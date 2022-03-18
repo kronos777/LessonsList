@@ -2,9 +2,11 @@ package com.example.buylistapplication.domain
 
 
 data class StudentItem(
+    val paymentBalance: Float,
     val name: String,
-    val count: Int,
-    val enabled: Boolean,
+    val lastname: String,
+    val group: ArrayList<Int>,
+    val notes: ArrayList<String>,
     var id: Int = UNDEFINED_ID
 ) {
 
