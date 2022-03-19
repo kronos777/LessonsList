@@ -7,6 +7,7 @@ data class StudentItem(
     val lastname: String,
     val group: ArrayList<Int>,
     val notes: ArrayList<String>,
+    val enabled: Boolean,
     var id: Int = UNDEFINED_ID
 ) {
 

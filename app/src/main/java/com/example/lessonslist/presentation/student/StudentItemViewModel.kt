@@ -6,11 +6,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.buylistapplication.domain.StudentItem
 import com.example.lessonslist.data.student.StudentListRepositoryImpl
 import com.example.lessonslist.domain.student.AddStudentItemUseCase
 import com.example.lessonslist.domain.student.EditStudentItemUseCase
 import com.example.lessonslist.domain.student.GetStudentItemUseCase
+import com.example.lessonslist.domain.student.StudentItem
 
 
 import kotlinx.coroutines.launch
@@ -49,10 +49,26 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
     fun addStudentItem(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
+
+        /*new testing var*/
+        val group = ArrayList<Int>()
+        group.addAll(listOf(1,3,5))
+
+        val notes = ArrayList<String>()//Creating an empty arraylist
+        notes.add("Ajay")//Adding object in arraylist
+        notes.add("Vijay")
+        notes.add("Prakash")
+        notes.add("Rohan")
+        notes.add("Vijay")
+
+        /*new testing var*/
+
+
+
         val fieldsValid = validateInput(name, count)
         if (fieldsValid) {
             viewModelScope.launch {
-                val studentItem = StudentItem(name, count, true)
+                val studentItem = StudentItem(1222f, "Vasy", "Kumov", group, notes, true)
                 addStudentItemUseCase.addStudentItem(studentItem)
                 finishWork()
             }
@@ -66,7 +82,8 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
         if (fieldsValid) {
             _studentItem.value?.let {
                 viewModelScope.launch {
-                    val item = it.copy(name = name, count = count)
+                    val item = it.copy(name = name)
+                    //val item add parametrs StudentItems
                     editStudentItemUseCase.editStudentItem(item)
                     finishWork()
                 }

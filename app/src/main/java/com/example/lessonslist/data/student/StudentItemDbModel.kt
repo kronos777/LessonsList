@@ -12,5 +12,6 @@ data class StudentItemDbModel(
     val name: String,
     val lastname: String,
     val group: ArrayList<Int>,
-    val notes: ArrayList<String>
+    val notes: ArrayList<String>,
+    val enabled: Boolean
 )

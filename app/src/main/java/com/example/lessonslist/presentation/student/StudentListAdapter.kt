@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ListAdapter
-import com.example.buylistapplication.domain.StudentItem
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.ItemStudentDisabledBinding
 import com.example.lessonslist.databinding.ItemStudentEnabledBinding
+import com.example.lessonslist.domain.student.StudentItem
 
 
 class StudentListAdapter : ListAdapter<StudentItem, StudentItemViewHolder>(StudentItemDiffCallback()) {
@@ -18,8 +18,8 @@ class StudentListAdapter : ListAdapter<StudentItem, StudentItemViewHolder>(Stude
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentItemViewHolder {
         val layout = when (viewType) {
-            VIEW_TYPE_DISABLED -> R.layout.item_shop_disabled
-            VIEW_TYPE_ENABLED -> R.layout.item_shop_enabled
+            VIEW_TYPE_DISABLED -> R.layout.item_student_disabled
+            VIEW_TYPE_ENABLED -> R.layout.item_student_enabled
             else -> throw RuntimeException("Unknown view type: $viewType")
         }
         val binding = DataBindingUtil.inflate<ViewDataBinding>(

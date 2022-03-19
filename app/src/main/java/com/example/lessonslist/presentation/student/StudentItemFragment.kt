@@ -9,8 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.buylistapplication.domain.StudentItem
 import com.example.lessonslist.databinding.FragmentStudentItemBinding
+import com.example.lessonslist.domain.student.StudentItem
 
 
 class StudentItemFragment : Fragment() {
@@ -23,7 +23,7 @@ class StudentItemFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentShopItemBinding == null")
 
     private var screenMode: String = MODE_UNKNOWN
-    private var shopItemId: Int = StudentItem.UNDEFINED_ID
+    private var studentItemId: Int = StudentItem.UNDEFINED_ID
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -99,7 +99,7 @@ class StudentItemFragment : Fragment() {
     private fun launchEditMode() {
         viewModel.getStudentItem(studentItemId)
         binding.saveButton.setOnClickListener {
-            viewModel.editShopItem(
+            viewModel.editStudentItem(
                 binding.etName.text?.toString(),
                 binding.etCount.text?.toString()
             )
@@ -129,7 +129,7 @@ class StudentItemFragment : Fragment() {
             if (!args.containsKey(SHOP_ITEM_ID)) {
                 throw RuntimeException("Param shop item id is absent")
             }
-            shopItemId = args.getInt(SHOP_ITEM_ID, StudentItem.UNDEFINED_ID)
+            studentItemId = args.getInt(SHOP_ITEM_ID, StudentItem.UNDEFINED_ID)
         }
     }
 

@@ -69,7 +69,7 @@ class StudentItemActivity : AppCompatActivity(), StudentItemFragment.OnEditingFi
             return intent
         }
 
-        fun newIntentEditItem(context: Context, shopItemId: Int): Intent {
+        fun newIntentEditItem(context: Context, studentItemId: Int): Intent {
             val intent = Intent(context, StudentItemActivity::class.java)
             intent.putExtra(EXTRA_SCREEN_MODE, MODE_EDIT)
             intent.putExtra(EXTRA_SHOP_ITEM_ID, studentItemId)

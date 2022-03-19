@@ -1,7 +1,6 @@
 package com.example.lessonslist.data.student
 
-import com.example.buylistapplication.domain.StudentItem
-
+import com.example.lessonslist.domain.student.StudentItem
 
 class StudentListMapper {
 
@@ -11,7 +10,8 @@ class StudentListMapper {
         lastname = studentItem.lastname,
         paymentBalance = studentItem.paymentBalance,
         group = studentItem.group,
-        notes = studentItem.notes
+        notes = studentItem.notes,
+        enabled = studentItem.enabled
     )
 
     fun mapDbModelToEntity(studentItemDbModel: StudentItemDbModel) = StudentItem(
@@ -20,7 +20,8 @@ class StudentListMapper {
         lastname = studentItemDbModel.lastname,
         paymentBalance = studentItemDbModel.paymentBalance,
         group = studentItemDbModel.group,
-        notes = studentItemDbModel.notes
+        notes = studentItemDbModel.notes,
+        enabled = studentItemDbModel.enabled
     )
 
     fun mapListDbModelToListEntity(list: List<StudentItemDbModel>) = list.map {
