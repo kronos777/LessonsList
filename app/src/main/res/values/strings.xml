@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">LessonsList</string>
+    <string name="app_name">Список покупок</string>
+    <string name="add_shop_item_content_description">Добавить новую статью</string>
+    <string name="name_hint">Имя:</string>
+    <string name="count_hint">Значение:</string>
+    <string name="save_btn">Сохранить</string>
+    <string name="error_input_name">Некоректное имя</string>
+    <string name="error_input_count">Некоректное количество</string>
 </resources>

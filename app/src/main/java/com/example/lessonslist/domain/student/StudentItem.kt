@@ -1,4 +1,4 @@
-package com.example.buylistapplication.domain
+package com.example.lessonslist.domain.student
 
 
 data class StudentItem(
