@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/count_hint"
                 android:inputType="number"
-                android:text="@{String.valueOf(viewModel.studentItem.count)}"
+                android:text="@{String.valueOf(viewModel.studentItem.lastname)}"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 

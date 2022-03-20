@@ -51,7 +51,7 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
         val count = parseCount(inputCount)
 
         /*new testing var*/
-        val group = ArrayList<Int>()
+        /*val group = ArrayList<Int>()
         group.addAll(listOf(1,3,5))
 
         val notes = ArrayList<String>()//Creating an empty arraylist
@@ -61,14 +61,14 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
         notes.add("Rohan")
         notes.add("Vijay")
 
-        /*new testing var*/
+        new testing var*/
 
 
 
         val fieldsValid = validateInput(name, count)
         if (fieldsValid) {
             viewModelScope.launch {
-                val studentItem = StudentItem(1222f, "Vasy", "Kumov", group, notes, true)
+                val studentItem = StudentItem(1222f, "Vasy", "Kumov", "group", "notes", true)
                 addStudentItemUseCase.addStudentItem(studentItem)
                 finishWork()
             }

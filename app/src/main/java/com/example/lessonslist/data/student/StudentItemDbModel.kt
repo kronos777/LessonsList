@@ -11,7 +11,9 @@ data class StudentItemDbModel(
 	val paymentBalance: Float,
     val name: String,
     val lastname: String,
-    val group: ArrayList<Int>,
-    val notes: ArrayList<String>,
+    val group: String,
+    //val group: ArrayList<Int>,
+    //val notes: ArrayList<String>,
+    val notes: String,
     val enabled: Boolean
 )

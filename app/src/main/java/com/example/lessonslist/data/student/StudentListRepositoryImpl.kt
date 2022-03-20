@@ -17,7 +17,7 @@ class StudentListRepositoryImpl(
     private val mapper = StudentListMapper()
 
     override suspend fun addStudentItem(studentItem: StudentItem) {
-        studentListDao.addStudentItem(mapper.mapEntityToDbModel(StudentItem))
+        studentListDao.addStudentItem(mapper.mapEntityToDbModel(studentItem))
     }
 
     override suspend fun deleteStudentItem(studentItem: StudentItem) {
@@ -25,7 +25,7 @@ class StudentListRepositoryImpl(
     }
 
     override suspend fun editStudentItem(studentItem: StudentItem) {
-        studentListDao.addStudentItem(mapper.mapEntityToDbModel(StudentItem))
+        studentListDao.addStudentItem(mapper.mapEntityToDbModel(studentItem))
     }
 
     override suspend fun getStudentItem(studentItemId: Int): StudentItem {

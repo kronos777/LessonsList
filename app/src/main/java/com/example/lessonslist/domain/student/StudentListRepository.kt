@@ -2,6 +2,7 @@ package com.example.buylistapplication.domain
 
 
 import androidx.lifecycle.LiveData
+import com.example.lessonslist.domain.student.StudentItem
 
 interface StudentListRepository {
 
