@@ -46,43 +46,36 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun addStudentItem(inputName: String?, inputCount: String?) {
+    fun addStudentItem(inputName: String?, inputLastName: String?, inputPaymentBalance: String, inputNotes: String, inputGroup: String) {
         val name = parseName(inputName)
-        val count = parseCount(inputCount)
+        val lastName = parseName(inputLastName)
+        val paymentBalance = inputPaymentBalance?.toFloat()
+        val group = inputGroup
+        val notes = inputNotes
+        //val count = parseCount(inputCount)
 
-        /*new testing var*/
-        /*val group = ArrayList<Int>()
-        group.addAll(listOf(1,3,5))
-
-        val notes = ArrayList<String>()//Creating an empty arraylist
-        notes.add("Ajay")//Adding object in arraylist
-        notes.add("Vijay")
-        notes.add("Prakash")
-        notes.add("Rohan")
-        notes.add("Vijay")
-
-        new testing var*/
-
-
-
-        val fieldsValid = validateInput(name, count)
+        val fieldsValid = validateInput(name, lastName)
         if (fieldsValid) {
             viewModelScope.launch {
-                val studentItem = StudentItem(1222f, "Vasy", "Kumov", "group", "notes", true)
+                val studentItem = StudentItem(paymentBalance, name, lastName, group, notes, true)
                 addStudentItemUseCase.addStudentItem(studentItem)
                 finishWork()
             }
         }
     }
 
-    fun editStudentItem(inputName: String?, inputCount: String?) {
+    fun editStudentItem(inputName: String?, inputLastName: String?, inputPaymentBalance: String, inputNotes: String, inputGroup: String) {
         val name = parseName(inputName)
-        val count = parseCount(inputCount)
-        val fieldsValid = validateInput(name, count)
+        val lastName = parseName(inputLastName)
+        val paymentBalance = inputPaymentBalance?.toFloat()
+        val group = inputGroup
+        val notes = inputNotes
+        //val count = parseCount(inputCount)
+        val fieldsValid = validateInput(name, lastName)
         if (fieldsValid) {
             _studentItem.value?.let {
                 viewModelScope.launch {
-                    val item = it.copy(name = name)
+                    val item = it.copy(name = name, lastname = lastName, paymentBalance = paymentBalance, group = group, notes = notes, enabled = true)
                     //val item add parametrs StudentItems
                     editStudentItemUseCase.editStudentItem(item)
                     finishWork()
@@ -103,13 +96,13 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    private fun validateInput(name: String, count: Int): Boolean {
+    private fun validateInput(name: String, lastName: String): Boolean {
         var result = true
         if (name.isBlank()) {
             _errorInputName.value = true
             result = false
         }
-        if (count <= 0) {
+        if (lastName.isBlank()) {
             _errorInputCount.value = true
             result = false
         }

@@ -1,8 +1,11 @@
 <resources>
-    <string name="app_name">Список покупок</string>
-    <string name="add_shop_item_content_description">Добавить новую статью</string>
+    <string name="app_name">Список занятий</string>
+    <string name="add_shop_item_content_description">Добавить нового ученика</string>
     <string name="name_hint">Имя:</string>
-    <string name="count_hint">Значение:</string>
+    <string name="lastname_hint">Фамилия:</string>
+    <string name="count_hint">Платежный баланс:</string>
+    <string name="notes_hint">Заметки о ученике:</string>
+    <string name="group_hint">Группы ученика:</string>
     <string name="save_btn">Сохранить</string>
     <string name="error_input_name">Некоректное имя</string>
     <string name="error_input_count">Некоректное количество</string>
