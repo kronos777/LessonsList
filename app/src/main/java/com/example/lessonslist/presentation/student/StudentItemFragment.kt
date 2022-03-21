@@ -83,7 +83,7 @@ class StudentItemFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
             }
         })
-        binding.etCount.addTextChangedListener(object : TextWatcher {
+        binding.etLastname.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
@@ -101,7 +101,10 @@ class StudentItemFragment : Fragment() {
         binding.saveButton.setOnClickListener {
             viewModel.editStudentItem(
                 binding.etName.text?.toString(),
-                binding.etCount.text?.toString()
+                binding.etLastname.text?.toString(),
+                binding.etPaymentBalance.text?.toString(),
+                binding.etNotes.text?.toString(),
+                binding.etGroup.text?.toString()
             )
         }
     }
@@ -110,7 +113,10 @@ class StudentItemFragment : Fragment() {
         binding.saveButton.setOnClickListener {
             viewModel.addStudentItem(
                 binding.etName.text?.toString(),
-                binding.etCount.text?.toString()
+                binding.etLastname.text?.toString(),
+                binding.etPaymentBalance.text?.toString(),
+                binding.etNotes.text?.toString(),
+                binding.etGroup.text?.toString()
             )
         }
     }
