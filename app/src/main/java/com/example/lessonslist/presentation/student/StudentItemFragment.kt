@@ -102,9 +102,9 @@ class StudentItemFragment : Fragment() {
             viewModel.editStudentItem(
                 binding.etName.text?.toString(),
                 binding.etLastname.text?.toString(),
-                binding.etPaymentBalance.text?.toString(),
-                binding.etNotes.text?.toString(),
-                binding.etGroup.text?.toString()
+                binding.etPaymentBalance.text.toString(),
+                binding.etNotes.text.toString(),
+                binding.etGroup.text.toString()
             )
         }
     }
@@ -114,9 +114,9 @@ class StudentItemFragment : Fragment() {
             viewModel.addStudentItem(
                 binding.etName.text?.toString(),
                 binding.etLastname.text?.toString(),
-                binding.etPaymentBalance.text?.toString(),
-                binding.etNotes.text?.toString(),
-                binding.etGroup.text?.toString()
+                binding.etPaymentBalance.text.toString(),
+                binding.etNotes.text.toString(),
+                binding.etGroup.text.toString()
             )
         }
     }
