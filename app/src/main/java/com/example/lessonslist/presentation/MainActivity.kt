@@ -1,7 +1,6 @@
 package com.example.lessonslist.presentation
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -16,10 +15,6 @@ import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.presentation.student.StudentItemActivity
 import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentListAdapter
-import com.google.android.material.internal.ContextUtils.getActivity
-import com.google.android.material.internal.NavigationMenuItemView
-import com.google.android.material.navigation.NavigationBarItemView
-import com.google.android.material.navigation.NavigationView
 
 
 class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener {
@@ -51,19 +46,19 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             }
         }
 
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        val navView: NavigationView = findViewById(R.id.navView)
+        val drawerLayout: DrawerLayout? = binding.drawerLayoutId
+        //val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
-        drawerLayout.addDrawerListener(toggle)
+        drawerLayout?.addDrawerListener(toggle)
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        navView.setNavigationItemSelectedListener {
-            when(it.itemId) {
-                R.id.muItem1 -> Toast.makeText(this,"Text1!",Toast.LENGTH_SHORT).show()
-                R.id.muItem2 -> Toast.makeText(this,"Text2!",Toast.LENGTH_SHORT).show()
-                R.id.muItem3 -> Toast.makeText(this,"Text3!",Toast.LENGTH_SHORT).show()
-                R.id.muItem4 -> Toast.makeText(this,"Text4 !",Toast.LENGTH_SHORT).show()
+        binding.navView?.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.muItem1 -> Toast.makeText(this, "Text1!", Toast.LENGTH_SHORT).show()
+                R.id.muItem2 -> Toast.makeText(this, "Text2!", Toast.LENGTH_SHORT).show()
+                R.id.muItem3 -> Toast.makeText(this, "Text3!", Toast.LENGTH_SHORT).show()
+                R.id.muItem4 -> Toast.makeText(this, "Text4 !", Toast.LENGTH_SHORT).show()
             }
             true
         }
