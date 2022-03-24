@@ -1,8 +1,11 @@
 package com.example.lessonslist.presentation
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -21,8 +24,12 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private lateinit var shopListAdapter: StudentListAdapter
     private lateinit var binding: ActivityMainBinding
 
+    lateinit var toggle: ActionBarDrawerToggle
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupRecyclerView()
@@ -38,7 +45,34 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 launchFragment(StudentItemFragment.newInstanceAddItem())
             }
         }
+
+        val drawerLayout: DrawerLayout? = binding.drawerLayoutId
+        //val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
+        drawerLayout?.addDrawerListener(toggle)
+        toggle.syncState()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        binding.navView?.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.muItem1 -> Toast.makeText(this, "Text1!", Toast.LENGTH_SHORT).show()
+                R.id.muItem2 -> Toast.makeText(this, "Text2!", Toast.LENGTH_SHORT).show()
+                R.id.muItem3 -> Toast.makeText(this, "Text3!", Toast.LENGTH_SHORT).show()
+                R.id.muItem4 -> Toast.makeText(this, "Text4 !", Toast.LENGTH_SHORT).show()
+            }
+            true
+        }
+
     }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(toggle.onOptionsItemSelected(item)){
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 
     override fun onEditingFinished() {
         Toast.makeText(this@MainActivity, "Success", Toast.LENGTH_SHORT).show()
