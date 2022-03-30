@@ -6,6 +6,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.lessonslist.data.group.GroupListDao
+import com.example.lessonslist.data.lessons.LessonsListDao
 import com.example.lessonslist.data.payment.PaymentListDao
 import com.example.lessonslist.data.student.StudentItemDbModel
 import com.example.lessonslist.data.student.StudentListDao
@@ -16,6 +17,8 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun StudentListDao(): StudentListDao
     abstract fun GroupListDao(): GroupListDao
     abstract fun PaymentListDao(): PaymentListDao
+    abstract fun LessonsListDao(): LessonsListDao
+
 
     companion object {
 
