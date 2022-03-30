@@ -1,9 +1,10 @@
-package com.example.lessonslist.domain.group
+package com.example.lessonslist.domain.payment
 
-data class GroupItem (
+data class PaymentItem (
     val title: String,
     val description: String,
     val student: String,
+    val price: Int,
     val id: Int = UNDEFINED_ID
 ){
 

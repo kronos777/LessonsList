@@ -1,8 +1,6 @@
 package com.example.lessonslist.domain.student
 
 
-import com.example.buylistapplication.domain.StudentListRepository
-
 
 class GetStudentItemUseCase(private val studentListRepository: StudentListRepository) {
 
