@@ -67,9 +67,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
 
-    fun goGroupFragment() {
+    private fun goGroupFragment() {
         if (!isOnePaneMode()) {
             launchFragment(GroupItemFragment())
+        } else {
+            Toast.makeText(this, "Долбаеб ты Иван!", Toast.LENGTH_SHORT).show()
         }
     }
 
