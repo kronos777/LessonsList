@@ -7,8 +7,8 @@ data class LessonsItem (
     val description: String,
     val student: String,
     val price: Int,
-    val dateStart: Date,
-    val dateEnd: Date,
+    val dateStart: String,
+    val dateEnd: String,
     val id: Int = UNDEFINED_ID
 ){
     companion object {

@@ -4,9 +4,9 @@ package com.example.lessonslist.data.student
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.example.buylistapplication.domain.StudentListRepository
 import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.domain.student.StudentItem
+import com.example.lessonslist.domain.student.StudentListRepository
 
 
 class StudentListRepositoryImpl(

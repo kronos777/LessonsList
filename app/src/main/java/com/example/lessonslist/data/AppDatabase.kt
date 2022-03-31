@@ -5,13 +5,16 @@ import android.app.Application
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.lessonslist.data.group.GroupItemDbModel
 import com.example.lessonslist.data.group.GroupListDao
+import com.example.lessonslist.data.lessons.LessonsItemDbModel
 import com.example.lessonslist.data.lessons.LessonsListDao
+import com.example.lessonslist.data.payment.PaymentItemDbModel
 import com.example.lessonslist.data.payment.PaymentListDao
 import com.example.lessonslist.data.student.StudentItemDbModel
 import com.example.lessonslist.data.student.StudentListDao
 
-@Database(entities = [StudentItemDbModel::class], version = 1, exportSchema = false)
+@Database(entities = [StudentItemDbModel::class, PaymentItemDbModel::class, GroupItemDbModel::class, LessonsItemDbModel::class], version = 2, exportSchema = false)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun StudentListDao(): StudentListDao
@@ -38,7 +41,9 @@ abstract class AppDatabase: RoomDatabase() {
                     application,
                     AppDatabase::class.java,
                     DB_NAME
-                ).build()
+                )
+                    .fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = db
                 return db
             }

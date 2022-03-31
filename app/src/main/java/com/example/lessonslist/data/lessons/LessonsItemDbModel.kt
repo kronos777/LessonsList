@@ -8,11 +8,13 @@ import java.util.*
 @Entity(tableName = "lessons_items")
 data class LessonsItemDbModel(
     @PrimaryKey(autoGenerate = true)
+    val id: Int,
     val title: String,
     val description: String,
     val student: String,
     val price: Int,
-    val dateStart: Date,
-    val dateEnd: Date,
-    val id: Int
-)
+    val dateStart: String,
+    //val dateStart: Date,
+    val dateEnd: String
+    //val dateEnd: Date
+    )
