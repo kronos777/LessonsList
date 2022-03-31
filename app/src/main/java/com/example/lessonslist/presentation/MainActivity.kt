@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.ActivityMainBinding
+import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.student.StudentItemActivity
 import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentListAdapter
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         binding.navView?.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.muItem1 -> Toast.makeText(this, "Text1!", Toast.LENGTH_SHORT).show()
+                R.id.muItem1 -> goGroupFragment()
                 R.id.muItem2 -> Toast.makeText(this, "Text2!", Toast.LENGTH_SHORT).show()
                 R.id.muItem3 -> Toast.makeText(this, "Text3!", Toast.LENGTH_SHORT).show()
                 R.id.muItem4 -> Toast.makeText(this, "Text4 !", Toast.LENGTH_SHORT).show()
@@ -65,6 +66,12 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     }
 
+
+    fun goGroupFragment() {
+        if (!isOnePaneMode()) {
+            launchFragment(GroupItemFragment())
+        }
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(toggle.onOptionsItemSelected(item)){
