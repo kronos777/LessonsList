@@ -9,6 +9,7 @@
     android:id="@+id/drawer_layout_id"
     tools:context=".presentation.MainActivity">
 <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/parent_recycler_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <androidx.recyclerview.widget.RecyclerView
@@ -35,7 +36,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_add" />
 </androidx.constraintlayout.widget.ConstraintLayout>
-
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_item_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="@id/guideline_middle"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navView"
         android:layout_width="wrap_content"
