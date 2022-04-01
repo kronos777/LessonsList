@@ -17,6 +17,8 @@ import com.example.lessonslist.domain.student.StudentItem
 
 class GroupItemFragment : Fragment() {
 
+    //   private lateinit var viewModel: StudentItemViewModel
+    private lateinit var viewModel: GroupItemViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,

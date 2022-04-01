@@ -13,4 +13,7 @@
     <item
         android:id="@+id/muItem4"
         android:title="Оплаты" />
+    <item
+        android:id="@+id/muItem5"
+        android:title="список групп" />
 </menu>
