@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
 
-    private fun goGroupFragment() {
+    fun goGroupFragment() {
         if (!isOnePaneMode()) {
             launchFragment(GroupItemFragment())
         } else {
