@@ -1,7 +1,6 @@
 package com.example.lessonslist.domain.student
 
 
-import com.example.buylistapplication.domain.StudentListRepository
 
 
 class AddStudentItemUseCase(private val studentListRepository: StudentListRepository) {

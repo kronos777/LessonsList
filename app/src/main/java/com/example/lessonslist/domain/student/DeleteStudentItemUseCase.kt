@@ -1,7 +1,6 @@
 package com.example.lessonslist.domain.student
 
 
-import com.example.buylistapplication.domain.StudentListRepository
 
 class DeleteStudentItemUseCase(private val studentListRepository: StudentListRepository) {
 

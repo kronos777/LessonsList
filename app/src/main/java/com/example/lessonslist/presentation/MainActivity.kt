@@ -2,6 +2,7 @@ package com.example.lessonslist.presentation
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -12,12 +13,16 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.ActivityMainBinding
+import com.example.lessonslist.presentation.group.GroupItemFragment
+import com.example.lessonslist.presentation.group.GroupItemListFragment
+import com.example.lessonslist.presentation.lessons.LessonsItemFragment
+import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.student.StudentItemActivity
 import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentListAdapter
 
 
-class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener {
+class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener {
 
 
     private lateinit var viewModel: MainViewModel
@@ -55,15 +60,69 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         binding.navView?.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.muItem1 -> Toast.makeText(this, "Text1!", Toast.LENGTH_SHORT).show()
-                R.id.muItem2 -> Toast.makeText(this, "Text2!", Toast.LENGTH_SHORT).show()
-                R.id.muItem3 -> Toast.makeText(this, "Text3!", Toast.LENGTH_SHORT).show()
-                R.id.muItem4 -> Toast.makeText(this, "Text4 !", Toast.LENGTH_SHORT).show()
+                R.id.muItem1 -> goGroupFragment()
+                R.id.muItem2 -> goLessonsFragment()
+                R.id.muItem3 -> goMainView()
+                R.id.muItem4 -> goPaymentFragment()
+                R.id.muItem5 -> goGroupListFragment()
             }
             true
         }
 
     }
+
+    private fun goMainView() {
+        if (isOnePaneMode()) {
+            binding.parentRecyclerLayout?.setVisibility(View.VISIBLE)
+            binding.fragmentItemContainer?.setVisibility (View.GONE)
+        }
+    }
+
+    private fun recyclerMainGone() {
+        binding.parentRecyclerLayout?.setVisibility(View.GONE)
+        binding.fragmentItemContainer?.setVisibility (View.VISIBLE)
+    }
+
+    fun goGroupListFragment() {
+        if (!isOnePaneMode()) {
+            launchFragment(GroupItemListFragment())
+        } else {
+            recyclerMainGone()
+            launchFragmentTemp(GroupItemListFragment())
+            Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun goGroupFragment() {
+        if (!isOnePaneMode()) {
+            launchFragment(GroupItemFragment())
+        } else {
+            recyclerMainGone()
+            launchFragmentTemp(GroupItemFragment())
+            Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun goLessonsFragment() {
+        if (!isOnePaneMode()) {
+            launchFragment(LessonsItemFragment())
+        } else {
+            recyclerMainGone()
+            launchFragmentTemp(LessonsItemFragment())
+            Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun goPaymentFragment() {
+        if (!isOnePaneMode()) {
+            launchFragment(PaymentItemFragment())
+        } else {
+            recyclerMainGone()
+            launchFragmentTemp(PaymentItemFragment())
+            Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -90,6 +149,15 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             .addToBackStack(null)
             .commit()
     }
+
+    private fun launchFragmentTemp(fragment: Fragment) {
+        supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_item_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
 
     private fun setupRecyclerView() {
         with(binding.rvShopList) {

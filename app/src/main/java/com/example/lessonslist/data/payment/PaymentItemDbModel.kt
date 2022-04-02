@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "payment_items")
 data class PaymentItemDbModel (
     @PrimaryKey(autoGenerate = true)
+    val id: Int,
     val title: String,
     val description: String,
     val student: String,
-    val price: Int,
-    val id: Int
+    val price: Int
 )

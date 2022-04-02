@@ -6,6 +6,9 @@
     <string name="count_hint">Платежный баланс:</string>
     <string name="notes_hint">Заметки о ученике:</string>
     <string name="group_hint">Группы ученика:</string>
+    <string name="group_title">Название группы:</string>
+    <string name="group_description">Описание группы:</string>
+    <string name="group_student">Ученики группы:</string>
     <string name="save_btn">Сохранить</string>
     <string name="error_input_name">Некоректное имя</string>
     <string name="error_input_count">Некоректное количество</string>
