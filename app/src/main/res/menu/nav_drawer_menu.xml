@@ -15,5 +15,5 @@
         android:title="Оплаты" />
     <item
         android:id="@+id/muItem5"
-        android:title="список групп" />
+        android:title="Список групп" />
 </menu>

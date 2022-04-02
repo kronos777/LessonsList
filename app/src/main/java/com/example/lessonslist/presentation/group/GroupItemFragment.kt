@@ -10,32 +10,19 @@ import android.view.ViewGroup
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.lessonslist.R
-import com.example.lessonslist.databinding.FragmentStudentItemBinding
-import com.example.lessonslist.domain.student.StudentItem
+import com.example.lessonslist.databinding.FragmentGroupItemBinding
 
 
 class GroupItemFragment : Fragment() {
 
     //   private lateinit var viewModel: StudentItemViewModel
     private lateinit var viewModel: GroupItemViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_group_item, container, false)
-    }
-   /* private lateinit var viewModel: StudentItemViewModel
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
-    private var _binding: FragmentStudentItemBinding? = null
-    private val binding: FragmentStudentItemBinding
-        get() = _binding ?: throw RuntimeException("FragmentShopItemBinding == null")
+    private var _binding: FragmentGroupItemBinding? = null
+    private val binding: FragmentGroupItemBinding
+        get() = _binding ?: throw RuntimeException("FragmentGroupItemBinding == null")
 
-    private var screenMode: String = MODE_UNKNOWN
-    private var studentItemId: Int = StudentItem.UNDEFINED_ID
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -46,81 +33,41 @@ class GroupItemFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        parseParams()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentStudentItemBinding.inflate(inflater, container, false)
+    ): View? {
+     //   return inflater.inflate(R.layout.fragment_group_item, container, false)
+        _binding = FragmentGroupItemBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[StudentItemViewModel::class.java]
+        viewModel = ViewModelProvider(this)[GroupItemViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        addTextChangeListeners()
-        launchRightMode()
+        //addTextChangeListeners()
+        launchAddMode()
         observeViewModel()
     }
 
-    private fun observeViewModel() {
-        viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            onEditingFinishedListener.onEditingFinished()
-        }
-    }
-
-    private fun launchRightMode() {
-        when (screenMode) {
-            MODE_EDIT -> launchEditMode()
-            MODE_ADD  -> launchAddMode()
-        }
-    }
-
     private fun addTextChangeListeners() {
-        binding.etName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetErrorInputName()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-        })
-        binding.etLastname.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetErrorInputCount()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-        })
+        TODO("Not yet implemented")
     }
 
-    private fun launchEditMode() {
-        viewModel.getStudentItem(studentItemId)
-        binding.saveButton.setOnClickListener {
-            viewModel.editStudentItem(
-                binding.etName.text?.toString(),
-                binding.etLastname.text?.toString(),
-                binding.etPaymentBalance.text.toString(),
-                binding.etNotes.text.toString(),
-                binding.etGroup.text.toString()
+    private fun launchAddMode() {
+        binding.saveButton.setOnClickListener{
+            viewModel.addGroupItem(
+                binding.etTitle.text.toString(),
+                binding.etDescription.text.toString(),
+                binding.etStudent.text.toString()
             )
         }
     }
-
+/*
     private fun launchAddMode() {
         binding.saveButton.setOnClickListener {
             viewModel.addStudentItem(
@@ -132,22 +79,11 @@ class GroupItemFragment : Fragment() {
             )
         }
     }
+    }*/
 
-    private fun parseParams() {
-        val args = requireArguments()
-        if (!args.containsKey(SCREEN_MODE)) {
-            throw RuntimeException("Param screen mode is absent")
-        }
-        val mode = args.getString(SCREEN_MODE)
-        if (mode != MODE_EDIT && mode != MODE_ADD) {
-            throw RuntimeException("Unknown screen mode $mode")
-        }
-        screenMode = mode
-        if (screenMode == MODE_EDIT) {
-            if (!args.containsKey(SHOP_ITEM_ID)) {
-                throw RuntimeException("Param shop item id is absent")
-            }
-            studentItemId = args.getInt(SHOP_ITEM_ID, StudentItem.UNDEFINED_ID)
+    private fun observeViewModel() {
+        viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
+            onEditingFinishedListener.onEditingFinished()
         }
     }
 
@@ -156,29 +92,5 @@ class GroupItemFragment : Fragment() {
         fun onEditingFinished()
     }
 
-    companion object {
-
-        private const val SCREEN_MODE = "extra_mode"
-        private const val SHOP_ITEM_ID = "extra_shop_item_id"
-        private const val MODE_EDIT = "mode_edit"
-        private const val MODE_ADD = "mode_add"
-        private const val MODE_UNKNOWN = ""
-
-        fun newInstanceAddItem(): GroupItemFragment {
-            return GroupItemFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_ADD)
-                }
-            }
-        }
-
-        fun newInstanceEditItem(shopItemId: Int): GroupItemFragment {
-            return GroupItemFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_EDIT)
-                    putInt(SHOP_ITEM_ID, shopItemId)
-                }
-            }
-        }
-    }*/
 }
+

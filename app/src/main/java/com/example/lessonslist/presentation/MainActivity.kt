@@ -21,7 +21,7 @@ import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentListAdapter
 
 
-class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener {
+class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener {
 
 
     private lateinit var viewModel: MainViewModel
