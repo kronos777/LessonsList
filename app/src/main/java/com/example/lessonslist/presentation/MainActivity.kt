@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.presentation.group.GroupItemFragment
+import com.example.lessonslist.presentation.group.GroupItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
 import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.student.StudentItemActivity
@@ -63,6 +64,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 R.id.muItem2 -> goLessonsFragment()
                 R.id.muItem3 -> goMainView()
                 R.id.muItem4 -> goPaymentFragment()
+                R.id.muItem5 -> goGroupListFragment()
             }
             true
         }
@@ -79,6 +81,16 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private fun recyclerMainGone() {
         binding.parentRecyclerLayout?.setVisibility(View.GONE)
         binding.fragmentItemContainer?.setVisibility (View.VISIBLE)
+    }
+
+    fun goGroupListFragment() {
+        if (!isOnePaneMode()) {
+            launchFragment(GroupItemListFragment())
+        } else {
+            recyclerMainGone()
+            launchFragmentTemp(GroupItemListFragment())
+            Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun goGroupFragment() {

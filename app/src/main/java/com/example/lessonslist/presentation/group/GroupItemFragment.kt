@@ -15,7 +15,6 @@ import com.example.lessonslist.databinding.FragmentGroupItemBinding
 
 class GroupItemFragment : Fragment() {
 
-    //   private lateinit var viewModel: StudentItemViewModel
     private lateinit var viewModel: GroupItemViewModel
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
@@ -67,19 +66,6 @@ class GroupItemFragment : Fragment() {
             )
         }
     }
-/*
-    private fun launchAddMode() {
-        binding.saveButton.setOnClickListener {
-            viewModel.addStudentItem(
-                binding.etName.text?.toString(),
-                binding.etLastname.text?.toString(),
-                binding.etPaymentBalance.text.toString(),
-                binding.etNotes.text.toString(),
-                binding.etGroup.text.toString()
-            )
-        }
-    }
-    }*/
 
     private fun observeViewModel() {
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
