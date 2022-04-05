@@ -24,12 +24,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#33BB86FC"
+            android:background="@color/purple_200"
             android:orientation="horizontal"
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/tv_name"
+                android:id="@+id/tv_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
