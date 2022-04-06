@@ -1,14 +1,19 @@
 package com.example.lessonslist.presentation.group
 
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
+import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentGroupItemListBinding
-import com.example.lessonslist.presentation.student.StudentListAdapter
-import java.lang.RuntimeException
+import com.example.lessonslist.domain.student.StudentItem
+import com.example.lessonslist.presentation.student.StudentItemActivity
+import com.example.lessonslist.presentation.student.StudentItemFragment
+
 
 class GroupItemListFragment: Fragment() {
 
@@ -18,7 +23,6 @@ class GroupItemListFragment: Fragment() {
 
     private lateinit var viewModel: GroupListViewModel
     private lateinit var groupListAdapter: GroupListAdapter
-    //private lateinit var binding: FragmentGroupItemListBinding
 
 
     override fun onCreateView(
@@ -38,6 +42,12 @@ class GroupItemListFragment: Fragment() {
             groupListAdapter.submitList(it)
         }
 
+        binding.buttonAddGroupItem.setOnClickListener {
+            val fragmentTransaction = fragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_item_container, GroupItemFragment.newInstanceAddItem())
+                ?.addToBackStack(null)
+                ?.commit()
+        }
     }
 
 
@@ -52,8 +62,18 @@ class GroupItemListFragment: Fragment() {
 
         }
        // setupLongClickListener()
-       // setupClickListener()
+        setupClickListener()
        // setupSwipeListener(binding.rvShopList)
+    }
+
+
+    private fun setupClickListener() {
+        groupListAdapter.onGroupItemClickListener = {
+            fragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_item_container, GroupItemFragment.newInstanceEditItem(it.id))
+                ?.addToBackStack(null)
+                ?.commit()
+       }
     }
 
 }
