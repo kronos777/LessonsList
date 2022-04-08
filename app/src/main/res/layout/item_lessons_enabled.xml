@@ -3,8 +3,8 @@
     <data>
 
         <variable
-            name="groupItem"
-            type="com.example.lessonslist.domain.group.GroupItem"
+            name="lessonsItem"
+            type="com.example.lessonslist.domain.lessons.LessonsItem"
             />
     </data>
     <androidx.cardview.widget.CardView
@@ -33,7 +33,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{groupItem.title}"
+                android:text="@{lessonsItem.title}"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"

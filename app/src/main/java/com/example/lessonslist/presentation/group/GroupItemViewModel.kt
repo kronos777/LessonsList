@@ -1,6 +1,7 @@
 package com.example.lessonslist.presentation.group
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -36,6 +37,16 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
 
+
+    fun getGroupItem(groupItemId: Int) {
+        viewModelScope.launch {
+            val item = getGroupItemUseCase.getGroupItem(groupItemId)
+
+            _groupItem.value = item
+        }
+    }
+
+
     fun addGroupItem(inputTitle: String, inputDescription: String, inputStudent: String) {
         val title = inputTitle
         val description = inputDescription
@@ -49,6 +60,26 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
                 val groupItem = GroupItem(title, description, student)
                 addGroupItemUseCase.addGroupItem(groupItem)
                 finishWork()
+            }
+        }
+
+    }
+
+    fun editGroupItem(inputTitle: String, inputDescription: String, inputStudent: String) {
+        val title = inputTitle
+        val description = inputDescription
+        val student = inputStudent
+
+        // add validation fun
+        val fieldsValid = true
+        if (fieldsValid) {
+            _groupItem.value?.let {
+                viewModelScope.launch {
+                 //   val groupItem = GroupItem(title, description, student)
+                    val groupItem = it.copy(title = title, description = description, student = student)
+                    editGroupItemUseCase.editGroupItem(groupItem)
+                    finishWork()
+                }
             }
         }
 

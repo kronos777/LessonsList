@@ -2,7 +2,7 @@ package com.example.lessonslist.domain.student
 
 
 data class StudentItem(
-    val paymentBalance: Float,
+    val paymentBalance: Int,
     val name: String,
     val lastname: String,
     val group: String,

@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             .commit()
     }
 
-    private fun launchFragmentTemp(fragment: Fragment) {
+    fun launchFragmentTemp(fragment: Fragment) {
         supportFragmentManager.popBackStack()
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_item_container, fragment)

@@ -4,11 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/group_list_recycler_layout"
+        android:id="@+id/lessons_list_recycler_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_group_list"
+            android:id="@+id/rv_lessons_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -19,13 +19,13 @@
             tools:listitem="@layout/item_group_enabled"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_add_group_item"
+            android:id="@+id/button_add_lessons_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:clickable="true"
-            android:contentDescription="@string/add_shop_item_content_description"
+            android:contentDescription="@string/add_lessons_item_content_description"
             android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
