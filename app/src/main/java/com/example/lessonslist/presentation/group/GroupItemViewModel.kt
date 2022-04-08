@@ -84,26 +84,6 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
         }
 
     }
-    /*
-    *     fun editStudentItem(inputName: String?, inputLastName: String?, inputPaymentBalance: String, inputNotes: String, inputGroup: String) {
-        val name = parseName(inputName)
-        val lastName = parseName(inputLastName)
-        val paymentBalance = inputPaymentBalance?.toFloat()
-        val group = inputGroup
-        val notes = inputNotes
-        //val count = parseCount(inputCount)
-        val fieldsValid = validateInput(name, lastName)
-        if (fieldsValid) {
-            _studentItem.value?.let {
-                viewModelScope.launch {
-                    val item = it.copy(name = name, lastname = lastName, paymentBalance = paymentBalance, group = group, notes = notes, enabled = true)
-                    //val item add parametrs StudentItems
-                    editStudentItemUseCase.editStudentItem(item)
-                    finishWork()
-                }
-            }
-        }
-    }*/
 
     private fun finishWork() {
         _shouldCloseScreen.value = Unit
