@@ -30,6 +30,11 @@ class GroupItemFragment : Fragment() {
     private var groupItemId: Int = GroupItem.UNDEFINED_ID
 
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        parseParams()
+    }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -71,7 +76,7 @@ class GroupItemFragment : Fragment() {
         when (screenMode) {
             MODE_EDIT -> launchEditMode()
             MODE_ADD -> launchAddMode()
-            else -> launchEditMode()
+           // else -> launchEditMode()
         }
     }
 
@@ -107,7 +112,23 @@ class GroupItemFragment : Fragment() {
 
         fun onEditingFinished()
     }
-
+    private fun parseParams() {
+        val args = requireArguments()
+        if (!args.containsKey(SCREEN_MODE)) {
+            throw RuntimeException("Param screen mode is absent")
+        }
+        val mode = args.getString(SCREEN_MODE)
+        if (mode != MODE_EDIT && mode != MODE_ADD) {
+            throw RuntimeException("Unknown screen mode $mode")
+        }
+        screenMode = mode
+        if (screenMode == MODE_EDIT) {
+            if (!args.containsKey(GROUP_ITEM_ID)) {
+                throw RuntimeException("Param shop item id is absent")
+            }
+            groupItemId = args.getInt(GROUP_ITEM_ID, GroupItem.UNDEFINED_ID)
+        }
+    }
     companion object {
 
         private const val SCREEN_MODE = "extra_mode"
