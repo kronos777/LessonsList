@@ -9,6 +9,12 @@
     <string name="group_title">Название группы:</string>
     <string name="group_description">Описание группы:</string>
     <string name="group_student">Ученики группы:</string>
+    <string name="lessons_name">Название урока:</string>
+    <string name="lessons_description">Описание урока:</string>
+    <string name="lessons_student">Ученики урока:</string>
+    <string name="lessons_price">Стоимость урока:</string>
+    <string name="lessons_date_start">Дата/Время начала урока:</string>
+    <string name="lessons_date_end">Дата/Время конца урока:</string>
     <string name="save_btn">Сохранить</string>
     <string name="error_input_name">Некоректное имя</string>
     <string name="error_input_count">Некоректное количество</string>

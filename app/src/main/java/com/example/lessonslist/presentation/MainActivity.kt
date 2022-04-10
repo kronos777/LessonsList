@@ -16,13 +16,14 @@ import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
+import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.student.StudentItemActivity
 import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentListAdapter
 
 
-class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener {
+class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener {
 
 
     private lateinit var viewModel: MainViewModel
@@ -65,6 +66,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 R.id.muItem3 -> goMainView()
                 R.id.muItem4 -> goPaymentFragment()
                 R.id.muItem5 -> goGroupListFragment()
+                R.id.muItem6 -> goLessonsListFragment()
             }
             true
         }
@@ -82,6 +84,17 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         binding.parentRecyclerLayout?.setVisibility(View.GONE)
         binding.fragmentItemContainer?.setVisibility (View.VISIBLE)
     }
+
+    fun goLessonsListFragment() {
+        if (!isOnePaneMode()) {
+            launchFragment(LessonsItemListFragment())
+        } else {
+            recyclerMainGone()
+            launchFragmentTemp(LessonsItemListFragment())
+            Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
     fun goGroupListFragment() {
         if (!isOnePaneMode()) {

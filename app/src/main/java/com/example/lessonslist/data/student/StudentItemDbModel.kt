@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class StudentItemDbModel(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
-	val paymentBalance: Int,
+	val paymentBalance: Float,
     val name: String,
     val lastname: String,
     val group: String,

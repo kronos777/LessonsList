@@ -16,4 +16,7 @@
     <item
         android:id="@+id/muItem5"
         android:title="Список групп" />
+    <item
+        android:id="@+id/muItem6"
+        android:title="Список уроков" />
 </menu>

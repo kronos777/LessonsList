@@ -38,7 +38,7 @@
                 android:id="@+id/et_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/group_title"
+                android:hint="@string/lessons_name"
                 android:inputType="textCapWords"
                 android:text="@{viewModel.lessonsItem.title}" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -62,7 +62,7 @@
                 android:id="@+id/et_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/group_description"
+                android:hint="@string/lessons_description"
                 android:inputType="textCapWords"
                 android:text="@{viewModel.lessonsItem.description}"
                 />
@@ -77,7 +77,7 @@
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
             app:errorInputCount="@{viewModel.errorInputStudent}"
-            app:layout_constraintBottom_toTopOf="@id/save_button"
+            app:layout_constraintBottom_toTopOf="@id/til_price"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/til_description">
@@ -86,9 +86,9 @@
                 android:id="@+id/et_student"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/group_student"
+                android:hint="@string/lessons_student"
                 android:inputType="textCapWords"
-                android:text="@{String.valueOf(viewModel.lessonsItem.student)}" />
+                android:text="@{viewModel.lessonsItem.student}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -109,9 +109,9 @@
                 android:id="@+id/et_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/group_student"
+                android:hint="@string/lessons_price"
                 android:inputType="text"
-                android:text="@{String.valueOf(viewModel.lessonsItem.student)}" />
+                android:text="@{String.valueOf(viewModel.lessonsItem.price)}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -132,9 +132,9 @@
                 android:id="@+id/et_datestart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/group_student"
+                android:hint="@string/lessons_date_start"
                 android:inputType="text"
-                android:text="@{String.valueOf(viewModel.lessonsItem.student)}" />
+                android:text="@{viewModel.lessonsItem.dateStart}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -155,9 +155,9 @@
                 android:id="@+id/et_dateend"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/group_student"
+                android:hint="@string/lessons_date_end"
                 android:inputType="textCapWords"
-                android:text="@{String.valueOf(viewModel.lessonsItem.student)}" />
+                android:text="@{viewModel.lessonsItem.dateEnd}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
