@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentGroupItemListBinding
 import com.example.lessonslist.databinding.FragmentLessonsItemListBinding
@@ -60,7 +62,7 @@ class LessonsItemListFragment: Fragment() {
         }
        // setupLongClickListener()
         setupClickListener()
-       // setupSwipeListener(binding.rvShopList)
+        setupSwipeListener(binding.rvLessonsList)
     }
 
 
@@ -72,5 +74,30 @@ class LessonsItemListFragment: Fragment() {
                 ?.commit()
        }
     }
+
+    private fun setupSwipeListener(rvLessonsList: RecyclerView) {
+        val callback = object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val item = lessonsListAdapter.currentList[viewHolder.adapterPosition]
+                viewModel.deleteLessonsItem(item)
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(callback)
+        itemTouchHelper.attachToRecyclerView(rvLessonsList)
+    }
+
+
 
 }

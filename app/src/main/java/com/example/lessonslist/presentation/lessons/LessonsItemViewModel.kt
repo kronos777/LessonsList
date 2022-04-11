@@ -9,10 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.lessonslist.data.group.GroupListRepositoryImpl
 import com.example.lessonslist.data.lessons.LessonsListRepositoryImpl
 import com.example.lessonslist.domain.group.*
-import com.example.lessonslist.domain.lessons.AddLessonsItemUseCase
-import com.example.lessonslist.domain.lessons.EditLessonsItemUseCase
-import com.example.lessonslist.domain.lessons.GetLessonsItemUseCase
-import com.example.lessonslist.domain.lessons.LessonsItem
+import com.example.lessonslist.domain.lessons.*
 import com.example.lessonslist.domain.student.StudentItem
 import kotlinx.coroutines.launch
 
@@ -22,6 +19,7 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
     private val getLessonsItemUseCase = GetLessonsItemUseCase(repository)
     private val addLessonsItemUseCase = AddLessonsItemUseCase(repository)
     private val editLessonsItemUseCase = EditLessonsItemUseCase(repository)
+    private val deleteLessonsItemUseCase = DeleteLessonsItemUseCase(repository)
     private val _lessonsItem = MutableLiveData<LessonsItem>()
     val lessonsItem: LiveData<LessonsItem>
         get() = _lessonsItem
@@ -122,6 +120,12 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
             result = false
         }
         return result
+    }
+
+    fun deleteLessonsItem(lessonsItem: LessonsItem) {
+        viewModelScope.launch {
+            deleteLessonsItemUseCase.deleteLessonsItem(lessonsItem)
+        }
     }
 
     private fun finishWork() {

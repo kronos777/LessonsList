@@ -19,6 +19,7 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
     private val getGroupItemUseCase = GetGroupItemUseCase(repository)
     private val addGroupItemUseCase = AddGroupItemUseCase(repository)
     private val editGroupItemUseCase = EditGroupItemUseCase(repository)
+    private val deleteGroupItemUseCase = DeleteGroupItemUseCase(repository)
     private val _groupItem = MutableLiveData<GroupItem>()
     val groupItem: LiveData<GroupItem>
         get() = _groupItem
@@ -105,6 +106,11 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
         return result
     }
 
+    fun deleteGroupItem(groupItem: GroupItem) {
+        viewModelScope.launch {
+            deleteGroupItemUseCase.deleteGroupItem(groupItem)
+        }
+    }
 
     private fun finishWork() {
         _shouldCloseScreen.value = Unit

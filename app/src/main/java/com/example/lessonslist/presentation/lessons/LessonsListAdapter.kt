@@ -40,6 +40,7 @@ class LessonsListAdapter : ListAdapter<LessonsItem, LessonsItemViewHolder>(Lesso
         binding.lessonsItem = lessonsItem
     }
 
+
     companion object {
 
         const val VIEW_TYPE_ENABLED = 100
