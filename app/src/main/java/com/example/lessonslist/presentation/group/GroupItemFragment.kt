@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ListView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -28,6 +30,11 @@ class GroupItemFragment : Fragment() {
 
     private var screenMode: String = MODE_UNKNOWN
     private var groupItemId: Int = GroupItem.UNDEFINED_ID
+
+    private var dataStudentGroupModel: ArrayList<DataStudentGroupModel>? = null
+    private lateinit var listView: ListView
+    private lateinit var adapter: ListStudentAdapter
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +71,33 @@ class GroupItemFragment : Fragment() {
         //addTextChangeListeners()
         launchRightMode()
         observeViewModel()
+
+        /**/
+        listView = binding.listView as ListView
+        dataStudentGroupModel = ArrayList<DataStudentGroupModel>()
+        dataStudentGroupModel!!.add(DataStudentGroupModel("Apple Pie", false))
+        dataStudentGroupModel!!.add(DataStudentGroupModel("Banana Bread", false))
+        dataStudentGroupModel!!.add(DataStudentGroupModel("Cupcake", false))
+        dataStudentGroupModel!!.add(DataStudentGroupModel("Donut", true))
+        dataStudentGroupModel!!.add(DataStudentGroupModel("Eclair", true))
+        dataStudentGroupModel!!.add(DataStudentGroupModel("Froyo", true))
+        dataStudentGroupModel!!.add(DataStudentGroupModel("Gingerbread", true))
+        dataStudentGroupModel!!.add(DataStudentGroupModel("Honeycomb", false))
+        dataStudentGroupModel!!.add(DataStudentGroupModel("Ice Cream Sandwich", false))
+        dataStudentGroupModel!!.add(DataStudentGroupModel("Jelly Bean", false))
+        dataStudentGroupModel!!.add(DataStudentGroupModel("Kitkat", false))
+        dataStudentGroupModel!!.add(DataStudentGroupModel("Lollipop", false))
+        dataStudentGroupModel!!.add(DataStudentGroupModel("Marshmallow", false))
+        dataStudentGroupModel!!.add(DataStudentGroupModel("Nougat", false))
+        adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
+        listView.adapter = adapter
+        listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+            val dataStudentGroupModel: DataStudentGroupModel =
+                dataStudentGroupModel!![position] as DataStudentGroupModel
+            dataStudentGroupModel.checked = !dataStudentGroupModel.checked
+            adapter.notifyDataSetChanged()
+        }
+        /**/
     }
 
     private fun addTextChangeListeners() {

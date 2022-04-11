@@ -91,7 +91,11 @@
                 android:text="@{String.valueOf(viewModel.groupItem.student)}" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="MissingConstraints" />
 
         <Button
             android:id="@+id/save_button"
