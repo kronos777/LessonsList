@@ -61,7 +61,7 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
         val dateEnd = inputDateEnd
 
         // add validation fun
-        val fieldsValid = true
+        val fieldsValid = validateInput(title, student, price, dateStart, dateEnd)
 
         if(fieldsValid) {
             viewModelScope.launch {
@@ -69,6 +69,8 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
                 addLessonsItemUseCase.addLessonsItem(lessonsItem)
                 finishWork()
             }
+        } else {
+            Log.d("errorinput", "error in edit lessons")
         }
 
     }
@@ -81,7 +83,7 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
     val dateStart = inputDateStart
     val dateEnd = inputDateEnd
         // add validation fun
-        val fieldsValid = true
+        val fieldsValid = validateInput(title, student, price, dateStart, dateEnd)
         if (fieldsValid) {
             _lessonsItem.value?.let {
                 viewModelScope.launch {
@@ -90,8 +92,36 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
                     finishWork()
                 }
             }
+        } else {
+            Log.d("errorinput", "error in edit lessons")
         }
 
+    }
+
+
+    private fun validateInput(title: String, student: String, price: String, dateStart: String, dateEnd: String): Boolean {
+        var result = true
+        if (title.isBlank()) {
+            //_errorInputName.value = true
+            result = false
+        }
+        if (student.isBlank()) {
+            //_errorInputLastName.value = true
+            result = false
+        }
+        if (price.isBlank()) {
+            //_errorInputLastName.value = true
+            result = false
+        }
+        if (dateStart.isBlank()) {
+            //_errorInputLastName.value = true
+            result = false
+        }
+        if (dateEnd.isBlank()) {
+            //_errorInputLastName.value = true
+            result = false
+        }
+        return result
     }
 
     private fun finishWork() {

@@ -17,7 +17,8 @@
     <string name="lessons_date_end">Дата/Время конца урока:</string>
     <string name="save_btn">Сохранить</string>
     <string name="error_input_name">Некоректное имя</string>
-    <string name="error_input_count">Некоректное количество</string>
+    <string name="error_input_last_name">Некоректная фамилия</string>
+    <string name="error_input_payment_balance">Некоректное значение баланса</string>
     <string name="open">open</string>
     <string name="close">close</string>
     <string name="add_lessons_item_content_description">добавить урок</string>

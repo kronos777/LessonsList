@@ -89,12 +89,24 @@ class StudentItemFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetErrorInputCount()
+                viewModel.resetErrorInputLastName()
             }
 
             override fun afterTextChanged(s: Editable?) {
             }
         })
+        binding.etPaymentBalance.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.resetErrorInputPaymentBalance()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+
     }
 
     private fun launchEditMode() {
