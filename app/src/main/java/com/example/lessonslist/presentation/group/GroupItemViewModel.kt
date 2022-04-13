@@ -20,6 +20,7 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
     private val addGroupItemUseCase = AddGroupItemUseCase(repository)
     private val editGroupItemUseCase = EditGroupItemUseCase(repository)
     private val deleteGroupItemUseCase = DeleteGroupItemUseCase(repository)
+
     private val _groupItem = MutableLiveData<GroupItem>()
     val groupItem: LiveData<GroupItem>
         get() = _groupItem
