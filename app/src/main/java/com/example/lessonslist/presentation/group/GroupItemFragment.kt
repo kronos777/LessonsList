@@ -80,13 +80,13 @@ class GroupItemFragment : Fragment() {
         observeViewModel()
 
 
-        listView = binding.listView as ListView
+        listView = binding.listView
 
 
         dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
         dataStudentGroupModel = ArrayList<DataStudentGroupModel>()
 
-        val dataStudentListArray = dataStudentlList.studentList.observe(viewLifecycleOwner) {
+        dataStudentlList.studentList.observe(viewLifecycleOwner) {
 
             for(student in it){
                 val name = student.name + " " + student.lastname
@@ -101,8 +101,9 @@ class GroupItemFragment : Fragment() {
             listView.adapter = adapter
             listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 val dataStudentGroupModel: DataStudentGroupModel =
-                    dataStudentGroupModel!![position] as DataStudentGroupModel
+                    dataStudentGroupModel!![position]
                 dataStudentGroupModel.checked = !dataStudentGroupModel.checked
+               // Log.d("dataStudentGroupModelchecked", dataStudentGroupModel.toString())
                 adapter.notifyDataSetChanged()
             }
         }
@@ -175,93 +176,94 @@ class GroupItemFragment : Fragment() {
 
 }
 
-private fun addTextChangeListeners() {
-TODO("Nyet implemented")
-}
+    private fun addTextChangeListeners() {
+    TODO("Nyet implemented")
+    }
 
 
-private fun launchRightMode() {
-Log.d("screenMode", screenMode)
-when (screenMode) {
-  MODE_EDIT -> launchEditMode()
-  MODE_ADD -> launchAddMode()
- // else -> launchEditMode()
-}
-}
+    private fun launchRightMode() {
+    Log.d("screenMode", screenMode)
+    when (screenMode) {
+      MODE_EDIT -> launchEditMode()
+      MODE_ADD -> launchAddMode()
+     // else -> launchEditMode()
+    }
+    }
 
 
-private fun launchEditMode() {
-viewModel.getGroupItem(groupItemId)
-binding.saveButton.setOnClickListener{
-  viewModel.editGroupItem(
-      binding.etTitle.text.toString(),
-      binding.etDescription.text.toString(),
-      binding.etStudent.text.toString()
-  )
-}
-}
+    private fun launchEditMode() {
+    viewModel.getGroupItem(groupItemId)
+    binding.saveButton.setOnClickListener{
+      viewModel.editGroupItem(
+          binding.etTitle.text.toString(),
+          binding.etDescription.text.toString(),
+          binding.etStudent.text.toString()
+      )
+    }
+    }
 
-private fun launchAddMode() {
-binding.saveButton.setOnClickListener{
-  viewModel.addGroupItem(
-      binding.etTitle.text.toString(),
-      binding.etDescription.text.toString(),
-      binding.etStudent.text.toString()
-  )
-}
-}
+    private fun launchAddMode() {
+    binding.saveButton.setOnClickListener{
+      viewModel.addGroupItem(
+          binding.etTitle.text.toString(),
+          binding.etDescription.text.toString(),
+          //binding.listView.text.toString()
+          binding.etStudent.text.toString()
+      )
+    }
+    }
 
-private fun observeViewModel() {
-viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-  onEditingFinishedListener.onEditingFinished()
-}
-}
+    private fun observeViewModel() {
+    viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
+      onEditingFinishedListener.onEditingFinished()
+    }
+    }
 
-interface OnEditingFinishedListener {
+    interface OnEditingFinishedListener {
 
-fun onEditingFinished()
-}
-private fun parseParams() {
-val args = requireArguments()
-if (!args.containsKey(SCREEN_MODE)) {
-  throw RuntimeException("Param screen mode is absent")
-}
-val mode = args.getString(SCREEN_MODE)
-if (mode != MODE_EDIT && mode != MODE_ADD) {
-  throw RuntimeException("Unknown screen mode $mode")
-}
-screenMode = mode
-if (screenMode == MODE_EDIT) {
-  if (!args.containsKey(GROUP_ITEM_ID)) {
-      throw RuntimeException("Param shop item id is absent")
-  }
-  groupItemId = args.getInt(GROUP_ITEM_ID, GroupItem.UNDEFINED_ID)
-}
-}
-companion object {
-
-private const val SCREEN_MODE = "extra_mode"
-private const val GROUP_ITEM_ID = "extra_group_item_id"
-private const val MODE_EDIT = "mode_edit"
-private const val MODE_ADD = "mode_add"
-private const val MODE_UNKNOWN = ""
-
-fun newInstanceAddItem(): GroupItemFragment {
-  return GroupItemFragment().apply {
-      arguments = Bundle().apply {
-          putString(SCREEN_MODE, MODE_ADD)
+    fun onEditingFinished()
+    }
+    private fun parseParams() {
+    val args = requireArguments()
+    if (!args.containsKey(SCREEN_MODE)) {
+      throw RuntimeException("Param screen mode is absent")
+    }
+    val mode = args.getString(SCREEN_MODE)
+    if (mode != MODE_EDIT && mode != MODE_ADD) {
+      throw RuntimeException("Unknown screen mode $mode")
+    }
+    screenMode = mode
+    if (screenMode == MODE_EDIT) {
+      if (!args.containsKey(GROUP_ITEM_ID)) {
+          throw RuntimeException("Param shop item id is absent")
       }
-  }
-}
+      groupItemId = args.getInt(GROUP_ITEM_ID, GroupItem.UNDEFINED_ID)
+    }
+    }
+    companion object {
 
-fun newInstanceEditItem(groupItemId: Int): GroupItemFragment {
-  return GroupItemFragment().apply {
-      arguments = Bundle().apply {
-          putString(SCREEN_MODE, MODE_EDIT)
-          putInt(GROUP_ITEM_ID, groupItemId)
+    private const val SCREEN_MODE = "extra_mode"
+    private const val GROUP_ITEM_ID = "extra_group_item_id"
+    private const val MODE_EDIT = "mode_edit"
+    private const val MODE_ADD = "mode_add"
+    private const val MODE_UNKNOWN = ""
+
+    fun newInstanceAddItem(): GroupItemFragment {
+      return GroupItemFragment().apply {
+          arguments = Bundle().apply {
+              putString(SCREEN_MODE, MODE_ADD)
+          }
       }
-  }
-}
-}
+    }
+
+    fun newInstanceEditItem(groupItemId: Int): GroupItemFragment {
+      return GroupItemFragment().apply {
+          arguments = Bundle().apply {
+              putString(SCREEN_MODE, MODE_EDIT)
+              putInt(GROUP_ITEM_ID, groupItemId)
+          }
+      }
+    }
+    }
 }
 

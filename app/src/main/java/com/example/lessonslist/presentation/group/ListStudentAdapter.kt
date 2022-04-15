@@ -1,6 +1,7 @@
 package com.example.lessonslist.presentation.group
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +47,7 @@ class ListStudentAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
         val item: DataStudentGroupModel = getItem(position)
         viewHolder.txtName.text = item.name
         viewHolder.checkBox.isChecked = item.checked
+      //  Log.d("Modelchecked", item.checked.toString())
         return result
     }
 }
