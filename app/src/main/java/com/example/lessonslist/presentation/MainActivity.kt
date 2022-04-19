@@ -213,6 +213,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         itemTouchHelper.attachToRecyclerView(rvShopList)
     }
 
+
     private fun setupClickListener() {
         shopListAdapter.onStudentItemClickListener = {
             if (isOnePaneMode()) {

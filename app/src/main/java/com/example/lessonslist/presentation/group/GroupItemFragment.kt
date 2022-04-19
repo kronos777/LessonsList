@@ -2,25 +2,25 @@ package com.example.lessonslist.presentation.group
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.CheckBox
 import android.widget.ListView
 import android.widget.Toast
-import androidx.drawerlayout.widget.DrawerLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.lessonslist.data.student.StudentListRepositoryImpl
 import com.example.lessonslist.databinding.FragmentGroupItemBinding
+import com.example.lessonslist.databinding.RowGroupStudentItemBinding
 import com.example.lessonslist.domain.group.GroupItem
-import com.example.lessonslist.domain.student.GetStudentItemListUseCase
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.MainViewModel
-import com.example.lessonslist.presentation.lessons.LessonsListViewModel
+import com.example.lessonslist.presentation.student.StudentItemActivity
 import com.example.lessonslist.presentation.student.StudentItemFragment
 
 
@@ -28,6 +28,11 @@ class GroupItemFragment : Fragment() {
 
     private lateinit var viewModel: GroupItemViewModel
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
+
+//    private var _bindingItem: RowGroupStudentItemBinding? = null
+   // private lateinit var bindingItem: RowGroupStudentItemBinding
+  //      get() = _bindingItem ?: throw RuntimeException("RowGroupItemBinding == null")
+
 
     private var _binding: FragmentGroupItemBinding? = null
     private val binding: FragmentGroupItemBinding
@@ -72,6 +77,10 @@ class GroupItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (activity as AppCompatActivity).supportActionBar?.title = "Группа"
+
+
         viewModel = ViewModelProvider(this)[GroupItemViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
@@ -91,23 +100,53 @@ class GroupItemFragment : Fragment() {
             for(student in it){
                 val name = student.name + " " + student.lastname
                 val id = student.id
-                Log.d("listname", name)
-                Log.d("id", id.toString())
+                //Log.d("listname", name)
+                //Log.d("id", id.toString())
 
                 dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
             }
 
             adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
+
             listView.adapter = adapter
-            listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+
+            /*listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                Toast.makeText(activity, "Work :-)", Toast.LENGTH_SHORT).show()
                 val dataStudentGroupModel: DataStudentGroupModel =
-                    dataStudentGroupModel!![position]
+                    dataStudentGroupModel!![position] as DataStudentGroupModel
+
                 dataStudentGroupModel.checked = !dataStudentGroupModel.checked
-               // Log.d("dataStudentGroupModelchecked", dataStudentGroupModel.toString())
+                Log.d("checkedItemPosition", listView[position].toString())
                 adapter.notifyDataSetChanged()
-            }
+
+            }*/
         }
 
+        //listView
+
+
+        //listView.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->  } { _, _, position, _ ->
+        //listView.onItemClickListener = AdapterView.OnItemClickListener { adapter, view, position, _ ->
+
+       /* var checkBox: CheckBox = CheckBox(context)
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            Toast.makeText(activity,isChecked.toString(),Toast.LENGTH_SHORT).show()
+        }*/
+       //    touchListener(listView)
+       // onCheckboxClicked(listView.findViewWithTag("CheckBox"))
+    }
+
+
+
+
+    private fun touchListener(view: View) {
+        view.setOnTouchListener { v, event ->
+            if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+                Toast.makeText(activity, "you just touch the screen :-)", Toast.LENGTH_SHORT).show()
+            }
+            true
+        }
+    }
 
        // Log.d("dataStudentList", dataStudentListArray.toString())
 /*     Log.d("dataStudentList", dataStudentList.toString())
@@ -174,7 +213,13 @@ class GroupItemFragment : Fragment() {
             dataStudentGroupModel!!.add(DataStudentGroupModel("Lollipop",23, false))
             dataStudentGroupModel!!.add(DataStudentGroupModel("Marshmallow", 33, false))*/
 
-}
+
+
+    override fun onStart() {
+        super.onStart()
+
+    }
+
 
     private fun addTextChangeListeners() {
     TODO("Nyet implemented")
@@ -194,10 +239,12 @@ class GroupItemFragment : Fragment() {
     private fun launchEditMode() {
     viewModel.getGroupItem(groupItemId)
     binding.saveButton.setOnClickListener{
+        var txt: String = adapter.arrayList.toString()
       viewModel.editGroupItem(
           binding.etTitle.text.toString(),
           binding.etDescription.text.toString(),
-          binding.etStudent.text.toString()
+        //  binding.etStudent.text.toString()
+          txt
       )
     }
     }
@@ -224,21 +271,21 @@ class GroupItemFragment : Fragment() {
     fun onEditingFinished()
     }
     private fun parseParams() {
-    val args = requireArguments()
-    if (!args.containsKey(SCREEN_MODE)) {
-      throw RuntimeException("Param screen mode is absent")
-    }
-    val mode = args.getString(SCREEN_MODE)
-    if (mode != MODE_EDIT && mode != MODE_ADD) {
-      throw RuntimeException("Unknown screen mode $mode")
-    }
-    screenMode = mode
-    if (screenMode == MODE_EDIT) {
-      if (!args.containsKey(GROUP_ITEM_ID)) {
-          throw RuntimeException("Param shop item id is absent")
-      }
-      groupItemId = args.getInt(GROUP_ITEM_ID, GroupItem.UNDEFINED_ID)
-    }
+        val args = requireArguments()
+        if (!args.containsKey(SCREEN_MODE)) {
+          throw RuntimeException("Param screen mode is absent")
+        }
+        val mode = args.getString(SCREEN_MODE)
+        if (mode != MODE_EDIT && mode != MODE_ADD) {
+          throw RuntimeException("Unknown screen mode $mode")
+        }
+        screenMode = mode
+        if (screenMode == MODE_EDIT) {
+          if (!args.containsKey(GROUP_ITEM_ID)) {
+              throw RuntimeException("Param shop item id is absent")
+          }
+          groupItemId = args.getInt(GROUP_ITEM_ID, GroupItem.UNDEFINED_ID)
+        }
     }
     companion object {
 
@@ -264,6 +311,9 @@ class GroupItemFragment : Fragment() {
           }
       }
     }
+
+
     }
+
 }
 

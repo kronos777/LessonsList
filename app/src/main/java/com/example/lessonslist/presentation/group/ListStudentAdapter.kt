@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.TextView
+import android.widget.Toast
 import com.example.lessonslist.R
 
 class ListStudentAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
@@ -16,6 +17,10 @@ class ListStudentAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
         lateinit var txtName: TextView
         lateinit var checkBox: CheckBox
     }
+
+    var arrayList: ArrayList<Int> = ArrayList()
+
+
     override fun getCount(): Int {
         return dataSet.size
     }
@@ -47,7 +52,63 @@ class ListStudentAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
         val item: DataStudentGroupModel = getItem(position)
         viewHolder.txtName.text = item.name
         viewHolder.checkBox.isChecked = item.checked
-      //  Log.d("Modelchecked", item.checked.toString())
+
+
+            viewHolder.checkBox.setOnClickListener {
+                if (viewHolder.checkBox.isChecked) {
+                    addCountArrayList(item.id!!)
+                    Log.d("chechBox", item.id.toString())
+                    Log.d("chechBox", viewHolder.checkBox.isChecked.toString())
+                    Log.d("chechBox", item.name.toString())
+                } else {
+                    removeCountArrayList(item.id!!)
+                }
+
+            }
+
+
+        //  Log.d("Modelchecked", item.checked.toString())
         return result
     }
+    private fun removeCountArrayList(id: Int) {
+        if (arrayList.size > 0) {
+            arrayList.removeIf {
+                it.equals(id)
+            }
+        }
+    }
+
+    private fun addCountArrayList(id: Int) {
+        //  val countArrayListSize: Int = arrayList.size
+/* if (arrayList.size > 0) {
+    arrayList.removeIf {
+        it.equals(id)
+
+    }
+*/
+    /* for (ids in arrayList) {
+     if(ids == id) {
+            Log.d("ExistsInArray", "Exists")
+            arrayList.remove(id)
+
+        }
+        if(ids == id) {
+            Log.d("countExistsInArray", "Exi")
+            arrayList.remove(id)
+            val idsRemove: Int = id
+        } else {
+
+            Log.d("countExistsInArray", "No Exists")
+            arrayList.add(id)
+        }
+       // Log.d("countExistsInArray", ids.toString())
+    }*/
+    //  arrayList.add(id)
+        //} else {
+    arrayList.add(id)
+    //}
+        Log.d("allList", arrayList.toString())
+    //GroupItemFragment.setStudentData(arrayList.toString())
+    }
+
 }
