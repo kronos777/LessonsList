@@ -89,7 +89,21 @@ class GroupItemFragment : Fragment() {
         observeViewModel()
 
 
+        /*get data student*/
+
+        //var dataString: String = String()
+
+
+      // Log.d("dataString", dataString)
+            //viewModel.groupItem.student
+        //if (dataStudentCheckBox != null) {
+
+      //  }
+        /*get data student*/
+
+
         listView = binding.listView
+
 
 
         dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
@@ -102,8 +116,30 @@ class GroupItemFragment : Fragment() {
                 val id = student.id
                 //Log.d("listname", name)
                 //Log.d("id", id.toString())
+                viewModel.groupItem.observe(viewLifecycleOwner) {
+                    var dataString = it.student
+                    dataString = dataString.replace("]", "")
+                    dataString = dataString.replace("[", "")
+                    val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
+                    if(lstValues.contains(id)) {
+                        dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
+                       // ListStudentAdapter.arrayList.add(id)
+                    } else {
+                        dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+                    }
+                    /*lstValues.forEach { it ->
+                        if(it.toInt() == id) {
+                            dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
+                        } else if (it.toInt() != id) {
+                            dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+                        }
+                        //   Log.i("Values", "value=$it")
+                        //Do Something
+                    }*/
 
-                dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+                    // Log.d("dataString", dataString)
+                }
+                //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
             }
 
             adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
