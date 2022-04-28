@@ -104,8 +104,6 @@ class GroupItemFragment : Fragment() {
 
         listView = binding.listView
 
-
-
         dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
         dataStudentGroupModel = ArrayList<DataStudentGroupModel>()
 
@@ -115,30 +113,37 @@ class GroupItemFragment : Fragment() {
                 val name = student.name + " " + student.lastname
                 val id = student.id
                 //Log.d("listname", name)
-                //Log.d("id", id.toString())
-                viewModel.groupItem.observe(viewLifecycleOwner) {
-                    var dataString = it.student
-                    dataString = dataString.replace("]", "")
-                    dataString = dataString.replace("[", "")
-                    val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
-                    if(lstValues.contains(id)) {
-                        dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
-                       // ListStudentAdapter.arrayList.add(id)
-                    } else {
-                        dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
-                    }
-                    /*lstValues.forEach { it ->
-                        if(it.toInt() == id) {
+                //Log.d("viewModelgroupItem", viewModel.groupItem.value.toString())
+                if(viewModel.groupItem.value != null) {
+                    viewModel.groupItem.observe(viewLifecycleOwner) {
+                        var dataString = it.student
+                        dataString = dataString.replace("]", "")
+                        dataString = dataString.replace("[", "")
+                        val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
+                        if(lstValues.contains(id)) {
                             dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
-                        } else if (it.toInt() != id) {
+                            // ListStudentAdapter.arrayList.add(id)
+                        } else {
                             dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
                         }
-                        //   Log.i("Values", "value=$it")
-                        //Do Something
-                    }*/
+                        /*lstValues.forEach { it ->
+                            if(it.toInt() == id) {
+                                dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
+                            } else if (it.toInt() != id) {
+                                dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+                            }
+                            //   Log.i("Values", "value=$it")
+                            //Do Something
+                        }*/
 
-                    // Log.d("dataString", dataString)
+                        // Log.d("dataString", dataString)
+                    }
+                } else {
+                    dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
                 }
+
+
+
                 //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
             }
 
@@ -275,23 +280,24 @@ class GroupItemFragment : Fragment() {
     private fun launchEditMode() {
     viewModel.getGroupItem(groupItemId)
     binding.saveButton.setOnClickListener{
-        var txt: String = adapter.arrayList.toString()
+        var studentIds: String = adapter.arrayList.toString()
       viewModel.editGroupItem(
           binding.etTitle.text.toString(),
           binding.etDescription.text.toString(),
         //  binding.etStudent.text.toString()
-          txt
+          studentIds
       )
     }
     }
 
     private fun launchAddMode() {
     binding.saveButton.setOnClickListener{
+      var studentIds: String = adapter.arrayList.toString()
       viewModel.addGroupItem(
           binding.etTitle.text.toString(),
           binding.etDescription.text.toString(),
-          //binding.listView.text.toString()
-          binding.etStudent.text.toString()
+      //    binding.etStudent.text.toString()
+          studentIds
       )
     }
     }

@@ -126,6 +126,9 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         }
     }
 
+
+
+
     fun goPaymentFragment() {
         if (!isOnePaneMode()) {
             launchFragment(PaymentItemFragment())

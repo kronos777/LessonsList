@@ -6,11 +6,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ListView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.databinding.FragmentLessonsItemBinding
 import com.example.lessonslist.domain.group.GroupItem
 import com.example.lessonslist.domain.lessons.LessonsItem
+import com.example.lessonslist.presentation.MainViewModel
+import com.example.lessonslist.presentation.group.DataStudentGroupModel
+import com.example.lessonslist.presentation.group.GroupListViewModel
+import com.example.lessonslist.presentation.group.ListStudentAdapter
 
 
 class LessonsItemFragment : Fragment() {
@@ -24,6 +31,20 @@ class LessonsItemFragment : Fragment() {
 
     private var screenMode: String = MODE_UNKNOWN
     private var lessonsItemId: Int = LessonsItem.UNDEFINED_ID
+
+
+
+    private lateinit var adapter: ListStudentAdapter
+    private lateinit var listView: ListView
+    private var dataStudentGroupModel: ArrayList<DataStudentGroupModel>? = null
+    private lateinit var dataStudentlList: MainViewModel
+
+
+    private lateinit var adapterGroup: ListGroupAdapter
+    private lateinit var listViewGroup: ListView
+    private var dataGroupLessonsModel: ArrayList<DataGroupLessonsModel>? = null
+    private lateinit var dataGroupList: GroupListViewModel
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,13 +75,110 @@ class LessonsItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (activity as AppCompatActivity).supportActionBar?.title = "Урок"
+
         viewModel = ViewModelProvider(this)[LessonsItemViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         //addTextChangeListeners()
         launchRightMode()
         observeViewModel()
+
+
+
+        listView = binding.listView
+
+        dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
+        dataStudentGroupModel = ArrayList<DataStudentGroupModel>()
+
+        dataStudentlList.studentList.observe(viewLifecycleOwner) {
+
+            for(student in it){
+                val name = student.name + " " + student.lastname
+                val id = student.id
+                if(viewModel.lessonsItem.value != null) {
+                    viewModel.lessonsItem.observe(viewLifecycleOwner) {
+                        var dataString = it.student
+                        dataString = dataString.replace("]", "")
+                        dataString = dataString.replace("[", "")
+                        val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
+                        if(lstValues.contains(id)) {
+                            dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
+                            // ListStudentAdapter.arrayList.add(id)
+                        } else {
+                            dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+                        }
+                    }
+                } else {
+                    dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+                }
+
+
+
+            }
+
+            adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
+
+            listView.adapter = adapter
+
+        }
+
+/**/
+        listViewGroup = binding.listViewGroup
+
+        dataGroupList = ViewModelProvider(this)[GroupListViewModel::class.java]
+        dataGroupLessonsModel = ArrayList<DataGroupLessonsModel>()
+
+        dataGroupList.groupList.observe(viewLifecycleOwner) {
+
+            for(group in it){
+                val students = group.student
+                val name = group.title
+                val id = group.id
+                Log.d("groupId", name)
+                dataGroupLessonsModel!!.add(DataGroupLessonsModel(name, students, id,false))
+                if(viewModel.lessonsItem.value != null) {
+                    listViewGroup.isInvisible
+                }
+               /* if(viewModel.groupItem.value != null) {
+                    viewModel.lessonsItem.observe(viewLifecycleOwner) {
+                        var dataString = it.student
+                        dataString = dataString.replace("]", "")
+                        dataString = dataString.replace("[", "")
+                        val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
+                        if(lstValues.contains(id)) {
+                            dataGroupLessonsModel!!.add(DataGroupLessonsModel(name, id,true))
+                            // ListStudentAdapter.arrayList.add(id)
+                        } else {
+                            dataGroupLessonsModel!!.add(DataGroupLessonsModel(name, id,false))
+                        }
+                    }
+                } else {
+                    dataGroupLessonsModel!!.add(DataGroupLessonsModel(name, id,false))
+                }
+            }*/
+
+            adapterGroup = ListGroupAdapter(dataGroupLessonsModel!!, requireContext().applicationContext)
+
+            listViewGroup.adapter = adapterGroup
+
+        }
+
+/**/
     }
+    }
+
+    private fun getStudentsOfString(student: String) : List<Int> {
+        //val ss = student.joinToString()
+        val ss = student
+        ss.replace("]", "")
+        ss.replace("[", "")
+        val lstValues: List<Int> = ss.split(",").map { it -> it.trim().toInt() }
+        return lstValues.distinct()
+    }
+
+
 
     private fun addTextChangeListeners() {
         TODO("Not yet implemented")
@@ -80,10 +198,12 @@ class LessonsItemFragment : Fragment() {
     private fun launchEditMode() {
         viewModel.getLessonsItem(lessonsItemId)
         binding.saveButton.setOnClickListener{
+            var studentIds: String = adapter.arrayList.toString()
             viewModel.editLessonsItem(
                 binding.etTitle.text.toString(),
                 binding.etDescription.text.toString(),
-                binding.etStudent.text.toString(),
+                //binding.etStudent.text.toString(),
+                studentIds,
                 binding.etPrice.text.toString(),
                 binding.etDatestart.text.toString(),
                 binding.etDateend.text.toString()
@@ -91,12 +211,34 @@ class LessonsItemFragment : Fragment() {
         }
     }
 
+
+
     private fun launchAddMode() {
         binding.saveButton.setOnClickListener{
+            var studentIds: String = adapter.arrayList.toString()
+            var groupStudentIds: String = adapterGroup.arrayList.toString()
+            var allStudent: String = studentIds + groupStudentIds
+            var lstValues: ArrayList<Int> = ArrayList()
+
+            allStudent.forEach {
+                if(it.isDigit()) {
+                    var str = it.toString()
+                    lstValues.add(str.toInt())
+                    Log.d("allStudent", it.toString())
+                }
+            }
+           var noD = HashSet(lstValues)
+            /*   Log.d("allStudent", noD.toString())
+             var allStudent: ArrayList<String> = ArrayList()
+              allStudent.add(studentIds)
+              allStudent.add(groupStudentIds)*/
+          //  var resultStudent = getStudentsOfString(studentIds)
+
             viewModel.addLessonsItem(
                 binding.etTitle.text.toString(),
                 binding.etDescription.text.toString(),
-                binding.etStudent.text.toString(),
+                noD.toString(),
+                //binding.etStudent.text.toString(),
                 binding.etPrice.text.toString(),
                 binding.etDatestart.text.toString(),
                 binding.etDateend.text.toString()
