@@ -196,6 +196,7 @@ class LessonsItemFragment : Fragment() {
 
 
     private fun launchEditMode() {
+        binding.listViewGroup.setVisibility(View.GONE)
         viewModel.getLessonsItem(lessonsItemId)
         binding.saveButton.setOnClickListener{
             var studentIds: String = adapter.arrayList.toString()
