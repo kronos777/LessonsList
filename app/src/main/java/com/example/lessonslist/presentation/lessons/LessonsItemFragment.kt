@@ -1,5 +1,7 @@
 package com.example.lessonslist.presentation.lessons
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
+import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
@@ -18,6 +21,13 @@ import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
+import java.lang.reflect.Array.set
+import java.time.Instant
+import java.time.temporal.ChronoUnit
+import java.util.*
+import javax.xml.datatype.DatatypeConstants.MONTHS
+import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
 
 class LessonsItemFragment : Fragment() {
@@ -165,8 +175,40 @@ class LessonsItemFragment : Fragment() {
 
         }
 
-/**/
     }
+        val mTimePicker: TimePickerDialog
+        val mTimePickerEnd: TimePickerDialog
+        val mcurrentTime = Calendar.getInstance()
+        val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
+        val minute = mcurrentTime.get(Calendar.MINUTE)
+
+        val year = mcurrentTime.get(Calendar.YEAR)
+        val month = mcurrentTime.get(Calendar.MONTH)
+        val day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
+
+
+
+        mTimePicker = TimePickerDialog(context, object : TimePickerDialog.OnTimeSetListener {
+            override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+                binding.etDatestart.setText(String.format("%d/%d/%d %d : %d", year, month + 1, day, hourOfDay, minute))
+            }
+        }, hour, minute, false)
+
+        mTimePickerEnd = TimePickerDialog(context, object : TimePickerDialog.OnTimeSetListener {
+            override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+                binding.etDateend.setText(String.format("%d/%d/%d %d : %d", year, month + 1, day, hourOfDay, minute))
+            }
+        }, hour, minute, false)
+
+         binding.etDatestart.setOnClickListener{
+             mTimePicker.show()
+         }
+
+        binding.etDateend.setOnClickListener{
+            mTimePickerEnd.show()
+        }
+
+
     }
 
     private fun getStudentsOfString(student: String) : List<Int> {
@@ -196,6 +238,7 @@ class LessonsItemFragment : Fragment() {
 
 
     private fun launchEditMode() {
+        binding.etStudent.setVisibility(View.GONE)
         binding.listViewGroup.setVisibility(View.GONE)
         viewModel.getLessonsItem(lessonsItemId)
         binding.saveButton.setOnClickListener{
@@ -215,6 +258,7 @@ class LessonsItemFragment : Fragment() {
 
 
     private fun launchAddMode() {
+        binding.etStudent.setVisibility(View.GONE)
         binding.saveButton.setOnClickListener{
             var studentIds: String = adapter.arrayList.toString()
             var groupStudentIds: String = adapterGroup.arrayList.toString()

@@ -152,7 +152,8 @@
             app:layout_constraintBottom_toTopOf="@id/til_dateend"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_price">
+            app:layout_constraintTop_toBottomOf="@+id/til_price"
+            >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_datestart"
@@ -160,7 +161,10 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/lessons_date_start"
                 android:inputType="text"
-                android:text="@{viewModel.lessonsItem.dateStart}" />
+                android:text="@{viewModel.lessonsItem.dateStart}"
+                android:clickable="true"
+                android:focusable="false"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -183,7 +187,10 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/lessons_date_end"
                 android:inputType="textCapWords"
-                android:text="@{viewModel.lessonsItem.dateEnd}" />
+                android:text="@{viewModel.lessonsItem.dateEnd}"
+                android:clickable="true"
+                android:focusable="false"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
