@@ -126,6 +126,9 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         }
     }
 
+
+
+
     fun goPaymentFragment() {
         if (!isOnePaneMode()) {
             launchFragment(PaymentItemFragment())
@@ -212,6 +215,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         val itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(rvShopList)
     }
+
 
     private fun setupClickListener() {
         shopListAdapter.onStudentItemClickListener = {

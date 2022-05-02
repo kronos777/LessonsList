@@ -1,7 +1,9 @@
 package com.example.lessonslist.presentation.group
 
 import android.app.Application
+import android.icu.text.CaseMap
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,6 +19,8 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
     private val getGroupItemUseCase = GetGroupItemUseCase(repository)
     private val addGroupItemUseCase = AddGroupItemUseCase(repository)
     private val editGroupItemUseCase = EditGroupItemUseCase(repository)
+    private val deleteGroupItemUseCase = DeleteGroupItemUseCase(repository)
+
     private val _groupItem = MutableLiveData<GroupItem>()
     val groupItem: LiveData<GroupItem>
         get() = _groupItem
@@ -53,7 +57,7 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
         val student = inputStudent
 
         // add validation fun
-        val fieldsValid = true
+        val fieldsValid = validateInput(title, student)
 
         if(fieldsValid) {
             viewModelScope.launch {
@@ -61,6 +65,8 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
                 addGroupItemUseCase.addGroupItem(groupItem)
                 finishWork()
             }
+        } else {
+            Log.d("errorinput", "error in add group")
         }
 
     }
@@ -71,7 +77,7 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
         val student = inputStudent
 
         // add validation fun
-        val fieldsValid = true
+        val fieldsValid = validateInput(title, student)
         if (fieldsValid) {
             _groupItem.value?.let {
                 viewModelScope.launch {
@@ -81,8 +87,30 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
                     finishWork()
                 }
             }
+        } else {
+            Log.d("errorinput", "error in edit group")
+         }
+
+    }
+
+    private fun validateInput(title: String, inputStudent: String): Boolean {
+        var result = true
+        if (title.isBlank()) {
+            //_errorInputName.value = true
+            result = false
+        }
+        if (inputStudent.isBlank()) {
+            //_errorInputLastName.value = true
+            result = false
         }
 
+        return result
+    }
+
+    fun deleteGroupItem(groupItem: GroupItem) {
+        viewModelScope.launch {
+            deleteGroupItemUseCase.deleteGroupItem(groupItem)
+        }
     }
 
     private fun finishWork() {
