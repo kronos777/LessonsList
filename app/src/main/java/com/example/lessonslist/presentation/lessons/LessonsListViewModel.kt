@@ -2,6 +2,8 @@ package com.example.lessonslist.presentation.lessons
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.example.lessonslist.data.group.GroupListRepositoryImpl
 import com.example.lessonslist.data.lessons.LessonsListRepositoryImpl
@@ -12,7 +14,8 @@ import com.example.lessonslist.domain.lessons.GetLessonsListItemUseCase
 import com.example.lessonslist.domain.lessons.LessonsItem
 import kotlinx.coroutines.launch
 
-class LessonsListViewModel(application: Application) : AndroidViewModel(application) {
+class LessonsListViewModel(application: Application) : AndroidViewModel(application),
+    LifecycleOwner {
 
     private val repository = LessonsListRepositoryImpl(application)
 
@@ -25,6 +28,10 @@ class LessonsListViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch {
             deleteLessonsItemUseCase.deleteLessonsItem(lessonsItem)
         }
+    }
+
+    override fun getLifecycle(): Lifecycle {
+        TODO("Not yet implemented")
     }
 
 }

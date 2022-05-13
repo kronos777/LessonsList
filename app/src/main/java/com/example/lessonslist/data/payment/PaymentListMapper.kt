@@ -9,6 +9,7 @@ class PaymentListMapper {
         description = paymentItem.description,
         student = paymentItem.student,
         price = paymentItem.price,
+        enabled = paymentItem.enabled,
         id = paymentItem.id
     )
 
@@ -17,7 +18,9 @@ class PaymentListMapper {
         description = paymentItemDbModel.description,
         student = paymentItemDbModel.student,
         price = paymentItemDbModel.price,
+        enabled = paymentItemDbModel.enabled,
         id = paymentItemDbModel.id
+
     )
 
     fun mapListDbModelToListEntity(list: List<PaymentItemDbModel>) = list.map {

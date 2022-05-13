@@ -5,6 +5,7 @@ data class PaymentItem (
     val description: String,
     val student: String,
     val price: Int,
+    val enabled: Boolean,
     val id: Int = UNDEFINED_ID
 ){
 
