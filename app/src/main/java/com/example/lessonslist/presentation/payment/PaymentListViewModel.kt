@@ -21,7 +21,7 @@ class PaymentListViewModel(application: Application) : AndroidViewModel(applicat
     private val editPaymentItemUseCase = EditPaymentItemUseCase(repository)
 
     val paymentList = getPaymentItemListUseCase.getPaymentList()
-    fun deleteGroupItem(paymentItem: PaymentItem) {
+    fun deletePaymentItem(paymentItem: PaymentItem) {
         viewModelScope.launch {
             deletePaymentItemUseCase.deletePaymentItem(paymentItem)
         }

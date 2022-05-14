@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.lessonslist.MyForegroundService
 import com.example.lessonslist.PaymentWork
@@ -29,6 +30,7 @@ import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.student.StudentItemActivity
 import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentListAdapter
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener {
@@ -86,15 +88,18 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
  )*/
  /*foreggroundseice */
  /*work manager */
- val request = OneTimeWorkRequestBuilder<PaymentWork>().build()
- WorkManager.getInstance(this).enqueue(request)
- WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
-     .observe(this, Observer {
+        //        PeriodicWorkRequest myWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class, 30, TimeUnit.MINUTES, 25, TimeUnit.MINUTES).build();
 
-         val status: String = it.state.name
-         Toast.makeText(this,status, Toast.LENGTH_SHORT).show()
-     })
-    /**/
+ val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES).build()
+     //val request = OneTimeWorkRequestBuilder<PaymentWork>().build()
+        WorkManager.getInstance(this).enqueue(request)
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
+            .observe(this, Observer {
+
+                val status: String = it.state.name
+                Toast.makeText(this,status, Toast.LENGTH_SHORT).show()
+            })
+           /**/
  /*work manager */
 
 }
