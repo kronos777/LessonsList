@@ -25,6 +25,7 @@ import com.example.lessonslist.presentation.group.GroupItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemFragment
+import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.student.StudentItemActivity
 import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentListAdapter
@@ -85,14 +86,15 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
  )*/
  /*foreggroundseice */
  /*work manager */
-/* val request = OneTimeWorkRequestBuilder<PaymentWork>().build()
+ val request = OneTimeWorkRequestBuilder<PaymentWork>().build()
  WorkManager.getInstance(this).enqueue(request)
  WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
      .observe(this, Observer {
 
          val status: String = it.state.name
          Toast.makeText(this,status, Toast.LENGTH_SHORT).show()
-     })*/
+     })
+    /**/
  /*work manager */
 
 }
@@ -157,10 +159,10 @@ fun goLessonsFragment() {
 
 fun goPaymentFragment() {
  if (!isOnePaneMode()) {
-     launchFragment(PaymentItemFragment())
+     launchFragment(PaymentItemListFragment())
  } else {
      recyclerMainGone()
-     launchFragmentTemp(PaymentItemFragment())
+     launchFragmentTemp(PaymentItemListFragment())
      Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
  }
 }

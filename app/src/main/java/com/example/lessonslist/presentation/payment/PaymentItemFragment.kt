@@ -103,6 +103,8 @@ class PaymentItemFragment: Fragment() {
             viewModel.editPaymentItem(
                 binding.etTitle.text.toString(),
                 binding.etDescription.text.toString(),
+                0,
+                0,
                 binding.etStudent.text.toString(),
                 binding.etPrice.text.toString()
 
@@ -115,6 +117,8 @@ class PaymentItemFragment: Fragment() {
             viewModel.addPaymentItem(
                 binding.etTitle.text.toString(),
                 binding.etDescription.text.toString(),
+                0,
+                0,
                 binding.etStudent.text.toString(),
                 binding.etPrice.text.toString()
 

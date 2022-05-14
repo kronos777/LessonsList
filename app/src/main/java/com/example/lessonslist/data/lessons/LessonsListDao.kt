@@ -14,6 +14,10 @@ interface LessonsListDao {
     @Query("SELECT * FROM lessons_items")
     fun getLessonsList(): LiveData<List<LessonsItemDbModel>>
 
+    @Query("SELECT * FROM lessons_items")
+    fun getAllLessonsList(): List<LessonsItemDbModel>
+
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addLessonsItem(lessonsItemDbModel: LessonsItemDbModel)
 

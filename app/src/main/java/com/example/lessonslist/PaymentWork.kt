@@ -14,14 +14,18 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.data.lessons.LessonsItemDbModel
+import com.example.lessonslist.data.lessons.LessonsListMapper
 import com.example.lessonslist.domain.lessons.GetLessonsItemUseCase
 import com.example.lessonslist.domain.lessons.GetLessonsListItemUseCase
 import com.example.lessonslist.domain.lessons.LessonsItem
+import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.lessons.LessonsListViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
 class PaymentWork(
     appContext: Context, params: WorkerParameters
@@ -31,17 +35,52 @@ class PaymentWork(
     params
 ) {
   //  private lateinit var viewLifecycleOwner: LifecycleOwner
- //   private var dataLessonsList: LessonsListViewModel = LessonsListViewModel(applicationContext as Application)
-  private val appDatabase = AppDatabase
+   // private var dataLessonsList: LessonsListViewModel = LessonsListViewModel(applicationContext as Application)
+    // private var dataLessonsListFragment: LessonsItemListFragment = LessonsItemListFragment()
+    private val appDatabase = AppDatabase
 
+    fun getStudentIds(dataString: String) : List<Int> {
+        var dataStr = dataString.replace("]", "")
+        dataStr = dataStr.replace("[", "")
+        var lstValues: List<Int> = dataStr.split(",").map { it -> it.trim().toInt() }
+        return lstValues
+    }
 
     override suspend fun doWork(): Result {
-        val db = appDatabase.getInstance(applicationContext as Application).LessonsListDao().getLessonsList()
-        db.observe(applicationContext) {
-            for (item in it) {
-                log(item.student)
+        withContext(Dispatchers.IO) {
+            val dbLessons = appDatabase.getInstance(applicationContext as Application).LessonsListDao().getAllLessonsList()
+            val dbStudent = appDatabase.getInstance(applicationContext as Application).StudentListDao()
+            dbLessons.let {
+                for (item in it){
+                    log(item.id.toString())
+                    log(item.title)
+                    log(item.dateStart)
+                    log(item.dateEnd)
+                    log(item.student)
+                    log(item.price.toString())
+
+
+                }
+               // log(it.get(0).title)
             }
+            val stIds = getStudentIds("[1, 2, 3]")
+            for (ids in stIds){
+                var student = dbStudent.getStudentItem(ids)
+                log(student.name + student.lastname + student.paymentBalance)
+            }
+            /*val db = appDatabase.getInstance(applicationContext as Application).LessonsListDao().getLessonsList()
+            log(db.toString())
+            db.observe(applicationContext) {
+                log(it.get(0).title)
+            }*/
         }
+     //   val db = appDatabase.getInstance(applicationContext as Application).LessonsListDao().getLessonsList()
+     //   log(db.value.toString())
+       /* dataLessonsList.lessonsList.observe(applicationContext) {
+           for (item in it) {
+               log(item.title)
+           }
+        }*/
         /*dataLessonsList.lessonsList.observe(this) {
             for(lessons in it){
                 Log.d("lesList", lessons.title)
@@ -100,4 +139,3 @@ class PaymentWork(
 
 
 }
-

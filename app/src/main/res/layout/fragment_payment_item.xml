@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/group_title"
                 android:inputType="textCapWords"
-                android:text="@{viewModel.groupItem.title}" />
+                android:text="@{viewModel.paymentItem.title}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/group_description"
                 android:inputType="textCapWords"
-                android:text="@{viewModel.groupItem.description}"
+                android:text="@{viewModel.paymentItem.description}"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/group_student"
                 android:inputType="textCapWords"
-                android:text="@{String.valueOf(viewModel.groupItem.student)}" />
+                android:text="@{String.valueOf(viewModel.paymentItem.student)}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -111,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/group_student"
                 android:inputType="textCapWords"
-                android:text="@{String.valueOf(viewModel.groupItem.student)}" />
+                android:text="@{String.valueOf(viewModel.paymentItem.student)}" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
