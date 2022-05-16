@@ -53,7 +53,7 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
     }
 
 
-    fun addPaymentItem(inputTitle: String, inputDescription: String, inputLessonsId: Int, inputStudentId: Int, inputStudent: String, inputPrice: String) {
+    fun addPaymentItem(inputTitle: String, inputDescription: String, inputLessonsId: String, inputStudentId: String, inputStudent: String, inputPrice: String) {
         val title = inputTitle
         val description = inputDescription
         val student = inputStudent
@@ -65,7 +65,7 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
 
         if(fieldsValid) {
             viewModelScope.launch {
-                val paymentItem = PaymentItem(title, description,  studentId, lessonsId, student, price, true)
+                val paymentItem = PaymentItem(title, description,  studentId.toInt(), lessonsId.toInt(), student, price, true)
                 addPaymentItemUseCase.addPaymentItem(paymentItem)
                 finishWork()
             }
@@ -75,13 +75,13 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
 
     }
 
-    fun editPaymentItem(inputTitle: String, inputDescription: String, inputStudentId: Int, inputLessonsId: Int, inputStudent: String, inputPrice: String) {
+    fun editPaymentItem(inputTitle: String, inputDescription: String, inputStudentId: String, inputLessonsId: String, inputStudent: String, inputPrice: String) {
         val title = inputTitle
         val description = inputDescription
         val student = inputStudent
         val price = inputPrice.toInt()
-        val studentId = inputStudentId
-        val lessonsId = inputLessonsId
+        val studentId = inputStudentId.toInt()
+        val lessonsId = inputLessonsId.toInt()
 
         // add validation fun
         val fieldsValid = validateInput(title, student)
