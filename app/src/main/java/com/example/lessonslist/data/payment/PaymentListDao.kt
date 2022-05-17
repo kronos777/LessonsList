@@ -12,6 +12,11 @@ interface PaymentListDao {
     @Query("SELECT * FROM payment_items")
     fun  getPaymentList(): LiveData<List<PaymentItemDbModel>>
 
+    @Query("SELECT * FROM payment_items")
+    fun  getPaymentAllList(): List<PaymentItemDbModel>
+
+
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addPaymentItem(paymentItemDbModel: PaymentItemDbModel)
 

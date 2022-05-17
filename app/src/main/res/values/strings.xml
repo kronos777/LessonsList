@@ -6,6 +6,12 @@
     <string name="lastname_hint">Фамилия:</string>
     <string name="count_hint">Платежный баланс:</string>
     <string name="notes_hint">Заметки о ученике:</string>
+    <string name="payment_name">Название платежа:</string>
+    <string name="payment_desc">Описание платежа:</string>
+    <string name="payment_price">Значение платежа:</string>
+    <string name="payment_student">Студент ФИО:</string>
+    <string name="payment_student_id">ИД студента:</string>
+    <string name="payment_lessons_id">ИД урока:</string>
     <string name="group_hint">Группы ученика:</string>
     <string name="group_title">Название группы:</string>
     <string name="group_description">Описание группы:</string>

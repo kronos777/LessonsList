@@ -8,6 +8,8 @@ class PaymentListMapper {
         title = paymentItem.title,
         description = paymentItem.description,
         student = paymentItem.student,
+        studentId = paymentItem.studentId,
+        lessonsId = paymentItem.lessonsId,
         price = paymentItem.price,
         enabled = paymentItem.enabled,
         id = paymentItem.id
@@ -17,6 +19,8 @@ class PaymentListMapper {
         title = paymentItemDbModel.title,
         description = paymentItemDbModel.description,
         student = paymentItemDbModel.student,
+        studentId = paymentItemDbModel.studentId,
+        lessonsId = paymentItemDbModel.lessonsId,
         price = paymentItemDbModel.price,
         enabled = paymentItemDbModel.enabled,
         id = paymentItemDbModel.id

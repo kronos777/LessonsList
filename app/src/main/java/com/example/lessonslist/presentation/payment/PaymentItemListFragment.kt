@@ -96,7 +96,7 @@ class PaymentItemListFragment: Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val item = paymentListAdapter.currentList[viewHolder.adapterPosition]
-                viewModel.deleteGroupItem(item)
+                viewModel.deletePaymentItem(item)
             }
         }
         val itemTouchHelper = ItemTouchHelper(callback)

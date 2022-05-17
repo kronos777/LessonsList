@@ -3,6 +3,8 @@ package com.example.lessonslist.domain.payment
 data class PaymentItem (
     val title: String,
     val description: String,
+    val studentId: Int,
+    val lessonsId: Int,
     val student: String,
     val price: Int,
     val enabled: Boolean,

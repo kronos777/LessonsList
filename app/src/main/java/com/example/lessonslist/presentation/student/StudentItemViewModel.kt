@@ -62,7 +62,8 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
         val fieldsValid = validateInput(name, lastName, paymentBalance)
         if (fieldsValid) {
             viewModelScope.launch {
-                val studentItem = StudentItem(paymentBalance?.toFloat(), name, lastName, group, notes, true)
+                val studentItem = StudentItem(paymentBalance.toFloat(), name, lastName, group, notes, true)
+                //val studentItem = StudentItem(paymentBalance?.toFloat(), name, lastName, group, notes, true)
                 addStudentItemUseCase.addStudentItem(studentItem)
                 finishWork()
             }
@@ -80,7 +81,7 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
         if (fieldsValid) {
             _studentItem.value?.let {
                 viewModelScope.launch {
-                    val item = it.copy(name = name, lastname = lastName, paymentBalance = paymentBalance?.toFloat(), group = group, notes = notes, enabled = true)
+                    val item = it.copy(name = name, lastname = lastName, paymentBalance = paymentBalance.toFloat(), group = group, notes = notes, enabled = true)
                     //val item add parametrs StudentItems
                     editStudentItemUseCase.editStudentItem(item)
                     finishWork()

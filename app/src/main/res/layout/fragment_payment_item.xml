@@ -38,9 +38,9 @@
                 android:id="@+id/et_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/group_title"
+                android:hint="@string/payment_name"
                 android:inputType="textCapWords"
-                android:text="@{viewModel.groupItem.title}" />
+                android:text="@{viewModel.paymentItem.title}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -62,9 +62,9 @@
                 android:id="@+id/et_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/group_description"
+                android:hint="@string/payment_desc"
                 android:inputType="textCapWords"
-                android:text="@{viewModel.groupItem.description}"
+                android:text="@{viewModel.paymentItem.description}"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -86,9 +86,9 @@
                 android:id="@+id/et_student"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/group_student"
+                android:hint="@string/payment_student"
                 android:inputType="textCapWords"
-                android:text="@{String.valueOf(viewModel.groupItem.student)}" />
+                android:text="@{String.valueOf(viewModel.paymentItem.student)}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -109,11 +109,56 @@
                 android:id="@+id/et_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/group_student"
+                android:hint="@string/payment_price"
                 android:inputType="textCapWords"
-                android:text="@{String.valueOf(viewModel.groupItem.student)}" />
+                android:text="@{String.valueOf(viewModel.paymentItem.price)}" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_student_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="8dp"
+            app:errorInputPaymentBalance="@{viewModel.errorInputStudent}"
+            app:layout_constraintBottom_toTopOf="@id/til_payment_id"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_price">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_student_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/payment_student_id"
+                android:inputType="textCapWords"
+                android:text="@{String.valueOf(viewModel.paymentItem.studentId)}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_payment_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="8dp"
+            app:errorInputPaymentBalance="@{viewModel.errorInputStudent}"
+            app:layout_constraintBottom_toTopOf="@id/save_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_student_id">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_payment_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/payment_lessons_id"
+                android:inputType="textCapWords"
+                android:text="@{String.valueOf(viewModel.paymentItem.lessonsId)}" />
+        </com.google.android.material.textfield.TextInputLayout>
 
 
         <Button

@@ -19,4 +19,7 @@
     <item
         android:id="@+id/muItem6"
         android:title="Список уроков" />
+    <item
+        android:id="@+id/muItem7"
+        android:title="Список учеников" />
 </menu>

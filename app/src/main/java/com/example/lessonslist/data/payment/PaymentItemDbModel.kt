@@ -11,6 +11,8 @@ data class PaymentItemDbModel (
     val title: String,
     val description: String,
     val student: String,
+    val studentId: Int,
+    val lessonsId: Int,
     val price: Int,
     val enabled: Boolean
 )

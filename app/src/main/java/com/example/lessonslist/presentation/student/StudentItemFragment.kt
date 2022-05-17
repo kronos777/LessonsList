@@ -155,6 +155,7 @@ class StudentItemFragment : Fragment() {
     interface OnEditingFinishedListener {
 
         fun onEditingFinished()
+
     }
 
     companion object {

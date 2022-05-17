@@ -15,22 +15,27 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.lessonslist.MyForegroundService
 import com.example.lessonslist.PaymentWork
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.ActivityMainBinding
+import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemFragment
+import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.student.StudentItemActivity
 import com.example.lessonslist.presentation.student.StudentItemFragment
+import com.example.lessonslist.presentation.student.StudentItemListFragment
 import com.example.lessonslist.presentation.student.StudentListAdapter
+import java.util.concurrent.TimeUnit
 
 
-class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener {
+class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener {
 
 
     private lateinit var viewModel: MainViewModel
@@ -45,6 +50,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        launchFragmentTemp(CalendarItemFragment())
+        /*
         setupRecyclerView()
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.studentList.observe(this) {
@@ -57,7 +64,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             } else {
                 launchFragment(StudentItemFragment.newInstanceAddItem())
             }
-        }
+        }*/
 
         val drawerLayout: DrawerLayout? = binding.drawerLayoutId
         //val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -74,6 +81,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 R.id.muItem4 -> goPaymentFragment()
                 R.id.muItem5 -> goGroupListFragment()
                 R.id.muItem6 -> goLessonsListFragment()
+                R.id.muItem7 -> goStudentListFragment()
             }
             true
         }
@@ -85,25 +93,38 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
  )*/
  /*foreggroundseice */
  /*work manager */
-/* val request = OneTimeWorkRequestBuilder<PaymentWork>().build()
- WorkManager.getInstance(this).enqueue(request)
- WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
-     .observe(this, Observer {
+        //        PeriodicWorkRequest myWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class, 30, TimeUnit.MINUTES, 25, TimeUnit.MINUTES).build();
 
-         val status: String = it.state.name
-         Toast.makeText(this,status, Toast.LENGTH_SHORT).show()
-     })*/
+ val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES).build()
+     //val request = OneTimeWorkRequestBuilder<PaymentWork>().build()
+        WorkManager.getInstance(this).enqueue(request)
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
+            .observe(this, Observer {
+
+                val status: String = it.state.name
+                Toast.makeText(this,status, Toast.LENGTH_SHORT).show()
+            })
+           /**/
  /*work manager */
 
 }
 
+    private fun goStudentListFragment() {
+        if (!isOnePaneMode()) {
+            launchFragment(StudentItemListFragment())
+        } else {
+            recyclerMainGone()
+            launchFragmentTemp(StudentItemListFragment())
+            Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+        }
+    }
 
 
-private fun goMainView() {
- if (isOnePaneMode()) {
-     binding.parentRecyclerLayout?.setVisibility(View.VISIBLE)
-     binding.fragmentItemContainer?.setVisibility (View.GONE)
- }
+    private fun goMainView() {
+         if (isOnePaneMode()) {
+             binding.parentRecyclerLayout?.setVisibility(View.VISIBLE)
+             binding.fragmentItemContainer?.setVisibility (View.GONE)
+         }
 }
 
 private fun recyclerMainGone() {
@@ -157,10 +178,10 @@ fun goLessonsFragment() {
 
 fun goPaymentFragment() {
  if (!isOnePaneMode()) {
-     launchFragment(PaymentItemFragment())
+     launchFragment(PaymentItemListFragment())
  } else {
      recyclerMainGone()
-     launchFragmentTemp(PaymentItemFragment())
+     launchFragmentTemp(PaymentItemListFragment())
      Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
  }
 }
