@@ -21,6 +21,7 @@ import com.example.lessonslist.MyForegroundService
 import com.example.lessonslist.PaymentWork
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.ActivityMainBinding
+import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
@@ -34,7 +35,7 @@ import com.example.lessonslist.presentation.student.StudentListAdapter
 import java.util.concurrent.TimeUnit
 
 
-class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener {
+class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener {
 
 
     private lateinit var viewModel: MainViewModel
@@ -49,6 +50,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        launchFragmentTemp(CalendarItemFragment())
+        /*
         setupRecyclerView()
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.studentList.observe(this) {
@@ -61,7 +64,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             } else {
                 launchFragment(StudentItemFragment.newInstanceAddItem())
             }
-        }
+        }*/
 
         val drawerLayout: DrawerLayout? = binding.drawerLayoutId
         //val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -118,10 +121,10 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
     private fun goMainView() {
- if (isOnePaneMode()) {
-     binding.parentRecyclerLayout?.setVisibility(View.VISIBLE)
-     binding.fragmentItemContainer?.setVisibility (View.GONE)
- }
+         if (isOnePaneMode()) {
+             binding.parentRecyclerLayout?.setVisibility(View.VISIBLE)
+             binding.fragmentItemContainer?.setVisibility (View.GONE)
+         }
 }
 
 private fun recyclerMainGone() {
