@@ -50,6 +50,8 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
     }
 
 
+
+
     fun addLessonsItem(inputTitle: String, inputDescription: String, inputStudent: String, inputPrice: String, inputDateStart: String, inputDateEnd: String) {
         val title = inputTitle
         val description = inputDescription

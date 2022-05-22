@@ -27,4 +27,6 @@ interface LessonsListDao {
     @Query("SELECT * FROM lessons_items WHERE id=:lessonsItemId LIMIT 1")
     suspend fun getLessonsItem(lessonsItemId: Int): LessonsItemDbModel
 
+
+
 }

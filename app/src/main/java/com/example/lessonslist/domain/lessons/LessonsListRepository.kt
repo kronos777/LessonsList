@@ -1,6 +1,7 @@
 package com.example.lessonslist.domain.lessons
 
 import androidx.lifecycle.LiveData
+import com.example.lessonslist.data.lessons.LessonsItemDbModel
 
 interface LessonsListRepository {
 
@@ -13,6 +14,9 @@ interface LessonsListRepository {
     suspend fun getLessonsItem(lessonsItemId: Int): LessonsItem
 
     fun getLessonsList(): LiveData<List<LessonsItem>>
+
+
+
 
 
 }
