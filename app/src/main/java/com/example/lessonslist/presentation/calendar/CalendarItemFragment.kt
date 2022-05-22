@@ -76,10 +76,7 @@ class CalendarItemFragment() : Fragment() {
     private fun log(message: String) {
         Log.d("SERVICE_TAG", "DateCalendar: $message")
     }
-   fun addDatatoList(string: String): ArrayList<String> {
-        arrayList.add(string)
-        return arrayList
-    }
+
 /*
 fun testData (): List<LessonsItem>? {
     viewModel = ViewModelProvider(this)[LessonsListViewModel::class.java]
