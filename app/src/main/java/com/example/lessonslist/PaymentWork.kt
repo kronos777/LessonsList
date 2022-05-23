@@ -56,6 +56,9 @@ class PaymentWork(
         return lstValues
     }
 
+
+
+
     override suspend fun doWork(): Result {
         withContext(Dispatchers.IO) {
             val dbLessons = appDatabase.getInstance(applicationContext as Application).LessonsListDao().getAllLessonsList()
@@ -99,7 +102,6 @@ class PaymentWork(
                 }*/
                 for (idLessons in listIdsLessons) {
                     if(listIdsPayment.contains(idLessons)) {
-                        //мы не хуя не создаем
                         log("нет необходимости что либо создавать.")
                     } else {
                         //dbLessonGet()

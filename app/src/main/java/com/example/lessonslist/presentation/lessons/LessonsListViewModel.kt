@@ -1,19 +1,15 @@
 package com.example.lessonslist.presentation.lessons
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
-import com.example.lessonslist.data.group.GroupListRepositoryImpl
+import com.example.lessonslist.data.AppDatabase
+import com.example.lessonslist.data.lessons.LessonsListDao
 import com.example.lessonslist.data.lessons.LessonsListRepositoryImpl
 import com.example.lessonslist.domain.group.*
-import com.example.lessonslist.domain.lessons.DeleteLessonsItemUseCase
-import com.example.lessonslist.domain.lessons.EditLessonsItemUseCase
-import com.example.lessonslist.domain.lessons.GetLessonsListItemUseCase
-import com.example.lessonslist.domain.lessons.LessonsItem
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import com.example.lessonslist.domain.lessons.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import java.util.stream.Collectors
+
 
 class LessonsListViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -24,11 +20,28 @@ class LessonsListViewModel(application: Application) : AndroidViewModel(applicat
     private val editLessonsItemUseCase = EditLessonsItemUseCase(repository)
 
     val lessonsList = getLessonsItemListUseCase.getLessonsList()
+    /*val appDatabase = AppDatabase
+
+    fun getData(): ArrayList<String> {
+
+        val dbLessons = appDatabase.LessonsListDao().getAllLessonsList()
+        val arrList: ArrayList<String> = ArrayList()
+        dbLessons.let {
+            for (item in it){
+                arrList.add(item.dateEnd)
+            }
+            // log(it.get(0).title)
+        }
+        return arrList
+    }*/
+   /* private val _offers = MutableLiveData<LessonsItem>()
+    val offers: LiveData<LessonsItem> = _offers*/
+  // var products: LiveData<List<LessonsItem>> = getLessonsItemListUseCase.getLessonsList()
+
+ //   products.value = getLessonsItemListUseCase.getLessonsList()
 
 
-
-
-    fun deleteLessonsItem(lessonsItem: LessonsItem) {
+        fun deleteLessonsItem(lessonsItem: LessonsItem) {
         viewModelScope.launch {
             deleteLessonsItemUseCase.deleteLessonsItem(lessonsItem)
         }
