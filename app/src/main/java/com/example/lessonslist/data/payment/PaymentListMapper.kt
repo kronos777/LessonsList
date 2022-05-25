@@ -10,6 +10,7 @@ class PaymentListMapper {
         student = paymentItem.student,
         studentId = paymentItem.studentId,
         lessonsId = paymentItem.lessonsId,
+        datePayment = paymentItem.datePayment,
         price = paymentItem.price,
         enabled = paymentItem.enabled,
         id = paymentItem.id
@@ -21,6 +22,7 @@ class PaymentListMapper {
         student = paymentItemDbModel.student,
         studentId = paymentItemDbModel.studentId,
         lessonsId = paymentItemDbModel.lessonsId,
+        datePayment = paymentItemDbModel.datePayment,
         price = paymentItemDbModel.price,
         enabled = paymentItemDbModel.enabled,
         id = paymentItemDbModel.id

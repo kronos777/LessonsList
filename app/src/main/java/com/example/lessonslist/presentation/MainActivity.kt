@@ -22,6 +22,7 @@ import com.example.lessonslist.PaymentWork
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
+import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
@@ -35,7 +36,7 @@ import com.example.lessonslist.presentation.student.StudentListAdapter
 import java.util.concurrent.TimeUnit
 
 
-class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener {
+class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, CalendarPaymentItemFragment.OnEditingFinishedListener {
 
 
     private lateinit var viewModel: MainViewModel
@@ -82,6 +83,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 R.id.muItem5 -> goGroupListFragment()
                 R.id.muItem6 -> goLessonsListFragment()
                 R.id.muItem7 -> goStudentListFragment()
+                R.id.muItem8 -> goPaymentCalendarFragment()
             }
             true
         }
@@ -108,6 +110,18 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
  /*work manager */
 
 }
+
+
+    private fun goPaymentCalendarFragment() {
+        if (!isOnePaneMode()) {
+            launchFragment(CalendarPaymentItemFragment())
+        } else {
+            recyclerMainGone()
+            launchFragmentTemp(CalendarPaymentItemFragment())
+            Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
     private fun goStudentListFragment() {
         if (!isOnePaneMode()) {

@@ -17,11 +17,13 @@ import androidx.work.OneTimeWorkRequestBuilder
 import com.example.lessonslist.PaymentWork
 import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
+import com.example.lessonslist.databinding.FragmentCalendarPaymentBinding
 import com.example.lessonslist.databinding.FragmentCalndarBinding
 import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.lessons.LessonsListViewModel
+import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.cleverpumpkin.calendar.CalendarDate
@@ -30,18 +32,18 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class CalendarItemFragment() : Fragment() {
+class CalendarPaymentItemFragment() : Fragment() {
 
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
-    private var _binding: FragmentCalndarBinding? = null
-    private val binding: FragmentCalndarBinding
+    private var _binding: FragmentCalendarPaymentBinding? = null
+    private val binding: FragmentCalendarPaymentBinding
         get() = _binding ?: throw RuntimeException("FragmentCalndarBinding == null")
 
 
     val arrayList: ArrayList<String> = ArrayList()
     val calendarList: ArrayList<CalendarDate> = ArrayList()
-    lateinit var viewModel: LessonsListViewModel
+    lateinit var viewModel: PaymentListViewModel
     val dateTitleMutableMap: MutableMap<String, String> =
         mutableMapOf()
 
@@ -60,14 +62,14 @@ class CalendarItemFragment() : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentCalndarBinding.inflate(inflater, container, false)
+        _binding = FragmentCalendarPaymentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as AppCompatActivity).supportActionBar?.title = "Календарь уроков"
+        (activity as AppCompatActivity).supportActionBar?.title = "Календарь платежей"
 
         /*binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
             binding.calendarText.text = "$dayOfMonth.${month + 1}.$year"
@@ -89,7 +91,7 @@ fun testData (): List<LessonsItem>? {
 }*/
 
     private fun getDate() {
-        val calendarView = binding.calendarView
+        val calendarView = binding.calendarPaymentView
         val calendar = Calendar.getInstance()
 
 // Initial date
@@ -116,10 +118,10 @@ fun testData (): List<LessonsItem>? {
 
 
 
-        viewModel = ViewModelProvider(this)[LessonsListViewModel::class.java]
-        viewModel.lessonsList.observe(viewLifecycleOwner) {
+        viewModel = ViewModelProvider(this)[PaymentListViewModel::class.java]
+        viewModel.paymentList.observe(viewLifecycleOwner) {
             for (item in it) {
-                val date = item.dateEnd.split(" ")
+                val date = item.datePayment.split(" ")
                 val nameLessons = item.title
                 val  dd = CalendarDate(Date(date[0]))
                 calendarList.add(dd)
@@ -142,17 +144,17 @@ fun testData (): List<LessonsItem>? {
             calendarView.onDateClickListener = { date ->
                 var curLes: ArrayList<String> = ArrayList()
                     for (item in it) {
-                        val curdate = item.dateEnd.split(" ")
+                        val curdate = item.datePayment.split(" ")
                         val  dd = CalendarDate(Date(curdate[0]))
                   //      log(dd.toString())
                         log(date.toString())
                        if(dd.toString() == date.toString()) {
-                           curLes.add(item.dateEnd + " " + item.title + " " + item.price)
+                           curLes.add(item.datePayment + " " + item.title + " " + item.price)
                        }
                     }
 
                 if(curLes.size == 0) {
-                    curLes.add("На эту дату уроков нет.")
+                    curLes.add("На эту дату платежей нет.")
                 }
 
                 /*for(item in dateTitleMutableMap) {
@@ -176,7 +178,7 @@ fun testData (): List<LessonsItem>? {
                     })
 
                 val alert = dialogBuilder.create()
-                alert.setTitle("Уроки на день:")
+                alert.setTitle("Платежи за день:")
                 alert.show()
 
                 log(date.toString())
@@ -199,34 +201,6 @@ fun testData (): List<LessonsItem>? {
         }
 
     }
-
-
-    private fun getPreselectedDates(): List<CalendarDate> {
-
-        val cal = Calendar.getInstance()
-        /**/
-        cal.set(2022, Calendar.MAY, 3)
-    //    log(cal.time.toString())
-        val initOne = CalendarDate(cal.time)
-        cal.set(2022, Calendar.MAY, 13)
-        val initTwo = CalendarDate(cal.time)
-        cal.set(2022, Calendar.MAY, 23)
-        val initFree = CalendarDate(cal.time)
-        cal.set(2022, Calendar.MAY, 27)
-        val initFour = CalendarDate(cal.time)
-
-        val current = Date("2022/5/14")
-       // val formatter = DateTimeFormatter.ofPattern("yyyy/M/dd HH:mm")
-        //val formatted = current.format(formatter)
-        val initFive = CalendarDate(current)
-        //val formatter = DateTimeFormatter.ofPattern("yyyy/M/dd HH:mm")
-        //val formatted = current.format(formatter)
-     //   log(current.toString())
-        return listOf(initOne, initTwo, initFree, initFour, initFive)
-        //return listOf(cal.set(2022, Calendar.MONTH.3, 16), cal.set(2022, 6, 12))
-    }
-
-
 
 
     interface OnEditingFinishedListener {

@@ -105,6 +105,7 @@ class PaymentItemFragment: Fragment() {
                 binding.etDescription.text.toString(),
                 binding.etStudentId.text.toString(),
                 binding.etStudent.text.toString(),
+                binding.etDateId.text.toString(),
                 binding.etPaymentId.text.toString(),
                 binding.etPrice.text.toString()
 
@@ -119,6 +120,7 @@ class PaymentItemFragment: Fragment() {
                 binding.etDescription.text.toString(),
                 binding.etStudentId.text.toString(),
                 binding.etPaymentId.text.toString(),
+                binding.etDateId.text.toString(),
                 binding.etStudent.text.toString(),
                 binding.etPrice.text.toString()
 

@@ -5,6 +5,7 @@ data class PaymentItem (
     val description: String,
     val studentId: Int,
     val lessonsId: Int,
+    val datePayment: String,
     val student: String,
     val price: Int,
     val enabled: Boolean,

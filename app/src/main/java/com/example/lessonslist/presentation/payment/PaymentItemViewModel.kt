@@ -53,19 +53,20 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
     }
 
 
-    fun addPaymentItem(inputTitle: String, inputDescription: String, inputLessonsId: String, inputStudentId: String, inputStudent: String, inputPrice: String) {
+    fun addPaymentItem(inputTitle: String, inputDescription: String, inputLessonsId: String, inputStudentId: String, inputDatePayment: String, inputStudent: String, inputPrice: String) {
         val title = inputTitle
         val description = inputDescription
         val student = inputStudent
         val price = inputPrice.toInt()
         val studentId = inputStudentId
+        val datePayment = inputDatePayment
         val lessonsId = inputLessonsId
         // add validation fun
         val fieldsValid = validateInput(title, student)
 
         if(fieldsValid) {
             viewModelScope.launch {
-                val paymentItem = PaymentItem(title, description,  studentId.toInt(), lessonsId.toInt(), student, price, true)
+                val paymentItem = PaymentItem(title, description,  studentId.toInt(), lessonsId.toInt(), datePayment, student, price, true)
                 addPaymentItemUseCase.addPaymentItem(paymentItem)
                 finishWork()
             }
@@ -75,12 +76,13 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
 
     }
 
-    fun editPaymentItem(inputTitle: String, inputDescription: String, inputStudentId: String, inputLessonsId: String, inputStudent: String, inputPrice: String) {
+    fun editPaymentItem(inputTitle: String, inputDescription: String, inputLessonsId: String, inputStudentId: String, inputDatePayment: String, inputStudent: String, inputPrice: String) {
         val title = inputTitle
         val description = inputDescription
         val student = inputStudent
         val price = inputPrice.toInt()
         val studentId = inputStudentId.toInt()
+        val datePayment = inputDatePayment
         val lessonsId = inputLessonsId.toInt()
 
         // add validation fun
@@ -88,7 +90,7 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
         if (fieldsValid) {
             _paymentItem.value?.let {
                 viewModelScope.launch {
-                    val paymentItem = it.copy(title = title, description = description, student = student, studentId = studentId, lessonsId = 0, price = price, enabled = true)
+                    val paymentItem = it.copy(title = title, description = description, student = student, studentId = studentId, datePayment = datePayment, lessonsId = 0, price = price, enabled = true)
                     editPaymentItemUseCase.editPaymentItem(paymentItem)
                     finishWork()
                 }

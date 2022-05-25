@@ -1,6 +1,5 @@
 package com.example.lessonslist.presentation.lessons
 
-import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
@@ -21,13 +20,7 @@ import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
-import java.lang.reflect.Array.set
-import java.time.Instant
-import java.time.temporal.ChronoUnit
 import java.util.*
-import javax.xml.datatype.DatatypeConstants.MONTHS
-import kotlin.collections.ArrayList
-import kotlin.collections.HashSet
 
 
 class LessonsItemFragment : Fragment() {
@@ -182,10 +175,49 @@ class LessonsItemFragment : Fragment() {
         val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
         val minute = mcurrentTime.get(Calendar.MINUTE)
 
-        val year = mcurrentTime.get(Calendar.YEAR)
+      /*  val year = mcurrentTime.get(Calendar.YEAR)
         val month = mcurrentTime.get(Calendar.MONTH)
         val day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
+*/
+        val year: Int
+        val month: Int
+        val day: Int
 
+        val args = requireArguments()
+        val dateAdd = args.getString(DATE_ADD)
+
+
+        val mode = args.getString(SCREEN_MODE)
+        if (mode == MODE_ADD) {
+           if (dateAdd == "") {
+                    log("string date add is null")
+
+                    year = mcurrentTime.get(Calendar.YEAR)
+                    month = mcurrentTime.get(Calendar.MONTH)
+                    day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
+
+           } else {
+                    log(dateAdd.toString())
+                    val dateTime = dateAdd!!.split("/")
+                    //val dateTime = Date(dateAdd)
+                    val cal = Calendar.getInstance()
+                    /*log(dateTime[0].toString())
+                    log(dateTime[1].toString())
+                    log(dateTime[2].toString())*/
+                    cal.set(dateTime[2].toInt(), dateTime[1].toInt()-1, dateTime[0].toInt())
+                    year = cal[Calendar.YEAR]
+                    month = cal[Calendar.MONTH]
+                    day = cal[Calendar.DAY_OF_MONTH]
+                   /* log(year.toString())
+                    log(month.toString())
+                    log(day.toString())*/
+                }
+           } else {
+            year = mcurrentTime.get(Calendar.YEAR)
+            month = mcurrentTime.get(Calendar.MONTH)
+            day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
+
+           }
 
 
         mTimePicker = TimePickerDialog(context, object : TimePickerDialog.OnTimeSetListener {
@@ -317,7 +349,13 @@ class LessonsItemFragment : Fragment() {
             }
             lessonsItemId = args.getInt(LESSONS_ITEM_ID, GroupItem.UNDEFINED_ID)
         }
+
     }
+
+    private fun log(message: String) {
+        Log.d("SERVICE_TAG", "DateCalendar: $message")
+    }
+
     companion object {
 
         private const val SCREEN_MODE = "extra_mode"
@@ -325,11 +363,13 @@ class LessonsItemFragment : Fragment() {
         private const val MODE_EDIT = "mode_edit"
         private const val MODE_ADD = "mode_add"
         private const val MODE_UNKNOWN = ""
+        private const val DATE_ADD = "date_add"
 
-        fun newInstanceAddItem(): LessonsItemFragment {
+        fun newInstanceAddItem(date: String): LessonsItemFragment {
             return LessonsItemFragment().apply {
                 arguments = Bundle().apply {
                     putString(SCREEN_MODE, MODE_ADD)
+                    putString(DATE_ADD, date)
                 }
             }
         }

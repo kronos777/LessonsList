@@ -48,7 +48,8 @@ class LessonsItemListFragment: Fragment() {
 
         binding.buttonAddLessonsItem.setOnClickListener {
             val fragmentTransaction = fragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem())
+                ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem(""))
+                //?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem("10/5/2022"))
                 ?.addToBackStack(null)
                 ?.commit()
         }

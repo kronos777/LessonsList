@@ -22,4 +22,7 @@
     <item
         android:id="@+id/muItem7"
         android:title="Список учеников" />
+    <item
+        android:id="@+id/muItem8"
+        android:title="Календарь платежей" />
 </menu>
