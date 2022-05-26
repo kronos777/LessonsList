@@ -52,8 +52,9 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         launchFragmentTemp(CalendarItemFragment())
-        /*
         setupRecyclerView()
+        /*
+
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.studentList.observe(this) {
             shopListAdapter.submitList(it)

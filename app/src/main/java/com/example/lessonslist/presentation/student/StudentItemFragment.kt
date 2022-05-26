@@ -1,30 +1,41 @@
 package com.example.lessonslist.presentation.student
 
+import android.R
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.ListView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.databinding.FragmentStudentItemBinding
 import com.example.lessonslist.domain.student.StudentItem
+import com.example.lessonslist.presentation.group.DataStudentGroupModel
+import com.example.lessonslist.presentation.lessons.LessonsItemFragment
+import com.example.lessonslist.presentation.payment.PaymentListViewModel
+import java.util.ArrayList
 
 
 class StudentItemFragment : Fragment() {
 
     private lateinit var viewModel: StudentItemViewModel
+    private lateinit var viewModelPayment: PaymentListViewModel
+
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
     private var _binding: FragmentStudentItemBinding? = null
     private val binding: FragmentStudentItemBinding
         get() = _binding ?: throw RuntimeException("FragmentShopItemBinding == null")
-
+    private lateinit var listView: ListView
     private var screenMode: String = MODE_UNKNOWN
     private var studentItemId: Int = StudentItem.UNDEFINED_ID
+    private var dataPaymentStudentModel: ArrayList<DataPaymentStudentModel>? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -57,6 +68,34 @@ class StudentItemFragment : Fragment() {
         addTextChangeListeners()
         launchRightMode()
         observeViewModel()
+
+        //viewModel.studentItem.
+        dataPaymentStudentModel = ArrayList<DataPaymentStudentModel>()
+        listView = binding.listView
+        val args = requireArguments()
+        val mode = args.getString(SCREEN_MODE)
+        if (mode == MODE_EDIT || mode == "mode_edit") {
+            Log.d("nowmodeadd", "mode add")
+            viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
+            viewModelPayment.paymentList.observe(viewLifecycleOwner) {
+                if(it.size > 0) {
+                    for (payment in it) {
+                        if(payment.studentId == studentItemId) {
+                            //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
+                            dataPaymentStudentModel!!.add(DataPaymentStudentModel(payment.title, payment.price))
+                            Log.d("nowmodeadd", "aaa" + payment.title + " " + payment.price)
+                        }
+                    }
+                }
+/*                adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
+
+                listView.adapter = adapter*/
+                val adapter =  ListPaymentAdapter(dataPaymentStudentModel!!, requireContext().applicationContext)
+                listView.adapter = adapter
+
+            }
+        }
+
     }
 
     private fun observeViewModel() {

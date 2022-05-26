@@ -66,7 +66,8 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
 
         if(fieldsValid) {
             viewModelScope.launch {
-                val paymentItem = PaymentItem(title, description,  studentId.toInt(), lessonsId.toInt(), datePayment, student, price, true)
+               // val paymentItem = PaymentItem(title, description, student, studentId.toInt(), lessonsId.toInt(), datePayment, price, true)
+                val paymentItem = PaymentItem(title, description, studentId.toInt(), lessonsId.toInt(), datePayment, student, price, true)
                 addPaymentItemUseCase.addPaymentItem(paymentItem)
                 finishWork()
             }
@@ -90,7 +91,7 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
         if (fieldsValid) {
             _paymentItem.value?.let {
                 viewModelScope.launch {
-                    val paymentItem = it.copy(title = title, description = description, student = student, studentId = studentId, datePayment = datePayment, lessonsId = 0, price = price, enabled = true)
+                    val paymentItem = it.copy(title = title, description = description, student = student, studentId = studentId, datePayment = datePayment.toString(), lessonsId = 0, price = price, enabled = true)
                     editPaymentItemUseCase.editPaymentItem(paymentItem)
                     finishWork()
                 }

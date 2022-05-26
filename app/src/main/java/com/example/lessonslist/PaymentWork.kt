@@ -130,7 +130,7 @@ class PaymentWork(
 
                                     //тут необходимо на каждого студента создать платеж и
                                     //(inputTitle: String, inputDescription: String, inputLessonsId: Int, inputStudentId: Int, inputStudent: String, inputPrice: String)
-                                    viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), lessonsItem.dateEnd, student.id.toString(), studentData, lessonsItem.price.toString())
+                                    viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString())
                                     // вычесть значение с платежного баланса
                                     val newBalanceStudent = student.paymentBalance.toInt() - lessonsItem.price
                                     namesStudentArrayList.add(studentData + ' ' + newBalanceStudent.toString())

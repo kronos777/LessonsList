@@ -96,34 +96,38 @@ class LessonsItemFragment : Fragment() {
         dataStudentGroupModel = ArrayList<DataStudentGroupModel>()
 
         dataStudentlList.studentList.observe(viewLifecycleOwner) {
-
-            for(student in it){
-                val name = student.name + " " + student.lastname
-                val id = student.id
-                if(viewModel.lessonsItem.value != null) {
-                    viewModel.lessonsItem.observe(viewLifecycleOwner) {
-                        var dataString = it.student
-                        dataString = dataString.replace("]", "")
-                        dataString = dataString.replace("[", "")
-                        val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
-                        if(lstValues.contains(id)) {
-                            dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
-                            // ListStudentAdapter.arrayList.add(id)
-                        } else {
-                            dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+            if(it.size > 0) {
+                for(student in it){
+                    val name = student.name + " " + student.lastname
+                    val id = student.id
+                    if(viewModel.lessonsItem.value != null) {
+                        viewModel.lessonsItem.observe(viewLifecycleOwner) {
+                            var dataString = it.student
+                            dataString = dataString.replace("]", "")
+                            dataString = dataString.replace("[", "")
+                            val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
+                            if(lstValues.contains(id)) {
+                                dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
+                                // ListStudentAdapter.arrayList.add(id)
+                            } else {
+                                dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+                            }
                         }
+                    } else {
+                        dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
                     }
-                } else {
-                    dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+
+
+
                 }
 
+                adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
 
-
+                listView.adapter = adapter
+            } else {
+                log("в учениках пока нет значений")
             }
 
-            adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
-
-            listView.adapter = adapter
 
         }
 
@@ -134,39 +138,43 @@ class LessonsItemFragment : Fragment() {
         dataGroupLessonsModel = ArrayList<DataGroupLessonsModel>()
 
         dataGroupList.groupList.observe(viewLifecycleOwner) {
-
-            for(group in it){
-                val students = group.student
-                val name = group.title
-                val id = group.id
-                Log.d("groupId", name)
-                dataGroupLessonsModel!!.add(DataGroupLessonsModel(name, students, id,false))
-                if(viewModel.lessonsItem.value != null) {
-                    listViewGroup.isInvisible
-                }
-               /* if(viewModel.groupItem.value != null) {
-                    viewModel.lessonsItem.observe(viewLifecycleOwner) {
-                        var dataString = it.student
-                        dataString = dataString.replace("]", "")
-                        dataString = dataString.replace("[", "")
-                        val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
-                        if(lstValues.contains(id)) {
-                            dataGroupLessonsModel!!.add(DataGroupLessonsModel(name, id,true))
-                            // ListStudentAdapter.arrayList.add(id)
-                        } else {
-                            dataGroupLessonsModel!!.add(DataGroupLessonsModel(name, id,false))
-                        }
+            if(it.size > 0) {
+                for(group in it){
+                    val students = group.student
+                    val name = group.title
+                    val id = group.id
+                    Log.d("groupId", name)
+                    dataGroupLessonsModel!!.add(DataGroupLessonsModel(name, students, id,false))
+                    if(viewModel.lessonsItem.value != null) {
+                        listViewGroup.isInvisible
                     }
-                } else {
-                    dataGroupLessonsModel!!.add(DataGroupLessonsModel(name, id,false))
+                    /* if(viewModel.groupItem.value != null) {
+                         viewModel.lessonsItem.observe(viewLifecycleOwner) {
+                             var dataString = it.student
+                             dataString = dataString.replace("]", "")
+                             dataString = dataString.replace("[", "")
+                             val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
+                             if(lstValues.contains(id)) {
+                                 dataGroupLessonsModel!!.add(DataGroupLessonsModel(name, id,true))
+                                 // ListStudentAdapter.arrayList.add(id)
+                             } else {
+                                 dataGroupLessonsModel!!.add(DataGroupLessonsModel(name, id,false))
+                             }
+                         }
+                     } else {
+                         dataGroupLessonsModel!!.add(DataGroupLessonsModel(name, id,false))
+                     }
+                 }*/
+
+                    adapterGroup = ListGroupAdapter(dataGroupLessonsModel!!, requireContext().applicationContext)
+
+                    listViewGroup.adapter = adapterGroup
+
                 }
-            }*/
+            } else {
+                log("в группе пока значений нет.")
+            }
 
-            adapterGroup = ListGroupAdapter(dataGroupLessonsModel!!, requireContext().applicationContext)
-
-            listViewGroup.adapter = adapterGroup
-
-        }
 
     }
         val mTimePicker: TimePickerDialog
@@ -191,7 +199,6 @@ class LessonsItemFragment : Fragment() {
         if (mode == MODE_ADD) {
            if (dateAdd == "") {
                     log("string date add is null")
-
                     year = mcurrentTime.get(Calendar.YEAR)
                     month = mcurrentTime.get(Calendar.MONTH)
                     day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
