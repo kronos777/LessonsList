@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +19,7 @@ import com.example.lessonslist.databinding.FragmentStudentItemBinding
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
+import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import java.util.ArrayList
 
@@ -62,6 +64,7 @@ class StudentItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel = ViewModelProvider(this)[StudentItemViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
@@ -94,8 +97,23 @@ class StudentItemFragment : Fragment() {
                 listView.adapter = adapter
 
             }
+
+            binding.paymentStudent.setOnClickListener {
+                launchFragment(PaymentItemListFragment.newInstanceStudentId(studentItemId))
+            }
+
+        } else {
+            binding.paymentStudent?.setVisibility (View.GONE)
         }
 
+    }
+
+    private fun launchFragment(fragment: Fragment) {
+        requireActivity().supportFragmentManager.popBackStack()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(com.example.lessonslist.R.id.fragment_item_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun observeViewModel() {

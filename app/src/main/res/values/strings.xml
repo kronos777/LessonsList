@@ -23,6 +23,8 @@
     <string name="lessons_date_start">Дата/Время начала урока:</string>
     <string name="lessons_date_end">Дата/Время конца урока:</string>
     <string name="save_btn">Сохранить</string>
+    <string name="payment_student_btn">Платежи студента</string>
+    <string name="payment_lesson_btn">Платежи урока</string>
     <string name="error_input_name">Некоректное имя</string>
     <string name="error_input_last_name">Некоректная фамилия</string>
     <string name="error_input_payment_balance">Некоректное значение баланса</string>

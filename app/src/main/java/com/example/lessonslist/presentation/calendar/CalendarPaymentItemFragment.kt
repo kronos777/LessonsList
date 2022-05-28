@@ -23,6 +23,7 @@ import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.lessons.LessonsListViewModel
+import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -89,6 +90,14 @@ fun testData (): List<LessonsItem>? {
          return@observe it
     }
 }*/
+    private fun launchFragment(fragment: Fragment) {
+        requireActivity().supportFragmentManager.popBackStack()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(com.example.lessonslist.R.id.fragment_item_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
 
     private fun getDate() {
         val calendarView = binding.calendarPaymentView
@@ -124,9 +133,12 @@ fun testData (): List<LessonsItem>? {
                 val date = item.datePayment.split(" ")
                 val nameLessons = item.title
                 val  dd = CalendarDate(Date(date[0]))
+               // log(dd.toString())
                 calendarList.add(dd)
                 dateTitleMutableMap.put(dd.toString(), nameLessons)
             }
+            val distinctThings = calendarList.distinct()
+            log(distinctThings.toString())
          //   log(calendarList.toString())
           //  log(dateTitleMutableMap.toString())
             calendarView.setupCalendar(
@@ -134,7 +146,7 @@ fun testData (): List<LessonsItem>? {
                 minDate = minDate,
                 maxDate = maxDate,
                 selectionMode = CalendarView.SelectionMode.MULTIPLE,
-                selectedDates = calendarList,
+                selectedDates = distinctThings,
                 firstDayOfWeek = firstDayOfWeek,
                 showYearSelectionView = true
             )
@@ -147,7 +159,7 @@ fun testData (): List<LessonsItem>? {
                         val curdate = item.datePayment.split(" ")
                         val  dd = CalendarDate(Date(curdate[0]))
                   //      log(dd.toString())
-                        log(date.toString())
+                      //  log(date.toString())
                        if(dd.toString() == date.toString()) {
                            curLes.add(item.datePayment + " " + item.title + " " + item.price)
                        }
@@ -174,14 +186,18 @@ fun testData (): List<LessonsItem>? {
                     .setPositiveButton("Ok", DialogInterface.OnClickListener {
                             dialog, id ->
                         dialog.dismiss()
-
+                    })
+                    .setNegativeButton("платежи на дату", DialogInterface.OnClickListener {
+                            dialog, id ->
+                        log(date.toString())
+                        launchFragment(PaymentItemListFragment.newInstanceDateId(date.toString()))
                     })
 
                 val alert = dialogBuilder.create()
                 alert.setTitle("Платежи за день:")
                 alert.show()
 
-                log(date.toString())
+                //log(date.toString())
             }
 
 

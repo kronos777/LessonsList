@@ -20,6 +20,7 @@ import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
+import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import java.util.*
 
 
@@ -197,6 +198,7 @@ class LessonsItemFragment : Fragment() {
 
         val mode = args.getString(SCREEN_MODE)
         if (mode == MODE_ADD) {
+            binding.paymentLesson?.setVisibility (View.GONE)
            if (dateAdd == "") {
                     log("string date add is null")
                     year = mcurrentTime.get(Calendar.YEAR)
@@ -223,7 +225,9 @@ class LessonsItemFragment : Fragment() {
             year = mcurrentTime.get(Calendar.YEAR)
             month = mcurrentTime.get(Calendar.MONTH)
             day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
-
+            binding.paymentLesson.setOnClickListener {
+                launchFragment(PaymentItemListFragment.newInstanceLessonsId(lessonsItemId))
+            }
            }
 
 
@@ -340,6 +344,16 @@ class LessonsItemFragment : Fragment() {
 
         fun onEditingFinished()
     }
+
+    private fun launchFragment(fragment: Fragment) {
+        requireActivity().supportFragmentManager.popBackStack()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(com.example.lessonslist.R.id.fragment_item_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+
     private fun parseParams() {
         val args = requireArguments()
         if (!args.containsKey(SCREEN_MODE)) {
@@ -355,6 +369,7 @@ class LessonsItemFragment : Fragment() {
                 throw RuntimeException("Param shop item id is absent")
             }
             lessonsItemId = args.getInt(LESSONS_ITEM_ID, GroupItem.UNDEFINED_ID)
+
         }
 
     }
