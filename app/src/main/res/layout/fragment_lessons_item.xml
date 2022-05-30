@@ -16,7 +16,17 @@
         android:layout_height="match_parent"
         tools:context=".presentation.lessons.LessonsItemFragment"
         >
-
+        <Button
+            android:id="@+id/payment_lesson"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/payment_lesson_btn"
+            app:layout_constraintBottom_toTopOf="@id/til_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_title"
+            />
 
 
         <com.google.android.material.textfield.TextInputLayout

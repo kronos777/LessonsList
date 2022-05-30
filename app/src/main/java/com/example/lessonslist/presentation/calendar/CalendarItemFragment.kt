@@ -28,6 +28,7 @@ import ru.cleverpumpkin.calendar.CalendarDate
 import ru.cleverpumpkin.calendar.CalendarView
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class CalendarItemFragment() : Fragment() {
@@ -125,6 +126,7 @@ fun testData (): List<LessonsItem>? {
                 calendarList.add(dd)
                 dateTitleMutableMap.put(dd.toString(), nameLessons)
             }
+
          //   log(calendarList.toString())
           //  log(dateTitleMutableMap.toString())
             calendarView.setupCalendar(
