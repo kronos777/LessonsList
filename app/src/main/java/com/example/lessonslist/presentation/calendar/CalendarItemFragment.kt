@@ -3,6 +3,7 @@ package com.example.lessonslist.presentation.calendar
 import android.app.Application
 import android.content.Context
 import android.content.DialogInterface
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import com.example.lessonslist.PaymentWork
 import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
+import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.databinding.FragmentCalndarBinding
 import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
@@ -32,6 +34,7 @@ import kotlin.collections.HashMap
 
 
 class CalendarItemFragment() : Fragment() {
+
 
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
@@ -192,16 +195,31 @@ fun testData (): List<LessonsItem>? {
 
 // Set date long click callback
         calendarView.onDateLongClickListener = { date ->
-            log("arrlistLong"+date.toString())
-            val fragmentTransaction = fragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem(date.toString()))
-                ?.addToBackStack(null)
-                ?.commit()
+            log("arrlistLong"+date.toString() + getScreenOrientation())
+            if(getScreenOrientation() == "Альбомная ориентация"){
+                val fragmentTransaction = fragmentManager?.beginTransaction()
+                    ?.replace(R.id.shop_item_container, LessonsItemFragment.newInstanceAddItem(date.toString()))
+                    ?.addToBackStack(null)
+                    ?.commit()
+            } else {
+                val fragmentTransaction = fragmentManager?.beginTransaction()
+                    ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem(date.toString()))
+                    ?.addToBackStack(null)
+                    ?.commit()
+            }
+
 
         }
 
     }
 
+    private fun getScreenOrientation(): String {
+        return when (resources.configuration.orientation) {
+            Configuration.ORIENTATION_PORTRAIT -> "Портретная ориентация"
+            Configuration.ORIENTATION_LANDSCAPE -> "Альбомная ориентация"
+            else -> "пидарасы"
+        }
+    }
 
     private fun getPreselectedDates(): List<CalendarDate> {
 

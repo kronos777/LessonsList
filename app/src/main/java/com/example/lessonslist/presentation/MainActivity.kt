@@ -50,7 +50,16 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        launchFragmentTemp(CalendarItemFragment())
+
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container)
+
+        if (currentFragment == null) {
+            if (isOnePaneMode()) {
+                launchFragmentTemp(CalendarItemFragment())
+            } else {
+                launchFragment(CalendarItemFragment())
+            }
+        }
 
         /* setupRecyclerView()
 
@@ -232,7 +241,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private fun launchFragment(fragment: Fragment) {
      supportFragmentManager.popBackStack()
      supportFragmentManager.beginTransaction()
-         .replace(R.id.shop_item_container, fragment)
+         .replace(R.id.fragment_item_container, fragment)
          .addToBackStack(null)
          .commit()
     }
@@ -241,7 +250,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
      supportFragmentManager.popBackStack()
      supportFragmentManager.beginTransaction()
          .replace(R.id.fragment_item_container, fragment)
-         .addToBackStack(null)
+         .addToBackStack(BACK_STACK_ROOT_TAG)
          .commit()
     }
 
@@ -304,4 +313,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
          viewModel.changeEnableState(it)
      }
     }*/
+    companion object {
+        const val BACK_STACK_ROOT_TAG = "root_fragment"
+    }
 }
