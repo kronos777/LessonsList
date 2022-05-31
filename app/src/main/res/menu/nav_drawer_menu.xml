@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item
-        android:id="@+id/muItem1"
-        android:title="Группы" />
-    <item
-        android:id="@+id/muItem2"
-        android:title="Занятия" />
     <item
         android:id="@+id/muItem3"
-        android:title="Ученики" />
+        android:title="Каледнарь занятий" />
+    <item
+        android:id="@+id/muItem8"
+        android:title="Календарь платежей" />
     <item
         android:id="@+id/muItem4"
-        android:title="Оплаты" />
+        android:title="Платежи" />
     <item
         android:id="@+id/muItem5"
         android:title="Список групп" />
@@ -22,7 +18,8 @@
     <item
         android:id="@+id/muItem7"
         android:title="Список учеников" />
+
     <item
-        android:id="@+id/muItem8"
-        android:title="Календарь платежей" />
+        android:id="@+id/muItem2"
+        android:title="Настройки" />
 </menu>

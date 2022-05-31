@@ -29,6 +29,7 @@ import com.example.lessonslist.presentation.lessons.LessonsItemFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
+import com.example.lessonslist.presentation.settings.SettingsItemFragment
 import com.example.lessonslist.presentation.student.StudentItemActivity
 import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentItemListFragment
@@ -36,11 +37,9 @@ import com.example.lessonslist.presentation.student.StudentListAdapter
 import java.util.concurrent.TimeUnit
 
 
-class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, CalendarPaymentItemFragment.OnEditingFinishedListener {
+class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, CalendarPaymentItemFragment.OnEditingFinishedListener, SettingsItemFragment.OnEditingFinishedListener {
 
 
-   /* private lateinit var viewModel: MainViewModel
-    private lateinit var shopListAdapter: StudentListAdapter*/
     private lateinit var binding: ActivityMainBinding
 
     lateinit var toggle: ActionBarDrawerToggle
@@ -77,8 +76,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         binding.navView?.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.muItem1 -> goGroupFragment()
-                R.id.muItem2 -> goLessonsFragment()
+            //    R.id.muItem1 -> goGroupFragment()
+                R.id.muItem2 -> goSettingsFragment()
                 R.id.muItem3 -> goMainView()
                 R.id.muItem4 -> goPaymentFragment()
                 R.id.muItem5 -> goGroupListFragment()
@@ -111,6 +110,16 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
  /*work manager */
 
 }
+
+    private fun goSettingsFragment() {
+        if (!isOnePaneMode()) {
+            launchFragment(SettingsItemFragment())
+        } else {
+            recyclerMainGone()
+            launchFragmentTemp(SettingsItemFragment())
+            Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+        }
+    }
 
 
     private fun goPaymentCalendarFragment() {

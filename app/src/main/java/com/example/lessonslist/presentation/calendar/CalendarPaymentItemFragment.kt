@@ -183,7 +183,7 @@ fun testData (): List<LessonsItem>? {
                 dialogBuilder.setMessage(curLes.toString())
                     // if the dialog is cancelable
                     .setCancelable(false)
-                    .setPositiveButton("Ok", DialogInterface.OnClickListener {
+                    .setPositiveButton("Закрыть", DialogInterface.OnClickListener {
                             dialog, id ->
                         dialog.dismiss()
                     })
