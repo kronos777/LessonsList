@@ -22,6 +22,7 @@ import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.databinding.FragmentCalndarBinding
 import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
+import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.lessons.LessonsListViewModel
 import kotlinx.coroutines.Dispatchers
@@ -145,47 +146,55 @@ fun testData (): List<LessonsItem>? {
 
 
             calendarView.onDateClickListener = { date ->
-                var curLes: ArrayList<String> = ArrayList()
+                if(getScreenOrientation() == true){
+                    val fragmentTransaction = fragmentManager?.beginTransaction()
+                        ?.replace(R.id.shop_item_container, LessonsItemListFragment.newInstanceDateId(date.toString()))
+                        ?.addToBackStack(null)
+                        ?.commit()
+                } else {
+                    var curLes: ArrayList<String> = ArrayList()
                     for (item in it) {
                         val curdate = item.dateEnd.split(" ")
                         val  dd = CalendarDate(Date(curdate[0]))
-                  //      log(dd.toString())
+                        //      log(dd.toString())
                         log(date.toString())
-                       if(dd.toString() == date.toString()) {
-                           curLes.add(item.dateEnd + " " + item.title + " " + item.price)
-                       }
+                        if(dd.toString() == date.toString()) {
+                            curLes.add(item.dateEnd + " " + item.title + " " + item.price)
+                        }
                     }
 
-                if(curLes.size == 0) {
-                    curLes.add("На эту дату уроков нет.")
+                    if(curLes.size == 0) {
+                        curLes.add("На эту дату уроков нет.")
+                    }
+
+                    /*for(item in dateTitleMutableMap) {
+                        if(item.key == date.toString()) {
+                            curLes.add(item.value)
+                        }
+                    }*/
+
+                    // Do something ...
+                    // for example get list of selected dates
+                    // val selectedDates = calendarView.selectedDates
+                    //log("arrlist"+date.toString())
+                    val dialogBuilder = AlertDialog.Builder(requireActivity())
+                    dialogBuilder.setMessage(curLes.toString())
+                        // if the dialog is cancelable
+                        .setCancelable(false)
+                        .setPositiveButton("Ok", DialogInterface.OnClickListener {
+                                dialog, id ->
+                            dialog.dismiss()
+
+                        })
+
+                    val alert = dialogBuilder.create()
+                    alert.setTitle("Уроки на день:")
+                    alert.show()
+
+                    log(date.toString())
+                }
                 }
 
-                /*for(item in dateTitleMutableMap) {
-                    if(item.key == date.toString()) {
-                        curLes.add(item.value)
-                    }
-                }*/
-
-                // Do something ...
-                // for example get list of selected dates
-                // val selectedDates = calendarView.selectedDates
-                //log("arrlist"+date.toString())
-                val dialogBuilder = AlertDialog.Builder(requireActivity())
-                dialogBuilder.setMessage(curLes.toString())
-                    // if the dialog is cancelable
-                    .setCancelable(false)
-                    .setPositiveButton("Ok", DialogInterface.OnClickListener {
-                            dialog, id ->
-                        dialog.dismiss()
-
-                    })
-
-                val alert = dialogBuilder.create()
-                alert.setTitle("Уроки на день:")
-                alert.show()
-
-                log(date.toString())
-            }
 
 
 
@@ -196,7 +205,7 @@ fun testData (): List<LessonsItem>? {
 // Set date long click callback
         calendarView.onDateLongClickListener = { date ->
             log("arrlistLong"+date.toString() + getScreenOrientation())
-            if(getScreenOrientation() == "Альбомная ориентация"){
+            if(getScreenOrientation() == true){
                 val fragmentTransaction = fragmentManager?.beginTransaction()
                     ?.replace(R.id.shop_item_container, LessonsItemFragment.newInstanceAddItem(date.toString()))
                     ?.addToBackStack(null)
@@ -213,11 +222,11 @@ fun testData (): List<LessonsItem>? {
 
     }
 
-    private fun getScreenOrientation(): String {
+    private fun getScreenOrientation(): Boolean {
         return when (resources.configuration.orientation) {
-            Configuration.ORIENTATION_PORTRAIT -> "Портретная ориентация"
-            Configuration.ORIENTATION_LANDSCAPE -> "Альбомная ориентация"
-            else -> "пидарасы"
+            Configuration.ORIENTATION_PORTRAIT -> false
+            Configuration.ORIENTATION_LANDSCAPE -> true
+            else -> false
         }
     }
 
