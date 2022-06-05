@@ -3,11 +3,13 @@ package com.example.lessonslist.presentation.calendar
 import android.app.Application
 import android.content.Context
 import android.content.DialogInterface
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
@@ -57,6 +59,10 @@ class CalendarPaymentItemFragment() : Fragment() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Toast.makeText(getActivity(),"Фрагмент снова на связи!", Toast.LENGTH_SHORT).show();
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,6 +72,17 @@ class CalendarPaymentItemFragment() : Fragment() {
         _binding = FragmentCalendarPaymentBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+
+    private fun getScreenOrientationLandscape(): Boolean {
+        return when (resources.configuration.orientation) {
+            Configuration.ORIENTATION_PORTRAIT -> false
+            Configuration.ORIENTATION_LANDSCAPE -> true
+            else -> false
+        }
+    }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -98,13 +115,19 @@ fun testData (): List<LessonsItem>? {
             .commit()
     }
 
-
+    private fun launchFragmentLandscape(fragment: Fragment) {
+        requireActivity().supportFragmentManager.popBackStack()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(com.example.lessonslist.R.id.shop_item_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
     private fun getDate() {
         val calendarView = binding.calendarPaymentView
         val calendar = Calendar.getInstance()
 
 // Initial date
-        calendar.set(2022, Calendar.MAY, 3)
+        calendar.set(2022, Calendar.JUNE, 3)
         val initialDate = CalendarDate(calendar.time)
 
 // Minimum available date
@@ -152,52 +175,124 @@ fun testData (): List<LessonsItem>? {
             )
 
 
-
-            calendarView.onDateClickListener = { date ->
-                var curLes: ArrayList<String> = ArrayList()
+            if(getScreenOrientationLandscape() == false) {
+                calendarView.onDateClickListener = { date ->
+                    var curLes: ArrayList<String> = ArrayList()
                     for (item in it) {
                         val curdate = item.datePayment.split(" ")
                         val  dd = CalendarDate(Date(curdate[0]))
-                  //      log(dd.toString())
-                      //  log(date.toString())
-                       if(dd.toString() == date.toString()) {
-                           curLes.add(item.datePayment + " " + item.title + " " + item.price)
-                       }
+                        //      log(dd.toString())
+                        //  log(date.toString())
+                        if(dd.toString() == date.toString()) {
+                            curLes.add(item.datePayment + " " + item.title + " " + item.price)
+                        }
                     }
 
-                if(curLes.size == 0) {
-                    curLes.add("На эту дату платежей нет.")
+                    if(curLes.size == 0) {
+                        curLes.add("На эту дату платежей нет.")
+                    }
+
+                    /*for(item in dateTitleMutableMap) {
+                        if(item.key == date.toString()) {
+                            curLes.add(item.value)
+                        }
+                    }*/
+
+                    // Do something ...
+                    // for example get list of selected dates
+                    // val selectedDates = calendarView.selectedDates
+                    //log("arrlist"+date.toString())
+                    val dialogBuilder = AlertDialog.Builder(requireActivity())
+                    dialogBuilder.setMessage(curLes.toString())
+                        // if the dialog is cancelable
+                        .setCancelable(false)
+                        .setPositiveButton("Закрыть", DialogInterface.OnClickListener {
+                                dialog, id ->
+                            dialog.dismiss()
+                        })
+                        .setNegativeButton("платежи на дату", DialogInterface.OnClickListener {
+                                dialog, id ->
+                            log(date.toString())
+                            launchFragment(PaymentItemListFragment.newInstanceDateId(date.toString()))
+                        })
+
+                    val alert = dialogBuilder.create()
+                    alert.setTitle("Платежи за день:")
+                    alert.show()
+                    calendarView.setupCalendar(
+                        initialDate = initialDate,
+                        minDate = minDate,
+                        maxDate = maxDate,
+                        selectionMode = CalendarView.SelectionMode.MULTIPLE,
+                        selectedDates = distinctThings,
+                        firstDayOfWeek = firstDayOfWeek,
+                        showYearSelectionView = true
+                    )
+                    //log(date.toString())
+                }
+                calendarView.onDateLongClickListener = { date ->
+                    log("arrlistLong"+date.toString())
+                    val fragmentTransaction = fragmentManager?.beginTransaction()
+                        ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem(date.toString()))
+                        ?.addToBackStack(null)
+                        ?.commit()
+
+                }
+            } else {
+                calendarView.onDateClickListener = { date ->
+                    var curLes: ArrayList<String> = ArrayList()
+                    for (item in it) {
+                        val curdate = item.datePayment.split(" ")
+                        val  dd = CalendarDate(Date(curdate[0]))
+                        //      log(dd.toString())
+                        //  log(date.toString())
+                        if(dd.toString() == date.toString()) {
+                            curLes.add(item.datePayment + " " + item.title + " " + item.price)
+                        }
+                    }
+
+                    if(curLes.size == 0) {
+                        curLes.add("На эту дату платежей нет.")
+                    }
+
+                    launchFragmentLandscape(PaymentItemListFragment.newInstanceDateId(date.toString()))
+                    /*val dialogBuilder = AlertDialog.Builder(requireActivity())
+                    dialogBuilder.setMessage(curLes.toString())
+                        // if the dialog is cancelable
+                        .setCancelable(false)
+                        .setPositiveButton("Закрыть", DialogInterface.OnClickListener {
+                                dialog, id ->
+                            dialog.dismiss()
+                        })
+                        .setNegativeButton("платежи на дату", DialogInterface.OnClickListener {
+                                dialog, id ->
+                            log(date.toString())
+                            launchFragmentLandscape(PaymentItemListFragment.newInstanceDateId(date.toString()))
+                        })
+
+                    val alert = dialogBuilder.create()
+                    alert.setTitle("Landscape Платежи за день:")
+                    alert.show()*/
+                    calendarView.setupCalendar(
+                        initialDate = initialDate,
+                        minDate = minDate,
+                        maxDate = maxDate,
+                        selectionMode = CalendarView.SelectionMode.MULTIPLE,
+                        selectedDates = distinctThings,
+                        firstDayOfWeek = firstDayOfWeek,
+                        showYearSelectionView = true
+                    )
+                    //log(date.toString())
                 }
 
-                /*for(item in dateTitleMutableMap) {
-                    if(item.key == date.toString()) {
-                        curLes.add(item.value)
-                    }
-                }*/
+                calendarView.onDateLongClickListener = { date ->
+                    log("arrlistLong"+date.toString())
+                    val fragmentTransaction = fragmentManager?.beginTransaction()
+                        ?.replace(R.id.shop_item_container, LessonsItemFragment.newInstanceAddItem(date.toString()))
+                        ?.addToBackStack(null)
+                        ?.commit()
 
-                // Do something ...
-                // for example get list of selected dates
-                // val selectedDates = calendarView.selectedDates
-                //log("arrlist"+date.toString())
-                val dialogBuilder = AlertDialog.Builder(requireActivity())
-                dialogBuilder.setMessage(curLes.toString())
-                    // if the dialog is cancelable
-                    .setCancelable(false)
-                    .setPositiveButton("Закрыть", DialogInterface.OnClickListener {
-                            dialog, id ->
-                        dialog.dismiss()
-                    })
-                    .setNegativeButton("платежи на дату", DialogInterface.OnClickListener {
-                            dialog, id ->
-                        log(date.toString())
-                        launchFragment(PaymentItemListFragment.newInstanceDateId(date.toString()))
-                    })
-
-                val alert = dialogBuilder.create()
-                alert.setTitle("Платежи за день:")
-                alert.show()
-
-                //log(date.toString())
+                }
             }
 
 
@@ -207,14 +302,7 @@ fun testData (): List<LessonsItem>? {
 
 
 // Set date long click callback
-        calendarView.onDateLongClickListener = { date ->
-            log("arrlistLong"+date.toString())
-            val fragmentTransaction = fragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem(date.toString()))
-                ?.addToBackStack(null)
-                ?.commit()
 
-        }
 
     }
 

@@ -48,6 +48,7 @@ class LessonsItemFragment : Fragment() {
     private lateinit var listViewGroup: ListView
     private var dataGroupLessonsModel: ArrayList<DataGroupLessonsModel>? = null
     private lateinit var dataGroupList: GroupListViewModel
+    private var dataGroupListString: Boolean = true
 
 
 
@@ -173,11 +174,17 @@ class LessonsItemFragment : Fragment() {
 
                 }
             } else {
+                dataGroupListString = false
                 log("в группе пока значений нет.")
             }
 
 
     }
+
+        /*string list*/
+            // dataGroupListString = adapterGroup.arrayList.toString()
+        /*string list*/
+
         val mTimePicker: TimePickerDialog
         val mTimePickerEnd: TimePickerDialog
         val mcurrentTime = Calendar.getInstance()
@@ -281,10 +288,12 @@ class LessonsItemFragment : Fragment() {
 
 
     private fun launchEditMode() {
-        binding.etStudent.setVisibility(View.GONE)
+      //  binding.etStudent.setVisibility(View.GONE)
+        binding.etPriceAdd?.setVisibility(View.GONE)
         binding.listViewGroup.setVisibility(View.GONE)
         viewModel.getLessonsItem(lessonsItemId)
-        binding.saveButton.setOnClickListener{
+      //  binding.etPrice.text = viewModel.lessonsItem.price
+            binding.saveButton.setOnClickListener{
             var studentIds: String = adapter.arrayList.toString()
             viewModel.editLessonsItem(
                 binding.etTitle.text.toString(),
@@ -301,11 +310,23 @@ class LessonsItemFragment : Fragment() {
 
 
     private fun launchAddMode() {
+        binding.etPrice?.setVisibility(View.GONE)
         binding.etStudent.setVisibility(View.GONE)
         binding.saveButton.setOnClickListener{
             var studentIds: String = adapter.arrayList.toString()
-            var groupStudentIds: String = adapterGroup.arrayList.toString()
-            var allStudent: String = studentIds + groupStudentIds
+           /* var groupStudentIds: String
+            if(adapterGroup.arrayList.toString().length > 0) {
+                groupStudentIds = adapterGroup.arrayList.toString()
+            }*/
+            var groupStudentIds: String
+            var allStudent: String
+            if(dataGroupListString) {
+                groupStudentIds = adapterGroup.arrayList.toString()
+                allStudent = studentIds + groupStudentIds
+            } else {
+                allStudent = studentIds
+            }
+
             var lstValues: ArrayList<Int> = ArrayList()
 
             allStudent.forEach {
@@ -327,7 +348,7 @@ class LessonsItemFragment : Fragment() {
                 binding.etDescription.text.toString(),
                 noD.toString(),
                 //binding.etStudent.text.toString(),
-                binding.etPrice.text.toString(),
+                binding.etPriceAdd?.text.toString(),
                 binding.etDatestart.text.toString(),
                 binding.etDateend.text.toString()
             )

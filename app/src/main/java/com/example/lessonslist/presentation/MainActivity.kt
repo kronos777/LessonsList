@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             when (it.itemId) {
             //    R.id.muItem1 -> goGroupFragment()
                 R.id.muItem2 -> goSettingsFragment()
-                R.id.muItem3 -> goMainView()
+                R.id.muItem3 -> launchFragment(CalendarItemFragment())
                 R.id.muItem4 -> goPaymentFragment()
                 R.id.muItem5 -> goGroupListFragment()
                 R.id.muItem6 -> goLessonsListFragment()
@@ -106,8 +106,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
  /*work manager */
         //        PeriodicWorkRequest myWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class, 30, TimeUnit.MINUTES, 25, TimeUnit.MINUTES).build();
 
- val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES).build()
-     //val request = OneTimeWorkRequestBuilder<PaymentWork>().build()
+        val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES).build()
+        //val request = OneTimeWorkRequestBuilder<PaymentWork>().build()
         WorkManager.getInstance(this).enqueue(request)
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
             .observe(this, Observer {
@@ -167,10 +167,10 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     fun goLessonsListFragment() {
      if (!isOnePaneMode()) {
-         launchFragment(LessonsItemListFragment())
+         launchFragment(LessonsItemListFragment.newInstanceNoneParams())
      } else {
          recyclerMainGone()
-         launchFragmentTemp(LessonsItemListFragment())
+         launchFragmentTemp(LessonsItemListFragment.newInstanceNoneParams())
          Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
      }
     }

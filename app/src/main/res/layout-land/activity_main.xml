@@ -21,7 +21,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <!--com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_add_shop_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
         android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guideline_middle"
-        app:srcCompat="@drawable/ic_add" />
+        app:srcCompat="@drawable/ic_add" /-->
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_middle"

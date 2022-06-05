@@ -89,7 +89,7 @@ class PaymentItemListFragment: Fragment() {
                 for (payment in it) {
                     var pay = payment.datePayment.split(" ")
                     val datePay = Date(pay[0])
-                    val dateFormated = SimpleDateFormat("dd/M/yyyy").format(datePay)
+                    val dateFormated = SimpleDateFormat("d/M/yyyy").format(datePay)
                   ///  val dateString = Date(dateId)
                     //Log.d("dateId", datePay.toString())
                     Log.d("dateId", dateFormated.toString())

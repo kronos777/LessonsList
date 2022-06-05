@@ -35,6 +35,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
 
 class PaymentWork(
@@ -109,12 +111,14 @@ class PaymentWork(
                         log("в противном случае на каждого ученика необходимо создать платеж" + idLessons)
                         /*dt*/
                         val current = LocalDateTime.now()
-                        val formatter = DateTimeFormatter.ofPattern("yyyy/M/dd HH:mm")
+                        val formatter = DateTimeFormatter.ofPattern("yyyy/M/d H:m")
                         val formatted = current.format(formatter)
-                        log(formatted)
+                        log("время текущее" + formatted)
                         val lessonsItem = dbLessonGet.getLessonsItem(idLessons)
                         val formattedLess = lessonsItem.dateEnd.format(formatter)
-                        log(formattedLess)
+                       // val formatterLess = DateTimeFormatter.ofPattern("yyyy/M/dd HH:mm")
+                       // val fLess = formattedLess.format(formattedLess)
+                        log("время урока" + formattedLess)
                         if(formattedLess >= formatted) {
                             log("время начала урока больше текущего")
                         } else if(formatted >= formattedLess) {

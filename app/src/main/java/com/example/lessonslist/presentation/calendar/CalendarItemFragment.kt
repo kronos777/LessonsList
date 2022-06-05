@@ -1,6 +1,6 @@
 package com.example.lessonslist.presentation.calendar
 
-import android.app.Application
+
 import android.content.Context
 import android.content.DialogInterface
 import android.content.res.Configuration
@@ -9,29 +9,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.work.OneTimeWorkRequestBuilder
-import com.example.lessonslist.PaymentWork
 import com.example.lessonslist.R
-import com.example.lessonslist.data.AppDatabase
-import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.databinding.FragmentCalndarBinding
-import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
-import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.lessons.LessonsListViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import ru.cleverpumpkin.calendar.CalendarDate
 import ru.cleverpumpkin.calendar.CalendarView
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 class CalendarItemFragment() : Fragment() {
@@ -92,13 +83,16 @@ fun testData (): List<LessonsItem>? {
          return@observe it
     }
 }*/
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Toast.makeText(getActivity(),"Фрагмент снова на связи!", Toast.LENGTH_SHORT).show();
+    }
     private fun getDate() {
         val calendarView = binding.calendarView
         val calendar = Calendar.getInstance()
 
 // Initial date
-        calendar.set(2022, Calendar.MAY, 3)
+        calendar.set(2022, Calendar.JUNE, 3)
         val initialDate = CalendarDate(calendar.time)
 
 // Minimum available date
@@ -146,7 +140,8 @@ fun testData (): List<LessonsItem>? {
 
 
             calendarView.onDateClickListener = { date ->
-                if(getScreenOrientation() == true){
+
+                if(getScreenOrientation() == true) {
                     val fragmentTransaction = fragmentManager?.beginTransaction()
                         ?.replace(R.id.shop_item_container, LessonsItemListFragment.newInstanceDateId(date.toString()))
                         ?.addToBackStack(null)
@@ -175,8 +170,10 @@ fun testData (): List<LessonsItem>? {
 
                     // Do something ...
                     // for example get list of selected dates
-                    // val selectedDates = calendarView.selectedDates
-                    //log("arrlist"+date.toString())
+                    val selectedDates = calendarView.selectedDates
+                    log("selectarr" + selectedDates.toString())
+                   // calendarView.selectedDates.last().remove()
+
                     val dialogBuilder = AlertDialog.Builder(requireActivity())
                     dialogBuilder.setMessage(curLes.toString())
                         // if the dialog is cancelable
@@ -193,6 +190,17 @@ fun testData (): List<LessonsItem>? {
 
                     log(date.toString())
                 }
+
+                calendarView.setupCalendar(
+                    initialDate = initialDate,
+                    minDate = minDate,
+                    maxDate = maxDate,
+                    selectionMode = CalendarView.SelectionMode.MULTIPLE,
+                    selectedDates = calendarList,
+                    firstDayOfWeek = firstDayOfWeek,
+                    showYearSelectionView = true
+                )
+
                 }
 
 
@@ -263,4 +271,7 @@ fun testData (): List<LessonsItem>? {
         fun onEditingFinished()
     }
 
+
+
 }
+

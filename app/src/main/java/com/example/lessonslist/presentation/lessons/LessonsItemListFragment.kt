@@ -44,9 +44,13 @@ class LessonsItemListFragment: Fragment() {
         _binding = FragmentLessonsItemListBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+
     private fun log(message: String) {
         Log.d("SERVICE_TAG", "LessonsListDate: $message")
     }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -56,12 +60,12 @@ class LessonsItemListFragment: Fragment() {
         val args = requireArguments()
         val dateFilter = args.getString(DATE_ID)
 
-        if(getScreenOrientation() == false) {
+        if(getScreenOrientationLandscape() == false) {
             viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
             viewModel.lessonsList.observe(viewLifecycleOwner) {
                 lessonsListAdapter.submitList(it)
             }
-        } else if (getScreenOrientation() == true && dateFilter != "date_id") {
+        } else if (getScreenOrientationLandscape() == true) {
             log(dateFilter.toString())
 
             val listArrayPayment: ArrayList<LessonsItem> = ArrayList()
@@ -70,7 +74,7 @@ class LessonsItemListFragment: Fragment() {
                 for (lessons in it) {
                     var pay = lessons.dateEnd.split(" ")
                     val datePay = Date(pay[0])
-                    val dateFormated = SimpleDateFormat("dd/M/yyyy").format(datePay)
+                    val dateFormated = SimpleDateFormat("d/M/yyyy").format(datePay)
                     ///  val dateString = Date(dateId)
                     //Log.d("dateId", datePay.toString())
                     //Log.d("dateId", dateFormated.toString())
@@ -87,17 +91,27 @@ class LessonsItemListFragment: Fragment() {
             }
         }
 
-
-        binding.buttonAddLessonsItem.setOnClickListener {
-            val fragmentTransaction = fragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem(""))
-                //?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem("10/5/2022"))
-                ?.addToBackStack(null)
-                ?.commit()
+        if (getScreenOrientationLandscape() == true) {
+            binding.buttonAddLessonsItem.setOnClickListener {
+                val fragmentTransaction = fragmentManager?.beginTransaction()
+                    ?.replace(R.id.shop_item_container, LessonsItemFragment.newInstanceAddItem(""))
+                    //?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem("10/5/2022"))
+                    ?.addToBackStack(null)
+                    ?.commit()
+            }
+        } else {
+            binding.buttonAddLessonsItem.setOnClickListener {
+                val fragmentTransaction = fragmentManager?.beginTransaction()
+                    ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem(""))
+                    //?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem("10/5/2022"))
+                    ?.addToBackStack(null)
+                    ?.commit()
+            }
         }
+
     }
 
-    private fun getScreenOrientation(): Boolean {
+    private fun getScreenOrientationLandscape(): Boolean {
         return when (resources.configuration.orientation) {
             Configuration.ORIENTATION_PORTRAIT -> false
             Configuration.ORIENTATION_LANDSCAPE -> true
@@ -122,12 +136,26 @@ class LessonsItemListFragment: Fragment() {
 
 
     private fun setupClickListener() {
-        lessonsListAdapter.onLessonsItemClickListener = {
-            fragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceEditItem(it.id))
-                ?.addToBackStack(null)
-                ?.commit()
-       }
+
+        if(getScreenOrientationLandscape() == false) {
+            lessonsListAdapter.onLessonsItemClickListener = {
+                fragmentManager?.beginTransaction()
+                    ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceEditItem(it.id))
+                    ?.addToBackStack(null)
+                    ?.commit()
+            }
+        } else {
+            lessonsListAdapter.onLessonsItemClickListener = {
+                fragmentManager?.beginTransaction()
+                    ?.replace(R.id.shop_item_container, LessonsItemFragment.newInstanceEditItem(it.id))
+                    ?.addToBackStack(null)
+                    ?.commit()
+            }
+        }
+
+
+
+
     }
 
     private fun setupSwipeListener(rvLessonsList: RecyclerView) {
