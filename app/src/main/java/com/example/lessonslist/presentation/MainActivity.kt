@@ -1,5 +1,6 @@
 package com.example.lessonslist.presentation
 
+import android.accounts.AccountManager
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -7,17 +8,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.lessonslist.MyForegroundService
 import com.example.lessonslist.PaymentWork
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.ActivityMainBinding
@@ -30,10 +25,8 @@ import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.settings.SettingsItemFragment
-import com.example.lessonslist.presentation.student.StudentItemActivity
 import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentItemListFragment
-import com.example.lessonslist.presentation.student.StudentListAdapter
 import java.util.concurrent.TimeUnit
 
 
@@ -117,6 +110,20 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             })
            /**/
  /*work manager */
+        /*get account*/
+        val accManager : AccountManager = AccountManager.get(getApplicationContext())
+        val acc = accManager.getAccountsByType("com.google")
+        Log.d("accountName", acc.size.toString())
+        /*  val accCount = acc.size
+          Log.d("accountName", acc.get(0).name)
+          for (i in 0 until accCount) {
+              //Do your task here...
+              //Toast.makeText(applicationContext, acc[i].name, Toast.LENGTH_SHORT).show()
+              Log.d("accountName", acc[i].name)
+          }*/
+        /*get account*/
+
+
 
 }
 

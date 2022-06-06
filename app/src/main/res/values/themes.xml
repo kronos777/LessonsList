@@ -12,5 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">#0061A5</item>
         <!-- Customize your theme here. -->
+        <item name="calendarViewStyle">@style/CalendarViewCustomStyle</item>
+
     </style>
 </resources>

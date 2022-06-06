@@ -6,6 +6,7 @@ import com.example.lessonslist.databinding.ItemGroupEnabledBinding
 import com.example.lessonslist.databinding.ItemPaymentEnabledBinding
 
 class PaymentItemViewHolder(
-    val binding: ItemPaymentEnabledBinding
+    val binding: ViewDataBinding
+    //val binding: ItemPaymentEnabledBinding
 
 ) : RecyclerView.ViewHolder(binding.root)

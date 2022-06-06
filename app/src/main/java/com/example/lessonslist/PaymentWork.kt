@@ -134,11 +134,19 @@ class PaymentWork(
 
                                     //тут необходимо на каждого студента создать платеж и
                                     //(inputTitle: String, inputDescription: String, inputLessonsId: Int, inputStudentId: Int, inputStudent: String, inputPrice: String)
-                                    viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString())
-                                    // вычесть значение с платежного баланса
                                     val newBalanceStudent = student.paymentBalance.toInt() - lessonsItem.price
                                     namesStudentArrayList.add(studentData + ' ' + newBalanceStudent.toString())
                                     log(newBalanceStudent.toString())
+
+                                    if(newBalanceStudent > 0) {
+                                        viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString(), true)
+                                    } else if (newBalanceStudent < 0){
+                                        viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString(), false)
+                                        log("создан отрицательный платеж" + studentData)
+                                    }
+
+                                    // вычесть значение с платежного баланса
+
                                     //inputName: String?, inputLastName: String?, inputPaymentBalance: String, inputNotes: String, inputGroup: String
                                         //viewModelStudent.getStudentItem(student.id)
                                     //student.editStudentItem(student.name, student.lastname, newBalanceStudent.toString(), student.notes, student.group)

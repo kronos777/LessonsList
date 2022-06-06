@@ -85,7 +85,12 @@ class StudentItemFragment : Fragment() {
                     for (payment in it) {
                         if(payment.studentId == studentItemId) {
                             //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
-                            dataPaymentStudentModel!!.add(DataPaymentStudentModel(payment.title, payment.price))
+                            if (payment.enabled == true) {
+                                dataPaymentStudentModel!!.add(DataPaymentStudentModel("Оплачен: " + payment.title, payment.price.toString()))
+                            } else {
+                                dataPaymentStudentModel!!.add(DataPaymentStudentModel("Долг: " + payment.title, "-" + payment.price.toString()))
+                            }
+
                             Log.d("nowmodeadd", "aaa" + payment.title + " " + payment.price)
                         }
                     }

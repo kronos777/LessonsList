@@ -122,8 +122,8 @@ class PaymentItemFragment: Fragment() {
                 binding.etPaymentId.text.toString(),
                 binding.etDateId.text.toString(),
                 binding.etStudent.text.toString(),
-                binding.etPrice.text.toString()
-
+                binding.etPrice.text.toString(),
+                true
             )
         }
     }

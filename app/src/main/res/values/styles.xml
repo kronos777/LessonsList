@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CalendarViewCustomStyle">
+        <item name="android:background">@android:color/white</item>
+        <item name="calendar_date_background">@color/purple_200</item>
+        <item name="calendar_date_text_color">@color/custom_calendar_grid_color</item>
+        <item name="calendar_day_bar_background">@color/custom_calendar_days_bar_background</item>
+        <item name="calendar_day_bar_text_color">@color/white</item>
+        <item name="calendar_grid_color">@color/custom_calendar_grid_color</item>
+        <item name="calendar_grid_on_selected_dates">false</item>
+        <item name="calendar_month_text_color">@color/custom_calendar_month_text_color</item>
+        <item name="calendar_year_selection_arrows_color">
+            @color/white
+        </item>
+        <item name="calendar_year_selection_background">
+            @color/custom_calendar_year_selection_background
+        </item>
+        <item name="calendar_year_selection_text_color">
+            @color/white
+        </item>
+    </style>
+</resources>
