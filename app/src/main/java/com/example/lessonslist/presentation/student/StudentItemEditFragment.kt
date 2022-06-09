@@ -2,6 +2,7 @@ package com.example.lessonslist.presentation.student
 
 import android.R
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,7 +11,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ListView
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -25,16 +29,16 @@ import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import java.util.ArrayList
 
 
-class StudentItemFragment : Fragment() {
+class StudentItemEditFragment : Fragment() {
 
     private lateinit var viewModel: StudentItemViewModel
     private lateinit var viewModelPayment: PaymentListViewModel
 
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
-    private var _binding: FragmentStudentItemBinding? = null
-    private val binding: FragmentStudentItemBinding
-        get() = _binding ?: throw RuntimeException("FragmentStudentItemBinding == null")
+    private var _binding: FragmentStudentItemEditBinding? = null
+    private val binding: FragmentStudentItemEditBinding
+        get() = _binding ?: throw RuntimeException("FragmentStudentItemEditBinding == null")
 
 
     private lateinit var listView: ListView
@@ -62,7 +66,7 @@ class StudentItemFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-            _binding = FragmentStudentItemBinding.inflate(inflater, container, false)
+            _binding = FragmentStudentItemEditBinding.inflate(inflater, container, false)
             return binding.root
     }
 
@@ -72,9 +76,10 @@ class StudentItemFragment : Fragment() {
         viewModel = ViewModelProvider(this)[StudentItemViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        addTextChangeListeners()
         launchRightMode()
         observeViewModel()
+
+
 
         //viewModel.studentItem.
         dataPaymentStudentModel = ArrayList<DataPaymentStudentModel>()
@@ -115,6 +120,29 @@ class StudentItemFragment : Fragment() {
             binding.paymentStudent?.setVisibility (View.GONE)
         }
 
+
+        binding.paymentStudentAdd.setOnClickListener {
+            val inputEditTextField = EditText(requireActivity())
+            val dialog = AlertDialog.Builder(requireContext())
+                .setTitle("Пополнить баланс студента.")
+                //.setMessage("Message")
+                .setView(inputEditTextField)
+                .setPositiveButton("OK") { _, _ ->
+                    val editTextInput = inputEditTextField.text.toString()
+                    Log.d("editext value is:", editTextInput)
+                }
+                .setNegativeButton("Отмена", null)
+                .create()
+            dialog.show()
+
+
+            viewModel.studentItem.observe(viewLifecycleOwner) {
+                Log.d("new balance", it.paymentBalance.toString())
+            }
+            Log.d("new balance", inputEditTextField.text.toString())
+
+        }
+
     }
 
     private fun launchFragment(fragment: Fragment) {
@@ -134,46 +162,9 @@ class StudentItemFragment : Fragment() {
     private fun launchRightMode() {
         when (screenMode) {
             MODE_EDIT -> launchEditMode()
-            MODE_ADD  -> launchAddMode()
         }
     }
 
-    private fun addTextChangeListeners() {
-        binding.etName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetErrorInputName()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-        })
-        binding.etLastname.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetErrorInputLastName()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-        })
-        binding.etPaymentBalance.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetErrorInputPaymentBalance()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-        })
-
-    }
 
     private fun launchEditMode() {
         viewModel.getStudentItem(studentItemId)
@@ -181,24 +172,14 @@ class StudentItemFragment : Fragment() {
             viewModel.editStudentItem(
                 binding.etName.text?.toString(),
                 binding.etLastname.text?.toString(),
-                binding.etPaymentBalance.text.toString(),
+                binding.textViewPaymentBalance.text.toString(),
                 binding.etNotes.text.toString(),
                 binding.etGroup.text.toString()
             )
         }
     }
 
-    private fun launchAddMode() {
-        binding.saveButton.setOnClickListener {
-            viewModel.addStudentItem(
-                binding.etName.text?.toString(),
-                binding.etLastname.text?.toString(),
-                binding.etPaymentBalance.text.toString(),
-                binding.etNotes.text.toString(),
-                binding.etGroup.text.toString()
-            )
-        }
-    }
+
 
     private fun parseParams() {
         val args = requireArguments()
@@ -206,7 +187,7 @@ class StudentItemFragment : Fragment() {
             throw RuntimeException("Param screen mode is absent")
         }
         val mode = args.getString(SCREEN_MODE)
-        if (mode != MODE_EDIT && mode != MODE_ADD) {
+        if (mode != MODE_EDIT) {
             throw RuntimeException("Unknown screen mode $mode")
         }
         screenMode = mode
@@ -233,16 +214,10 @@ class StudentItemFragment : Fragment() {
         private const val MODE_ADD = "mode_add"
         private const val MODE_UNKNOWN = ""
 
-        fun newInstanceAddItem(): StudentItemFragment {
-            return StudentItemFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_ADD)
-                }
-            }
-        }
 
-        fun newInstanceEditItem(shopItemId: Int): StudentItemFragment {
-            return StudentItemFragment().apply {
+
+        fun newInstanceEditItem(shopItemId: Int): StudentItemEditFragment {
+            return StudentItemEditFragment().apply {
                 arguments = Bundle().apply {
                     putString(SCREEN_MODE, MODE_EDIT)
                     putInt(SHOP_ITEM_ID, shopItemId)

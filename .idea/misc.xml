@@ -22,21 +22,18 @@
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/nav_header.xml" value="0.10277777777777777" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/row_group_student_item.xml" value="0.35688405797101447" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/menu/nav_drawer_menu.xml" value="0.10277777777777777" />
+        <entry key="..\:/StudioProjects/app/src/main/res/layout/fragment_student_item_edit.xml" value="0.1" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout-land/activity_main.xml" value="0.31040564373897706" />
-        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout-land/fragment_lessons_item.xml" value="0.25" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout-land/row_lessons_group_item.xml" value="0.31040564373897706" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/activity_main.xml" value="0.358695652173913" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_calendar_payment.xml" value="0.358695652173913" />
-        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_calndar.xml" value="0.18802083333333333" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_group_item.xml" value="0.358695652173913" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_lessons_item.xml" value="0.21603260869565216" />
-        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_lessons_item_list.xml" value="0.18802083333333333" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_payment_item.xml" value="0.18854166666666666" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_payment_item_list.xml" value="0.358695652173913" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_student_item.xml" value="0.21603260869565216" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/item_group_enabled.xml" value="0.21603260869565216" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/item_lessons_enabled.xml" value="0.358695652173913" />
-        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/item_payment_disabled.xml" value="0.18802083333333333" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/item_payment_enabled.xml" value="0.358695652173913" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/item_student_disabled.xml" value="0.358695652173913" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/item_student_enabled.xml" value="0.358695652173913" />

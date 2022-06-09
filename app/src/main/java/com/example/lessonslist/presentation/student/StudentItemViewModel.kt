@@ -7,10 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.lessonslist.data.student.StudentListRepositoryImpl
-import com.example.lessonslist.domain.student.AddStudentItemUseCase
-import com.example.lessonslist.domain.student.EditStudentItemUseCase
-import com.example.lessonslist.domain.student.GetStudentItemUseCase
-import com.example.lessonslist.domain.student.StudentItem
+import com.example.lessonslist.domain.student.*
 
 
 import kotlinx.coroutines.launch
@@ -22,6 +19,7 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
     private val getStudentItemUseCase = GetStudentItemUseCase(repository)
     private val addStudentItemUseCase = AddStudentItemUseCase(repository)
     private val editStudentItemUseCase = EditStudentItemUseCase(repository)
+    private val editStudentItemPaymentBalanceUseCase = EditStudentItemPaymentBalanceUseCase(repository)
 
     private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean>
@@ -87,6 +85,13 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
                     finishWork()
                 }
             }
+        }
+    }
+
+    private fun editPaymentBalance(studentId: Int, paymentBalance: Float) {
+        viewModelScope.launch {
+            editStudentItemPaymentBalanceUseCase.editStudentItemPaymentBalance(studentId, paymentBalance)
+            finishWork()
         }
     }
 

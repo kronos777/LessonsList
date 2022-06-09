@@ -12,6 +12,8 @@ interface StudentListRepository {
 
     suspend fun editStudentItem(studentItem: StudentItem)
 
+    suspend fun editStudentItemPaymentBalance(studentItemId: Int, paymentBalance: Float)
+
     suspend fun getStudentItem(studentItemId: Int): StudentItem
 
     fun getStudentList(): LiveData<List<StudentItem>>

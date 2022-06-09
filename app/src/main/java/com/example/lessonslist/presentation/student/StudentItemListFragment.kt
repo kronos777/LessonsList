@@ -79,7 +79,8 @@ class StudentItemListFragment: Fragment() {
     private fun setupClickListener() {
         studentListAdapter.onStudentItemClickListener = {
             fragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment_item_container, StudentItemFragment.newInstanceEditItem(it.id))
+             //   ?.replace(R.id.fragment_item_container, StudentItemFragment.newInstanceEditItem(it.id))
+                ?.replace(R.id.fragment_item_container, StudentItemEditFragment.newInstanceEditItem(it.id))
                 ?.addToBackStack(null)
                 ?.commit()
        }
