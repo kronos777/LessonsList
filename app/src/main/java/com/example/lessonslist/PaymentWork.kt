@@ -134,23 +134,33 @@ class PaymentWork(
 
                                     //тут необходимо на каждого студента создать платеж и
                                     //(inputTitle: String, inputDescription: String, inputLessonsId: Int, inputStudentId: Int, inputStudent: String, inputPrice: String)
-                                    val newBalanceStudent = student.paymentBalance.toInt() - lessonsItem.price
+                                    val newBalanceStudent = calculatePaymentPriceAdd(student.paymentBalance.toInt(), lessonsItem.price.toInt())
                                     namesStudentArrayList.add(studentData + ' ' + newBalanceStudent.toString())
                                     log(newBalanceStudent.toString())
 
                                     if(newBalanceStudent > 0) {
-                                        viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString(), true)
-                                    } else if (newBalanceStudent < 0){
-                                        viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString(), false)
+                                        if(lessonsItem.price > student.paymentBalance){
+                                            val price = calculatePaymentPriceAddPlus(student.paymentBalance, lessonsItem.price)
+                                            viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, price.toString(), false)
+                                        } else {
+                                            viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString(), true)
+                                       }
+                                     } else if (newBalanceStudent < 0){
+                                        viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, newBalanceStudent.toString(), false)
                                         log("создан отрицательный платеж" + studentData)
+                                    } else if (student.paymentBalance < 0){
+                                        viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, (- lessonsItem.price.toInt()).toString(), false)
+
                                     }
 
+
+                                    dbStudent.editStudentItemPaymentBalance(student.id, (student.paymentBalance - lessonsItem.price).toFloat())
                                     // вычесть значение с платежного баланса
 
                                     //inputName: String?, inputLastName: String?, inputPaymentBalance: String, inputNotes: String, inputGroup: String
                                         //viewModelStudent.getStudentItem(student.id)
                                     //student.editStudentItem(student.name, student.lastname, newBalanceStudent.toString(), student.notes, student.group)
-                                    dbStudent.editStudentItemPaymentBalance(student.id, newBalanceStudent.toFloat())
+
                                 }
                             }
                             createNotification("Список уроков", "выставлены счета ученикам:" + namesStudentArrayList.toString())
@@ -204,6 +214,50 @@ class PaymentWork(
         return Result.success()
       //  Log.d("lesList", less.toString())
 
+    }
+
+
+    private fun calculatePaymentPriceAddPlus(paymentBalance: Int, priceLessons: Int): Int {
+        val calculatePaymentPrice: Int = paymentBalance - priceLessons
+
+        /*if(priceLessons > paymentBalance) {
+            for (it in 0..paymentBalance) {
+            //priceLessons?.let {
+                if (it < priceLessons) {
+                    log(it.toString() + "menee")
+                } else {
+                    log(it.toString() + "bolee")
+                }
+
+            }
+        }*/
+        return calculatePaymentPrice
+        //   return l
+    }
+
+
+
+
+    private fun calculatePaymentPriceAdd(paymentBalance: Int, priceLessons: Int): Int {
+        val calculatePaymentPrice: Int
+        if(paymentBalance > 0){
+            calculatePaymentPrice = paymentBalance - priceLessons
+        } else {
+            calculatePaymentPrice = 0 - priceLessons
+        }
+        /*if(priceLessons > paymentBalance) {
+            for (it in 0..paymentBalance) {
+            //priceLessons?.let {
+                if (it < priceLessons) {
+                    log(it.toString() + "menee")
+                } else {
+                    log(it.toString() + "bolee")
+                }
+
+            }
+        }*/
+        return calculatePaymentPrice
+    //   return l
     }
 
 

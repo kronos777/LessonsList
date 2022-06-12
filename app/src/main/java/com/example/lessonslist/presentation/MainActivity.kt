@@ -11,10 +11,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.lessonslist.PaymentWork
 import com.example.lessonslist.R
+import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
@@ -100,8 +102,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
  /*work manager */
         //        PeriodicWorkRequest myWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class, 30, TimeUnit.MINUTES, 25, TimeUnit.MINUTES).build();
 
-        val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES).build()
-        //val request = OneTimeWorkRequestBuilder<PaymentWork>().build()
+        //val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES).build()
+        val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
         WorkManager.getInstance(this).enqueue(request)
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
             .observe(this, Observer {
@@ -123,8 +125,10 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
               Log.d("accountName", acc[i].name)
           }*/
         /*get account*/
-
-
+        val database: String = AppDatabase.DB_NAME
+        val path = applicationContext.filesDir.absolutePath
+        Toast.makeText(this, "database name!" + database.toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "path name!" + path.toString(), Toast.LENGTH_SHORT).show();
 
 }
 

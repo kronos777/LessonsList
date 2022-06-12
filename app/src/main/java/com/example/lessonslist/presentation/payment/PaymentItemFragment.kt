@@ -103,13 +103,22 @@ class PaymentItemFragment: Fragment() {
             viewModel.editPaymentItem(
                 binding.etTitle.text.toString(),
                 binding.etDescription.text.toString(),
+                binding.etLessonId.text.toString(),
                 binding.etStudentId.text.toString(),
-                binding.etStudent.text.toString(),
                 binding.etDateId.text.toString(),
-                binding.etPaymentId.text.toString(),
-                binding.etPrice.text.toString()
-
+                binding.etStudent.text.toString(),
+                binding.etPrice.text.toString(),
+                true
             )
+            //               inputTitle: String, +
+        //                    inputDescription: String, +
+            // inputLessonsId: String,
+        //                    inputStudentId: String,
+            //                inputDatePayment: String,
+        //                    inputStudent: String,
+            //              inputPrice: String,
+        //                    enabledPayment: Boolean
+            //                    //val item add parametrs StudentItems
         }
     }
 
@@ -118,8 +127,8 @@ class PaymentItemFragment: Fragment() {
             viewModel.addPaymentItem(
                 binding.etTitle.text.toString(),
                 binding.etDescription.text.toString(),
+                binding.etLessonId.text.toString(),
                 binding.etStudentId.text.toString(),
-                binding.etPaymentId.text.toString(),
                 binding.etDateId.text.toString(),
                 binding.etStudent.text.toString(),
                 binding.etPrice.text.toString(),

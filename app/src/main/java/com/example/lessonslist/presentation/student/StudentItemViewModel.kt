@@ -80,7 +80,7 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
             _studentItem.value?.let {
                 viewModelScope.launch {
                     val item = it.copy(name = name, lastname = lastName, paymentBalance = paymentBalance.toInt(), group = group, notes = notes, enabled = true)
-                    //val item add parametrs StudentItems
+
                     editStudentItemUseCase.editStudentItem(item)
                     finishWork()
                 }
@@ -88,7 +88,7 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    private fun editPaymentBalance(studentId: Int, paymentBalance: Float) {
+    fun editPaymentBalance(studentId: Int, paymentBalance: Float) {
         viewModelScope.launch {
             editStudentItemPaymentBalanceUseCase.editStudentItemPaymentBalance(studentId, paymentBalance)
             finishWork()
