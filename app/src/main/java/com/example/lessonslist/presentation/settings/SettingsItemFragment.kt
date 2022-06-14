@@ -1,6 +1,7 @@
 package com.example.lessonslist.presentation.settings
 
 
+import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.databinding.FragmentSettingsItemBinding
+import com.example.lessonslist.presentation.MainActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 
 
 class SettingsItemFragment : Fragment() {
@@ -20,8 +25,8 @@ class SettingsItemFragment : Fragment() {
     private val binding: FragmentSettingsItemBinding
         get() = _binding ?: throw RuntimeException("FragmentGroupItemBinding == null")
 
-
-
+    private val appDatabase = AppDatabase
+    private lateinit var contextForDump: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +36,8 @@ class SettingsItemFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        contextForDump = context
+
         if (context is OnEditingFinishedListener) {
             onEditingFinishedListener = context
         } else {
@@ -49,10 +56,14 @@ class SettingsItemFragment : Fragment() {
         return binding.root
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         (activity as AppCompatActivity).supportActionBar?.title = "Настройки"
+
+
 
 
         binding.switch1.setOnClickListener {
@@ -61,6 +72,15 @@ class SettingsItemFragment : Fragment() {
             } else {
                 log(binding.switch1.text.toString() + " Выключено ")
             }
+        }
+      //  val appContext = this.context?.applicationContext
+
+
+
+        binding.backupButton.setOnClickListener {
+           //val activity = (activity as AppCompatActivity).requireActivity()
+            //val fragmentActivity = (activity as SettingsItemFragment)
+
         }
 
 }

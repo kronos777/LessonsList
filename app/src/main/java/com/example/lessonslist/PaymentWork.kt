@@ -139,22 +139,25 @@ class PaymentWork(
                                     log(newBalanceStudent.toString())
 
                                     if(newBalanceStudent > 0) {
-                                        if(lessonsItem.price > student.paymentBalance){
+                                        if(lessonsItem.price > student.paymentBalance) {
                                             val price = calculatePaymentPriceAddPlus(student.paymentBalance, lessonsItem.price)
                                             viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, price.toString(), false)
+                                            dbStudent.editStudentItemPaymentBalance(student.id, (0).toFloat())
                                         } else {
                                             viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString(), true)
-                                       }
-                                     } else if (newBalanceStudent < 0){
-                                        viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, newBalanceStudent.toString(), false)
+                                            dbStudent.editStudentItemPaymentBalance(student.id, (student.paymentBalance - lessonsItem.price).toFloat())
+                                        }
+                                     } else if (newBalanceStudent <= 0) {
+                                        viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, (- lessonsItem.price).toString(), false)
+                                        dbStudent.editStudentItemPaymentBalance(student.id, (0).toFloat())
                                         log("создан отрицательный платеж" + studentData)
-                                    } else if (student.paymentBalance < 0){
-                                        viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, (- lessonsItem.price.toInt()).toString(), false)
-
+                                    } else if (student.paymentBalance <= 0) {
+                                        viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, (- lessonsItem.price).toString(), false)
+                                        dbStudent.editStudentItemPaymentBalance(student.id, (0).toFloat())
                                     }
 
 
-                                    dbStudent.editStudentItemPaymentBalance(student.id, (student.paymentBalance - lessonsItem.price).toFloat())
+
                                     // вычесть значение с платежного баланса
 
                                     //inputName: String?, inputLastName: String?, inputPaymentBalance: String, inputNotes: String, inputGroup: String
@@ -243,7 +246,7 @@ class PaymentWork(
         if(paymentBalance > 0){
             calculatePaymentPrice = paymentBalance - priceLessons
         } else {
-            calculatePaymentPrice = 0 - priceLessons
+            calculatePaymentPrice = paymentBalance + priceLessons
         }
         /*if(priceLessons > paymentBalance) {
             for (it in 0..paymentBalance) {

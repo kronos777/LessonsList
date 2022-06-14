@@ -2,29 +2,20 @@ package com.example.lessonslist.presentation.student
 
 import android.R
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.lessonslist.databinding.FragmentStudentItemBinding
 import com.example.lessonslist.databinding.FragmentStudentItemEditBinding
 import com.example.lessonslist.domain.student.StudentItem
-import com.example.lessonslist.presentation.group.DataStudentGroupModel
-import com.example.lessonslist.presentation.lessons.LessonsItemFragment
-import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
-
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class StudentItemEditFragment : Fragment() {
@@ -111,16 +102,18 @@ class StudentItemEditFragment : Fragment() {
 
             }
 
-            binding.paymentStudent.setOnClickListener {
+          /*  binding.paymentStudent.setOnClickListener {
                 launchFragment(PaymentItemListFragment.newInstanceStudentId(studentItemId))
             }
-
+*/
         } else {
-            binding.paymentStudent?.setVisibility (View.GONE)
+  //          binding.paymentStudent?.setVisibility (View.GONE)
         }
 
+
         var newBalance: Int
-        binding.paymentStudentAdd.setOnClickListener {
+/*
+        binding.navigation_add_balance.setOnClickListener {
             val inputEditTextField = EditText(requireActivity())
             val dialog = AlertDialog.Builder(requireContext())
                 .setTitle("Пополнить баланс студента.")
@@ -139,29 +132,83 @@ class StudentItemEditFragment : Fragment() {
                         }
                         Toast.makeText(getActivity(),"new balance!"+(it.paymentBalance + newBalance).toString(),Toast.LENGTH_SHORT).show();
                         binding.textViewPaymentBalance.setText((it.paymentBalance + newBalance).toString())
-                        if(it.paymentBalance > sumOffDebts()) {
+                   /*     if(it.paymentBalance > sumOffDebts()) {
                             alertDialogSetMove(it.paymentBalance + newBalance)
-                        }
+                        }*/
                     }
                 }
                 .setNegativeButton("Отмена", null)
                 .create()
             dialog.show()
-
-
-
-            //Toast.makeText(getActivity(),"inputdata!"+inputEditTextField.text.toString(),Toast.LENGTH_SHORT).show();
+           //Toast.makeText(getActivity(),"inputdata!"+inputEditTextField.text.toString(),Toast.LENGTH_SHORT).show();
             //Log.d("new balance", inputEditTextField.text.toString())
+        }
 
+*/
+/*
+        binding.paymentPaymentOff.setOnClickListener {
+            viewModel.studentItem.observe(viewLifecycleOwner) {
+                payOffDebtsAll(studentItemId, it.paymentBalance)
+            }
+        }*/
+
+      //  }
+   /*     binding.navView.setOnNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.navigation_save -> Toast.makeText(getActivity(),"save data!",Toast.LENGTH_SHORT).show();
+            }
+        }
+*/
+        binding.navView.setOnClickListener {
+            when(it.id) {
+
+            }
         }
 
 
-      //  }
+    }
 
 
 
+    private fun payOffDebtsAll(studentId: Int, studentBalance: Int): Int {
+        var summPaymentDolg: ArrayList<Int> = ArrayList()
+        /// if(dataPaymentStudentModel != null) {
+        viewModel = ViewModelProvider(this)[StudentItemViewModel::class.java]
+        //viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
+        viewModelPaymentItem = ViewModelProvider(this)[PaymentItemViewModel::class.java]
+        viewModelPayment.paymentList.observe(viewLifecycleOwner) {
+            if(it.size > 0) {
+                for (payment in it) {
+                    if(!payment.enabled && studentId == payment.studentId) {
+                       // Log.d("tagView:", studentItemId.toString())
+                        if(studentBalance >= payment.price) {
+                            viewModelPaymentItem.getPaymentItem(payment.id)
+                            viewModelPaymentItem.editPaymentItem(payment.title, payment.description, payment.lessonsId.toString(),
+                                payment.studentId.toString(), payment.datePayment, payment.student, (payment.price + payment.price).toString(), true)
+
+                            //(inputTitle: String, inputDescription: String, inputLessonsId: String, inputStudentId: String,
+                            // inputDatePayment: String, inputStudent: String, inputPrice: String, enabledPayment: Boolean)
+
+                            val balance = studentBalance + payment.price
+                            Toast.makeText(getActivity(), "new balance!" + balance.toString(), Toast.LENGTH_SHORT).show();
+                            viewModel.editPaymentBalance(payment.studentId, balance.toFloat())
+                            Toast.makeText(getActivity(), "paymentBalance!" + (payment.studentId + payment.price.toFloat()).toString(), Toast.LENGTH_SHORT).show();
+//idPaymnet: Int, inputTitle: String, inputDescription: String, inputLessonsId: String, inputStudentId: String, inputDatePayment: String, inputStudent: String, inputPrice: String, enabledPayment: Boolean
+                            summPaymentDolg.add(payment.price)
+                            //dolgPay.add(payment.id.toString() + " " + payment.title + ' ' + payment.price + ' ' + payment.enabled)
+                        } else {
+                            Toast.makeText(getActivity(), "На оплату оставшихся долгов не хватает средств!", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }
+            }
 
 
+
+        }
+
+        return summPaymentDolg.sum()
     }
 
     private fun alertDialogSetMove(studentBalance: Int) {
@@ -169,7 +216,7 @@ class StudentItemEditFragment : Fragment() {
             .setTitle("Сумма баланса позволяет списать все долги студента.")
             .setPositiveButton("Списать долги") { _, _ ->
                 //Toast.makeText(getActivity(), "Долги в количестве " + payOffDebtsAll().toString() + " были списаны и неолаченных платежей нет.", Toast.LENGTH_SHORT).show();
-                payOffDebtsAll(studentBalance)
+              // payOffDebtsAll(studentBalance)
             }
             .setNegativeButton("Отмена", null)
             .create()
@@ -196,41 +243,7 @@ class StudentItemEditFragment : Fragment() {
     }
 
 
-    private fun payOffDebtsAll(studentBalance: Int): Int {
-        var summPaymentDolg: ArrayList<Int> = ArrayList()
-            /// if(dataPaymentStudentModel != null) {
-            viewModel = ViewModelProvider(this)[StudentItemViewModel::class.java]
-            //viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
-            viewModelPaymentItem = ViewModelProvider(this)[PaymentItemViewModel::class.java]
-            viewModelPayment.paymentList.observe(viewLifecycleOwner) {
-            if(it.size > 0) {
-                for (payment in it) {
-                    if(!payment.enabled && studentItemId == payment.studentId) {
-                        Log.d("tagView:", studentItemId.toString())
-                        viewModelPaymentItem.getPaymentItem(payment.id)
-                        viewModelPaymentItem.editPaymentItem(payment.title, payment.description, payment.lessonsId.toString(),
-                            payment.studentId.toString(), payment.datePayment, payment.student, (payment.price + payment.price).toString(), true)
 
-                        //(inputTitle: String, inputDescription: String, inputLessonsId: String, inputStudentId: String,
-                        // inputDatePayment: String, inputStudent: String, inputPrice: String, enabledPayment: Boolean)
-
-                        val balance = studentBalance + payment.price
-                        Toast.makeText(getActivity(), "new balance!" + balance.toString(), Toast.LENGTH_SHORT).show();
-                        viewModel.editPaymentBalance(payment.studentId, balance.toFloat())
-                        Toast.makeText(getActivity(), "paymentBalance!" + (payment.studentId + payment.price.toFloat()).toString(), Toast.LENGTH_SHORT).show();
-//idPaymnet: Int, inputTitle: String, inputDescription: String, inputLessonsId: String, inputStudentId: String, inputDatePayment: String, inputStudent: String, inputPrice: String, enabledPayment: Boolean
-                        summPaymentDolg.add(payment.price)
-                        //dolgPay.add(payment.id.toString() + " " + payment.title + ' ' + payment.price + ' ' + payment.enabled)
-                    }
-            }
-        }
-
-
-
-        }
-
-        return summPaymentDolg.sum()
-    }
 
 
 
@@ -257,7 +270,7 @@ class StudentItemEditFragment : Fragment() {
 
     private fun launchEditMode() {
         viewModel.getStudentItem(studentItemId)
-        binding.saveButton.setOnClickListener {
+        /*binding.saveButton.setOnClickListener {
             viewModel.editStudentItem(
                 binding.etName.text?.toString(),
                 binding.etLastname.text?.toString(),
@@ -265,7 +278,7 @@ class StudentItemEditFragment : Fragment() {
                 binding.etNotes.text.toString(),
                 binding.etGroup.text.toString()
             )
-        }
+        }*/
     }
 
 

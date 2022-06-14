@@ -26,6 +26,7 @@
     <string name="payment_student_btn">Платежи студента</string>
     <string name="payment_lesson_btn">Платежи урока</string>
     <string name="payment_lesson_btn_add">Пополнить баланс</string>
+    <string name="payment_payment_off">Списать долги</string>
     <string name="error_input_name">Некоректное имя</string>
     <string name="error_input_last_name">Некоректная фамилия</string>
     <string name="error_input_payment_balance">Некоректное значение баланса</string>
