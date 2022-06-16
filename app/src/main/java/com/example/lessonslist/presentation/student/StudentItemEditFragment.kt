@@ -159,11 +159,7 @@ class StudentItemEditFragment : Fragment() {
             }
         }
 */
-        binding.navView.setOnClickListener {
-            when(it.id) {
 
-            }
-        }
 
 
     }
