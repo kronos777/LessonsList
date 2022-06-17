@@ -139,7 +139,8 @@ fun testData (): List<LessonsItem>? {
                     val  dd = CalendarDate(Date(date[0]))
                     if(!item.enabled) {
                         calendarPicList += EventItemsList(dd, "payment", item.student)
-
+                    } else {
+                        calendarPicList += EventItemsList(dd, "paymentyes", item.student)
                     }
                 }
 
@@ -277,6 +278,8 @@ fun testData (): List<LessonsItem>? {
     private fun setDatesIndicators(calendarPicList: List<EventItemsList>): List<EventItem> {
         val context = requireContext()
         val eventItems = mutableListOf<EventItem>()
+        var payNoCount = 0
+        var payYesCount = 0
 
         for (event in calendarPicList) {
             val title = event.eventName
@@ -286,7 +289,7 @@ fun testData (): List<LessonsItem>? {
                 eventItems += EventItem(
                     eventName = title,
                     date = date,
-                    color = context.getColorInt(R.color.event_3_color)
+                    color = context.getColorInt(R.color.event_2_color)
                 )
             } else if (event.color == "payment") {
                 //log(title)
@@ -295,10 +298,14 @@ fun testData (): List<LessonsItem>? {
                     date = date,
                     color = context.getColorInt(R.color.event_1_color)
                 )
+            } else if (event.color == "paymentyes") {
+
+                eventItems += EventItem(
+                    eventName = title,
+                    date = date,
+                    color = context.getColorInt(R.color.event_3_color)
+                )
             }
-
-
-
 
         }
 
@@ -318,6 +325,21 @@ fun testData (): List<LessonsItem>? {
             val builder = AlertDialog.Builder(requireContext())
                 .setTitle("$date")
                 .setAdapter(adapter, null)
+                .setCancelable(false)
+                .setPositiveButton("Платежи", DialogInterface.OnClickListener {
+                        dialog, id ->
+                    dialog.dismiss()
+                })
+                .setNeutralButton("Закрыть", DialogInterface.OnClickListener {
+                        dialog, id ->
+                    dialog.dismiss()
+                })
+                .setNegativeButton("Уроки", DialogInterface.OnClickListener {
+                        dialog, id ->
+                    //    log(date.toString())
+                    //launchFragment(PaymentItemListFragment.newInstanceDateId(date.toString()))
+                })
+
 
             val dialog = builder.create()
             dialog.show()

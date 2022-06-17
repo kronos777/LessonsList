@@ -80,7 +80,6 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
             _studentItem.value?.let {
                 viewModelScope.launch {
                     val item = it.copy(name = name, lastname = lastName, paymentBalance = paymentBalance.toInt(), group = group, notes = notes, enabled = true)
-
                     editStudentItemUseCase.editStudentItem(item)
                     finishWork()
                 }

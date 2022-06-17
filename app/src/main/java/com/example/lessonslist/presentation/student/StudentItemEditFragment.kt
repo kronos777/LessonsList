@@ -2,6 +2,7 @@ package com.example.lessonslist.presentation.student
 
 import android.R
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.databinding.FragmentStudentItemEditBinding
 import com.example.lessonslist.domain.student.StudentItem
+import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -102,18 +104,18 @@ class StudentItemEditFragment : Fragment() {
 
             }
 
-          /*  binding.paymentStudent.setOnClickListener {
+           binding.paymentStudent.setOnClickListener {
                 launchFragment(PaymentItemListFragment.newInstanceStudentId(studentItemId))
             }
-*/
+/* */
         } else {
-  //          binding.paymentStudent?.setVisibility (View.GONE)
+            binding.paymentStudent?.setVisibility (View.GONE)
         }
 
 
         var newBalance: Int
-/*
-        binding.navigation_add_balance.setOnClickListener {
+
+        binding.paymentStudentAdd.setOnClickListener {
             val inputEditTextField = EditText(requireActivity())
             val dialog = AlertDialog.Builder(requireContext())
                 .setTitle("Пополнить баланс студента.")
@@ -122,20 +124,27 @@ class StudentItemEditFragment : Fragment() {
                 .setPositiveButton("OK") { _, _ ->
                     val editTextInput = inputEditTextField.text.toString()
                     Log.d("editext value is:", editTextInput)
-                    Toast.makeText(getActivity(),"setbalance!"+editTextInput,Toast.LENGTH_SHORT).show();
-                    newBalance = editTextInput.toInt()
-                    viewModel.studentItem.observe(viewLifecycleOwner) {
-                        //Log.d("new balance", it.paymentBalance.toString())
-                        viewModel.editPaymentBalance(it.id, (it.paymentBalance + newBalance).toFloat())
-                        if(it.paymentBalance < 0) {
-                            Toast.makeText(getActivity(),"payment balance"+(it.paymentBalance).toString(),Toast.LENGTH_SHORT).show();
+
+                    if(isNumeric(editTextInput)){
+                        Toast.makeText(getActivity(),"Строка число можно сохранять.",Toast.LENGTH_SHORT).show();
+                        newBalance = editTextInput.toInt()
+                        viewModel.studentItem.observe(viewLifecycleOwner) {
+                            //Log.d("new balance", it.paymentBalance.toString())
+                            viewModel.editPaymentBalance(it.id, (it.paymentBalance + newBalance).toFloat())
+                            if(it.paymentBalance < 0) {
+                                Toast.makeText(getActivity(),"payment balance"+(it.paymentBalance).toString(),Toast.LENGTH_SHORT).show();
+                            }
+                            Toast.makeText(getActivity(),"new balance!"+(it.paymentBalance + newBalance).toString(),Toast.LENGTH_SHORT).show();
+                            binding.textViewPaymentBalance.setText((it.paymentBalance + newBalance).toString())
+                            /*     if(it.paymentBalance > sumOffDebts()) {
+                                     alertDialogSetMove(it.paymentBalance + newBalance)
+                                 }*/
                         }
-                        Toast.makeText(getActivity(),"new balance!"+(it.paymentBalance + newBalance).toString(),Toast.LENGTH_SHORT).show();
-                        binding.textViewPaymentBalance.setText((it.paymentBalance + newBalance).toString())
-                   /*     if(it.paymentBalance > sumOffDebts()) {
-                            alertDialogSetMove(it.paymentBalance + newBalance)
-                        }*/
+                    } else {
+                        Toast.makeText(getActivity(),"Строка не является числом, сохранить невозможно.",Toast.LENGTH_SHORT).show();
                     }
+
+
                 }
                 .setNegativeButton("Отмена", null)
                 .create()
@@ -144,27 +153,30 @@ class StudentItemEditFragment : Fragment() {
             //Log.d("new balance", inputEditTextField.text.toString())
         }
 
-*/
-/*
+
+
+        /*
         binding.paymentPaymentOff.setOnClickListener {
             viewModel.studentItem.observe(viewLifecycleOwner) {
                 payOffDebtsAll(studentItemId, it.paymentBalance)
             }
-        }*/
-
-      //  }
-   /*     binding.navView.setOnNavigationItemSelectedListener {
-            when(it.itemId) {
-                R.id.navigation_save -> Toast.makeText(getActivity(),"save data!",Toast.LENGTH_SHORT).show();
-            }
         }
 */
+      //  }
 
+
+
+        binding.imageView.setOnClickListener {
+
+        }
 
 
     }
 
-
+    private fun isNumeric(toCheck: String): Boolean {
+        val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
+        return toCheck.matches(regex)
+    }
 
     private fun payOffDebtsAll(studentId: Int, studentBalance: Int): Int {
         var summPaymentDolg: ArrayList<Int> = ArrayList()
@@ -266,7 +278,7 @@ class StudentItemEditFragment : Fragment() {
 
     private fun launchEditMode() {
         viewModel.getStudentItem(studentItemId)
-        /*binding.saveButton.setOnClickListener {
+        /**/binding.saveButton.setOnClickListener {
             viewModel.editStudentItem(
                 binding.etName.text?.toString(),
                 binding.etLastname.text?.toString(),
@@ -274,7 +286,8 @@ class StudentItemEditFragment : Fragment() {
                 binding.etNotes.text.toString(),
                 binding.etGroup.text.toString()
             )
-        }*/
+        }
+
     }
 
 
@@ -304,6 +317,7 @@ class StudentItemEditFragment : Fragment() {
 
     }
 
+
     companion object {
 
         private const val SCREEN_MODE = "extra_mode"
@@ -324,3 +338,4 @@ class StudentItemEditFragment : Fragment() {
         }
     }
 }
+
