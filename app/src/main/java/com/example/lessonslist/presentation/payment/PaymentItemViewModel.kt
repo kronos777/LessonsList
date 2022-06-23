@@ -146,6 +146,13 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
         return result
     }
 
+    fun changeEnableState(paymentItem: PaymentItem, price: Int) {
+        viewModelScope.launch {
+            val newItem = paymentItem.copy(price = price, enabled = !paymentItem.enabled)
+            editPaymentItemUseCase.editPaymentItem(newItem)
+        }
+    }
+
     fun deleteGroupItem(paymentItem: PaymentItem) {
         viewModelScope.launch {
             deletePaymentItemUseCase.deletePaymentItem(paymentItem)

@@ -19,6 +19,7 @@ import com.example.lessonslist.databinding.FragmentCalndarBinding
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsListViewModel
+import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import ru.cleverpumpkin.calendar.CalendarDate
 import ru.cleverpumpkin.calendar.CalendarView
@@ -275,6 +276,14 @@ fun testData (): List<LessonsItem>? {
     }
 
 
+    private fun launchFragment(fragment: Fragment) {
+        requireActivity().supportFragmentManager.popBackStack()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(com.example.lessonslist.R.id.fragment_item_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
     private fun setDatesIndicators(calendarPicList: List<EventItemsList>): List<EventItem> {
         val context = requireContext()
         val eventItems = mutableListOf<EventItem>()
@@ -328,18 +337,17 @@ fun testData (): List<LessonsItem>? {
                 .setCancelable(false)
                 .setPositiveButton("Платежи", DialogInterface.OnClickListener {
                         dialog, id ->
-                    dialog.dismiss()
+                    launchFragment(PaymentItemListFragment.newInstanceDateId(date.toString()))
+                })
+                .setNegativeButton("Уроки", DialogInterface.OnClickListener {
+                        dialog, id ->
+                    //    log(date.toString())
+                    launchFragment(LessonsItemListFragment.newInstanceDateId(date.toString()))
                 })
                 .setNeutralButton("Закрыть", DialogInterface.OnClickListener {
                         dialog, id ->
                     dialog.dismiss()
                 })
-                .setNegativeButton("Уроки", DialogInterface.OnClickListener {
-                        dialog, id ->
-                    //    log(date.toString())
-                    //launchFragment(PaymentItemListFragment.newInstanceDateId(date.toString()))
-                })
-
 
             val dialog = builder.create()
             dialog.show()

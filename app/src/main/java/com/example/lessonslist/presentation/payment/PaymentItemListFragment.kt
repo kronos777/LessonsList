@@ -168,6 +168,17 @@ class PaymentItemListFragment: Fragment() {
         itemTouchHelper.attachToRecyclerView((rvPaymentList))
     }
 
+
+
+    private fun setupLongClickListener() {
+        paymentListAdapter.onPaymentItemClickListener = {
+            viewModel.changeEnableState(it)
+        }
+    }
+
+
+
+
     companion object {
 
         private const val SCREEN_MODE = "screen_mode"

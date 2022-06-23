@@ -18,8 +18,13 @@
     <item
         android:id="@+id/muItem7"
         android:title="Список учеников" />
-
     <item
         android:id="@+id/muItem2"
         android:title="Настройки" />
+    <item
+        android:id="@+id/muItem9"
+        android:title="Сделать резервную копию" />
+    <item
+        android:id="@+id/muItem10"
+        android:title="Восстановить из резервной копии" />
 </menu>

@@ -15,7 +15,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.lessonslist.PaymentWork
 import com.example.lessonslist.R
@@ -34,8 +33,6 @@ import com.example.lessonslist.presentation.student.StudentItemEditFragment
 import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentItemListFragment
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
-import java.security.AccessController.getContext
-import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, CalendarPaymentItemFragment.OnEditingFinishedListener, SettingsItemFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener {
@@ -44,6 +41,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private lateinit var binding: ActivityMainBinding
 
     lateinit var toggle: ActionBarDrawerToggle
+
+    private lateinit var backup: RoomBackup
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +60,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 launchFragment(CalendarItemFragment())
             }
         }
+
+        backup = RoomBackup(this)
 
         /* setupRecyclerView()
 
@@ -84,16 +85,22 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+
+
+
         binding.navView?.setNavigationItemSelectedListener {
             when (it.itemId) {
             //    R.id.muItem1 -> goGroupFragment()
-                R.id.muItem2 -> goSettingsFragment()
+                //      R.id.muItem2 -> launchFragment(SettingsItemFragment())
+                R.id.muItem2 -> Toast.makeText(this, "privet i punkt menu.", Toast.LENGTH_SHORT).show()
                 R.id.muItem3 -> launchFragment(CalendarItemFragment())
                 R.id.muItem4 -> goPaymentFragment()
                 R.id.muItem5 -> goGroupListFragment()
                 R.id.muItem6 -> goLessonsListFragment()
                 R.id.muItem7 -> goStudentListFragment()
                 R.id.muItem8 -> goPaymentCalendarFragment()
+                R.id.muItem9 -> backup()
+                R.id.muItem10 -> restore()
             }
             true
         }
@@ -185,6 +192,43 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
 
+    }
+
+
+    private fun backup() {
+        backup
+            .database(AppDatabase.getInstance(applicationContext as Application))
+            .enableLogDebug(true)
+            .backupIsEncrypted(true)
+            .customEncryptPassword("YOUR_SECRET_PASSWORD")
+            .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_CUSTOM_DIALOG)
+            //.backupLocation(RoomBackup.BACKUP_FILE_LOCATION_INTERNAL)
+            .maxFileCount(5)
+            .apply {
+                onCompleteListener { success, message, exitCode ->
+                    //Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
+                    //    Toast.makeText(this, "vse ok!", Toast.LENGTH_SHORT).show();
+
+                    //  if (success) restartApp(Intent(this@MainActivity, MainActivity::class.java))
+                }
+            }
+            .backup()
+    }
+
+    private fun restore() {
+        backup
+            .database(AppDatabase.getInstance(applicationContext as Application))
+            .enableLogDebug(true)
+            .backupIsEncrypted(true)
+            .customEncryptPassword("YOUR_SECRET_PASSWORD")
+            .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_CUSTOM_DIALOG)
+            .apply {
+                onCompleteListener { success, message, exitCode ->
+                    Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
+                    if (success) restartApp(Intent(this@MainActivity, MainActivity::class.java))
+                }
+            }
+            .restore()
     }
 
 
@@ -381,6 +425,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
          viewModel.changeEnableState(it)
      }
     }*/
+
     companion object {
              const val BACK_STACK_ROOT_TAG = "root_fragment"
     }

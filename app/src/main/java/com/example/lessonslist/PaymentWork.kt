@@ -148,7 +148,8 @@ class PaymentWork(
                                             dbStudent.editStudentItemPaymentBalance(student.id, (student.paymentBalance - lessonsItem.price).toFloat())
                                         }
                                      } else if (newBalanceStudent <= 0) {
-                                        viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, (- lessonsItem.price).toString(), false)
+                                        val price = calculatePaymentPriceAddPlus(student.paymentBalance, lessonsItem.price)
+                                        viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, price.toString(), false)
                                         dbStudent.editStudentItemPaymentBalance(student.id, (0).toFloat())
                                         log("создан отрицательный платеж" + studentData)
                                     } else if (student.paymentBalance <= 0) {

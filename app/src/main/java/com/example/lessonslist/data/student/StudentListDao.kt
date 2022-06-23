@@ -6,6 +6,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.lessonslist.domain.student.StudentItem
 
 @Dao
 interface StudentListDao {
@@ -18,7 +19,7 @@ interface StudentListDao {
 
     @Query("DELETE FROM student_items WHERE id=:studentItemId")
     suspend fun deleteStudentItem(studentItemId: Int)
-// @Query("UPDATE item SET quantity = quantity + 1 WHERE id = :id")
+
     @Query("UPDATE student_items SET paymentBalance =:paymentBalance WHERE id=:studentItemId")
     suspend fun editStudentItemPaymentBalance(studentItemId: Int, paymentBalance: Float)
 

@@ -22,11 +22,16 @@ import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupItemViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
+import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
+import com.example.lessonslist.presentation.student.StudentItemViewModel
 
 class PaymentItemFragment: Fragment() {
 
 
     private lateinit var viewModel: PaymentItemViewModel
+    private lateinit var viewModelStudent: StudentItemViewModel
+    private lateinit var viewModelLessons: LessonsItemViewModel
+
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
 //    private var _bindingItem: RowGroupStudentItemBinding? = null
@@ -80,6 +85,37 @@ class PaymentItemFragment: Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         launchRightMode()
         observeViewModel()
+
+        binding.paymentOff.setOnClickListener {
+            //val paymentItem = viewModel.getPaymentItem(paymentItemId)
+            viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
+            viewModelLessons = ViewModelProvider(this)[LessonsItemViewModel::class.java]
+            viewModel.paymentItem.observe(viewLifecycleOwner) {
+                if(!it.enabled) {
+
+                    val payOff = it.price
+                    val itemPayment = it
+                    val idLessons = it.lessonsId
+                    viewModelStudent.getStudentItem(it.studentId)
+                    viewModelStudent.studentItem.observe(viewLifecycleOwner) {
+                        if(it.paymentBalance > payOff) {
+                            viewModelStudent.editPaymentBalance(it.id, (it.paymentBalance + payOff.toFloat()))
+
+                            viewModelLessons.getLessonsItem(idLessons)
+                            viewModelLessons.lessonsItem.observe(viewLifecycleOwner) {
+                                viewModel.changeEnableState(itemPayment, it.price)
+                            }
+
+
+                            Toast.makeText(getActivity(),"Долг успешно списан",Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+                }
+            }
+        }
+
 
     }
 
