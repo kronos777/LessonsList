@@ -3,6 +3,7 @@ package com.example.lessonslist.presentation
 import android.accounts.AccountManager
 import android.app.Application
 import android.content.ContentValues.TAG
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -22,6 +24,7 @@ import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
+import com.example.lessonslist.presentation.calendar.EventDialogAdapter
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
@@ -92,15 +95,14 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             when (it.itemId) {
             //    R.id.muItem1 -> goGroupFragment()
                 //      R.id.muItem2 -> launchFragment(SettingsItemFragment())
-                R.id.muItem2 -> Toast.makeText(this, "privet i punkt menu.", Toast.LENGTH_SHORT).show()
+                R.id.muItem2 -> getDialogBackup()
                 R.id.muItem3 -> launchFragment(CalendarItemFragment())
                 R.id.muItem4 -> goPaymentFragment()
                 R.id.muItem5 -> goGroupListFragment()
                 R.id.muItem6 -> goLessonsListFragment()
                 R.id.muItem7 -> goStudentListFragment()
                 R.id.muItem8 -> goPaymentCalendarFragment()
-                R.id.muItem9 -> backup()
-                R.id.muItem10 -> restore()
+
             }
             true
         }
@@ -229,6 +231,28 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 }
             }
             .restore()
+    }
+
+    private fun getDialogBackup() {
+        val builder = AlertDialog.Builder(this)
+            .setTitle("Создать/Восстановить резервную копию.")
+            .setCancelable(false)
+            .setPositiveButton("Создать резервную копию.", DialogInterface.OnClickListener {
+                    dialog, id ->
+                    backup()
+            })
+            .setNegativeButton("Восстановить из резервной копии.", DialogInterface.OnClickListener {
+                    dialog, id ->
+                //    log(date.toString())
+                    restore()
+            })
+            .setNeutralButton("Закрыть", DialogInterface.OnClickListener {
+                    dialog, id ->
+                dialog.dismiss()
+            })
+
+        val dialog = builder.create()
+        dialog.show()
     }
 
 
