@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
@@ -86,35 +87,65 @@ class PaymentItemFragment: Fragment() {
         launchRightMode()
         observeViewModel()
 
-        binding.paymentOff.setOnClickListener {
-            //val paymentItem = viewModel.getPaymentItem(paymentItemId)
+
+        viewModel.paymentItem.observe(viewLifecycleOwner) {
+
             viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
-            viewModelLessons = ViewModelProvider(this)[LessonsItemViewModel::class.java]
-            viewModel.paymentItem.observe(viewLifecycleOwner) {
-                if(!it.enabled) {
 
-                    val payOff = it.price
-                    val itemPayment = it
-                    val idLessons = it.lessonsId
-                    viewModelStudent.getStudentItem(it.studentId)
-                    viewModelStudent.studentItem.observe(viewLifecycleOwner) {
-                        if(it.paymentBalance > payOff) {
-                            viewModelStudent.editPaymentBalance(it.id, (it.paymentBalance + payOff.toFloat()))
+                if (it.enabled) {
+                    binding.paymentOff.visibility = (View.GONE)
+                }
+            val paymentCount = it.price
+            viewModelStudent.getStudentItem(it.studentId)
+            viewModelStudent.studentItem.observe(viewLifecycleOwner) {
+                Log.d("enabledpay", "it.paymentBalance " + it.paymentBalance)
+                Log.d("enabledpay", "paymentCount " + ( - paymentCount))
+                if(it.paymentBalance > ( - paymentCount)) {
+                    binding.paymentOff.setOnClickListener {
+                        //val paymentItem = viewModel.getPaymentItem(paymentItemId)
+                        viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
+                        viewModelLessons = ViewModelProvider(this)[LessonsItemViewModel::class.java]
+                        viewModel.paymentItem.observe(viewLifecycleOwner) {
+                            if(!it.enabled) {
 
-                            viewModelLessons.getLessonsItem(idLessons)
-                            viewModelLessons.lessonsItem.observe(viewLifecycleOwner) {
-                                viewModel.changeEnableState(itemPayment, it.price)
+                                val payOff = it.price
+                                val itemPaymentId = it.id
+                                val idLessons = it.lessonsId
+                                viewModelStudent.getStudentItem(it.studentId)
+                                viewModelStudent.studentItem.observe(viewLifecycleOwner) {
+                                    if(it.paymentBalance.toInt() > ( - payOff.toInt())) {
+
+                                        /* */
+                                        //производит замену прайса с учетом списания долга в записи студента
+                                        viewModelStudent.editPaymentBalance(it.id, (it.paymentBalance + payOff.toFloat()))
+
+                                        //выстаявляет значение платежа в соответствии со стоимостью урока
+                                        viewModelLessons.getLessonsItem(idLessons)
+                                        viewModelLessons.lessonsItem.observe(viewLifecycleOwner) {
+                                            viewModel.changeEnableState(it.price, itemPaymentId)
+                                        }
+
+
+                                        Toast.makeText(getActivity(),"Баланс: " + it.paymentBalance + " Долг:  " + payOff,Toast.LENGTH_SHORT).show();
+
+                                    } else {
+                                        Toast.makeText(getActivity(),"Баланс студента не позволяет списать долг.",Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
                             }
-
-
-                            Toast.makeText(getActivity(),"Долг успешно списан",Toast.LENGTH_SHORT).show();
-
                         }
                     }
 
+                } else {
+                    binding.paymentOff.visibility = (View.GONE)
+                    Toast.makeText(getActivity(),"Баланс студента не позволяет списать долг.",Toast.LENGTH_SHORT).show();
+
                 }
             }
+
         }
+
 
 
     }

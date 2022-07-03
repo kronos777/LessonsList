@@ -10,6 +10,8 @@ interface PaymentListRepository {
 
     suspend fun editPaymentItem(paymentItem: PaymentItem)
 
+    suspend fun changeEnableStatePaymentItem(price: Int, id: Int)
+
     suspend fun getPaymentItem(paymentItemId: Int): PaymentItem
 
     fun getPaymentList(): LiveData<List<PaymentItem>>

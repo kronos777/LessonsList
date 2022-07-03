@@ -23,6 +23,7 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
     private val addPaymentItemUseCase = AddPaymentItemUseCase(repository)
     private val editPaymentItemUseCase = EditPaymentItemUseCase(repository)
     private val deletePaymentItemUseCase = DeletePaymentItemUseCase(repository)
+    private val ChangeEnableStatePaymentItemUseCase = ChangeEnableStatePaymentItemUseCase(repository)
 
     private val _paymentItem = MutableLiveData<PaymentItem>()
     val paymentItem: LiveData<PaymentItem>
@@ -146,10 +147,11 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
         return result
     }
 
-    fun changeEnableState(paymentItem: PaymentItem, price: Int) {
+    fun changeEnableState(price: Int, id: Int) {
         viewModelScope.launch {
-            val newItem = paymentItem.copy(price = price, enabled = !paymentItem.enabled)
-            editPaymentItemUseCase.editPaymentItem(newItem)
+            /*val newItem = paymentItem.copy(price = price, enabled = !paymentItem.enabled)
+            editPaymentItemUseCase.editPaymentItem(newItem)*/
+            ChangeEnableStatePaymentItemUseCase.changeEnableStatePaymentItem(price, id)
         }
     }
 

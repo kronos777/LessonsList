@@ -24,22 +24,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/cardColor"
+            android:background="@drawable/border_card"
             android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp">
-
+            android:padding="16dp"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/imageCardStudent"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:rotation="90"
+                android:src="@{studentItem.image}"
+                />
             <TextView
                 android:id="@+id/tv_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@{studentItem.name + ' ' + studentItem.lastname}"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:layout_marginLeft="5dp"
                 tools:text="Салфетки" />
 
             <TextView
@@ -47,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{String.valueOf(studentItem.paymentBalance)}"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="1"

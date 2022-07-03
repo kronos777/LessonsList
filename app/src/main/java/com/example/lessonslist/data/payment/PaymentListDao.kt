@@ -23,5 +23,10 @@ interface PaymentListDao {
 
     @Query("SELECT * FROM payment_items WHERE id=:paymentItemId LIMIT 1")
     suspend fun getPaymentItem(paymentItemId: Int): PaymentItemDbModel
+//@Query("UPDATE student_items SET paymentBalance =:paymentBalance WHERE id=:studentItemId")
+
+    @Query("UPDATE payment_items SET price =:price, enabled =:enabled WHERE id=:paymentItemId")
+    suspend fun changeEnableStatePaymentItem(price: Int, paymentItemId: Int, enabled: Boolean = true)
+
 
 }

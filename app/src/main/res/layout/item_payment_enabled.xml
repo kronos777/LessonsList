@@ -24,12 +24,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/cardColor"
+            android:background="@drawable/border_card"
             android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
+            android:padding="16dp"
             >
 
 
@@ -39,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@{paymentItem.title + ' ' + paymentItem.student}"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="Платежи" />

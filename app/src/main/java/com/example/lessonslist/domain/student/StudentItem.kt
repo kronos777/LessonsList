@@ -6,6 +6,7 @@ data class StudentItem(
     val name: String,
     val lastname: String,
     val group: String,
+    val image: String,
     //val group: ArrayList<Int>,
     val notes: String,
     //val notes: ArrayList<String>,

@@ -183,7 +183,8 @@ class StudentItemFragment : Fragment() {
                 binding.etLastname.text?.toString(),
                 binding.etPaymentBalance.text.toString(),
                 binding.etNotes.text.toString(),
-                binding.etGroup.text.toString()
+                binding.etGroup.text.toString(),
+                ""
             )
         }
     }
@@ -195,7 +196,8 @@ class StudentItemFragment : Fragment() {
                 binding.etLastname.text?.toString(),
                 binding.etPaymentBalance.text.toString(),
                 binding.etNotes.text.toString(),
-                binding.etGroup.text.toString()
+                binding.etGroup.text.toString(),
+                ""
             )
         }
     }

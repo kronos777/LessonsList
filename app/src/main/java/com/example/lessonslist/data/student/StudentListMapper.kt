@@ -10,6 +10,7 @@ class StudentListMapper {
         lastname = studentItem.lastname,
         paymentBalance = studentItem.paymentBalance,
         group = studentItem.group,
+        image = studentItem.image,
         notes = studentItem.notes,
         enabled = studentItem.enabled
     )
@@ -20,6 +21,7 @@ class StudentListMapper {
         lastname = studentItemDbModel.lastname,
         paymentBalance = studentItemDbModel.paymentBalance,
         group = studentItemDbModel.group,
+        image = studentItemDbModel.image,
         notes = studentItemDbModel.notes,
         enabled = studentItemDbModel.enabled
     )
