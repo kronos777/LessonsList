@@ -2,8 +2,8 @@ package com.example.lessonslist.domain.notes
 
 class GetNotesUseCase(private val notesListRepository: NotesListRepository) {
 
-    suspend fun getParentContact(parentContactId: Int) : NotesItem {
-        return notesListRepository.getParentContact(parentContactId)
+    suspend fun getNotesItem(notesItemId: Int) : NotesItem {
+        return notesListRepository.getNotesItem(notesItemId)
     }
 
 }

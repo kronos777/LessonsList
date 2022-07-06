@@ -39,28 +39,4 @@ class ParentListRepositoryImpl(
         mapper.mapListDbModelToListEntity(it)
     }
 
-/*
-    override suspend fun addGroupItem(groupItem: GroupItem) {
-        groupListDao.addGroupItem(mapper.mapEntityToDbModel(groupItem))
-    }
-
-    override suspend fun deleteGroupItem(groupItem: GroupItem) {
-        groupListDao.deleteGroupItem(groupItem.id)
-    }
-
-    override suspend fun editGroupItem(groupItem: GroupItem) {
-        groupListDao.addGroupItem(mapper.mapEntityToDbModel(groupItem))
-    }
-
-    override suspend fun getGroupItem(groupItemId: Int): GroupItem {
-        val dbModel = groupListDao.getGroupItem(groupItemId)
-        return mapper.mapDbModelToEntity(dbModel)
-    }
-
-    override fun getGroupList(): LiveData<List<GroupItem>> = Transformations.map(
-        groupListDao.getGroupList()
-    ) {
-        mapper.mapListDbModelToListEntity(it)
-    }
-*/
 }
