@@ -28,13 +28,7 @@
             android:orientation="horizontal"
             android:padding="16dp"
             android:gravity="center">
-            <ImageView
-                android:id="@+id/imageCardStudent"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:rotation="90"
-                android:src="@{studentItem.image}"
-                />
+
             <TextView
                 android:id="@+id/tv_name"
                 android:layout_width="0dp"

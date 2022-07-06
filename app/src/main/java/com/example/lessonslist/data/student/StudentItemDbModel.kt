@@ -13,8 +13,7 @@ data class StudentItemDbModel(
     val lastname: String,
     val group: String,
     val image: String,
-    //val group: ArrayList<Int>,
-    //val notes: ArrayList<String>,
     val notes: String,
+    val telephone: String,
     val enabled: Boolean
 )

@@ -11,14 +11,13 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentStudentItemEditBinding
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
@@ -59,7 +58,7 @@ class StudentItemEditFragment : Fragment() {
     val myExecutor = Executors.newSingleThreadExecutor()
     val myHandler = Handler(Looper.getMainLooper())
 
-
+    private lateinit var pathImageSrc: String
 
 
     override fun onAttach(context: Context) {
@@ -72,6 +71,7 @@ class StudentItemEditFragment : Fragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
         parseParams()
     }
@@ -94,15 +94,12 @@ class StudentItemEditFragment : Fragment() {
         launchRightMode()
       //  observeViewModel()
 
-
-
         //viewModel.studentItem.
         dataPaymentStudentModel = ArrayList<DataPaymentStudentModel>()
         listView = binding.listView
         val args = requireArguments()
         val mode = args.getString(SCREEN_MODE)
-        if (mode == MODE_EDIT || mode == "mode_edit") {
-            Log.d("nowmodeadd", "mode add")
+        Log.d("nowmodeadd", "mode add")
             viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
             viewModelPayment.paymentList.observe(viewLifecycleOwner) {
                 if(it.size > 0) {
@@ -131,107 +128,25 @@ class StudentItemEditFragment : Fragment() {
                 launchFragment(PaymentItemListFragment.newInstanceStudentId(studentItemId))
             }
 /* */
-        } else {
-            binding.paymentStudent?.setVisibility (View.GONE)
-        }
-
-
-        var newBalance: Int
-
-        binding.paymentStudentAdd.setOnClickListener {
-            val inputEditTextField = EditText(requireActivity())
-            val dialog = AlertDialog.Builder(requireContext())
-                .setTitle("Пополнить баланс студента.")
-                //.setMessage("Message")
-                .setView(inputEditTextField)
-                .setPositiveButton("OK") { _, _ ->
-                    val editTextInput = inputEditTextField.text.toString()
-                    Log.d("editext value is:", editTextInput)
-
-                    if(isNumeric(editTextInput)){
-                        Toast.makeText(getActivity(),"Строка число можно сохранять.",Toast.LENGTH_SHORT).show();
-                        newBalance = editTextInput.toInt()
-                        viewModel.studentItem.observe(viewLifecycleOwner) {
-                            //Log.d("new balance", it.paymentBalance.toString())
-                            viewModel.editPaymentBalance(it.id, (it.paymentBalance + newBalance).toFloat())
-                            if(it.paymentBalance < 0) {
-                                Toast.makeText(getActivity(),"payment balance"+(it.paymentBalance).toString(),Toast.LENGTH_SHORT).show();
-                            }
-                            Toast.makeText(getActivity(),"new balance!"+(it.paymentBalance + newBalance).toString(),Toast.LENGTH_SHORT).show();
-                            binding.textViewPaymentBalance.setText((it.paymentBalance + newBalance).toString())
-                            /*     if(it.paymentBalance > sumOffDebts()) {
-                                     alertDialogSetMove(it.paymentBalance + newBalance)
-                                 }*/
-                        }
-                    } else {
-                        Toast.makeText(getActivity(),"Строка не является числом, сохранить невозможно.",Toast.LENGTH_SHORT).show();
-                    }
-
-
-                }
-                .setNegativeButton("Отмена", null)
-                .create()
-            dialog.show()
-           //Toast.makeText(getActivity(),"inputdata!"+inputEditTextField.text.toString(),Toast.LENGTH_SHORT).show();
-            //Log.d("new balance", inputEditTextField.text.toString())
-        }
 
 
 
-        /*
-        binding.paymentPaymentOff.setOnClickListener {
-            viewModel.studentItem.observe(viewLifecycleOwner) {
-                payOffDebtsAll(studentItemId, it.paymentBalance)
-            }
-        }
-*/
-      //  }
-
-        // Declaring and initializing the elements from the layout file
-
-        // Declaring a Bitmap local
-
-        // Declaring a webpath as a string
-      //  val mWebPath = "https://media.geeksforgeeks.org/wp-content/uploads/20210224040124/JSBinCollaborativeJavaScriptDebugging6-300x160.png"
-
-        // Declaring and initializing an Executor and a Handler
 
 
         mImageView = binding.imageView
-        mButton = binding.addImageStudent
 
-
-
-      //  Toast.makeText(getActivity(), "File path" + chosenImageUri, Toast.LENGTH_LONG).show()
-
-
-        mButton.setOnClickListener {
-            myExecutor.execute {
-
-                getImageLocal()
-
-
-                /*
-                //mImage = mLoad(mWebPath)
-                myHandler.post {
-                    mImageView.setImageBitmap(mImage)
-                    if(mImage!=null){
-                        mSaveMediaToStorage(mImage)
-                    }
-                }*/
-            }
-        }
 
             viewModel.studentItem.observe(viewLifecycleOwner) {
                 if(it.image != "") {
                     myHandler.post {
                         val file = File(it.image)
-                        Log.d("imageTag", it.image)
+                    //    Log.d("imageTag", it.image)
                         Picasso.get()
                             .load(file)
-                            .resize(400, 300)
+                            .resize(200, 200)
                             .rotate(90f)
                             .into(mImageView)
+                        pathImageSrc = file.toString()
                         /*Picasso.get()
                             .load(it.image)
                             .resize(400, 300)
@@ -246,6 +161,90 @@ class StudentItemEditFragment : Fragment() {
 
 
     }
+
+
+
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.student_menu_fragment, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+
+        when(id) {
+            R.id.action_add_money -> actionAddMoney()
+            R.id.action_change_image -> actionChangeImage()
+            R.id.action_payment_student -> launchFragment(PaymentItemListFragment.newInstanceStudentId(studentItemId))
+            R.id.action_get_lessons -> Toast.makeText(getActivity(), "action_get_lessons.", Toast.LENGTH_LONG).show()
+            R.id.action_get_group -> Toast.makeText(getActivity(), "action_get_group.", Toast.LENGTH_LONG).show()
+            R.id.action_add_contact_parent -> Toast.makeText(getActivity(), "action_add_contact_parent.", Toast.LENGTH_LONG).show()
+        }
+
+        return super.onOptionsItemSelected(item)
+
+    }
+
+    private fun actionAddMoney() {
+        var newBalance: Int
+        val inputEditTextField = EditText(requireActivity())
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle("Пополнить баланс студента.")
+            //.setMessage("Message")
+            .setView(inputEditTextField)
+            .setPositiveButton("OK") { _, _ ->
+                val editTextInput = inputEditTextField.text.toString()
+                Log.d("editext value is:", editTextInput)
+
+                if(isNumeric(editTextInput)){
+                    Toast.makeText(getActivity(),"Строка число можно сохранять.",Toast.LENGTH_SHORT).show();
+                    newBalance = editTextInput.toInt()
+                    viewModel.studentItem.observe(viewLifecycleOwner) {
+                        //Log.d("new balance", it.paymentBalance.toString())
+                        viewModel.editPaymentBalance(it.id, (it.paymentBalance + newBalance).toFloat())
+                        if(it.paymentBalance < 0) {
+                            Toast.makeText(getActivity(),"payment balance"+(it.paymentBalance).toString(),Toast.LENGTH_SHORT).show();
+                        }
+                        Toast.makeText(getActivity(),"new balance!"+(it.paymentBalance + newBalance).toString(),Toast.LENGTH_SHORT).show();
+                        binding.textViewPaymentBalance.setText((it.paymentBalance + newBalance).toString())
+                        /*     if(it.paymentBalance > sumOffDebts()) {
+                                 alertDialogSetMove(it.paymentBalance + newBalance)
+                             }*/
+                    }
+                } else {
+                    Toast.makeText(getActivity(),"Строка не является числом, сохранить невозможно.",Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+            .setNegativeButton("Отмена", null)
+            .create()
+        dialog.show()
+        //Toast.makeText(getActivity(),"inputdata!"+inputEditTextField.text.toString(),Toast.LENGTH_SHORT).show();
+        //Log.d("new balance", inputEditTextField.text.toString())
+    }
+    private fun actionChangeImage() {
+        myExecutor.execute {
+            getImageLocal()
+        }
+    }
+    private fun actionPaymentStudent() {
+        TODO()
+    }
+    private fun actionGetLessons() {
+        TODO()
+    }
+    private fun actionGetGroup() {
+        TODO()
+    }
+    private fun actionAddContactparent() {
+        TODO()
+    }
+
+
+
 
     fun getImageLocal() {
         val photoPickerIntent = Intent(Intent.ACTION_GET_CONTENT)
@@ -273,7 +272,7 @@ class StudentItemEditFragment : Fragment() {
                         chosenImageUri = data.data!!
 
                         var mImage: Bitmap?
-                        Toast.makeText(getActivity(), "File path" + chosenImageUri, Toast.LENGTH_LONG).show()
+                        //Toast.makeText(getActivity(), "File path" + chosenImageUri, Toast.LENGTH_LONG).show()
                         mImage = mLoadLocal(chosenImageUri.toString())
                     //    binding.imagepath.setText(chosenImageUri.toString())
                         myHandler.post {
@@ -288,8 +287,8 @@ class StudentItemEditFragment : Fragment() {
 
 
                             if(mImage!=null){
-                                val pathImageSrc = mSaveMediaToStorage(mImage)
-                                binding.imagepath.setText(pathImageSrc.toString())
+                                pathImageSrc = mSaveMediaToStorage(mImage).toString()
+
                             }
                         }
 
@@ -485,12 +484,13 @@ class StudentItemEditFragment : Fragment() {
                 binding.textViewPaymentBalance.text.toString(),
                 " ",
                 " ",
-                binding.imagepath.text.toString()
+                pathImageSrc
                 //binding.etNotes.text.toString(),
                 //binding.etGroup.text.toString()
             )
-        }
 
+        }
+        observeViewModel()
     }
 
 
