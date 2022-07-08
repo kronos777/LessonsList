@@ -187,8 +187,8 @@ class StudentItemEditFragment : Fragment() {
 
        listViewParentContact.setOnItemClickListener { parent, _, position, _ ->
             val selectedItem = parent.getItemAtPosition(position)
-
-            Toast.makeText(getActivity(), "item click^" + dataParentContactStudentModel?.get(position)?.phone.toString(), Toast.LENGTH_LONG).show()
+            call(dataParentContactStudentModel?.get(position)?.phone!!.toInt())
+          //  Toast.makeText(getActivity(), "item click^" + dataParentContactStudentModel?.get(position)?.phone.toString(), Toast.LENGTH_LONG).show()
         }
 /* */
 
