@@ -62,10 +62,8 @@ class StudentListAdapter : ListAdapter<StudentItem, StudentItemViewHolder>(Stude
     }
 
     companion object {
-
         const val VIEW_TYPE_ENABLED = 100
         const val VIEW_TYPE_DISABLED = 101
-
         const val MAX_POOL_SIZE = 30
     }
 }

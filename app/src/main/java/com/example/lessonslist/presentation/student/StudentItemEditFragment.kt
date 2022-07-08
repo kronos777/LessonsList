@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.text.InputType.TYPE_CLASS_NUMBER
 import android.util.Log
 import android.view.*
 import android.widget.*
@@ -19,16 +20,28 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentStudentItemEditBinding
+import com.example.lessonslist.domain.notes.NotesItem
+import com.example.lessonslist.domain.parent.ParentContact
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
+import com.example.lessonslist.presentation.student.notes.DataNotesStudentModel
+import com.example.lessonslist.presentation.student.notes.ListNotesAdapter
+import com.example.lessonslist.presentation.student.parentContact.DataParentContactStudentModel
+import com.example.lessonslist.presentation.student.parentContact.ListParentContactAdapter
 import com.squareup.picasso.Picasso
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 import java.util.concurrent.Executors
+import kotlin.collections.ArrayList
+import kotlin.math.log
 
 
 class StudentItemEditFragment : Fragment() {
@@ -36,6 +49,8 @@ class StudentItemEditFragment : Fragment() {
     private lateinit var viewModel: StudentItemViewModel
     private lateinit var viewModelPayment: PaymentListViewModel
     private lateinit var viewModelPaymentItem: PaymentItemViewModel
+    private lateinit var viewModelNotesItem: NotesItemViewModel
+    private lateinit var viewModelParentContact: ParentContactViewModel
 
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
@@ -45,9 +60,13 @@ class StudentItemEditFragment : Fragment() {
 
 
     private lateinit var listView: ListView
+    private lateinit var listViewNotes: ListView
+    private lateinit var listViewParentContact: ListView
     private var screenMode: String = MODE_UNKNOWN
     private var studentItemId: Int = StudentItem.UNDEFINED_ID
     private var dataPaymentStudentModel: ArrayList<DataPaymentStudentModel>? = null
+    private var dataNotesStudentModel: ArrayList<DataNotesStudentModel>? = null
+    private var dataParentContactStudentModel: ArrayList<DataParentContactStudentModel>? = null
 
     private lateinit var chosenImageUri: Uri
 
@@ -124,19 +143,67 @@ class StudentItemEditFragment : Fragment() {
 
             }
 
-           binding.paymentStudent.setOnClickListener {
+/*           binding.paymentStudent.setOnClickListener {
                 launchFragment(PaymentItemListFragment.newInstanceStudentId(studentItemId))
             }
+ */
+
+        listViewNotes = binding.listViewNotes
+        dataNotesStudentModel = ArrayList<DataNotesStudentModel>()
+        viewModelNotesItem = ViewModelProvider(this)[NotesItemViewModel::class.java]
+        viewModelNotesItem.notesList.getNotesList().observe(viewLifecycleOwner) {
+
+            for (item in it) {
+                if(item.student == studentItemId) {
+                    dataNotesStudentModel!!.add(DataNotesStudentModel(item.text, item.date))
+                    Log.d("notes current student", item.text + item.date)
+                 //   Toast.makeText(activity, "notes current student" + item.text + item.date, Toast.LENGTH_LONG).show()
+                }
+            }
+
+            val adapterNotes = ListNotesAdapter(dataNotesStudentModel!!, requireContext().applicationContext)
+
+            listViewNotes.adapter = adapterNotes
+
+        }
+
+        listViewParentContact = binding.listViewParentContact
+        viewModelParentContact = ViewModelProvider(this)[ParentContactViewModel::class.java]
+        dataParentContactStudentModel = ArrayList<DataParentContactStudentModel>()
+        viewModelParentContact.parentContactList.getParentList().observe(viewLifecycleOwner) {
+            for (item in it) {
+
+                if (item.student == studentItemId){
+                    dataParentContactStudentModel!!.add(DataParentContactStudentModel(item.name, item.number))
+                }
+
+            }
+
+            val adapterParentContact = ListParentContactAdapter(dataParentContactStudentModel!!, requireContext().applicationContext)
+            listViewParentContact.adapter = adapterParentContact
+
+
+        }
+
+       listViewParentContact.setOnItemClickListener { parent, _, position, _ ->
+            val selectedItem = parent.getItemAtPosition(position)
+
+            Toast.makeText(getActivity(), "item click^" + dataParentContactStudentModel?.get(position)?.phone.toString(), Toast.LENGTH_LONG).show()
+        }
 /* */
 
-
-
-
+      /*  listViewParentContact.setOnClickListener {
+            Toast.makeText(getActivity(), "item click^" + it.toString(), Toast.LENGTH_LONG).show()
+        }*/
 
         mImageView = binding.imageView
 
+        mImageView.setOnClickListener {
+            actionChangeImage()
+        }
 
-            viewModel.studentItem.observe(viewLifecycleOwner) {
+
+        viewModel.studentItem.observe(viewLifecycleOwner) {
                 if(it.image != "") {
                     myHandler.post {
                         val file = File(it.image)
@@ -162,7 +229,11 @@ class StudentItemEditFragment : Fragment() {
 
     }
 
-
+    fun call(number: Number) {
+        val dialIntent = Intent(Intent.ACTION_DIAL)
+        dialIntent.data = Uri.parse("tel:" + number)
+        startActivity(dialIntent)
+    }
 
 
 
@@ -180,7 +251,8 @@ class StudentItemEditFragment : Fragment() {
             R.id.action_payment_student -> launchFragment(PaymentItemListFragment.newInstanceStudentId(studentItemId))
             R.id.action_get_lessons -> Toast.makeText(getActivity(), "action_get_lessons.", Toast.LENGTH_LONG).show()
             R.id.action_get_group -> Toast.makeText(getActivity(), "action_get_group.", Toast.LENGTH_LONG).show()
-            R.id.action_add_contact_parent -> Toast.makeText(getActivity(), "action_add_contact_parent.", Toast.LENGTH_LONG).show()
+            R.id.action_add_contact_parent -> addParentContactStudent()
+            R.id.action_add_notes_student -> addNotesStudent()
         }
 
         return super.onOptionsItemSelected(item)
@@ -225,6 +297,8 @@ class StudentItemEditFragment : Fragment() {
         //Toast.makeText(getActivity(),"inputdata!"+inputEditTextField.text.toString(),Toast.LENGTH_SHORT).show();
         //Log.d("new balance", inputEditTextField.text.toString())
     }
+
+
     private fun actionChangeImage() {
         myExecutor.execute {
             getImageLocal()
@@ -243,9 +317,151 @@ class StudentItemEditFragment : Fragment() {
         TODO()
     }
 
+    private fun addParentContactStudent() {
+
+        val alert = AlertDialog.Builder(requireContext())
+        alert.setTitle("Добавить телефон родителей.")
+        //alert.setMessage("Enter phone details and amount to buy airtime.")
+
+        val layout = LinearLayout(requireContext())
+        layout.orientation = LinearLayout.VERTICAL
+
+
+        val mobileNoET = EditText(requireContext())
+        mobileNoET.setSingleLine()
+        mobileNoET.hint = "Имя"
+        layout.addView(mobileNoET)
+
+        val amountET = EditText(requireContext())
+        amountET.setSingleLine()
+        amountET.hint = "Телефон"
+        amountET.inputType = TYPE_CLASS_NUMBER
+        layout.addView(amountET)
+
+        layout.setPadding(50, 40, 50, 10)
+
+        alert.setView(layout)
+
+        alert.setPositiveButton("Добавить") { _, _ ->
+            val name = mobileNoET.text.toString()
+            val number = amountET.text.toString()
+
+
+            Toast.makeText(activity, "Saved Sucessfully", Toast.LENGTH_LONG).show()
+            viewModelParentContact.addParentContact(name, number, studentItemId)
+        }
+
+        alert.setNegativeButton("отмена") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        alert.setCancelable(false)
+        alert.show()
+    }
+
+
+    private fun addNotesStudent() {
+
+        val calendarTimeZone: Calendar = Calendar.getInstance(TimeZone.getDefault())
+        val currentYear = calendarTimeZone[Calendar.YEAR]
+        val currentMonth = calendarTimeZone[Calendar.MONTH]
+        val currentDay = calendarTimeZone[Calendar.DAY_OF_MONTH]
+        val currentHour = calendarTimeZone[Calendar.HOUR]
+        val currentMinute = calendarTimeZone[Calendar.MINUTE]
 
 
 
+
+        val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+        val currentDate = sdf.format(Date())
+
+        val alert = AlertDialog.Builder(requireContext())
+        alert.setTitle("Добавить заметку")
+        //alert.setMessage("Enter phone details and amount to buy airtime.")
+
+        val layout = LinearLayout(requireContext())
+        layout.orientation = LinearLayout.VERTICAL
+
+
+        val mobileNoET = EditText(requireContext())
+        mobileNoET.setSingleLine()
+        mobileNoET.hint = "Текст заметки"
+        layout.addView(mobileNoET)
+
+        val amountET = EditText(requireContext())
+        amountET.setSingleLine()
+        amountET.hint = "дата" + currentDate
+        layout.addView(amountET)
+
+        layout.setPadding(50, 40, 50, 10)
+
+        alert.setView(layout)
+
+        alert.setPositiveButton("Добавить") { _, _ ->
+            val mobileNo = mobileNoET.text.toString()
+            val amount = amountET.text.toString()
+
+            Log.i("xxx",mobileNo )
+            Log.i("xxx",amount )
+
+            Toast.makeText(activity, "Saved Sucessfully", Toast.LENGTH_LONG).show()
+            viewModelNotesItem.addNotesItem(mobileNo, amount, studentItemId)
+        }
+
+        alert.setNegativeButton("отмена") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        alert.setCancelable(false)
+        alert.show()
+    }
+
+    fun expopupshow() {
+        val alert = AlertDialog.Builder(requireContext())
+        alert.setTitle("Buy Airtime")
+        alert.setMessage("Enter phone details and amount to buy airtime.")
+    
+        val layout = LinearLayout(requireContext())
+        layout.orientation = LinearLayout.VERTICAL
+    
+        val mobileNoET = EditText(requireContext())
+        mobileNoET.setSingleLine()
+        mobileNoET.hint = "Mobile Number"
+        layout.addView(mobileNoET)
+    
+        val amountET = EditText(requireContext())
+        amountET.setSingleLine()
+        amountET.hint = "Amount"
+        layout.addView(amountET)
+    
+        val networkET = EditText(requireContext())
+        networkET.setSingleLine()
+        networkET.hint = "Network"
+        layout.addView(networkET)
+    
+        layout.setPadding(50, 40, 50, 10)
+    
+        alert.setView(layout)
+    
+        alert.setPositiveButton("Proceed") { _, _ ->
+            val mobileNo = mobileNoET.text.toString()
+            val amount = amountET.text.toString()
+            val network = networkET.text.toString()
+    
+            Log.i("xxx",mobileNo )
+            Log.i("xxx",amount )
+            Log.i("xxx",network )
+    
+            Toast.makeText(activity, "Saved Sucessfully", Toast.LENGTH_LONG).show()
+        }
+    
+        alert.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
+    
+        alert.setCancelable(false)
+        alert.show()
+    }
     fun getImageLocal() {
         val photoPickerIntent = Intent(Intent.ACTION_GET_CONTENT)
         photoPickerIntent.type = "image/*"
@@ -484,7 +700,8 @@ class StudentItemEditFragment : Fragment() {
                 binding.textViewPaymentBalance.text.toString(),
                 " ",
                 " ",
-                pathImageSrc
+                pathImageSrc,
+                " "
                 //binding.etNotes.text.toString(),
                 //binding.etGroup.text.toString()
             )

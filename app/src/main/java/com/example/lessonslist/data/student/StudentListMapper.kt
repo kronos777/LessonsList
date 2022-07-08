@@ -12,6 +12,7 @@ class StudentListMapper {
         group = studentItem.group,
         image = studentItem.image,
         notes = studentItem.notes,
+        telephone = studentItem.telephone,
         enabled = studentItem.enabled
     )
 
@@ -23,6 +24,7 @@ class StudentListMapper {
         group = studentItemDbModel.group,
         image = studentItemDbModel.image,
         notes = studentItemDbModel.notes,
+        telephone = studentItemDbModel.telephone,
         enabled = studentItemDbModel.enabled
     )
 

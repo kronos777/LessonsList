@@ -29,4 +29,8 @@
         android:id="@+id/action_add_contact_parent"
         android:title="+ контакты родителей"
         />
+    <item
+        android:id="@+id/action_add_notes_student"
+        android:title="+ заметка"
+        />
 </menu>
