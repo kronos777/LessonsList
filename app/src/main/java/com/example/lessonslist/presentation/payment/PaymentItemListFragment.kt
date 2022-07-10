@@ -12,10 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
-import com.example.lessonslist.databinding.FragmentGroupItemListBinding
 import com.example.lessonslist.databinding.FragmentPaymentItemListBinding
 import com.example.lessonslist.domain.payment.PaymentItem
-import com.example.lessonslist.presentation.student.StudentItemFragment
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -109,13 +107,13 @@ class PaymentItemListFragment: Fragment() {
 
 
 
-
+/*
         binding.buttonAddPaymentItem.setOnClickListener {
             val fragmentTransaction = fragmentManager?.beginTransaction()
                 ?.replace(R.id.fragment_item_container, PaymentItemFragment.newInstanceAddItem())
                 ?.addToBackStack(null)
                 ?.commit()
-        }
+        }*/
     }
 
 
@@ -167,6 +165,17 @@ class PaymentItemListFragment: Fragment() {
         val itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView((rvPaymentList))
     }
+
+
+
+    private fun setupLongClickListener() {
+        paymentListAdapter.onPaymentItemClickListener = {
+            viewModel.changeEnableState(it)
+        }
+    }
+
+
+
 
     companion object {
 

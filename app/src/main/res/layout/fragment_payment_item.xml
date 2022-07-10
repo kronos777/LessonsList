@@ -100,7 +100,7 @@
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
             app:errorInputPaymentBalance="@{viewModel.errorInputStudent}"
-            app:layout_constraintBottom_toTopOf="@id/save_button"
+            app:layout_constraintBottom_toTopOf="@id/til_student_id"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/til_student">
@@ -123,7 +123,7 @@
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
             app:errorInputPaymentBalance="@{viewModel.errorInputStudent}"
-            app:layout_constraintBottom_toTopOf="@id/til_payment_id"
+            app:layout_constraintBottom_toTopOf="@id/til_date_id"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/til_price">
@@ -146,23 +146,24 @@
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
             app:errorInputPaymentBalance="@{viewModel.errorInputStudent}"
-            app:layout_constraintBottom_toTopOf="@id/til_payment_id"
+            app:layout_constraintBottom_toTopOf="@id/til_lesson_id"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_student">
+            app:layout_constraintTop_toBottomOf="@+id/til_student_id">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_date_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/payment_student_id"
+                android:hint="время"
                 android:inputType="textCapWords"
                 android:text="@{String.valueOf(viewModel.paymentItem.studentId)}" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
+
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_payment_id"
+            android:id="@+id/til_lesson_id"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -170,13 +171,13 @@
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
             app:errorInputPaymentBalance="@{viewModel.errorInputStudent}"
-            app:layout_constraintBottom_toTopOf="@id/save_button"
+            app:layout_constraintBottom_toTopOf="@id/payment_off"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/til_date_id">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_payment_id"
+                android:id="@+id/et_lesson_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/payment_lessons_id"
@@ -184,6 +185,16 @@
                 android:text="@{String.valueOf(viewModel.paymentItem.lessonsId)}" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <Button
+            android:id="@+id/payment_off"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/payment_payment_off"
+            app:layout_constraintBottom_toTopOf="@id/save_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_lesson_id"
+            />
 
         <Button
             android:id="@+id/save_button"

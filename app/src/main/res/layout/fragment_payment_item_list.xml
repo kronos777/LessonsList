@@ -18,7 +18,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_payment_enabled"/>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <!--com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_add_payment_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,6 +29,6 @@
             android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_add" />
+            app:srcCompat="@drawable/ic_add" /-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

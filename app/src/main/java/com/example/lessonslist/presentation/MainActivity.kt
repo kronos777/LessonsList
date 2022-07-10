@@ -1,23 +1,30 @@
 package com.example.lessonslist.presentation
 
 import android.accounts.AccountManager
+import android.app.Application
+import android.content.ContentValues.TAG
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.lessonslist.PaymentWork
 import com.example.lessonslist.R
+import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
+import com.example.lessonslist.presentation.calendar.EventDialogAdapter
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
@@ -28,7 +35,7 @@ import com.example.lessonslist.presentation.settings.SettingsItemFragment
 import com.example.lessonslist.presentation.student.StudentItemEditFragment
 import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentItemListFragment
-import java.util.concurrent.TimeUnit
+import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 
 
 class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, CalendarPaymentItemFragment.OnEditingFinishedListener, SettingsItemFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener {
@@ -37,6 +44,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private lateinit var binding: ActivityMainBinding
 
     lateinit var toggle: ActionBarDrawerToggle
+
+    private lateinit var backup: RoomBackup
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +63,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 launchFragment(CalendarItemFragment())
             }
         }
+
+        backup = RoomBackup(this)
 
         /* setupRecyclerView()
 
@@ -77,16 +88,21 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+
+
+
         binding.navView?.setNavigationItemSelectedListener {
             when (it.itemId) {
             //    R.id.muItem1 -> goGroupFragment()
-                R.id.muItem2 -> goSettingsFragment()
+                //      R.id.muItem2 -> launchFragment(SettingsItemFragment())
+                R.id.muItem2 -> getDialogBackup()
                 R.id.muItem3 -> launchFragment(CalendarItemFragment())
                 R.id.muItem4 -> goPaymentFragment()
                 R.id.muItem5 -> goGroupListFragment()
                 R.id.muItem6 -> goLessonsListFragment()
                 R.id.muItem7 -> goStudentListFragment()
                 R.id.muItem8 -> goPaymentCalendarFragment()
+
             }
             true
         }
@@ -100,8 +116,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
  /*work manager */
         //        PeriodicWorkRequest myWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class, 30, TimeUnit.MINUTES, 25, TimeUnit.MINUTES).build();
 
-        val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES).build()
-        //val request = OneTimeWorkRequestBuilder<PaymentWork>().build()
+        //val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES).build()
+        val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
         WorkManager.getInstance(this).enqueue(request)
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
             .observe(this, Observer {
@@ -123,10 +139,122 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
               Log.d("accountName", acc[i].name)
           }*/
         /*get account*/
+        //RoomBackup.BACKUP_FILE_LOCATION_INTERNAL
 
 
 
-}
+   //     val database: String = AppDatabase.DB_NAME
+     //   val path = applicationContext.filesDir.absolutePath
+     //  Toast.makeText(this, "database path!" + RoomBackup.BACKUP_FILE_LOCATION_INTERNAL, Toast.LENGTH_SHORT).show();
+     //   Toast.makeText(this, "path name!" + path.toString(), Toast.LENGTH_SHORT).show();
+
+
+
+/*
+
+  val backup = RoomBackup(this)
+        backup
+            .database(AppDatabase.getInstance(applicationContext as Application))
+            .enableLogDebug(true)
+            .backupIsEncrypted(true)
+            .customEncryptPassword("YOUR_SECRET_PASSWORD")
+            .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_CUSTOM_DIALOG)
+            //.backupLocation(RoomBackup.BACKUP_FILE_LOCATION_INTERNAL)
+            .maxFileCount(5)
+            .apply {
+                onCompleteListener { success, message, exitCode ->
+                    //Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
+                //    Toast.makeText(this, "vse ok!", Toast.LENGTH_SHORT).show();
+
+                    //  if (success) restartApp(Intent(this@MainActivity, MainActivity::class.java))
+                }
+            }
+            .backup()
+*/
+
+        /*
+  Восстановить
+        val backup = RoomBackup(this)
+
+        backup
+            .database(AppDatabase.getInstance(applicationContext as Application))
+            .enableLogDebug(true)
+            .backupIsEncrypted(true)
+            .customEncryptPassword("YOUR_SECRET_PASSWORD")
+            .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_INTERNAL)
+            .apply {
+                onCompleteListener { success, message, exitCode ->
+                    Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
+                    if (success) restartApp(Intent(this@MainActivity, MainActivity::class.java))
+                }
+            }
+            .restore()
+        */
+
+
+
+
+    }
+
+
+    private fun backup() {
+        backup
+            .database(AppDatabase.getInstance(applicationContext as Application))
+            .enableLogDebug(true)
+            .backupIsEncrypted(true)
+            .customEncryptPassword("YOUR_SECRET_PASSWORD")
+            .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_CUSTOM_DIALOG)
+            //.backupLocation(RoomBackup.BACKUP_FILE_LOCATION_INTERNAL)
+            .maxFileCount(5)
+            .apply {
+                onCompleteListener { success, message, exitCode ->
+                    //Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
+                    //    Toast.makeText(this, "vse ok!", Toast.LENGTH_SHORT).show();
+
+                    //  if (success) restartApp(Intent(this@MainActivity, MainActivity::class.java))
+                }
+            }
+            .backup()
+    }
+
+    private fun restore() {
+        backup
+            .database(AppDatabase.getInstance(applicationContext as Application))
+            .enableLogDebug(true)
+            .backupIsEncrypted(true)
+            .customEncryptPassword("YOUR_SECRET_PASSWORD")
+            .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_CUSTOM_DIALOG)
+            .apply {
+                onCompleteListener { success, message, exitCode ->
+                    Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
+                    if (success) restartApp(Intent(this@MainActivity, MainActivity::class.java))
+                }
+            }
+            .restore()
+    }
+
+    private fun getDialogBackup() {
+        val builder = AlertDialog.Builder(this)
+            .setTitle("Создать/Восстановить резервную копию.")
+            .setCancelable(false)
+            .setPositiveButton("Создать резервную копию.", DialogInterface.OnClickListener {
+                    dialog, id ->
+                    backup()
+            })
+            .setNegativeButton("Восстановить из резервной копии.", DialogInterface.OnClickListener {
+                    dialog, id ->
+                //    log(date.toString())
+                    restore()
+            })
+            .setNeutralButton("Закрыть", DialogInterface.OnClickListener {
+                    dialog, id ->
+                dialog.dismiss()
+            })
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
 
     private fun goSettingsFragment() {
         if (!isOnePaneMode()) {
@@ -156,7 +284,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         } else {
             recyclerMainGone()
             launchFragmentTemp(StudentItemListFragment())
-            Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+           // Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -179,7 +307,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
      } else {
          recyclerMainGone()
          launchFragmentTemp(LessonsItemListFragment.newInstanceNoneParams())
-         Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+      //   Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
      }
     }
 
@@ -190,7 +318,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
      } else {
          recyclerMainGone()
          launchFragmentTemp(GroupItemListFragment())
-         Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+     //    Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
      }
     }
 
@@ -200,7 +328,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
      } else {
          recyclerMainGone()
          launchFragmentTemp(GroupItemFragment())
-         Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+       //  Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
      }
     }
 
@@ -210,7 +338,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
      } else {
          recyclerMainGone()
          launchFragmentTemp(LessonsItemFragment())
-         Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+    //     Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
      }
     }
 
@@ -321,7 +449,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
          viewModel.changeEnableState(it)
      }
     }*/
+
     companion object {
-        const val BACK_STACK_ROOT_TAG = "root_fragment"
+             const val BACK_STACK_ROOT_TAG = "root_fragment"
     }
 }

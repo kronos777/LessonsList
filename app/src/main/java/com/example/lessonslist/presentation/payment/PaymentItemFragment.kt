@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
@@ -22,11 +23,16 @@ import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupItemViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
+import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
+import com.example.lessonslist.presentation.student.StudentItemViewModel
 
 class PaymentItemFragment: Fragment() {
 
 
     private lateinit var viewModel: PaymentItemViewModel
+    private lateinit var viewModelStudent: StudentItemViewModel
+    private lateinit var viewModelLessons: LessonsItemViewModel
+
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
 //    private var _bindingItem: RowGroupStudentItemBinding? = null
@@ -81,6 +87,67 @@ class PaymentItemFragment: Fragment() {
         launchRightMode()
         observeViewModel()
 
+
+        viewModel.paymentItem.observe(viewLifecycleOwner) {
+
+            viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
+
+                if (it.enabled) {
+                    binding.paymentOff.visibility = (View.GONE)
+                }
+            val paymentCount = it.price
+            viewModelStudent.getStudentItem(it.studentId)
+            viewModelStudent.studentItem.observe(viewLifecycleOwner) {
+                Log.d("enabledpay", "it.paymentBalance " + it.paymentBalance)
+                Log.d("enabledpay", "paymentCount " + ( - paymentCount))
+                if(it.paymentBalance > ( - paymentCount)) {
+                    binding.paymentOff.setOnClickListener {
+                        //val paymentItem = viewModel.getPaymentItem(paymentItemId)
+                        viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
+                        viewModelLessons = ViewModelProvider(this)[LessonsItemViewModel::class.java]
+                        viewModel.paymentItem.observe(viewLifecycleOwner) {
+                            if(!it.enabled) {
+
+                                val payOff = it.price
+                                val itemPaymentId = it.id
+                                val idLessons = it.lessonsId
+                                viewModelStudent.getStudentItem(it.studentId)
+                                viewModelStudent.studentItem.observe(viewLifecycleOwner) {
+                                    if(it.paymentBalance.toInt() > ( - payOff.toInt())) {
+
+                                        /* */
+                                        //производит замену прайса с учетом списания долга в записи студента
+                                        viewModelStudent.editPaymentBalance(it.id, (it.paymentBalance + payOff.toFloat()))
+
+                                        //выстаявляет значение платежа в соответствии со стоимостью урока
+                                        viewModelLessons.getLessonsItem(idLessons)
+                                        viewModelLessons.lessonsItem.observe(viewLifecycleOwner) {
+                                            viewModel.changeEnableState(it.price, itemPaymentId)
+                                        }
+
+
+                                        Toast.makeText(getActivity(),"Баланс: " + it.paymentBalance + " Долг:  " + payOff,Toast.LENGTH_SHORT).show();
+
+                                    } else {
+                                        Toast.makeText(getActivity(),"Баланс студента не позволяет списать долг.",Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+
+                } else {
+                    binding.paymentOff.visibility = (View.GONE)
+                    Toast.makeText(getActivity(),"Баланс студента не позволяет списать долг.",Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+        }
+
+
+
     }
 
 
@@ -103,13 +170,22 @@ class PaymentItemFragment: Fragment() {
             viewModel.editPaymentItem(
                 binding.etTitle.text.toString(),
                 binding.etDescription.text.toString(),
+                binding.etLessonId.text.toString(),
                 binding.etStudentId.text.toString(),
-                binding.etStudent.text.toString(),
                 binding.etDateId.text.toString(),
-                binding.etPaymentId.text.toString(),
-                binding.etPrice.text.toString()
-
+                binding.etStudent.text.toString(),
+                binding.etPrice.text.toString(),
+                true
             )
+            //               inputTitle: String, +
+        //                    inputDescription: String, +
+            // inputLessonsId: String,
+        //                    inputStudentId: String,
+            //                inputDatePayment: String,
+        //                    inputStudent: String,
+            //              inputPrice: String,
+        //                    enabledPayment: Boolean
+            //                    //val item add parametrs StudentItems
         }
     }
 
@@ -118,8 +194,8 @@ class PaymentItemFragment: Fragment() {
             viewModel.addPaymentItem(
                 binding.etTitle.text.toString(),
                 binding.etDescription.text.toString(),
+                binding.etLessonId.text.toString(),
                 binding.etStudentId.text.toString(),
-                binding.etPaymentId.text.toString(),
                 binding.etDateId.text.toString(),
                 binding.etStudent.text.toString(),
                 binding.etPrice.text.toString(),

@@ -59,12 +59,40 @@ class LessonsItemListFragment: Fragment() {
         setupRecyclerView()
         val args = requireArguments()
         val dateFilter = args.getString(DATE_ID)
+        Toast.makeText(getActivity(),"Работает эта часть кода!" + dateFilter.toString(),Toast.LENGTH_SHORT).show();
 
-        if(getScreenOrientationLandscape() == false) {
+
+        if(dateFilter != null) {
+                val listArrayPayment: ArrayList<LessonsItem> = ArrayList()
+                viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
+                viewModel.lessonsList.observe(viewLifecycleOwner) {
+                    for (lessons in it) {
+                        var pay = lessons.dateEnd.split(" ")
+                        val datePay = Date(pay[0])
+                        val dateFormated = SimpleDateFormat("d/M/yyyy").format(datePay)
+                        if(dateFormated == dateFilter){
+                            listArrayPayment.add(lessons)
+                        }
+                    }
+                    if(listArrayPayment.size > 0) {
+                        lessonsListAdapter.submitList(listArrayPayment)
+                    } else {
+                        Toast.makeText(getActivity(),"На эту дату уроков не запланировано!",Toast.LENGTH_SHORT).show();
+                    }
+                }
+        } else {
+                viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
+                viewModel.lessonsList.observe(viewLifecycleOwner) {
+                    lessonsListAdapter.submitList(it)
+                }
+        }
+
+      /*  if(getScreenOrientationLandscape() == false) {
             viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
             viewModel.lessonsList.observe(viewLifecycleOwner) {
                 lessonsListAdapter.submitList(it)
             }
+            Toast.makeText(getActivity(),"Работает эта часть кода!",Toast.LENGTH_SHORT).show();
         } else if (getScreenOrientationLandscape() == true) {
             log(dateFilter.toString())
 
@@ -89,7 +117,7 @@ class LessonsItemListFragment: Fragment() {
                 }
 
             }
-        }
+        }*/
 
         if (getScreenOrientationLandscape() == true) {
             binding.buttonAddLessonsItem.setOnClickListener {

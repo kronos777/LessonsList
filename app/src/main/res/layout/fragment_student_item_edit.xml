@@ -13,10 +13,20 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="4dp"
         tools:context=".presentation.student.StudentItemFragment"
         >
 
-
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/til_name"
+            android:src="@drawable/calendar_days_of_week_bar_shadow"
+            />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_name"
@@ -29,7 +39,7 @@
             app:layout_constraintBottom_toTopOf="@id/til_lastname"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageView"
             app:layout_constraintVertical_chainStyle="packed"
             >
 
@@ -70,19 +80,21 @@
         <TextView
                 android:id="@+id/textViewPaymentBalance"
                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                app:layout_constraintBottom_toTopOf="@id/til_notes"
+                android:textSize="32dp"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toTopOf="@id/listView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/til_lastname"
                 android:text="@{String.valueOf(viewModel.studentItem.paymentBalance)}" />
 
-        <com.google.android.material.textfield.TextInputLayout
+        <!--com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_notes"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -115,7 +127,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
             app:errorInputName="@{viewModel.errorInputName}"
-            app:layout_constraintBottom_toTopOf="@id/save_button"
+            app:layout_constraintBottom_toTopOf="@id/listView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/til_notes"
@@ -130,50 +142,98 @@
                 android:inputType="textCapWords"
                 android:text="@{viewModel.studentItem.group}"
                 />
-        </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout-->
 
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="75dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toTopOf="@id/listViewNotes"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewPaymentBalance"
+            />
+        <ListView
+            android:id="@+id/listViewNotes"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toTopOf="@id/listViewParentContact"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/listView"
+            />
+        <ListView
+            android:id="@+id/listViewParentContact"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toTopOf="@id/save_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/listViewNotes"
+            />
+        <!--Button
+            android:id="@+id/add_image_student"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/image_btn_add"
             app:layout_constraintBottom_toTopOf="@id/payment_student_add"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_group"
+            app:layout_constraintTop_toBottomOf="@+id/listView"
             />
         <Button
             android:id="@+id/payment_student_add"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/payment_lesson_btn_add"
-            app:layout_constraintBottom_toBottomOf="@id/payment_student"
+            app:layout_constraintBottom_toTopOf="@id/payment_student"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/listView"
+            app:layout_constraintTop_toBottomOf="@+id/add_image_student"
             />
         <Button
             android:id="@+id/payment_student"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/payment_student_btn"
-            app:layout_constraintBottom_toBottomOf="@id/save_button"
+            app:layout_constraintBottom_toTopOf="@id/save_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/payment_student_add"
-            />
+            /-->
+
         <Button
             android:id="@+id/save_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/save_btn"
-            app:layout_constraintTop_toBottomOf="@+id/payment_student"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            />
+             />
+
+
+        <!-- <com.google.android.material.bottomnavigation.BottomNavigationView
+             android:id="@+id/student_nav_view"
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:background="?android:attr/windowBackground"
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintHorizontal_bias="0.0"
+             app:layout_constraintLeft_toLeftOf="parent"
+             app:layout_constraintRight_toRightOf="parent"
+             app:menu="@menu/nav_student_menu" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

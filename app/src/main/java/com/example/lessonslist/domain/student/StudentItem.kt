@@ -6,15 +6,13 @@ data class StudentItem(
     val name: String,
     val lastname: String,
     val group: String,
-    //val group: ArrayList<Int>,
+    val image: String,
     val notes: String,
-    //val notes: ArrayList<String>,
+    val telephone: String,
     val enabled: Boolean,
     var id: Int = UNDEFINED_ID
 ) {
-
     companion object {
-
         const val UNDEFINED_ID = 0
     }
 }

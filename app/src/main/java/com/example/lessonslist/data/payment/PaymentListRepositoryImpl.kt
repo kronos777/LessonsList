@@ -27,6 +27,10 @@ class PaymentListRepositoryImpl(
         paymentListDao.addPaymentItem(mapper.mapEntityToDbModel(paymentItem))
     }
 
+    override suspend fun changeEnableStatePaymentItem(price: Int, id: Int) {
+        paymentListDao.changeEnableStatePaymentItem(price, id)
+    }
+
     override suspend fun getPaymentItem(paymentItemId: Int): PaymentItem {
          val dbModel = paymentListDao.getPaymentItem(paymentItemId)
         return mapper.mapDbModelToEntity(dbModel)

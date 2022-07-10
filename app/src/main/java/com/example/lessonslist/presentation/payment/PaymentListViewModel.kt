@@ -10,6 +10,7 @@ import com.example.lessonslist.domain.payment.DeletePaymentItemUseCase
 import com.example.lessonslist.domain.payment.EditPaymentItemUseCase
 import com.example.lessonslist.domain.payment.GetPaymentListItemUseCase
 import com.example.lessonslist.domain.payment.PaymentItem
+import com.example.lessonslist.domain.student.StudentItem
 import kotlinx.coroutines.launch
 
 class PaymentListViewModel(application: Application) : AndroidViewModel(application) {
@@ -26,5 +27,10 @@ class PaymentListViewModel(application: Application) : AndroidViewModel(applicat
             deletePaymentItemUseCase.deletePaymentItem(paymentItem)
         }
     }
-
+    fun changeEnableState(paymentItem: PaymentItem) {
+        viewModelScope.launch {
+            val newItem = paymentItem.copy(enabled = !paymentItem.enabled)
+            editPaymentItemUseCase.editPaymentItem(newItem)
+        }
+    }
 }

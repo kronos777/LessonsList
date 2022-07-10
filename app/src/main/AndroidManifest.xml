@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.lessonslist">
+
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
 
     <application
         android:allowBackup="true"
@@ -10,11 +16,11 @@
         android:roundIcon="@mipmap/ic_logo_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.LessonsList">
+
         <activity
             android:name=".presentation.student.StudentItemActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="false">
-        </activity>
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true">
@@ -24,8 +30,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".MyForegroundService"
-                 android:foregroundServiceType="location|camera|microphone"/>
+
+        <service
+            android:name=".MyForegroundService"
+            android:foregroundServiceType="location|camera|microphone" />
     </application>
 
 </manifest>
