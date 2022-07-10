@@ -18,5 +18,6 @@
         <item name="calendar_year_selection_text_color">
             @color/white
         </item>
+
     </style>
 </resources>

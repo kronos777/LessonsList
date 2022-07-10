@@ -3,41 +3,27 @@ package com.example.lessonslist
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
-import android.media.AudioAttributes
-import android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION
-import android.media.AudioAttributes.USAGE_NOTIFICATION_RINGTONE
+import android.content.Intent
 import android.media.RingtoneManager.TYPE_NOTIFICATION
 import android.media.RingtoneManager.getDefaultUri
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.*
 import androidx.work.CoroutineWorker
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.lessonslist.data.AppDatabase
-import com.example.lessonslist.data.lessons.LessonsItemDbModel
-import com.example.lessonslist.data.lessons.LessonsListMapper
-import com.example.lessonslist.domain.lessons.GetLessonsItemUseCase
-import com.example.lessonslist.domain.lessons.GetLessonsListItemUseCase
-import com.example.lessonslist.domain.lessons.LessonsItem
-import com.example.lessonslist.presentation.MainViewModel
-import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
-import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
-import com.example.lessonslist.presentation.lessons.LessonsListViewModel
+import com.example.lessonslist.presentation.MainActivity
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import com.example.lessonslist.presentation.student.StudentItemViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.coroutines.CoroutineContext
+
 
 class PaymentWork(
     appContext: Context, params: WorkerParameters
@@ -266,11 +252,20 @@ class PaymentWork(
 
 
     private fun log(message: String) {
-        Log.d("SERVICE_TAG", "PaymentService: $message")
+        Log.d("SERVICE_PAYMENT", "PaymentService: $message")
     }
 
 
     private fun createNotification(title: String, description: String) {
+
+
+        // Create PendingIntent
+        val resultIntent = Intent(applicationContext, MainActivity::class.java)
+        val resultPendingIntent = PendingIntent.getActivity(
+            applicationContext, 0, resultIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
 
         var notificationManager =
             applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -288,7 +283,9 @@ class PaymentWork(
             .setContentTitle(title)
             .setContentText(description)
             .setSound(ringtoneManager)
-            .setSmallIcon(R.drawable.ic_add)
+            .setSmallIcon(R.drawable.ic_baseline_menu_book_24)
+            .setContentIntent(resultPendingIntent)
+            .setAutoCancel(true) // закрыть по нажатию
 
         notificationManager.notify(1, notificationBuilder.build())
 

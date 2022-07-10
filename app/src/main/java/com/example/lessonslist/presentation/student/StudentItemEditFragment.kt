@@ -20,8 +20,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentStudentItemEditBinding
-import com.example.lessonslist.domain.notes.NotesItem
-import com.example.lessonslist.domain.parent.ParentContact
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
@@ -36,12 +34,9 @@ import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.Executors
 import kotlin.collections.ArrayList
-import kotlin.math.log
 
 
 class StudentItemEditFragment : Fragment() {
@@ -187,9 +182,12 @@ class StudentItemEditFragment : Fragment() {
 
        listViewParentContact.setOnItemClickListener { parent, _, position, _ ->
             val selectedItem = parent.getItemAtPosition(position)
-
-            Toast.makeText(getActivity(), "item click^" + dataParentContactStudentModel?.get(position)?.phone.toString(), Toast.LENGTH_LONG).show()
+           call(dataParentContactStudentModel?.get(position)?.phone)
+           Toast.makeText(getActivity(), "item click^" + dataParentContactStudentModel?.get(position)?.phone.toString(), Toast.LENGTH_LONG).show()
         }
+
+
+
 /* */
 
       /*  listViewParentContact.setOnClickListener {
@@ -229,7 +227,7 @@ class StudentItemEditFragment : Fragment() {
 
     }
 
-    fun call(number: Number) {
+    fun call(number: String?) {
         val dialIntent = Intent(Intent.ACTION_DIAL)
         dialIntent.data = Uri.parse("tel:" + number)
         startActivity(dialIntent)
