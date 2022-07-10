@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             .observe(this, Observer {
 
                 val status: String = it.state.name
-                Toast.makeText(this,status, Toast.LENGTH_SHORT).show()
+             //   Toast.makeText(this,status, Toast.LENGTH_SHORT).show()
             })
            /**/
  /*work manager */
@@ -366,7 +366,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
     override fun onEditingFinished() {
-     Toast.makeText(this@MainActivity, "Success", Toast.LENGTH_SHORT).show()
+     Toast.makeText(this@MainActivity, "Отработал финиш", Toast.LENGTH_SHORT).show()
      supportFragmentManager.popBackStack()
     }
 
