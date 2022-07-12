@@ -9,6 +9,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -93,6 +96,9 @@ fun testData (): List<LessonsItem>? {
         super.onCreate(savedInstanceState)
         //Toast.makeText(getActivity(),"Фрагмент снова на связи!", Toast.LENGTH_SHORT).show();
     }
+
+
+
     private fun getDate() {
         val calendarView = binding.calendarView
         val calendar = Calendar.getInstance()
@@ -109,6 +115,7 @@ fun testData (): List<LessonsItem>? {
 
 
         val calendarPicList = mutableListOf<EventItemsList>()
+        val calendarShowMessgeList = mutableListOf<EventItemsList>()
         viewModel = ViewModelProvider(this)[LessonsListViewModel::class.java]
         viewModelPaymentList = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModel.lessonsList.observe(viewLifecycleOwner) {
@@ -123,6 +130,7 @@ fun testData (): List<LessonsItem>? {
                 arrayListLessons.add(dd)
              //   calendarList.add(dd)
                 calendarPicList += EventItemsList(dd, "lessons", nameLessons)
+                calendarShowMessgeList += EventItemsList(dd, "lessons", nameLessons)
                 dateTitleMutableMap.put(dd.toString(), nameLessons)
             }
 
@@ -141,8 +149,11 @@ fun testData (): List<LessonsItem>? {
 
                         if(!item.enabled) {
                             calendarPicList += EventItemsList(dd, "payment", item.student)
+                            calendarShowMessgeList += EventItemsList(dd, "dolg", item.student)
+
                         } else {
                             calendarPicList += EventItemsList(dd, "paymentyes", item.student)
+                            calendarShowMessgeList += EventItemsList(dd, "paymentyes", item.student)
                         }
                     } else {
                         continue
@@ -229,91 +240,27 @@ fun testData (): List<LessonsItem>? {
                 if(calendarPicList != null) {
                     val calendarNewPaymentPicList = mutableListOf<EventItemsList>()
                     //сортировать платежи долги
-                    var ixpr = 0
+
                     for (index in calendarPicList.indices) {
 
 
                         if(calendarPicList[index].color == "paymentyes") {
-                            val dateLessLast: CalendarDate
-  /*                          if(index != 0) {
-                                dateLessLast = calendarPicList[index - 1].date
-                            } else {
-                                dateLessLast = calendarPicList[index].date
-                            }
-
-
-
-                            if(dateLessLast == calendarPicList[index].date) {
-
-                                ixpr = ixpr + 1
-
-
-                            } else {
-                                var addOne = true
-                                if(ixpr != 0) {
-                                    calendarNewPaymentPicList += EventItemsList(dateLessLast, calendarPicList[index - 1].color, "Платежей успешных" + (ixpr + 1))
-                                    addOne = false
-                                }
-
-                               ixpr = 0
-                               if(ixpr == 0 && addOne != false) {
-                                        calendarNewPaymentPicList += EventItemsList(dateLessLast, calendarPicList[index].color, "Платежей успешных" + (ixpr + 1))
-                               }
-
-                            }*/
                             calendarNewPaymentPicList += EventItemsList(calendarPicList[index].date, calendarPicList[index].color, "успешный платеж")
 
                         } else if (calendarPicList[index].color == "payment") {
 
                             calendarNewPaymentPicList += EventItemsList(calendarPicList[index].date, calendarPicList[index].color, "долг")
-  /*                          var ixpr = 0
-                            val dateLessLast: CalendarDate
-                            if(index != 0) {
-                                dateLessLast = calendarPicList[index - 1].date
-                            } else {
-                                dateLessLast = calendarPicList[index].date
-                            }
 
-
-
-                            if(dateLessLast == calendarPicList[index].date) {
-
-                                ixpr += 1
-
-
-                            } else {
-
-                                var addOne = true
-                                if(ixpr != 0) {
-                                    Toast.makeText(activity, ixpr.toString() + " успешных платежей" + (dateLessLast.toString() + " " +  calendarPicList[index].date.toString()).toString(), Toast.LENGTH_SHORT).show()
-                                    calendarNewPaymentPicList += EventItemsList(dateLessLast, calendarPicList[index - 1].color, "долгов " + (ixpr + 1))
-                                    addOne = false
-                                }
-
-                                ixpr = 0
-
-                                if(ixpr == 0 && addOne != false) {
-                                    Toast.makeText(activity, ixpr.toString() + " долгов" + calendarPicList[index].date.toString() + "" + ixpr.toString(), Toast.LENGTH_SHORT).show()
-                                    calendarNewPaymentPicList += EventItemsList(calendarPicList[index].date, calendarPicList[index].color, "долгов" + (ixpr + 1))
-                                }
-
-
-
-                                // Toast.makeText(activity, "настоящая дата не равна с предыдущей" + (dateLessLast.toString() + " " +  calendarPicList[index].date.toString()).toString(), Toast.LENGTH_SHORT).show()
-                            }
-*/
                         } else {
                             calendarNewPaymentPicList += EventItemsList(calendarPicList[index].date, calendarPicList[index].color, "урок")
-                            //calendarNewPaymentPicList += calendarPicList[index]
+
                         }
                     }
 
           val newCalendarNewPaymentPicList = mutableListOf<EventItemsList>()
-                    // val arrayList: List<Map<String, String>>
-                    //  val map: LinkedHashMap<String, String> = LinkedHashMap()
-         val map: HashMap<String, String> = HashMap()
+          val map: HashMap<String, String> = HashMap()
 
-                for(index in calendarNewPaymentPicList.indices) {
+          for(index in calendarNewPaymentPicList.indices) {
                     if(newCalendarNewPaymentPicList.size > 0) {
                         if(map.containsKey(calendarNewPaymentPicList[index].date.toString() + calendarNewPaymentPicList[index].eventName) &&
                             !map.containsValue(calendarNewPaymentPicList[index].color)){
@@ -339,76 +286,9 @@ fun testData (): List<LessonsItem>? {
                         newCalendarNewPaymentPicList += calendarNewPaymentPicList[index]
                     }
 
-                 /*  if(newCalendarNewPaymentPicList.size > 0) {
-                       if(map.containsKey(calendarNewPaymentPicList[index].date.toString()) &&
-                           !map.containsValue(calendarNewPaymentPicList[index].eventName)) {
-                           indexMap++
-                           map[calendarNewPaymentPicList[index].date.toString()] =
-                               calendarNewPaymentPicList[index].eventName
-                           newCalendarNewPaymentPicList += calendarNewPaymentPicList[index]
-                       }
 
-
-
-                    } else {
-                        map[calendarNewPaymentPicList[index].date.toString()] =
-                            calendarNewPaymentPicList[index].eventName
-                        newCalendarNewPaymentPicList += calendarNewPaymentPicList[index]
-                    }*/
                 }
 
-                Log.d("hashmap", map.toString())
-/*
-                     if(newCalendarNewPaymentPicList.size > 0) {
-                         for(index2 in newCalendarNewPaymentPicList.indices) {
-                             /*
-                             * индекс  урок 1 сегодня
-                             *
-                             * индекс платеж сегодня
-                             * */
-
-                             if(newCalendarNewPaymentPicList[index2].color != calendarNewPaymentPicList[index].color &&
-                                 newCalendarNewPaymentPicList[index2].date == calendarNewPaymentPicList[index].date &&
-                                 newCalendarNewPaymentPicList[index2].eventName != calendarNewPaymentPicList[index].eventName &&
-                                 newCalendarNewPaymentPicList.size - 1 == index2
-                             ) {
-
-                                     newCalendarNewPaymentPicList += calendarNewPaymentPicList[index]
-
-                             }
-
-
-                             if(//newCalendarNewPaymentPicList[index2].color == calendarNewPaymentPicList[index].color &&
-                                 newCalendarNewPaymentPicList[index2].date != calendarNewPaymentPicList[index].date &&
-                              //   newCalendarNewPaymentPicList[index2].eventName == calendarNewPaymentPicList[index].eventName &&
-                                 newCalendarNewPaymentPicList.size - 1 == index2
-                             ) {
-
-                                    newCalendarNewPaymentPicList += calendarNewPaymentPicList[index]
-
-                             }
-                             if(newCalendarNewPaymentPicList[index2].eventName == calendarNewPaymentPicList[index].eventName &&
-                                 newCalendarNewPaymentPicList[index2].date == calendarNewPaymentPicList[index].date &&
-                                 //   newCalendarNewPaymentPicList[index2].eventName == calendarNewPaymentPicList[index].eventName &&
-                                 newCalendarNewPaymentPicList.size - 1 == index2
-                             ) {
-
-                                   continue
-
-                             }
-
-
-                         }
-
-                     } else {
-                         newCalendarNewPaymentPicList += calendarNewPaymentPicList[index]
-                     }
-
-*/
-
-
-
-         //var newCalendarNewPaymentPicList = HashSet<EventItemsList>(calendarNewPaymentPicList)
 
 
 
@@ -434,93 +314,22 @@ fun testData (): List<LessonsItem>? {
         }
 
 
+            calendarView.onDateClickListener = { date ->
+                 //showDialogWithEventsForSpecificDate(date)
+                val calendarDateList = mutableListOf<EventItemsList>()
+                for (index in calendarShowMessgeList.indices) {
 
-        //   log(calendarList.toString())
-        //  log(dateTitleMutableMap.toString())
-
-
-        //val indicators: List<CalendarView.DateIndicator> = setDatesIndicators()
-        //val indicators: List<CalendarView.DateIndicator> = getDatesIndicators()
-
-        // Set List of indicators that will be displayed on the calendar
-        //calendarView.datesIndicators = indicators
-
-
-        calendarView.onDateClickListener = { date ->
-
-        showDialogWithEventsForSpecificDate(date)
-
-        /*
-
-        val indicatorsForDate = calendarView.getDateIndicators(date)
-
-        for (item in indicatorsForDate) {
-         log(item.date.toString())
-         log(item.color.toString())
-        }
+                    if(calendarShowMessgeList[index].date == date) {
+                    //   Log.d("current date:", calendarShowMessgeList[index].date.toString() + calendarShowMessgeList[index].eventName.toString())
+                   //    Toast.makeText(getActivity(),"данные на дату!" + calendarShowMessgeList[index].date.toString() + calendarShowMessgeList[index].eventName.toString(), Toast.LENGTH_SHORT).show();
+                        calendarDateList += calendarShowMessgeList[index]
+                    }
+                }
 
 
-        val dialogBuilder = AlertDialog.Builder(requireActivity())
-        dialogBuilder.setMessage(indicatorsForDate.toString())
-         // if the dialog is cancelable
-         .setCancelable(false)
-         .setPositiveButton("Ok", DialogInterface.OnClickListener {
-                 dialog, id ->
-             dialog.dismiss()
 
-         })
-
-        val alert = dialogBuilder.create()
-        alert.setTitle("Уроки на день:")
-        alert.show()
-        */
-
-
-        /*
-
-        if(getScreenOrientation() == true) {
-         val fragmentTransaction = fragmentManager?.beginTransaction()
-             ?.replace(R.id.shop_item_container, LessonsItemListFragment.newInstanceDateId(date.toString()))
-             ?.addToBackStack(null)
-             ?.commit()
-        } else {
-         var curLes: ArrayList<String> = ArrayList()
-         for (item in it) {
-             val curdate = item.dateEnd.split(" ")
-             val  dd = CalendarDate(Date(curdate[0]))
-             //      log(dd.toString())
-             log(date.toString())
-             if(dd.toString() == date.toString()) {
-                 curLes.add(item.dateEnd + " " + item.title + " " + item.price)
-             }
-         }
-
-         if(curLes.size == 0) {
-             curLes.add("На эту дату уроков нет.")
-         }
-
-
-         val selectedDates = calendarView.selectedDates
-         log("selectarr" + selectedDates.toString())
-
-         val dialogBuilder = AlertDialog.Builder(requireActivity())
-         dialogBuilder.setMessage(curLes.toString())
-             // if the dialog is cancelable
-             .setCancelable(false)
-             .setPositiveButton("Ok", DialogInterface.OnClickListener {
-                     dialog, id ->
-                 dialog.dismiss()
-
-             })
-
-         val alert = dialogBuilder.create()
-         alert.setTitle("Уроки на день:")
-         alert.show()
-
-         log(date.toString())
-        }
-        */
-        }
+                dialogWindow(date, calendarDateList)
+            }
 
 
 
@@ -531,23 +340,165 @@ fun testData (): List<LessonsItem>? {
 
         // Set date long click callback
         calendarView.onDateLongClickListener = { date ->
-        log("arrlistLong"+date.toString() + getScreenOrientation())
-        if(getScreenOrientation()){
-        val fragmentTransaction = fragmentManager?.beginTransaction()
-         ?.replace(R.id.shop_item_container, LessonsItemFragment.newInstanceAddItem(date.toString()))
-         ?.addToBackStack(null)
-         ?.commit()
+                log("arrlistLong"+date.toString() + getScreenOrientation())
+                if(getScreenOrientation()){
+                    val fragmentTransaction = fragmentManager?.beginTransaction()
+                     ?.replace(R.id.shop_item_container, LessonsItemFragment.newInstanceAddItem(date.toString()))
+                     ?.addToBackStack(null)
+                     ?.commit()
+                } else {
+                    val fragmentTransaction = fragmentManager?.beginTransaction()
+                     ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem(date.toString()))
+                     ?.addToBackStack(null)
+                     ?.commit()
+                }
+
+
+        }
+
+   }
+
+
+
+
+    private fun dialogWindow(date: CalendarDate, dataDate: MutableList<EventItemsList>) {
+
+        if(dataDate.size == 0) {
+            Toast.makeText(getActivity(),"На сегодня ничего нет", Toast.LENGTH_SHORT).show()
+            val alert = AlertDialog.Builder(requireContext())
+            alert.setTitle("$date")
+            alert.setMessage("Запланированных занятий нет.")
+
+            alert.setPositiveButton("Добавить урок", DialogInterface.OnClickListener {
+                    dialog, id ->
+                val fragmentTransaction = fragmentManager?.beginTransaction()
+                    ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem(date.toString()))
+                    ?.addToBackStack(null)
+                    ?.commit()
+            })
+            alert.setNeutralButton("Закрыть", DialogInterface.OnClickListener {
+                    dialog, id ->
+                dialog.dismiss()
+            })
+
+            alert.setCancelable(false)
+            alert.show()
         } else {
-        val fragmentTransaction = fragmentManager?.beginTransaction()
-         ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem(date.toString()))
-         ?.addToBackStack(null)
-         ?.commit()
+           // Toast.makeText(getActivity()," ", Toast.LENGTH_SHORT).show()
+
+            val alert = AlertDialog.Builder(requireContext())
+            alert.setTitle("$date")
+            //alert.setMessage("Enter phone details and amount to buy airtime.")
+
+            val layout = LinearLayout(requireContext())
+            layout.orientation = LinearLayout.VERTICAL
+
+
+
+
+
+
+            val lessonsLabel = TextView(requireContext())
+            lessonsLabel.setSingleLine()
+            lessonsLabel.text = "Уроки:"
+            layout.addView(lessonsLabel)
+
+
+            for (index in dataDate.indices) {
+                if(dataDate[index].color == "lessons"){
+                  //  Log.d("lessshow:", dataDate[index].color)
+                    val nameEvent = dataDate[index].eventName
+
+                    val index = TextView(requireContext())
+                    index.setSingleLine()
+                    index.text = nameEvent
+                    index.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
+                    //lessonsInfo.inputType = InputType.TYPE_CLASS_NUMBER
+                    layout.addView(index)
+                }
+
+            }
+
+
+
+
+            val paymentsLabel = TextView(requireContext())
+            paymentsLabel.setSingleLine()
+            paymentsLabel.text = "Оплаченные платежи:"
+            paymentsLabel.top = 15
+            layout.addView(paymentsLabel)
+
+
+            var countPayYes = 0
+            for (index in dataDate.indices) {
+                if(dataDate[index].color == "paymentyes"){
+                    //  Log.d("lessshow:", dataDate[index].color)
+                    countPayYes++
+                }
+
+            }
+            val paymentYes = TextView(requireContext())
+            paymentYes.setSingleLine()
+            paymentYes.text = countPayYes.toString()
+            paymentYes.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
+            //lessonsInfo.inputType = InputType.TYPE_CLASS_NUMBER
+            layout.addView(paymentYes)
+
+            val paymentsNoLabel = TextView(requireContext())
+            paymentsNoLabel.setSingleLine()
+            paymentsNoLabel.text = "Долги :"
+            paymentsNoLabel.top = 15
+            layout.addView(paymentsNoLabel)
+
+
+            var countPayNo = 0
+            for (index in dataDate.indices) {
+                if(dataDate[index].color == "dolg"){
+                    //  Log.d("lessshow:", dataDate[index].color)
+                    countPayNo++
+
+                }
+
+            }
+
+            val payNo = TextView(requireContext())
+            payNo.setSingleLine()
+            payNo.text = countPayNo.toString()
+            payNo.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
+            //lessonsInfo.inputType = InputType.TYPE_CLASS_NUMBER
+            layout.addView(payNo)
+
+            layout.setPadding(50, 40, 50, 10)
+
+            alert.setView(layout)
+
+            if(countPayYes != 0 || countPayNo != 0) {
+                alert.setPositiveButton("Платежи", DialogInterface.OnClickListener {
+                        dialog, id ->
+                    launchFragment(PaymentItemListFragment.newInstanceDateId(date.toString()))
+                })
+            }
+
+
+
+            alert.setNegativeButton("Уроки", DialogInterface.OnClickListener {
+                    dialog, id ->
+                //    log(date.toString())
+                launchFragment(LessonsItemListFragment.newInstanceDateId(date.toString()))
+            })
+            alert.setNeutralButton("Закрыть", DialogInterface.OnClickListener {
+                    dialog, id ->
+                dialog.dismiss()
+            })
+
+            alert.setCancelable(false)
+            alert.show()
+
         }
 
 
-        }
 
-        }
+    }
 
 
         private fun launchFragment(fragment: Fragment) {
@@ -598,36 +549,36 @@ fun testData (): List<LessonsItem>? {
 
 
         private fun showDialogWithEventsForSpecificDate(date: CalendarDate) {
-        val eventItems = binding.calendarView.getDateIndicators(date)
-        .filterIsInstance<EventItem>()
-        .toTypedArray()
+            val eventItems = binding.calendarView.getDateIndicators(date)
+                .filterIsInstance<EventItem>()
+                .toTypedArray()
 
 
 
-        if (eventItems.isNotEmpty()) {
-        val adapter = EventDialogAdapter(requireContext(), eventItems)
+            if (eventItems.isNotEmpty()) {
+                val adapter = EventDialogAdapter(requireContext(), eventItems)
 
-        val builder = AlertDialog.Builder(requireContext())
-        .setTitle("$date")
-        .setAdapter(adapter, null)
-        .setCancelable(false)
-        .setPositiveButton("Платежи", DialogInterface.OnClickListener {
-             dialog, id ->
-         launchFragment(PaymentItemListFragment.newInstanceDateId(date.toString()))
-        })
-        .setNegativeButton("Уроки", DialogInterface.OnClickListener {
-             dialog, id ->
-         //    log(date.toString())
-         launchFragment(LessonsItemListFragment.newInstanceDateId(date.toString()))
-        })
-        .setNeutralButton("Закрыть", DialogInterface.OnClickListener {
-             dialog, id ->
-         dialog.dismiss()
-        })
+                val builder = AlertDialog.Builder(requireContext())
+                .setTitle("$date")
+                .setAdapter(adapter, null)
+                .setCancelable(false)
+                .setPositiveButton("Платежи", DialogInterface.OnClickListener {
+                     dialog, id ->
+                 launchFragment(PaymentItemListFragment.newInstanceDateId(date.toString()))
+                })
+                .setNegativeButton("Уроки", DialogInterface.OnClickListener {
+                     dialog, id ->
+                 //    log(date.toString())
+                 launchFragment(LessonsItemListFragment.newInstanceDateId(date.toString()))
+                })
+                .setNeutralButton("Закрыть", DialogInterface.OnClickListener {
+                     dialog, id ->
+                 dialog.dismiss()
+                })
 
-        val dialog = builder.create()
-        dialog.show()
-        }
+                val dialog = builder.create()
+                dialog.show()
+            }
         }
 
 
