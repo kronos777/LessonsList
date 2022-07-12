@@ -1,17 +1,25 @@
 package com.example.lessonslist.presentation.student
 
 import android.R
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -22,7 +30,10 @@ import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
+import com.squareup.picasso.Picasso
+import java.io.*
 import java.util.ArrayList
+import java.util.concurrent.Executors
 
 
 class StudentItemFragment : Fragment() {
@@ -42,6 +53,16 @@ class StudentItemFragment : Fragment() {
     private var studentItemId: Int = StudentItem.UNDEFINED_ID
     private var dataPaymentStudentModel: ArrayList<DataPaymentStudentModel>? = null
 
+
+    private lateinit var chosenImageUri: Uri
+
+
+    private lateinit var mImageView: ImageView
+
+    val myExecutor = Executors.newSingleThreadExecutor()
+    val myHandler = Handler(Looper.getMainLooper())
+
+    private lateinit var pathImageSrc: String
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -76,26 +97,26 @@ class StudentItemFragment : Fragment() {
         launchRightMode()
         observeViewModel()
 
-        //viewModel.studentItem.
+
         dataPaymentStudentModel = ArrayList<DataPaymentStudentModel>()
         listView = binding.listView
         val args = requireArguments()
         val mode = args.getString(SCREEN_MODE)
         if (mode == MODE_EDIT || mode == "mode_edit") {
-            Log.d("nowmodeadd", "mode add")
+
             viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
             viewModelPayment.paymentList.observe(viewLifecycleOwner) {
                 if(it.size > 0) {
                     for (payment in it) {
                         if(payment.studentId == studentItemId) {
-                            //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
+
                             if (payment.enabled == true) {
                                 dataPaymentStudentModel!!.add(DataPaymentStudentModel("Оплачен: " + payment.title, payment.price.toString()))
                             } else {
                                 dataPaymentStudentModel!!.add(DataPaymentStudentModel("Долг: " + payment.title, "-" + payment.price.toString()))
                             }
 
-                            Log.d("nowmodeadd", "aaa" + payment.title + " " + payment.price)
+
                         }
                     }
                 }
@@ -115,6 +136,92 @@ class StudentItemFragment : Fragment() {
             binding.paymentStudent?.setVisibility (View.GONE)
         }
 
+
+        mImageView = binding.imageView
+
+        mImageView.setOnClickListener {
+            actionChangeImage()
+        }
+
+
+    }
+
+
+
+
+    private fun actionChangeImage() {
+        myExecutor.execute {
+            getImageLocal()
+        }
+    }
+
+    fun getImageLocal() {
+        val photoPickerIntent = Intent(Intent.ACTION_GET_CONTENT)
+        photoPickerIntent.type = "image/*"
+        startActivityForResult(photoPickerIntent, 1)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            1 -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    if (data != null) {
+                        chosenImageUri = data.data!!
+
+                        var mImage: Bitmap?
+                        mImage = mLoadLocal(chosenImageUri.toString())
+                        myHandler.post {
+
+                            Picasso.get()
+                                .load(chosenImageUri.toString())
+                                .resize(400, 300)
+                                .rotate(90f)
+                                .into(mImageView)
+
+
+                            if(mImage!=null){
+                                pathImageSrc = mSaveMediaToStorage(mImage).toString()
+
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
+    private fun mLoadLocal(string: String): Bitmap? {
+        try {
+            val inputStream: InputStream? = activity?.applicationContext?.getContentResolver()?.openInputStream(string.toUri())
+            return BitmapFactory.decodeStream(inputStream)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+
+    private fun mSaveMediaToStorage(bitmap: Bitmap?): File {
+        val filename = "${System.currentTimeMillis()}.jpg"
+        var fos: OutputStream? = null
+
+        val imagesDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + "lessonslist")
+        imagesDir.apply {
+            if (!this.exists()) this.mkdir()
+        }
+
+        val image = File(imagesDir, filename)
+        fos = FileOutputStream(image)
+
+        fos.use {
+
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, it)
+
+
+        }
+        return image
     }
 
     private fun launchFragment(fragment: Fragment) {
@@ -184,7 +291,7 @@ class StudentItemFragment : Fragment() {
                 binding.etPaymentBalance.text.toString(),
                 binding.etNotes.text.toString(),
                 binding.etGroup.text.toString(),
-                "",
+                pathImageSrc,
                 binding.etTelephone.text.toString()
 
             )
@@ -199,7 +306,7 @@ class StudentItemFragment : Fragment() {
                 binding.etPaymentBalance.text.toString(),
                 binding.etNotes.text.toString(),
                 binding.etGroup.text.toString(),
-                "",
+                pathImageSrc,
                 binding.etTelephone.text.toString()
             )
         }

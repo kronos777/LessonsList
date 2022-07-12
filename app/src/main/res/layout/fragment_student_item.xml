@@ -17,6 +17,16 @@
         >
 
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/til_name"
+            android:src="@drawable/calendar_days_of_week_bar_shadow"
+            />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_name"
@@ -109,7 +119,7 @@
                 android:id="@+id/et_telephone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/notes_hint"
+                android:hint="@string/student_telephone"
                 android:inputType="textCapWords"
                 android:text="@{viewModel.studentItem.telephone}"
                 />
@@ -134,9 +144,9 @@
                 android:id="@+id/et_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/notes_hint"
-                android:inputType="textCapWords"
-                android:text="@{viewModel.studentItem.notes}"
+                android:hint="@string/student_telephone"
+                android:inputType="number"
+                android:text="@{viewModel.studentItem.telephone}"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -177,6 +187,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/til_group"
+
             />
         <Button
             android:id="@+id/payment_student"

@@ -113,7 +113,6 @@ class StudentItemEditFragment : Fragment() {
         listView = binding.listView
         val args = requireArguments()
         val mode = args.getString(SCREEN_MODE)
-        Log.d("nowmodeadd", "mode add")
             viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
             viewModelPayment.paymentList.observe(viewLifecycleOwner) {
                 if(it.size > 0) {

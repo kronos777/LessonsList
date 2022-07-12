@@ -5,6 +5,7 @@
     <string name="name_hint">Имя:</string>
     <string name="lastname_hint">Фамилия:</string>
     <string name="count_hint">Платежный баланс:</string>
+    <string name="student_telephone">Телефон студента:</string>
     <string name="notes_hint">Заметки о ученике:</string>
     <string name="payment_name">Название платежа:</string>
     <string name="payment_desc">Описание платежа:</string>
