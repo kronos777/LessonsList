@@ -577,7 +577,7 @@ class StudentItemEditFragment : Fragment() {
         val image = File(imagesDir, filename)
         fos = FileOutputStream(image)
 
-        fos?.use {
+        fos.use {
 
             bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, it)
             Toast.makeText(getActivity() , "Saved to Gallery", Toast.LENGTH_SHORT).show()

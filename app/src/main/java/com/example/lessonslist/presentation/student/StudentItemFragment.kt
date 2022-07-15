@@ -98,6 +98,8 @@ class StudentItemFragment : Fragment() {
         observeViewModel()
 
 
+
+
         dataPaymentStudentModel = ArrayList<DataPaymentStudentModel>()
         listView = binding.listView
         val args = requireArguments()
@@ -182,7 +184,6 @@ class StudentItemFragment : Fragment() {
 
                             if(mImage!=null){
                                 pathImageSrc = mSaveMediaToStorage(mImage).toString()
-
                             }
                         }
 
@@ -297,7 +298,15 @@ class StudentItemFragment : Fragment() {
             )
         }
     }
-
+    /*    val paymentBalance: Int,
+        val name: String,
+        val lastname: String,
+        val group: String,
+        val image: String,
+        val notes: String,
+        val telephone: String,
+        val enabled: Boolean,
+        var id: Int = UNDEFINED_ID*/
     private fun launchAddMode() {
         binding.saveButton.setOnClickListener {
             viewModel.addStudentItem(

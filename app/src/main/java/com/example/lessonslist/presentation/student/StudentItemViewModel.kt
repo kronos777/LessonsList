@@ -62,7 +62,7 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
         val fieldsValid = validateInput(name, lastName, paymentBalance)
         if (fieldsValid) {
             viewModelScope.launch {
-                val studentItem = StudentItem(paymentBalance.toInt(), name, lastName, group, notes, image, phone,true)
+                val studentItem = StudentItem(paymentBalance.toInt(), name, lastName, group,  image, notes, phone,true)
                 //val studentItem = StudentItem(paymentBalance?.toFloat(), name, lastName, group, notes, true)
                 addStudentItemUseCase.addStudentItem(studentItem)
                 finishWork()

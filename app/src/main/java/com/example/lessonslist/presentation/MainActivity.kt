@@ -91,9 +91,9 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
 
-        binding.navView?.setNavigationItemSelectedListener {
+        binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
-            //    R.id.muItem1 -> goGroupFragment()
+                //    R.id.muItem1 -> goGroupFragment()
                 //      R.id.muItem2 -> launchFragment(SettingsItemFragment())
                 R.id.muItem2 -> getDialogBackup()
                 R.id.muItem3 -> launchFragment(CalendarItemFragment())
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 R.id.muItem5 -> goGroupListFragment()
                 R.id.muItem6 -> goLessonsListFragment()
                 R.id.muItem7 -> goStudentListFragment()
-                R.id.muItem8 -> goPaymentCalendarFragment()
+                // R.id.muItem8 -> goPaymentCalendarFragment()
 
             }
             true

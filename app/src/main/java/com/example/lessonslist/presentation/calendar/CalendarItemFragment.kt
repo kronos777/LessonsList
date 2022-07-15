@@ -305,7 +305,7 @@ fun testData (): List<LessonsItem>? {
                  initialDate = initialDate,
                  minDate = minDate,
                  maxDate = maxDate,
-                 selectionMode = CalendarView.SelectionMode.MULTIPLE,
+                 selectionMode = CalendarView.SelectionMode.SINGLE,
                  selectedDates = calendarList,
                  firstDayOfWeek = firstDayOfWeek,
                  showYearSelectionView = true

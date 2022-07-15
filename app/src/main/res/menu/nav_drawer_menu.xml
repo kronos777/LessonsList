@@ -2,22 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/muItem3"
-        android:title="Каледнарь занятий" />
-    <item
+        android:title="Календарь" />
+    <!--item
         android:id="@+id/muItem8"
-        android:title="Календарь платежей" />
+        android:title="Календарь платежей" /-->
     <item
         android:id="@+id/muItem4"
         android:title="Платежи" />
     <item
         android:id="@+id/muItem5"
-        android:title="Список групп" />
+        android:title="Группы" />
     <item
         android:id="@+id/muItem6"
-        android:title="Список уроков" />
+        android:title="Уроки" />
     <item
         android:id="@+id/muItem7"
-        android:title="Список учеников" />
+        android:title="Ученики" />
     <item
         android:id="@+id/muItem2"
         android:title="Резервное копирование." />

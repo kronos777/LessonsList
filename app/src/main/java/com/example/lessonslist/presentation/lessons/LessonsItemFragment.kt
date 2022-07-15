@@ -192,10 +192,7 @@ class LessonsItemFragment : Fragment() {
         val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
         val minute = mcurrentTime.get(Calendar.MINUTE)
 
-      /*  val year = mcurrentTime.get(Calendar.YEAR)
-        val month = mcurrentTime.get(Calendar.MONTH)
-        val day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
-*/
+
         val year: Int
         val month: Int
         val day: Int
@@ -311,6 +308,7 @@ class LessonsItemFragment : Fragment() {
 
 
     private fun launchAddMode() {
+        binding.tilStudent?.setVisibility(View.GONE)
         binding.etPrice?.setVisibility(View.GONE)
         binding.etStudent.setVisibility(View.GONE)
         binding.saveButton.setOnClickListener{
