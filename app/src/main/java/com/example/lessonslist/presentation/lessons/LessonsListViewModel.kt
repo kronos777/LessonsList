@@ -16,10 +16,13 @@ class LessonsListViewModel(application: Application) : AndroidViewModel(applicat
     private val repository = LessonsListRepositoryImpl(application)
 
     private val getLessonsItemListUseCase = GetLessonsListItemUseCase(repository)
+    private val getLessonsListItemDateUseCase = GetLessonsListItemDateUseCase(repository)
     private val deleteLessonsItemUseCase = DeleteLessonsItemUseCase(repository)
     private val editLessonsItemUseCase = EditLessonsItemUseCase(repository)
 
     val lessonsList = getLessonsItemListUseCase.getLessonsList()
+    val lessonsListDate = getLessonsListItemDateUseCase
+
     /*val appDatabase = AppDatabase
 
     fun getData(): ArrayList<String> {

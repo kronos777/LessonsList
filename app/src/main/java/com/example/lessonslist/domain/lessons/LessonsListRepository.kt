@@ -15,7 +15,7 @@ interface LessonsListRepository {
 
     fun getLessonsList(): LiveData<List<LessonsItem>>
 
-
+    fun getLessonsListDate(date: String): LiveData<List<LessonsItem>>
 
 
 

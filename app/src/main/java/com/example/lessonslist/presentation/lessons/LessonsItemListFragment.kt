@@ -14,16 +14,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
-import com.example.lessonslist.databinding.FragmentGroupItemListBinding
 import com.example.lessonslist.databinding.FragmentLessonsItemListBinding
 import com.example.lessonslist.domain.lessons.LessonsItem
-import com.example.lessonslist.domain.payment.PaymentItem
-import com.example.lessonslist.presentation.payment.PaymentItemListFragment
-import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.log
 
 
 class LessonsItemListFragment: Fragment() {
@@ -40,7 +35,7 @@ class LessonsItemListFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentLessonsItemListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -59,15 +54,26 @@ class LessonsItemListFragment: Fragment() {
         setupRecyclerView()
         val args = requireArguments()
         val dateFilter = args.getString(DATE_ID)
-        Toast.makeText(getActivity(),"Работает эта часть кода!" + dateFilter.toString(),Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(getActivity(),"Работает эта часть кода!" + dateFilter.toString(),Toast.LENGTH_SHORT).show();
 
 
         if(dateFilter != null) {
                 val listArrayPayment: ArrayList<LessonsItem> = ArrayList()
                 viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
+                /*viewModel.lessonsListDate.getLessonsListDate(dateFilter).observe(viewLifecycleOwner) {
+                    it.forEach {
+                        Toast.makeText(getActivity(),"дата фильтрации!" + it.title + it.dateEnd,Toast.LENGTH_SHORT).show()
+                        listArrayPayment.add(it)
+                    }
+                    if(listArrayPayment.size > 0) {
+                        lessonsListAdapter.submitList(listArrayPayment)
+                    } else {
+                        Toast.makeText(getActivity(),"На эту дату уроков не запланировано!",Toast.LENGTH_SHORT).show();
+                    }
+                }*/
                 viewModel.lessonsList.observe(viewLifecycleOwner) {
                     for (lessons in it) {
-                        var pay = lessons.dateEnd.split(" ")
+                        val pay = lessons.dateEnd.split(" ")
                         val datePay = Date(pay[0])
                         val dateFormated = SimpleDateFormat("d/M/yyyy").format(datePay)
                         if(dateFormated == dateFilter){

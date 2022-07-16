@@ -1,6 +1,5 @@
 package com.example.lessonslist.presentation.calendar
 
-import android.app.Application
 import android.content.Context
 import android.content.DialogInterface
 import android.content.res.Configuration
@@ -12,23 +11,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.work.OneTimeWorkRequestBuilder
-import com.example.lessonslist.PaymentWork
 import com.example.lessonslist.R
-import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.databinding.FragmentCalendarPaymentBinding
-import com.example.lessonslist.databinding.FragmentCalndarBinding
-import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
-import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
-import com.example.lessonslist.presentation.lessons.LessonsListViewModel
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import ru.cleverpumpkin.calendar.CalendarDate
 import ru.cleverpumpkin.calendar.CalendarView
 import java.util.*

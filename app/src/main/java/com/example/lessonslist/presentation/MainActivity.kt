@@ -15,16 +15,16 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.lessonslist.PaymentWork
+import com.example.lessonslist.data.service.PaymentWork
 import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
-import com.example.lessonslist.presentation.calendar.EventDialogAdapter
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
@@ -54,15 +54,21 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container)
+        //val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container)
 
-        if (currentFragment == null) {
+        //val backStack = supportFragmentManager.popBackStack().toString()
+        //Toast.makeText(this, "path name!" + backStack, Toast.LENGTH_SHORT).show()
+        launchMainFragment(CalendarItemFragment(), "calendar")
+
+        //Toast.makeText(this, "path name!" + supportFragmentManager.popBackStack().toString(), Toast.LENGTH_SHORT).show()
+
+    /*    if (currentFragment == null) {
             if (isOnePaneMode()) {
                 launchFragmentTemp(CalendarItemFragment())
             } else {
                 launchFragment(CalendarItemFragment())
             }
-        }
+        }*/
 
         backup = RoomBackup(this)
 
@@ -196,6 +202,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     }
 
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        supportFragmentManager.popBackStack("calendar", 0)
+    }
 
     private fun backup() {
         backup
@@ -347,10 +358,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     fun goPaymentFragment() {
      if (!isOnePaneMode()) {
-         launchFragment(PaymentItemListFragment.newInstanceNoneParams())
+        launchFragment(PaymentItemListFragment.newInstanceNoneParams())
      } else {
          recyclerMainGone()
          launchFragmentTemp(PaymentItemListFragment.newInstanceNoneParams())
+         //llaunchFragment(PaymentItemListFragment.newInstanceNoneParams())
          Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
      }
     }
@@ -366,7 +378,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
     override fun onEditingFinished() {
-     Toast.makeText(this@MainActivity, "Отработал финиш", Toast.LENGTH_SHORT).show()
+    // Toast.makeText(this@MainActivity, "Отработал финиш", Toast.LENGTH_SHORT).show()
      supportFragmentManager.popBackStack()
     }
 
@@ -374,19 +386,31 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
      return binding.shopItemContainer == null
     }
 
-    private fun launchFragment(fragment: Fragment) {
-     supportFragmentManager.popBackStack()
+
+    private fun launchMainFragment(fragment: Fragment, name: String) {
+     //   supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_item_container, fragment)
+            .addToBackStack(name)
+            .commit()
+    }
+
+
+    private fun launchFragment(fragment: Fragment, name: String? = "other") {
+     //supportFragmentManager.popBackStack()
      supportFragmentManager.beginTransaction()
          .replace(R.id.fragment_item_container, fragment)
-         .addToBackStack(null)
+         .addToBackStack(name)
+         //.addToBackStack("CalendarItemFragment")
          .commit()
     }
 
-    fun launchFragmentTemp(fragment: Fragment) {
-     supportFragmentManager.popBackStack()
+    fun launchFragmentTemp(fragment: Fragment, name: String? = "other") {
+     //supportFragmentManager.popBackStack()
      supportFragmentManager.beginTransaction()
+         .add(R.id.fragment_item_container, fragment)
          .replace(R.id.fragment_item_container, fragment)
-         .addToBackStack(BACK_STACK_ROOT_TAG)
+         .addToBackStack(name)
          .commit()
     }
 

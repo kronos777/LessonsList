@@ -1,4 +1,4 @@
-package com.example.lessonslist
+package com.example.lessonslist.data.service
 
 import android.app.Application
 import android.app.NotificationChannel
@@ -11,9 +11,9 @@ import android.media.RingtoneManager.getDefaultUri
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.*
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.presentation.MainActivity
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel

@@ -38,6 +38,10 @@ class LessonsListRepositoryImpl(
         mapper.mapListDbModelToListEntity(it)
     }
 
-
+    override fun getLessonsListDate(date: String): LiveData<List<LessonsItem>> = Transformations.map(
+        lessonsListDao.getLessonsList()
+    ) {
+        mapper.mapListDbModelToListEntity(it)
+    }
 
 }

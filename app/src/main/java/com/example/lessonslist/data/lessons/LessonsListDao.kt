@@ -17,6 +17,9 @@ interface LessonsListDao {
     @Query("SELECT * FROM lessons_items")
     fun getAllLessonsList(): List<LessonsItemDbModel>
 
+    @Query("SELECT * FROM lessons_items WHERE dateEnd LIKE :date")
+    fun getLessonsListDate(date: String): LiveData<List<LessonsItemDbModel>>
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addLessonsItem(lessonsItemDbModel: LessonsItemDbModel)
