@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-<androidx.drawerlayout.widget.DrawerLayout
+<layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.drawerlayout.widget.DrawerLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawer_layout_id"
@@ -24,6 +23,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_add" /-->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_view_bottom"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_item_container"
@@ -31,6 +41,7 @@
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="@id/guideline_middle"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="58dp"
         />
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navView"
@@ -41,7 +52,6 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         />
-
 
 </androidx.drawerlayout.widget.DrawerLayout>
 </layout>

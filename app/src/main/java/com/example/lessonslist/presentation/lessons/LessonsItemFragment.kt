@@ -1,5 +1,6 @@
 package com.example.lessonslist.presentation.lessons
 
+import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
@@ -22,7 +23,9 @@ import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
+import java.time.Month
 import java.util.*
+import javax.xml.datatype.DatatypeConstants.MONTHS
 
 
 class LessonsItemFragment : Fragment() {
@@ -193,9 +196,9 @@ class LessonsItemFragment : Fragment() {
         val minute = mcurrentTime.get(Calendar.MINUTE)
 
 
-        val year: Int
-        val month: Int
-        val day: Int
+        var year: Int
+        var month: Int
+        var day: Int
 
         val args = requireArguments()
         val dateAdd = args.getString(DATE_ADD)
@@ -205,10 +208,42 @@ class LessonsItemFragment : Fragment() {
         if (mode == MODE_ADD) {
             binding.paymentLesson?.setVisibility (View.GONE)
            if (dateAdd == "") {
-                    log("string date add is null")
-                    year = mcurrentTime.get(Calendar.YEAR)
-                    month = mcurrentTime.get(Calendar.MONTH)
-                    day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
+
+               val cal = Calendar.getInstance()
+               val year1 = cal.get(Calendar.YEAR)
+               val month1 = cal.get(Calendar.MONTH)
+               val day1 = cal.get(Calendar.DAY_OF_MONTH)
+
+
+               year = mcurrentTime.get(Calendar.YEAR)
+               month = mcurrentTime.get(Calendar.MONTH)
+               day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
+
+
+               val dpd =
+                   getActivity()?.let {
+                       DatePickerDialog(it, DatePickerDialog.OnDateSetListener { view, yearcur, monthOfYear, dayOfMonth ->
+                         //  val monthOfYear = monthOfYear - 1
+                           // Display Selected date in textbox
+                           Toast.makeText(activity, "need date lessons" + "You Selected: $dayOfMonth/$monthOfYear/$yearcur", Toast.LENGTH_SHORT).show()
+
+                           cal.set(yearcur, monthOfYear, dayOfMonth)
+
+                           year = cal[Calendar.YEAR]
+                           month = cal[Calendar.MONTH]
+                           day = cal[Calendar.DAY_OF_MONTH]
+
+
+                       }, year1, month1, day1)
+
+                   }
+
+               dpd!!.show()
+
+
+             //year = mcurrentTime.get(Calendar.YEAR)
+              //month = mcurrentTime.get(Calendar.MONTH)
+              //day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
 
            } else {
                     log(dateAdd.toString())
@@ -234,6 +269,7 @@ class LessonsItemFragment : Fragment() {
                 launchFragment(PaymentItemListFragment.newInstanceLessonsId(lessonsItemId))
             }
            }
+
 
 
         mTimePicker = TimePickerDialog(context, object : TimePickerDialog.OnTimeSetListener {

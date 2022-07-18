@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bottomItem1"
+        android:icon="@drawable/ic_baseline_calendar_today_24"
+        android:title="Календарь" />
+    <item
+        android:id="@+id/bottomItem2"
+        android:icon="@drawable/ic_baseline_payment_24"
+        android:title="Платежи" />
+    <item
+        android:id="@+id/bottomItem3"
+        android:icon="@drawable/ic_baseline_group_24"
+        android:title="Группы" />
+    <item
+        android:id="@+id/bottomItem4"
+        android:icon="@drawable/ic_baseline_list_24"
+        android:title="Уроки" />
+    <item
+        android:id="@+id/bottomItem5"
+        android:icon="@drawable/ic_baseline_people_24"
+        android:title="Ученики" />
+</menu>

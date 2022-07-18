@@ -6,6 +6,8 @@ import android.content.ContentValues.TAG
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -15,13 +17,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.lessonslist.data.service.PaymentWork
 import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
+import com.example.lessonslist.data.service.PaymentWork
 import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
@@ -35,6 +36,7 @@ import com.example.lessonslist.presentation.settings.SettingsItemFragment
 import com.example.lessonslist.presentation.student.StudentItemEditFragment
 import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentItemListFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 
 
@@ -46,6 +48,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     lateinit var toggle: ActionBarDrawerToggle
 
     private lateinit var backup: RoomBackup
+
+    private var doubleBackToExitPressedOnce = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,6 +117,42 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             true
         }
 
+
+
+
+        binding.navViewBottom?.setOnNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.bottomItem1 -> {
+                    // Respond to navigation item 1 click
+                    launchMainFragment(CalendarItemFragment(), "calendar")
+                    true
+                }
+                R.id.bottomItem2 -> {
+                    // Respond to navigation item 2 click
+                  //  Log.d("menuitem", "ite2")
+                    //Toast.makeText(this, "item2", Toast.LENGTH_SHORT).show()
+                    goPaymentFragment()
+                    true
+                }
+                R.id.bottomItem3 -> {
+                    // Respond to navigation item 2 click
+                    goGroupListFragment()
+                    true
+                }
+                R.id.bottomItem4 -> {
+                    // Respond to navigation item 2 click
+                    goLessonsListFragment()
+                    true
+                }
+                R.id.bottomItem5 -> {
+                    // Respond to navigation item 2 click
+                    goStudentListFragment()
+                    true
+                }
+                else -> false
+            }
+            true
+        }
         /*foreggroundservice */
 /* ContextCompat.startForegroundService(
      this,
@@ -204,8 +244,21 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        //super.onBackPressed()
         supportFragmentManager.popBackStack("calendar", 0)
+        val myFragment: Fragment = supportFragmentManager.findFragmentByTag("MainCalendarFragment") as Fragment
+        if (doubleBackToExitPressedOnce) {
+            // super.onBackPressed()
+            //return
+            if (myFragment != null && myFragment.isVisible()) {
+                this.finishAffinity()
+                Toast.makeText(this, "Текущий форагмент календарь, можно выходить.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        this.doubleBackToExitPressedOnce = true
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
+        Handler(Looper.getMainLooper()).postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
     }
 
     private fun backup() {
@@ -293,7 +346,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         if (!isOnePaneMode()) {
             launchFragment(StudentItemListFragment())
         } else {
-            recyclerMainGone()
+         //   recyclerMainGone()
             launchFragmentTemp(StudentItemListFragment())
            // Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
         }
@@ -316,7 +369,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
      if (!isOnePaneMode()) {
          launchFragment(LessonsItemListFragment.newInstanceNoneParams())
      } else {
-         recyclerMainGone()
+        // recyclerMainGone()
          launchFragmentTemp(LessonsItemListFragment.newInstanceNoneParams())
       //   Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
      }
@@ -327,7 +380,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
      if (!isOnePaneMode()) {
          launchFragment(GroupItemListFragment())
      } else {
-         recyclerMainGone()
+      //   recyclerMainGone()
          launchFragmentTemp(GroupItemListFragment())
      //    Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
      }
@@ -337,7 +390,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
      if (!isOnePaneMode()) {
          launchFragment(GroupItemFragment())
      } else {
-         recyclerMainGone()
+        // recyclerMainGone()
          launchFragmentTemp(GroupItemFragment())
        //  Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
      }
@@ -347,7 +400,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
      if (!isOnePaneMode()) {
          launchFragment(LessonsItemFragment())
      } else {
-         recyclerMainGone()
+        // recyclerMainGone()
          launchFragmentTemp(LessonsItemFragment())
     //     Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
      }
@@ -360,7 +413,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
      if (!isOnePaneMode()) {
         launchFragment(PaymentItemListFragment.newInstanceNoneParams())
      } else {
-         recyclerMainGone()
+       //  recyclerMainGone()
          launchFragmentTemp(PaymentItemListFragment.newInstanceNoneParams())
          //llaunchFragment(PaymentItemListFragment.newInstanceNoneParams())
          Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
@@ -390,7 +443,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private fun launchMainFragment(fragment: Fragment, name: String) {
      //   supportFragmentManager.popBackStack()
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_item_container, fragment)
+            .replace(R.id.fragment_item_container, fragment, "MainCalendarFragment")
             .addToBackStack(name)
             .commit()
     }
@@ -399,7 +452,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private fun launchFragment(fragment: Fragment, name: String? = "other") {
      //supportFragmentManager.popBackStack()
      supportFragmentManager.beginTransaction()
-         .replace(R.id.fragment_item_container, fragment)
+         .replace(R.id.fragment_item_container, fragment, "OtherFragment")
          .addToBackStack(name)
          //.addToBackStack("CalendarItemFragment")
          .commit()
@@ -408,8 +461,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     fun launchFragmentTemp(fragment: Fragment, name: String? = "other") {
      //supportFragmentManager.popBackStack()
      supportFragmentManager.beginTransaction()
-         .add(R.id.fragment_item_container, fragment)
-         .replace(R.id.fragment_item_container, fragment)
+         //.add(R.id.fragment_item_container, fragment)
+         .replace(R.id.fragment_item_container, fragment, "OtherFragment")
          .addToBackStack(name)
          .commit()
     }

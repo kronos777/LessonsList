@@ -77,6 +77,7 @@ class CalendarItemFragment() : Fragment() {
         /*binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
             binding.calendarText.text = "$dayOfMonth.${month + 1}.$year"
         }*/
+
         getDate()
 
     }
@@ -116,12 +117,22 @@ fun testData (): List<LessonsItem>? {
 
         val calendarPicList = mutableListOf<EventItemsList>()
         val calendarShowMessgeList = mutableListOf<EventItemsList>()
+
         viewModel = ViewModelProvider(this)[LessonsListViewModel::class.java]
         viewModelPaymentList = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModel.lessonsList.observe(viewLifecycleOwner) {
 
             var arrayListLessons: ArrayList<CalendarDate> = ArrayList()
             var arrayListPayments: ArrayList<CalendarDate> = ArrayList()
+
+
+
+            if(calendarShowMessgeList.size > 0) {
+                Toast.makeText(getActivity(),"Размер больше 0 ", Toast.LENGTH_SHORT).show()
+                calendarShowMessgeList.clear()
+                calendarPicList.clear()
+            }
+
             for (item in it) {
 
                 val date = item.dateEnd.split(" ")
@@ -133,7 +144,6 @@ fun testData (): List<LessonsItem>? {
                 calendarShowMessgeList += EventItemsList(dd, "lessons", nameLessons)
                 dateTitleMutableMap.put(dd.toString(), nameLessons)
             }
-
 
 
             viewModelPaymentList.paymentList.observe(viewLifecycleOwner) {
@@ -152,6 +162,7 @@ fun testData (): List<LessonsItem>? {
                             calendarShowMessgeList += EventItemsList(dd, "dolg", item.student)
 
                         } else {
+
                             calendarPicList += EventItemsList(dd, "paymentyes", item.student)
                             calendarShowMessgeList += EventItemsList(dd, "paymentyes", item.student)
                         }
@@ -299,17 +310,26 @@ fun testData (): List<LessonsItem>? {
 
                 calendar.set(currentYear, currentMonth, currentDay)
                 val today = calendar.time
-                // val today =
-                calendarList.add(CalendarDate(today))
+                if (calendarList.size > 0) {
+                    calendarList.clear()
+                    calendarList.add(CalendarDate(today))
+                } else if (calendarList.size == 0) {
+                    calendarList.add(CalendarDate(today))
+                }
+
                 calendarView.setupCalendar(
-                 initialDate = initialDate,
-                 minDate = minDate,
-                 maxDate = maxDate,
-                 selectionMode = CalendarView.SelectionMode.MULTIPLE,
-                 selectedDates = calendarList,
-                 firstDayOfWeek = firstDayOfWeek,
-                 showYearSelectionView = true
+                     initialDate = initialDate,
+                     minDate = minDate,
+                     maxDate = maxDate,
+                     selectionMode = CalendarView.SelectionMode.SINGLE,
+                     selectedDates = calendarList,
+                     firstDayOfWeek = firstDayOfWeek,
+                     showYearSelectionView = true
                 )
+
+
+
+
 
         }
 
@@ -483,8 +503,8 @@ fun testData (): List<LessonsItem>? {
 
             alert.setNegativeButton("Уроки", DialogInterface.OnClickListener {
                     dialog, id ->
-                //    log(date.toString())
-                launchFragment(LessonsItemListFragment.newInstanceDateId(date.toString()))
+                // GoFragment.goFragmentOther(LessonsItemListFragment.newInstanceDateId(date.toString()))
+                  launchFragment(LessonsItemListFragment.newInstanceDateId(date.toString()))
             })
             alert.setNeutralButton("Закрыть", DialogInterface.OnClickListener {
                     dialog, id ->
@@ -501,12 +521,12 @@ fun testData (): List<LessonsItem>? {
     }
 
 
-        private fun launchFragment(fragment: Fragment) {
-        requireActivity().supportFragmentManager.popBackStack()
-        requireActivity().supportFragmentManager.beginTransaction()
-        .replace(com.example.lessonslist.R.id.fragment_item_container, fragment)
-        .addToBackStack(null)
-        .commit()
+        private fun launchFragment(fragment: Fragment, name: String? = "other") {
+            //requireActivity().supportFragmentManager.popBackStack()
+            requireActivity().supportFragmentManager.beginTransaction()
+            .replace(com.example.lessonslist.R.id.fragment_item_container, fragment)
+            .addToBackStack(name)
+            .commit()
         }
 
         private fun setDatesIndicators(calendarPicList: List<EventItemsList>): List<EventItem> {
