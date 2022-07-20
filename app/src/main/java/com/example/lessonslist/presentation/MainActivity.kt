@@ -64,7 +64,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         //Toast.makeText(this, "path name!" + backStack, Toast.LENGTH_SHORT).show()
         launchMainFragment(CalendarItemFragment(), "calendar")
 
-        //Toast.makeText(this, "path name!" + supportFragmentManager.popBackStack().toString(), Toast.LENGTH_SHORT).show()
+
+        if (intent.getStringExtra("extra") != null) {
+            Toast.makeText(this, "extra params" + intent.getStringExtra("extra"), Toast.LENGTH_SHORT).show()
+        }
+
 
     /*    if (currentFragment == null) {
             if (isOnePaneMode()) {
