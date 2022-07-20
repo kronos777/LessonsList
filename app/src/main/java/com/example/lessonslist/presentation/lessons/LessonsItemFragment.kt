@@ -1,5 +1,6 @@
 package com.example.lessonslist.presentation.lessons
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
@@ -8,13 +9,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
-import android.widget.TimePicker
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemBinding
 import com.example.lessonslist.domain.group.GroupItem
 import com.example.lessonslist.domain.lessons.LessonsItem
@@ -23,9 +23,14 @@ import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
-import java.time.Month
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
-import javax.xml.datatype.DatatypeConstants.MONTHS
+
+
 
 
 class LessonsItemFragment : Fragment() {
@@ -36,6 +41,7 @@ class LessonsItemFragment : Fragment() {
     private var _binding: FragmentLessonsItemBinding? = null
     private val binding: FragmentLessonsItemBinding
         get() = _binding ?: throw RuntimeException("FragmentGroupItemBinding == null")
+
 
     private var screenMode: String = MODE_UNKNOWN
     private var lessonsItemId: Int = LessonsItem.UNDEFINED_ID
@@ -54,7 +60,8 @@ class LessonsItemFragment : Fragment() {
     private lateinit var dataGroupList: GroupListViewModel
     private var dataGroupListString: Boolean = true
 
-
+    lateinit var alertDialog: AlertDialog.Builder
+    lateinit var dialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,6 +103,14 @@ class LessonsItemFragment : Fragment() {
 
 
 
+        binding.bottomSheetView!!.setVisibility (View.GONE)
+       // val alert = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+        val btnsheet = layoutInflater.inflate(R.layout.bottom_sheet, null)
+        val dialog = BottomSheetDialog(requireContext())
+        dialog.setContentView(btnsheet)
+        dialog.show()
+
+
         listView = binding.listView
 
         dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
@@ -127,9 +142,35 @@ class LessonsItemFragment : Fragment() {
 
                 }
 
-                adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
 
+
+                adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
+              //  openDialog(dataStudentGroupModel)
                 listView.adapter = adapter
+
+            /*test list alert dialog
+                val mCountry = arrayOf("India", "Brazil", "Argentina", "Portugal",
+                    "France", "England", "Italy")
+                val mAlertDialogBuilder = AlertDialog.Builder(requireContext().applicationContext)
+
+                // Row layout is inflated and added to ListView
+                val mRowList = layoutInflater.inflate(R.layout.row, null)
+                val mListView = mRowList.findViewById<ListView>(R.id.list_view_1)
+
+                // Adapter is created and applied to ListView
+                val mAdapter = ArrayAdapter(requireContext().applicationContext, android.R.layout.simple_list_item_1, mCountry)
+                mListView.adapter = mAdapter
+                mAdapter.notifyDataSetChanged()
+
+                // Row item is set as view in the Builder and the
+                // ListView is displayed in the Alert Dialog
+                mAlertDialogBuilder.setView(mRowList)
+                val dialog = mAlertDialogBuilder.create()
+                dialog.show()
+*/
+            /*test list alert dialog*/
+
+
             } else {
                 log("в учениках пока нет значений")
             }
@@ -172,8 +213,8 @@ class LessonsItemFragment : Fragment() {
                      }
                  }*/
 
-                    adapterGroup = ListGroupAdapter(dataGroupLessonsModel!!, requireContext().applicationContext)
 
+                    adapterGroup = ListGroupAdapter(dataGroupLessonsModel!!, requireContext().applicationContext)
                     listViewGroup.adapter = adapterGroup
 
                 }
@@ -206,7 +247,9 @@ class LessonsItemFragment : Fragment() {
 
         val mode = args.getString(SCREEN_MODE)
         if (mode == MODE_ADD) {
-            binding.paymentLesson?.setVisibility (View.GONE)
+            binding.paymentLesson.setVisibility (View.GONE)
+
+
            if (dateAdd == "") {
 
                val cal = Calendar.getInstance()
@@ -271,18 +314,36 @@ class LessonsItemFragment : Fragment() {
            }
 
 
+        var timePicker1 = ""
+        var timePicker2 = ""
+
+    /*    val str = "2022-7-19 16:4"
+        val formatter = DateTimeFormatter.ofPattern("yyyy-M-dd HH:m")
+        val dateTime: LocalDateTime = LocalDateTime.parse(str, formatter)
+        Toast.makeText(activity, "Время начала " + dateTime, Toast.LENGTH_SHORT).show()
+*/
+
+
 
         mTimePicker = TimePickerDialog(context, object : TimePickerDialog.OnTimeSetListener {
             override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
                 binding.etDatestart.setText(String.format("%d/%d/%d %d : %d", year, month + 1, day, hourOfDay, minute))
+                timePicker1 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + hourOfDay.toString() + ":" + minute.toString()
+                if (timePicker1.length > 0 && timePicker2.length > 0) {
+                    checkAddDateTime(timePicker1, timePicker2)
+                }
             }
-        }, hour, minute, false)
+        }, hour, minute, true)
 
         mTimePickerEnd = TimePickerDialog(context, object : TimePickerDialog.OnTimeSetListener {
             override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
                 binding.etDateend.setText(String.format("%d/%d/%d %d : %d", year, month + 1, day, hourOfDay, minute))
+                timePicker2 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + hourOfDay.toString() + ":" + minute.toString()
+                if (timePicker1.length > 0 && timePicker2.length > 0) {
+                    checkAddDateTime(timePicker1, timePicker2)
+                }
             }
-        }, hour, minute, false)
+        }, hour, minute, true)
 
          binding.etDatestart.setOnClickListener{
              mTimePicker.show()
@@ -291,8 +352,43 @@ class LessonsItemFragment : Fragment() {
         binding.etDateend.setOnClickListener{
             mTimePickerEnd.show()
         }
+    }
 
 
+
+    private fun checkAddDateTime(valueCheck1: String, valueCheck2: String): Boolean {
+
+        if (valueCheck1.length > 0 && valueCheck2.length > 0) {
+
+            val formatter = DateTimeFormatter.ofPattern("yyyy-M-dd HH:m")
+            val dt: LocalDateTime = LocalDateTime.parse(valueCheck1, formatter)
+            val dt2: LocalDateTime = LocalDateTime.parse(valueCheck2, formatter)
+
+
+            if(dt == dt2) {
+                Toast.makeText(activity, "Время начала и конца урока не могут совпадать.", Toast.LENGTH_SHORT).show()
+                return false
+            } else if (dt > dt2) {
+                Toast.makeText(activity, "Время начала урока не может превышать время конца урока.", Toast.LENGTH_SHORT).show()
+                return false
+            } else if (dt < dt2) {
+                val diff: Duration = Duration.between(dt, dt2)
+                val minutes = diff.toMinutes()
+                if(minutes < 30) {
+                    Toast.makeText(activity, "урок не может быть менее 30 минут", Toast.LENGTH_SHORT).show()
+                    return false
+                } else {
+                    Toast.makeText(activity, "разница минут" + minutes.toString(), Toast.LENGTH_SHORT).show()
+                    return true
+                }
+
+            }
+        } else {
+            Toast.makeText(activity, "Не все поля с датами были заполнены.", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        return true
     }
 
     private fun getStudentsOfString(student: String) : List<Int> {
@@ -304,7 +400,11 @@ class LessonsItemFragment : Fragment() {
         return lstValues.distinct()
     }
 
-
+    fun convertDate(dateString: String): String {
+//        return SimpleDateFormat("yyyy-MM-dd HH:mm").parse(dateString)
+        val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
+        return dateString.format(formatter)
+    }
 
     private fun addTextChangeListeners() {
         TODO("Not yet implemented")
@@ -372,6 +472,11 @@ class LessonsItemFragment : Fragment() {
                 }
             }
            var noD = HashSet(lstValues)
+
+            if(noD.size <= 0) {
+                Toast.makeText(activity, "Без учеников урок не может быть создан.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             /*   Log.d("allStudent", noD.toString())
              var allStudent: ArrayList<String> = ArrayList()
               allStudent.add(studentIds)

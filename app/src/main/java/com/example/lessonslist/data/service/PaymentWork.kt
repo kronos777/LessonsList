@@ -97,6 +97,7 @@ class PaymentWork(
                             log("время начала урока больше текущего")
                         } else if(formatted >= formattedLess) {
                             log("время начала урока меньше текущего те урок окончен")
+                          //  log("поле студенты " + lessonsItem.student.toString() + lessonsItem.title)
                             val stIds = getStudentIds(lessonsItem.student)
                             log("в противном случае на каждого ученика необходимо создать платеж" + stIds)
                             var namesStudentArrayList: ArrayList<String> = ArrayList()
@@ -207,7 +208,7 @@ class PaymentWork(
 
 
         // Create PendingIntent
-        val resultIntent = Intent(applicationContext, MainActivity::class.java)
+        val resultIntent = Intent(applicationContext, MainActivity::class.java).putExtra("extra", "PARAMS_EXTRA")
         val resultPendingIntent = PendingIntent.getActivity(
             applicationContext, 0, resultIntent,
             PendingIntent.FLAG_UPDATE_CURRENT

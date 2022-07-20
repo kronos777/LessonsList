@@ -26,6 +26,8 @@
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout-land/fragment_lessons_item.xml" value="0.25" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout-land/row_lessons_group_item.xml" value="0.31040564373897706" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/activity_main.xml" value="0.358695652173913" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/bottom_sheet.xml" value="0.21666666666666667" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/buttom_sheet_card.xml" value="0.365625" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_calendar_payment.xml" value="0.358695652173913" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_calndar.xml" value="0.18802083333333333" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_group_item.xml" value="0.358695652173913" />
@@ -40,6 +42,7 @@
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/item_payment_enabled.xml" value="0.358695652173913" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/item_student_disabled.xml" value="0.358695652173913" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/item_student_enabled.xml" value="0.358695652173913" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/list_view_ex.xml" value="0.21666666666666667" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/row_group_student_item.xml" value="0.21603260869565216" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/row_payment_student_item.xml" value="0.18802083333333333" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/menu/bottom_nav_menu.xml" value="0.365625" />

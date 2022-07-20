@@ -7,21 +7,14 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.CheckBox
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.databinding.FragmentGroupItemBinding
-import com.example.lessonslist.databinding.RowGroupStudentItemBinding
 import com.example.lessonslist.domain.group.GroupItem
-import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.MainViewModel
-import com.example.lessonslist.presentation.student.StudentItemActivity
-import com.example.lessonslist.presentation.student.StudentItemFragment
 
 
 class GroupItemFragment : Fragment() {
