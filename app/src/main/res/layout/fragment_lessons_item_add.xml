@@ -25,7 +25,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_title"
+            app:layout_constraintTop_toBottomOf="parent"
+            android:layout_marginTop="-370dp"
+            app:layout_constraintVertical_chainStyle="packed"
             />
 
 
@@ -37,10 +39,10 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
             app:errorInputName="@{viewModel.errorInputTitle}"
-            app:layout_constraintBottom_toTopOf="@id/til_description"
+            app:layout_constraintBottom_toTopOf="@id/til_student"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/payment_lesson"
             app:layout_constraintVertical_chainStyle="packed"
             >
 
@@ -53,30 +55,7 @@
                 android:text="@{viewModel.lessonsItem.title}" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="4dp"
-            app:errorInputName="@{viewModel.errorInputDescription}"
-            app:layout_constraintBottom_toTopOf="@id/til_student"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_title"
-            app:layout_constraintVertical_chainStyle="packed"
-            >
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/lessons_description"
-                android:inputType="textCapWords"
-                android:text="@{viewModel.lessonsItem.description}"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_student"
@@ -87,10 +66,10 @@
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
             app:errorInputName="@{viewModel.errorInputStudent}"
-            app:layout_constraintBottom_toTopOf="@id/listView"
+            app:layout_constraintBottom_toTopOf="@id/til_price"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_description">
+            app:layout_constraintTop_toBottomOf="@+id/til_title">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_student"
@@ -101,54 +80,10 @@
                 android:text="@{viewModel.lessonsItem.student}" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <ListView
-            android:id="@+id/listView"
-            android:layout_width="367dp"
-            android:layout_height="75dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="4dp"
-            app:layout_constraintBottom_toTopOf="@id/til_price"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_student" />
-        <ListView
-            android:id="@+id/listViewGroup"
-            android:layout_width="367dp"
-            android:layout_height="75dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="4dp"
-            app:layout_constraintBottom_toTopOf="@id/til_price"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/listView" />
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_price_add"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="8dp"
-            app:errorInputPaymentBalance="@{viewModel.errorInputStudent}"
-            app:layout_constraintBottom_toTopOf="@id/til_datestart"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/listViewGroup">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_price_add"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/lessons_price"
-                android:inputType="number"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_price"
             android:layout_width="0dp"
@@ -161,7 +96,8 @@
             app:layout_constraintBottom_toTopOf="@id/til_datestart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/listViewGroup">
+            app:layout_constraintTop_toBottomOf="@+id/til_student"
+            app:layout_constraintVertical_chainStyle="packed">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_price"
@@ -179,74 +115,83 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            android:layout_marginEnd="8dp"
             app:errorInputPaymentBalance="@{viewModel.errorInputStudent}"
-            app:layout_constraintBottom_toTopOf="@id/til_dateend"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/save_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/til_price"
-            >
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintWidth_percent="0.45">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_datestart"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/lessons_date_start"
-                android:inputType="text"
-                android:text="@{viewModel.lessonsItem.dateStart}"
+                android:layout_height="match_parent"
                 android:clickable="true"
                 android:focusable="false"
-                />
+                android:hint="@string/lessons_date_start"
+                android:inputType="text"
+                android:text="@{viewModel.lessonsItem.dateStart}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_dateend"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginStart="5dp"
             android:layout_marginEnd="8dp"
+            android:orientation="vertical"
             app:errorInputPaymentBalance="@{viewModel.errorInputStudent}"
-            app:layout_constraintBottom_toTopOf="@id/save_button"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_datestart">
+            app:layout_constraintStart_toEndOf="@+id/til_datestart"
+            app:layout_constraintTop_toBottomOf="@+id/til_price"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintWidth_percent="0.45">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_dateend"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/lessons_date_end"
-                android:inputType="textCapWords"
-                android:text="@{viewModel.lessonsItem.dateEnd}"
                 android:clickable="true"
                 android:focusable="false"
-                />
+                android:hint="@string/lessons_date_end"
+                android:inputType="textCapWords"
+                android:text="@{viewModel.lessonsItem.dateEnd}" />
         </com.google.android.material.textfield.TextInputLayout>
-
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintTop_toBottomOf="@id/til_dateend"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/listViewGroup" />
+        <ListView
+            android:id="@+id/listViewGroup"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintBottom_toTopOf="@id/save_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/listView" />
         <Button
             android:id="@+id/save_button"
             android:layout_width="0dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_height="wrap_content"
             android:text="@string/save_btn"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-        <Button
-            android:id="@+id/button_test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Студенты"
-            app:layout_constraintBottom_toTopOf="@id/bottom_sheet_view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/save_button" />
-        <include
-            android:id="@+id/bottom_sheet_view"
-            layout="@layout/list_view_ex"/>
-
+            app:layout_constraintStart_toStartOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

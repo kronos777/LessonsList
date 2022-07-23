@@ -62,7 +62,7 @@ class StudentItemFragment : Fragment() {
     val myExecutor = Executors.newSingleThreadExecutor()
     val myHandler = Handler(Looper.getMainLooper())
 
-    private lateinit var pathImageSrc: String
+    private var pathImageSrc: String = ""
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -315,7 +315,7 @@ class StudentItemFragment : Fragment() {
                 binding.etPaymentBalance.text.toString(),
                 binding.etNotes.text.toString(),
                 binding.etGroup.text.toString(),
-                pathImageSrc,
+                inputImage = pathImageSrc ?: " ",
                 binding.etTelephone.text.toString()
             )
         }

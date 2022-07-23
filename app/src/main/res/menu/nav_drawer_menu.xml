@@ -21,5 +21,7 @@
     <item
         android:id="@+id/muItem2"
         android:title="Резервное копирование." />
-
+    <item
+        android:id="@+id/muItem8"
+        android:title="тестовое добавление уроков." />
 </menu>

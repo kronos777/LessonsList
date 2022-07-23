@@ -28,6 +28,7 @@ import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupItemListFragment
+import com.example.lessonslist.presentation.lessons.LessonsItemAddFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemFragment
@@ -115,7 +116,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 R.id.muItem5 -> goGroupListFragment()
                 R.id.muItem6 -> goLessonsListFragment()
                 R.id.muItem7 -> goStudentListFragment()
-                // R.id.muItem8 -> goPaymentCalendarFragment()
+                 R.id.muItem8 -> goTestAddLessons()
 
             }
             true
@@ -334,7 +335,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         }
     }
 
+    private fun goTestAddLessons() {
 
+            launchFragment(LessonsItemAddFragment())
+
+    }
     private fun goPaymentCalendarFragment() {
         if (!isOnePaneMode()) {
             launchFragment(CalendarPaymentItemFragment())

@@ -9,13 +9,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ListView
+import android.widget.TimePicker
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
-import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemBinding
 import com.example.lessonslist.domain.group.GroupItem
 import com.example.lessonslist.domain.lessons.LessonsItem
@@ -24,16 +24,13 @@ import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
-
-class LessonsItemFragment : Fragment() {
+class LessonsItemAddFragment: Fragment()  {
 
     private lateinit var viewModel: LessonsItemViewModel
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
@@ -85,7 +82,7 @@ class LessonsItemFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-     //   return inflater.inflate(R.layout.fragment_group_item, container, false)
+        //   return inflater.inflate(R.layout.fragment_group_item, container, false)
         _binding = FragmentLessonsItemBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -147,30 +144,30 @@ class LessonsItemFragment : Fragment() {
 
 
                 adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
-              //  openDialog(dataStudentGroupModel)
+                //  openDialog(dataStudentGroupModel)
                 listView.adapter = adapter
 
-            /*test list alert dialog
-                val mCountry = arrayOf("India", "Brazil", "Argentina", "Portugal",
-                    "France", "England", "Italy")
-                val mAlertDialogBuilder = AlertDialog.Builder(requireContext().applicationContext)
+                /*test list alert dialog
+                    val mCountry = arrayOf("India", "Brazil", "Argentina", "Portugal",
+                        "France", "England", "Italy")
+                    val mAlertDialogBuilder = AlertDialog.Builder(requireContext().applicationContext)
 
-                // Row layout is inflated and added to ListView
-                val mRowList = layoutInflater.inflate(R.layout.row, null)
-                val mListView = mRowList.findViewById<ListView>(R.id.list_view_1)
+                    // Row layout is inflated and added to ListView
+                    val mRowList = layoutInflater.inflate(R.layout.row, null)
+                    val mListView = mRowList.findViewById<ListView>(R.id.list_view_1)
 
-                // Adapter is created and applied to ListView
-                val mAdapter = ArrayAdapter(requireContext().applicationContext, android.R.layout.simple_list_item_1, mCountry)
-                mListView.adapter = mAdapter
-                mAdapter.notifyDataSetChanged()
+                    // Adapter is created and applied to ListView
+                    val mAdapter = ArrayAdapter(requireContext().applicationContext, android.R.layout.simple_list_item_1, mCountry)
+                    mListView.adapter = mAdapter
+                    mAdapter.notifyDataSetChanged()
 
-                // Row item is set as view in the Builder and the
-                // ListView is displayed in the Alert Dialog
-                mAlertDialogBuilder.setView(mRowList)
-                val dialog = mAlertDialogBuilder.create()
-                dialog.show()
-*/
-            /*test list alert dialog*/
+                    // Row item is set as view in the Builder and the
+                    // ListView is displayed in the Alert Dialog
+                    mAlertDialogBuilder.setView(mRowList)
+                    val dialog = mAlertDialogBuilder.create()
+                    dialog.show()
+    */
+                /*test list alert dialog*/
 
 
             } else {
@@ -230,7 +227,7 @@ class LessonsItemFragment : Fragment() {
             }
 
 
-    }
+        }
 
 
 
@@ -243,7 +240,7 @@ class LessonsItemFragment : Fragment() {
 
 
         /*string list*/
-            // dataGroupListString = adapterGroup.arrayList.toString()
+        // dataGroupListString = adapterGroup.arrayList.toString()
         /*string list*/
 
         val mTimePicker: TimePickerDialog
@@ -266,78 +263,78 @@ class LessonsItemFragment : Fragment() {
             binding.paymentLesson.setVisibility (View.GONE)
 
 
-           if (dateAdd == "") {
+            if (dateAdd == "") {
 
-               val cal = Calendar.getInstance()
-               val year1 = cal.get(Calendar.YEAR)
-               val month1 = cal.get(Calendar.MONTH)
-               val day1 = cal.get(Calendar.DAY_OF_MONTH)
-
-
-               year = mcurrentTime.get(Calendar.YEAR)
-               month = mcurrentTime.get(Calendar.MONTH)
-               day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
+                val cal = Calendar.getInstance()
+                val year1 = cal.get(Calendar.YEAR)
+                val month1 = cal.get(Calendar.MONTH)
+                val day1 = cal.get(Calendar.DAY_OF_MONTH)
 
 
-               val dpd =
-                   getActivity()?.let {
-                       DatePickerDialog(it, DatePickerDialog.OnDateSetListener { view, yearcur, monthOfYear, dayOfMonth ->
-                         //  val monthOfYear = monthOfYear - 1
-                           // Display Selected date in textbox
-                           Toast.makeText(activity, "need date lessons" + "You Selected: $dayOfMonth/$monthOfYear/$yearcur", Toast.LENGTH_SHORT).show()
-
-                           cal.set(yearcur, monthOfYear, dayOfMonth)
-
-                           year = cal[Calendar.YEAR]
-                           month = cal[Calendar.MONTH]
-                           day = cal[Calendar.DAY_OF_MONTH]
+                year = mcurrentTime.get(Calendar.YEAR)
+                month = mcurrentTime.get(Calendar.MONTH)
+                day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
 
 
-                       }, year1, month1, day1)
+                val dpd =
+                    getActivity()?.let {
+                        DatePickerDialog(it, DatePickerDialog.OnDateSetListener { view, yearcur, monthOfYear, dayOfMonth ->
+                            //  val monthOfYear = monthOfYear - 1
+                            // Display Selected date in textbox
+                            Toast.makeText(activity, "need date lessons" + "You Selected: $dayOfMonth/$monthOfYear/$yearcur", Toast.LENGTH_SHORT).show()
 
-                   }
+                            cal.set(yearcur, monthOfYear, dayOfMonth)
 
-               dpd!!.show()
+                            year = cal[Calendar.YEAR]
+                            month = cal[Calendar.MONTH]
+                            day = cal[Calendar.DAY_OF_MONTH]
 
 
-             //year = mcurrentTime.get(Calendar.YEAR)
-              //month = mcurrentTime.get(Calendar.MONTH)
-              //day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
+                        }, year1, month1, day1)
 
-           } else {
-                    log(dateAdd.toString())
-                    val dateTime = dateAdd!!.split("/")
-                    //val dateTime = Date(dateAdd)
-                    val cal = Calendar.getInstance()
-                    /*log(dateTime[0].toString())
-                    log(dateTime[1].toString())
-                    log(dateTime[2].toString())*/
-                    cal.set(dateTime[2].toInt(), dateTime[1].toInt()-1, dateTime[0].toInt())
-                    year = cal[Calendar.YEAR]
-                    month = cal[Calendar.MONTH]
-                    day = cal[Calendar.DAY_OF_MONTH]
-                   /* log(year.toString())
-                    log(month.toString())
-                    log(day.toString())*/
-                }
-           } else {
+                    }
+
+                dpd!!.show()
+
+
+                //year = mcurrentTime.get(Calendar.YEAR)
+                //month = mcurrentTime.get(Calendar.MONTH)
+                //day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
+
+            } else {
+                log(dateAdd.toString())
+                val dateTime = dateAdd!!.split("/")
+                //val dateTime = Date(dateAdd)
+                val cal = Calendar.getInstance()
+                /*log(dateTime[0].toString())
+                log(dateTime[1].toString())
+                log(dateTime[2].toString())*/
+                cal.set(dateTime[2].toInt(), dateTime[1].toInt()-1, dateTime[0].toInt())
+                year = cal[Calendar.YEAR]
+                month = cal[Calendar.MONTH]
+                day = cal[Calendar.DAY_OF_MONTH]
+                /* log(year.toString())
+                 log(month.toString())
+                 log(day.toString())*/
+            }
+        } else {
             year = mcurrentTime.get(Calendar.YEAR)
             month = mcurrentTime.get(Calendar.MONTH)
             day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
             binding.paymentLesson.setOnClickListener {
                 launchFragment(PaymentItemListFragment.newInstanceLessonsId(lessonsItemId))
             }
-           }
+        }
 
 
         var timePicker1 = ""
         var timePicker2 = ""
 
-    /*    val str = "2022-7-19 16:4"
-        val formatter = DateTimeFormatter.ofPattern("yyyy-M-dd HH:m")
-        val dateTime: LocalDateTime = LocalDateTime.parse(str, formatter)
-        Toast.makeText(activity, "Время начала " + dateTime, Toast.LENGTH_SHORT).show()
-*/
+        /*    val str = "2022-7-19 16:4"
+            val formatter = DateTimeFormatter.ofPattern("yyyy-M-dd HH:m")
+            val dateTime: LocalDateTime = LocalDateTime.parse(str, formatter)
+            Toast.makeText(activity, "Время начала " + dateTime, Toast.LENGTH_SHORT).show()
+    */
 
 
 
@@ -361,9 +358,9 @@ class LessonsItemFragment : Fragment() {
             }
         }, hour, minute, true)
 
-         binding.etDatestart.setOnClickListener{
-             mTimePicker.show()
-         }
+        binding.etDatestart.setOnClickListener{
+            mTimePicker.show()
+        }
 
         binding.etDateend.setOnClickListener{
             mTimePickerEnd.show()
@@ -463,32 +460,11 @@ class LessonsItemFragment : Fragment() {
     private fun launchRightMode() {
         Log.d("screenMode", screenMode)
         when (screenMode) {
-            MODE_EDIT -> launchEditMode()
             MODE_ADD -> launchAddMode()
-           // else -> launchEditMode()
+            // else -> launchEditMode()
         }
     }
 
-
-    private fun launchEditMode() {
-      //  binding.etStudent.setVisibility(View.GONE)
-        binding.etPriceAdd?.setVisibility(View.GONE)
-        binding.listViewGroup.setVisibility(View.GONE)
-        viewModel.getLessonsItem(lessonsItemId)
-      //  binding.etPrice.text = viewModel.lessonsItem.price
-            binding.saveButton.setOnClickListener{
-            var studentIds: String = adapter.arrayList.toString()
-            viewModel.editLessonsItem(
-                binding.etTitle.text.toString(),
-                binding.etDescription.text.toString(),
-                //binding.etStudent.text.toString(),
-                studentIds,
-                binding.etPrice.text.toString(),
-                binding.etDatestart.text.toString(),
-                binding.etDateend.text.toString()
-            )
-        }
-    }
 
 
 
@@ -498,10 +474,10 @@ class LessonsItemFragment : Fragment() {
         binding.etStudent.setVisibility(View.GONE)
         binding.saveButton.setOnClickListener{
             var studentIds: String = adapter.arrayList.toString()
-           /* var groupStudentIds: String
-            if(adapterGroup.arrayList.toString().length > 0) {
-                groupStudentIds = adapterGroup.arrayList.toString()
-            }*/
+            /* var groupStudentIds: String
+             if(adapterGroup.arrayList.toString().length > 0) {
+                 groupStudentIds = adapterGroup.arrayList.toString()
+             }*/
             var groupStudentIds: String
             var allStudent: String
             if(dataGroupListString) {
@@ -520,7 +496,7 @@ class LessonsItemFragment : Fragment() {
                     Log.d("allStudent", it.toString())
                 }
             }
-           var noD = HashSet(lstValues)
+            var noD = HashSet(lstValues)
 
             if(stdlistName.size > 0) {
 
@@ -546,7 +522,7 @@ class LessonsItemFragment : Fragment() {
              var allStudent: ArrayList<String> = ArrayList()
               allStudent.add(studentIds)
               allStudent.add(groupStudentIds)*/
-          //  var resultStudent = getStudentsOfString(studentIds)
+            //  var resultStudent = getStudentsOfString(studentIds)
 
             viewModel.addLessonsItem(
                 binding.etTitle.text.toString(),
@@ -586,17 +562,6 @@ class LessonsItemFragment : Fragment() {
             throw RuntimeException("Param screen mode is absent")
         }
         val mode = args.getString(SCREEN_MODE)
-        if (mode != MODE_EDIT && mode != MODE_ADD) {
-            throw RuntimeException("Unknown screen mode $mode")
-        }
-        screenMode = mode
-        if (screenMode == MODE_EDIT) {
-            if (!args.containsKey(LESSONS_ITEM_ID)) {
-                throw RuntimeException("Param shop item id is absent")
-            }
-            lessonsItemId = args.getInt(LESSONS_ITEM_ID, GroupItem.UNDEFINED_ID)
-
-        }
 
     }
 
@@ -608,7 +573,6 @@ class LessonsItemFragment : Fragment() {
 
         private const val SCREEN_MODE = "extra_mode"
         private const val LESSONS_ITEM_ID = "extra_lessons_item_id"
-        private const val MODE_EDIT = "mode_edit"
         private const val MODE_ADD = "mode_add"
         private const val MODE_UNKNOWN = ""
         private const val DATE_ADD = "date_add"
@@ -622,14 +586,7 @@ class LessonsItemFragment : Fragment() {
             }
         }
 
-        fun newInstanceEditItem(lessonsItemId: Int): LessonsItemFragment {
-            return LessonsItemFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_EDIT)
-                    putInt(LESSONS_ITEM_ID, lessonsItemId)
-                }
-            }
-        }
+
     }
 }
 
