@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.TimePicker
 import android.widget.Toast
@@ -16,8 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.lessonslist.databinding.FragmentLessonsItemBinding
-import com.example.lessonslist.domain.group.GroupItem
+import com.example.lessonslist.databinding.FragmentLessonsItemAddBinding
 import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
@@ -30,19 +30,20 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
-class LessonsItemAddFragment: Fragment()  {
+class LessonsItemAddFragment : Fragment()  {
 
     private lateinit var viewModel: LessonsItemViewModel
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
-    private var _binding: FragmentLessonsItemBinding? = null
-    private val binding: FragmentLessonsItemBinding
+    private var _binding: FragmentLessonsItemAddBinding? = null
+    private val binding: FragmentLessonsItemAddBinding
         get() = _binding ?: throw RuntimeException("FragmentGroupItemBinding == null")
 
 
     private var screenMode: String = MODE_UNKNOWN
     private var lessonsItemId: Int = LessonsItem.UNDEFINED_ID
 
+    private var selectionStatesStudent: Boolean = false
 
 
     private lateinit var adapter: ListStudentAdapter
@@ -63,7 +64,7 @@ class LessonsItemAddFragment: Fragment()  {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        parseParams()
+         parseParams()
     }
 
 
@@ -83,7 +84,7 @@ class LessonsItemAddFragment: Fragment()  {
         savedInstanceState: Bundle?
     ): View? {
         //   return inflater.inflate(R.layout.fragment_group_item, container, false)
-        _binding = FragmentLessonsItemBinding.inflate(inflater, container, false)
+        _binding = FragmentLessonsItemAddBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -101,8 +102,8 @@ class LessonsItemAddFragment: Fragment()  {
 
 
 
-        binding.bottomSheetView!!.setVisibility (View.GONE)
-
+        binding.tilStudent!!.setVisibility (View.GONE)
+        binding.listViewGroup.setVisibility(View.GONE)
 
 
 
@@ -147,28 +148,12 @@ class LessonsItemAddFragment: Fragment()  {
                 //  openDialog(dataStudentGroupModel)
                 listView.adapter = adapter
 
-                /*test list alert dialog
-                    val mCountry = arrayOf("India", "Brazil", "Argentina", "Portugal",
-                        "France", "England", "Italy")
-                    val mAlertDialogBuilder = AlertDialog.Builder(requireContext().applicationContext)
-
-                    // Row layout is inflated and added to ListView
-                    val mRowList = layoutInflater.inflate(R.layout.row, null)
-                    val mListView = mRowList.findViewById<ListView>(R.id.list_view_1)
-
-                    // Adapter is created and applied to ListView
-                    val mAdapter = ArrayAdapter(requireContext().applicationContext, android.R.layout.simple_list_item_1, mCountry)
-                    mListView.adapter = mAdapter
-                    mAdapter.notifyDataSetChanged()
-
-                    // Row item is set as view in the Builder and the
-                    // ListView is displayed in the Alert Dialog
-                    mAlertDialogBuilder.setView(mRowList)
-                    val dialog = mAlertDialogBuilder.create()
-                    dialog.show()
-    */
-                /*test list alert dialog*/
-
+                listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                    val dataStudent: DataStudentGroupModel = dataStudentGroupModel!![position] as DataStudentGroupModel
+                    dataStudent.checked = !dataStudent.checked
+                    Log.d("checkstate", dataStudent.checked.toString())
+                    adapter.notifyDataSetChanged()
+                }
 
             } else {
                 log("в учениках пока нет значений")
@@ -231,12 +216,21 @@ class LessonsItemAddFragment: Fragment()  {
 
 
 
-        binding.buttonTest?.setOnClickListener {
-            stdlistName = withMultiChoiceList(studentName)
+
+        binding.textViewChangeStateCheckbox.setOnClickListener {
+            if(!selectionStatesStudent) {
+                binding.listViewGroup.setVisibility(View.VISIBLE)
+                binding.listView.setVisibility(View.GONE)
+                binding.textViewChangeStateCheckbox.text = "Выберите учеников из списка."
+                selectionStatesStudent = true
+            } else {
+                binding.listViewGroup.setVisibility(View.GONE)
+                binding.listView.setVisibility(View.VISIBLE)
+                binding.textViewChangeStateCheckbox.text = "Выбрать студентов из групп."
+                selectionStatesStudent = false
+            }
 
         }
-
-
 
 
         /*string list*/
@@ -260,7 +254,7 @@ class LessonsItemAddFragment: Fragment()  {
 
         val mode = args.getString(SCREEN_MODE)
         if (mode == MODE_ADD) {
-            binding.paymentLesson.setVisibility (View.GONE)
+
 
 
             if (dateAdd == "") {
@@ -321,9 +315,7 @@ class LessonsItemAddFragment: Fragment()  {
             year = mcurrentTime.get(Calendar.YEAR)
             month = mcurrentTime.get(Calendar.MONTH)
             day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
-            binding.paymentLesson.setOnClickListener {
-                launchFragment(PaymentItemListFragment.newInstanceLessonsId(lessonsItemId))
-            }
+
         }
 
 
@@ -412,7 +404,8 @@ class LessonsItemAddFragment: Fragment()  {
 
 
             if(dt == dt2) {
-                Toast.makeText(activity, "Время начала и конца урока не могут совпадать.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "Время начала и конца урока не могут совпадать.",
+                    Toast.LENGTH_SHORT).show()
                 return false
             } else if (dt > dt2) {
                 Toast.makeText(activity, "Время начала урока не может превышать время конца урока.", Toast.LENGTH_SHORT).show()
@@ -421,16 +414,19 @@ class LessonsItemAddFragment: Fragment()  {
                 val diff: Duration = Duration.between(dt, dt2)
                 val minutes = diff.toMinutes()
                 if(minutes < 30) {
-                    Toast.makeText(activity, "урок не может быть менее 30 минут", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "урок не может быть менее 30 минут",
+                        Toast.LENGTH_SHORT).show()
                     return false
                 } else {
-                    Toast.makeText(activity, "разница минут" + minutes.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "разница минут" + minutes.toString(),
+                        Toast.LENGTH_SHORT).show()
                     return true
                 }
 
             }
         } else {
-            Toast.makeText(activity, "Не все поля с датами были заполнены.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "Не все поля с датами были заполнены.",
+                Toast.LENGTH_SHORT).show()
             return false
         }
 
@@ -470,7 +466,7 @@ class LessonsItemAddFragment: Fragment()  {
 
     private fun launchAddMode() {
         binding.tilStudent?.setVisibility(View.GONE)
-        binding.etPrice?.setVisibility(View.GONE)
+            // binding.etPrice?.setVisibility(View.GONE)
         binding.etStudent.setVisibility(View.GONE)
         binding.saveButton.setOnClickListener{
             var studentIds: String = adapter.arrayList.toString()
@@ -526,10 +522,10 @@ class LessonsItemAddFragment: Fragment()  {
 
             viewModel.addLessonsItem(
                 binding.etTitle.text.toString(),
-                binding.etDescription.text.toString(),
+                "",
                 noD.toString(),
                 //binding.etStudent.text.toString(),
-                binding.etPriceAdd?.text.toString(),
+                binding.etPrice.text.toString(),
                 binding.etDatestart.text.toString(),
                 binding.etDateend.text.toString()
             )
@@ -569,19 +565,23 @@ class LessonsItemAddFragment: Fragment()  {
         Log.d("SERVICE_TAG", "DateCalendar: $message")
     }
 
+
+
+
     companion object {
 
         private const val SCREEN_MODE = "extra_mode"
         private const val LESSONS_ITEM_ID = "extra_lessons_item_id"
+        private const val MODE_EDIT = "mode_edit"
         private const val MODE_ADD = "mode_add"
         private const val MODE_UNKNOWN = ""
         private const val DATE_ADD = "date_add"
 
-        fun newInstanceAddItem(date: String): LessonsItemFragment {
-            return LessonsItemFragment().apply {
+        fun addInstance(date: String): LessonsItemAddFragment {
+            return LessonsItemAddFragment().apply {
                 arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_ADD)
-                    putString(DATE_ADD, date)
+                    putString(LessonsItemAddFragment.SCREEN_MODE, LessonsItemAddFragment.MODE_ADD)
+                    putString(LessonsItemAddFragment.DATE_ADD, date)
                 }
             }
         }

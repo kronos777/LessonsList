@@ -64,11 +64,13 @@ class ListGroupAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
             viewHolder.checkBox.setOnClickListener {
                 if (viewHolder.checkBox.isChecked) {
                     addCountArrayList(students)
+                    item.checked = true
                     Log.d("chechBoxGroup", item.id.toString())
                     Log.d("chechBoxGroup", viewHolder.checkBox.isChecked.toString())
                     Log.d("chechBoxGroup", item.name.toString())
                 } else {
                     removeCountArrayList(students)
+                    item.checked = false
                 }
 
             }

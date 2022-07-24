@@ -54,6 +54,7 @@ class ListStudentAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
         viewHolder.checkBox.isChecked = item.checked
 
         if (viewHolder.checkBox.isChecked) {
+
             arrayList.add(item.id!!)
         }
 
@@ -63,8 +64,11 @@ class ListStudentAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
                     addCountArrayList(item.id!!)
                     Log.d("chechBox", item.id.toString())
                     Log.d("chechBox", viewHolder.checkBox.isChecked.toString())
+                    item.checked = true
+                    Log.d("chechBox", item.checked.toString())
                     Log.d("chechBox", item.name.toString())
                 } else {
+                    item.checked = false
                     removeCountArrayList(item.id!!)
                 }
 

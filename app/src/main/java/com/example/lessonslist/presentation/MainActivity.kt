@@ -41,7 +41,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 
 
-class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, CalendarPaymentItemFragment.OnEditingFinishedListener, SettingsItemFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener {
+class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, CalendarPaymentItemFragment.OnEditingFinishedListener, SettingsItemFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener, LessonsItemAddFragment.OnEditingFinishedListener {
 
 
     private lateinit var binding: ActivityMainBinding
@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 R.id.muItem5 -> goGroupListFragment()
                 R.id.muItem6 -> goLessonsListFragment()
                 R.id.muItem7 -> goStudentListFragment()
-                 R.id.muItem8 -> goTestAddLessons()
+                R.id.muItem8 -> goTestAddLessons()
 
             }
             true
@@ -336,10 +336,12 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
     private fun goTestAddLessons() {
-
-            launchFragment(LessonsItemAddFragment())
-
+          //  launchFragment(LessonsItemAddFragment().newInstanceAdd(""))
+        launchFragmentTemp(LessonsItemAddFragment.addInstance(""))
     }
+
+
+
     private fun goPaymentCalendarFragment() {
         if (!isOnePaneMode()) {
             launchFragment(CalendarPaymentItemFragment())
