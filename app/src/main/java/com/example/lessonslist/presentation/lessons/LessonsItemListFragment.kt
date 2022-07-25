@@ -128,7 +128,7 @@ class LessonsItemListFragment: Fragment() {
         if (getScreenOrientationLandscape() == true) {
             binding.buttonAddLessonsItem.setOnClickListener {
                 val fragmentTransaction = fragmentManager?.beginTransaction()
-                    ?.replace(R.id.shop_item_container, LessonsItemFragment.newInstanceAddItem(""))
+                    ?.replace(R.id.shop_item_container, LessonsItemAddFragment.addInstance(""))
                     //?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem("10/5/2022"))
                     ?.addToBackStack(null)
                     ?.commit()
@@ -136,7 +136,7 @@ class LessonsItemListFragment: Fragment() {
         } else {
             binding.buttonAddLessonsItem.setOnClickListener {
                 val fragmentTransaction = fragmentManager?.beginTransaction()
-                    ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem(""))
+                    ?.replace(R.id.fragment_item_container, LessonsItemAddFragment.addInstance(""))
                     //?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem("10/5/2022"))
                     ?.addToBackStack(null)
                     ?.commit()

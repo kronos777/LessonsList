@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentCalndarBinding
+import com.example.lessonslist.presentation.lessons.LessonsItemAddFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsListViewModel
@@ -363,7 +364,7 @@ fun testData (): List<LessonsItem>? {
                 log("arrlistLong"+date.toString() + getScreenOrientation())
                 if(getScreenOrientation()){
                     val fragmentTransaction = fragmentManager?.beginTransaction()
-                     ?.replace(R.id.shop_item_container, LessonsItemFragment.newInstanceAddItem(date.toString()))
+                     ?.replace(R.id.shop_item_container, LessonsItemAddFragment.addInstance(date.toString()))
                      ?.addToBackStack(null)
                      ?.commit()
                 } else {
@@ -392,7 +393,7 @@ fun testData (): List<LessonsItem>? {
             alert.setPositiveButton("Добавить урок", DialogInterface.OnClickListener {
                     dialog, id ->
                 val fragmentTransaction = fragmentManager?.beginTransaction()
-                    ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem(date.toString()))
+                    ?.replace(R.id.fragment_item_container, LessonsItemAddFragment.addInstance(date.toString()))
                     ?.addToBackStack(null)
                     ?.commit()
             })

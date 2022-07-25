@@ -97,7 +97,8 @@ class LessonsItemAddFragment : Fragment()  {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         //addTextChangeListeners()
-        launchRightMode()
+       // launchRightMode()
+        launchAddMode()
         observeViewModel()
 
 
@@ -469,6 +470,8 @@ class LessonsItemAddFragment : Fragment()  {
             // binding.etPrice?.setVisibility(View.GONE)
         binding.etStudent.setVisibility(View.GONE)
         binding.saveButton.setOnClickListener{
+            Toast.makeText(getActivity(), "btn click", Toast.LENGTH_SHORT).show()
+
             var studentIds: String = adapter.arrayList.toString()
             /* var groupStudentIds: String
              if(adapterGroup.arrayList.toString().length > 0) {
@@ -493,8 +496,8 @@ class LessonsItemAddFragment : Fragment()  {
                 }
             }
             var noD = HashSet(lstValues)
-
-            if(stdlistName.size > 0) {
+            Toast.makeText(getActivity(), "value student string"+noD.toString(), Toast.LENGTH_SHORT).show()
+           /* if(stdlistName.size > 0) {
 
 
                 for (index in dataStudentGroupModel!!.indices) {
@@ -506,7 +509,7 @@ class LessonsItemAddFragment : Fragment()  {
 
 
                 return@setOnClickListener
-            }
+            }*/
 
             if(noD.size <= 0) {
                 Toast.makeText(activity, "Без учеников урок не может быть создан.", Toast.LENGTH_SHORT).show()
