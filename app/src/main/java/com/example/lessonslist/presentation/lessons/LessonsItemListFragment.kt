@@ -60,17 +60,7 @@ class LessonsItemListFragment: Fragment() {
         if(dateFilter != null) {
                 val listArrayPayment: ArrayList<LessonsItem> = ArrayList()
                 viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
-                /*viewModel.lessonsListDate.getLessonsListDate(dateFilter).observe(viewLifecycleOwner) {
-                    it.forEach {
-                        Toast.makeText(getActivity(),"дата фильтрации!" + it.title + it.dateEnd,Toast.LENGTH_SHORT).show()
-                        listArrayPayment.add(it)
-                    }
-                    if(listArrayPayment.size > 0) {
-                        lessonsListAdapter.submitList(listArrayPayment)
-                    } else {
-                        Toast.makeText(getActivity(),"На эту дату уроков не запланировано!",Toast.LENGTH_SHORT).show();
-                    }
-                }*/
+
                 viewModel.lessonsList.observe(viewLifecycleOwner) {
                     for (lessons in it) {
                         val pay = lessons.dateEnd.split(" ")
@@ -93,65 +83,17 @@ class LessonsItemListFragment: Fragment() {
                 }
         }
 
-      /*  if(getScreenOrientationLandscape() == false) {
-            viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
-            viewModel.lessonsList.observe(viewLifecycleOwner) {
-                lessonsListAdapter.submitList(it)
-            }
-            Toast.makeText(getActivity(),"Работает эта часть кода!",Toast.LENGTH_SHORT).show();
-        } else if (getScreenOrientationLandscape() == true) {
-            log(dateFilter.toString())
 
-            val listArrayPayment: ArrayList<LessonsItem> = ArrayList()
-            viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
-            viewModel.lessonsList.observe(viewLifecycleOwner) {
-                for (lessons in it) {
-                    var pay = lessons.dateEnd.split(" ")
-                    val datePay = Date(pay[0])
-                    val dateFormated = SimpleDateFormat("d/M/yyyy").format(datePay)
-                    ///  val dateString = Date(dateId)
-                    //Log.d("dateId", datePay.toString())
-                    //Log.d("dateId", dateFormated.toString())
-                    if(dateFormated == dateFilter){
-                        listArrayPayment.add(lessons)
-                    }
-                }
-                if(listArrayPayment.size > 0) {
-                    lessonsListAdapter.submitList(listArrayPayment)
-                } else {
-                    Toast.makeText(getActivity(),"На эту дату уроков не запланировано!",Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        }*/
-
-        if (getScreenOrientationLandscape() == true) {
-            binding.buttonAddLessonsItem.setOnClickListener {
-                val fragmentTransaction = fragmentManager?.beginTransaction()
-                    ?.replace(R.id.shop_item_container, LessonsItemAddFragment.addInstance(""))
-                    //?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem("10/5/2022"))
-                    ?.addToBackStack(null)
-                    ?.commit()
-            }
-        } else {
-            binding.buttonAddLessonsItem.setOnClickListener {
-                val fragmentTransaction = fragmentManager?.beginTransaction()
-                    ?.replace(R.id.fragment_item_container, LessonsItemAddFragment.addInstance(""))
-                    //?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem("10/5/2022"))
-                    ?.addToBackStack(null)
-                    ?.commit()
-            }
+        binding.buttonAddLessonsItem.setOnClickListener {
+            val fragmentTransaction = fragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_item_container, LessonsItemAddFragment.addInstance(""))
+                //?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem("10/5/2022"))
+                ?.addToBackStack(null)
+                ?.commit()
         }
 
     }
 
-    private fun getScreenOrientationLandscape(): Boolean {
-        return when (resources.configuration.orientation) {
-            Configuration.ORIENTATION_PORTRAIT -> false
-            Configuration.ORIENTATION_LANDSCAPE -> true
-            else -> false
-        }
-    }
 
     private fun setupRecyclerView() {
         with(binding.rvLessonsList) {
@@ -171,20 +113,11 @@ class LessonsItemListFragment: Fragment() {
 
     private fun setupClickListener() {
 
-        if(getScreenOrientationLandscape() == false) {
-            lessonsListAdapter.onLessonsItemClickListener = {
-                fragmentManager?.beginTransaction()
-                    ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceEditItem(it.id))
-                    ?.addToBackStack(null)
-                    ?.commit()
-            }
-        } else {
-            lessonsListAdapter.onLessonsItemClickListener = {
-                fragmentManager?.beginTransaction()
-                    ?.replace(R.id.shop_item_container, LessonsItemFragment.newInstanceEditItem(it.id))
-                    ?.addToBackStack(null)
-                    ?.commit()
-            }
+        lessonsListAdapter.onLessonsItemClickListener = {
+            fragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_item_container, LessonsItemEditFragment.newInstanceEditItem(it.id))
+                ?.addToBackStack(null)
+                ?.commit()
         }
 
 

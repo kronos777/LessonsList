@@ -29,6 +29,7 @@ import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemAddFragment
+import com.example.lessonslist.presentation.lessons.LessonsItemEditFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemFragment
@@ -41,7 +42,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 
 
-class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, CalendarPaymentItemFragment.OnEditingFinishedListener, SettingsItemFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener, LessonsItemAddFragment.OnEditingFinishedListener {
+class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, CalendarPaymentItemFragment.OnEditingFinishedListener, SettingsItemFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener, LessonsItemAddFragment.OnEditingFinishedListener, LessonsItemEditFragment.OnEditingFinishedListener {
 
 
     private lateinit var binding: ActivityMainBinding
@@ -59,10 +60,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container)
-
-        //val backStack = supportFragmentManager.popBackStack().toString()
-        //Toast.makeText(this, "path name!" + backStack, Toast.LENGTH_SHORT).show()
         launchMainFragment(CalendarItemFragment(), "calendar")
 
 

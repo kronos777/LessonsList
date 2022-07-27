@@ -23,7 +23,6 @@ import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
-import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -59,8 +58,6 @@ class LessonsItemAddFragment : Fragment()  {
     private var dataGroupListString: Boolean = true
 
 
-    private var stdlistName: ArrayList<String> = ArrayList()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +80,6 @@ class LessonsItemAddFragment : Fragment()  {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        //   return inflater.inflate(R.layout.fragment_group_item, container, false)
         _binding = FragmentLessonsItemAddBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -574,8 +570,7 @@ class LessonsItemAddFragment : Fragment()  {
     companion object {
 
         private const val SCREEN_MODE = "extra_mode"
-        private const val LESSONS_ITEM_ID = "extra_lessons_item_id"
-        private const val MODE_EDIT = "mode_edit"
+
         private const val MODE_ADD = "mode_add"
         private const val MODE_UNKNOWN = ""
         private const val DATE_ADD = "date_add"
