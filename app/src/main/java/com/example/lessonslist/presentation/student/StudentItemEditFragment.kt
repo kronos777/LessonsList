@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentStudentItemEditBinding
 import com.example.lessonslist.domain.student.StudentItem
+import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
@@ -72,7 +73,7 @@ class StudentItemEditFragment : Fragment() {
     val myExecutor = Executors.newSingleThreadExecutor()
     val myHandler = Handler(Looper.getMainLooper())
 
-    private lateinit var pathImageSrc: String
+    private var pathImageSrc: String = ""
 
 
     override fun onAttach(context: Context) {
@@ -333,6 +334,7 @@ class StudentItemEditFragment : Fragment() {
         amountET.setSingleLine()
         amountET.hint = "Телефон"
         amountET.inputType = TYPE_CLASS_NUMBER
+        amountET.addTextChangedListener(PhoneTextFormatter(amountET, "+7 (###) ###-####"))
         layout.addView(amountET)
 
         layout.setPadding(50, 40, 50, 10)

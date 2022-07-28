@@ -75,28 +75,8 @@ class CalendarItemFragment() : Fragment() {
 
         (activity as AppCompatActivity).supportActionBar?.title = "Календарь уроков"
 
-        /*binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            binding.calendarText.text = "$dayOfMonth.${month + 1}.$year"
-        }*/
-
         getDate()
 
-    }
-    private fun log(message: String) {
-        Log.d("SERVICE_TAG", "DateCalendar: $message")
-    }
-
-/*
-fun testData (): List<LessonsItem>? {
-    viewModel = ViewModelProvider(this)[LessonsListViewModel::class.java]
-
-     viewModel.lessonsList.observe(this) {
-         return@observe it
-    }
-}*/
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        //Toast.makeText(getActivity(),"Фрагмент снова на связи!", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -105,15 +85,10 @@ fun testData (): List<LessonsItem>? {
         val calendarView = binding.calendarView
         val calendar = Calendar.getInstance()
 
-// List of preselected dates that will be initially selected
-
-       // val preselectedDates: List<CalendarDate> = getPreselectedDates()
-
-
-// The first day of week
+        // The first day of week
         val firstDayOfWeek = java.util.Calendar.MONDAY
 
-// Set up calendar with all available parameters
+        // Set up calendar with all available parameters
 
 
         val calendarPicList = mutableListOf<EventItemsList>()
@@ -361,7 +336,6 @@ fun testData (): List<LessonsItem>? {
 
         // Set date long click callback
         calendarView.onDateLongClickListener = { date ->
-                log("arrlistLong"+date.toString() + getScreenOrientation())
                 if(getScreenOrientation()){
                     val fragmentTransaction = fragmentManager?.beginTransaction()
                      ?.replace(R.id.shop_item_container, LessonsItemAddFragment.addInstance(date.toString()))
@@ -369,7 +343,7 @@ fun testData (): List<LessonsItem>? {
                      ?.commit()
                 } else {
                     val fragmentTransaction = fragmentManager?.beginTransaction()
-                     ?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem(date.toString()))
+                     ?.replace(R.id.fragment_item_container, LessonsItemAddFragment.addInstance(date.toString()))
                      ?.addToBackStack(null)
                      ?.commit()
                 }
@@ -405,11 +379,8 @@ fun testData (): List<LessonsItem>? {
             alert.setCancelable(false)
             alert.show()
         } else {
-           // Toast.makeText(getActivity()," ", Toast.LENGTH_SHORT).show()
-
             val alert = AlertDialog.Builder(requireContext())
             alert.setTitle("$date")
-            //alert.setMessage("Enter phone details and amount to buy airtime.")
 
             val layout = LinearLayout(requireContext())
             layout.orientation = LinearLayout.VERTICAL
@@ -427,14 +398,12 @@ fun testData (): List<LessonsItem>? {
 
             for (index in dataDate.indices) {
                 if(dataDate[index].color == "lessons"){
-                  //  Log.d("lessshow:", dataDate[index].color)
-                    val nameEvent = dataDate[index].eventName
+                   val nameEvent = dataDate[index].eventName
 
                     val index = TextView(requireContext())
                     index.setSingleLine()
                     index.text = nameEvent
                     index.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
-                    //lessonsInfo.inputType = InputType.TYPE_CLASS_NUMBER
                     layout.addView(index)
                 }
 
@@ -453,7 +422,6 @@ fun testData (): List<LessonsItem>? {
             var countPayYes = 0
             for (index in dataDate.indices) {
                 if(dataDate[index].color == "paymentyes"){
-                    //  Log.d("lessshow:", dataDate[index].color)
                     countPayYes++
                 }
 
@@ -462,7 +430,6 @@ fun testData (): List<LessonsItem>? {
             paymentYes.setSingleLine()
             paymentYes.text = countPayYes.toString()
             paymentYes.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
-            //lessonsInfo.inputType = InputType.TYPE_CLASS_NUMBER
             layout.addView(paymentYes)
 
             val paymentsNoLabel = TextView(requireContext())
@@ -475,7 +442,6 @@ fun testData (): List<LessonsItem>? {
             var countPayNo = 0
             for (index in dataDate.indices) {
                 if(dataDate[index].color == "dolg"){
-                    //  Log.d("lessshow:", dataDate[index].color)
                     countPayNo++
 
                 }
@@ -486,7 +452,6 @@ fun testData (): List<LessonsItem>? {
             payNo.setSingleLine()
             payNo.text = countPayNo.toString()
             payNo.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
-            //lessonsInfo.inputType = InputType.TYPE_CLASS_NUMBER
             layout.addView(payNo)
 
             layout.setPadding(50, 40, 50, 10)
@@ -504,8 +469,7 @@ fun testData (): List<LessonsItem>? {
 
             alert.setNegativeButton("Уроки", DialogInterface.OnClickListener {
                     dialog, id ->
-                // GoFragment.goFragmentOther(LessonsItemListFragment.newInstanceDateId(date.toString()))
-                  launchFragment(LessonsItemListFragment.newInstanceDateId(date.toString()))
+                   launchFragment(LessonsItemListFragment.newInstanceDateId(date.toString()))
             })
             alert.setNeutralButton("Закрыть", DialogInterface.OnClickListener {
                     dialog, id ->
@@ -523,7 +487,6 @@ fun testData (): List<LessonsItem>? {
 
 
         private fun launchFragment(fragment: Fragment, name: String? = "other") {
-            //requireActivity().supportFragmentManager.popBackStack()
             requireActivity().supportFragmentManager.beginTransaction()
             .replace(com.example.lessonslist.R.id.fragment_item_container, fragment)
             .addToBackStack(name)
@@ -531,42 +494,40 @@ fun testData (): List<LessonsItem>? {
         }
 
         private fun setDatesIndicators(calendarPicList: List<EventItemsList>): List<EventItem> {
+
         val context = requireContext()
         val eventItems = mutableListOf<EventItem>()
-        var payNoCount = 0
-        var payYesCount = 0
 
         for (event in calendarPicList.indices) {
-        val title = calendarPicList[event].eventName
-        val date = calendarPicList[event].date
+                val title = calendarPicList[event].eventName
+                val date = calendarPicList[event].date
 
-        if (calendarPicList[event].color == "lessons") {
-        eventItems += EventItem(
-         eventName = title,
-         date = date,
-         color = context.getColorInt(R.color.event_2_color)
-        )
-        } else if (calendarPicList[event].color == "payment") {
-        //log(title)
-        eventItems += EventItem(
-         eventName = title,
-         date = date,
-         color = context.getColorInt(R.color.event_1_color)
-        )
-        } else if (calendarPicList[event].color == "paymentyes") {
+               if (calendarPicList[event].color == "lessons") {
+                     eventItems += EventItem(
+                         eventName = title,
+                         date = date,
+                         color = context.getColorInt(R.color.event_2_color)
+                    )
+                } else if (calendarPicList[event].color == "payment") {
+                    eventItems += EventItem(
+                         eventName = title,
+                         date = date,
+                         color = context.getColorInt(R.color.event_1_color)
+                    )
+                } else if (calendarPicList[event].color == "paymentyes") {
 
-        eventItems += EventItem(
-         eventName = title,
-         date = date,
-         color = context.getColorInt(R.color.event_3_color)
-        )
-        }
+                    eventItems += EventItem(
+                            eventName = title,
+                            date = date,
+                            color = context.getColorInt(R.color.event_3_color)
+                        )
+                }
 
         }
 
 
         return eventItems
-        }
+    }
 
 
         private fun showDialogWithEventsForSpecificDate(date: CalendarDate) {
@@ -609,87 +570,47 @@ fun testData (): List<LessonsItem>? {
         val calendar = Calendar.getInstance()
 
         val eventItems = mutableListOf<EventItem>()
-        //  log(CalendarDate(calendar.time).toString());
 
         repeat(10) {
-        /*   eventItems += EventItem(
-        eventName = "Event #1",
-        date = CalendarDate(calendar.time),
-        color = context.getColorInt(R.color.event_1_color)
-        )
 
-        eventItems += EventItem(
-        eventName = "Event #2",
-        date = CalendarDate(calendar.time),
-        color = context.getColorInt(R.color.event_2_color)
-        )*/
 
-        eventItems += EventItem(
-        eventName = "Event #3",
-        date = CalendarDate(calendar.time),
-        color = context.getColorInt(R.color.event_3_color)
-        )
+            eventItems += EventItem(
+                eventName = "Event #3",
+                date = CalendarDate(calendar.time),
+                color = context.getColorInt(R.color.event_3_color)
+            )
 
-        eventItems += EventItem(
-        eventName = "Event #4",
-        date = CalendarDate(calendar.time),
-        color = context.getColorInt(R.color.event_4_color)
-        )
+            eventItems += EventItem(
+                eventName = "Event #4",
+                date = CalendarDate(calendar.time),
+                color = context.getColorInt(R.color.event_4_color)
+            )
 
-        eventItems += EventItem(
-        eventName = "Event #5",
-        date = CalendarDate(calendar.time),
-        color = context.getColorInt(R.color.event_1_color)
-        )
+            eventItems += EventItem(
+                eventName = "Event #5",
+                date = CalendarDate(calendar.time),
+                color = context.getColorInt(R.color.event_1_color)
+            )
 
-        calendar.add(Calendar.DAY_OF_MONTH, 5)
+            calendar.add(Calendar.DAY_OF_MONTH, 5)
         }
 
         return eventItems
         }
 
         private fun getScreenOrientation(): Boolean {
-        return when (resources.configuration.orientation) {
-        Configuration.ORIENTATION_PORTRAIT -> false
-        Configuration.ORIENTATION_LANDSCAPE -> true
-        else -> false
-        }
-        }
-
-        private fun getPreselectedDates(): List<CalendarDate> {
-
-        val cal = Calendar.getInstance()
-        /**/
-        cal.set(2022, Calendar.MAY, 3)
-        //    log(cal.time.toString())
-        val initOne = CalendarDate(cal.time)
-        cal.set(2022, Calendar.MAY, 13)
-        val initTwo = CalendarDate(cal.time)
-        cal.set(2022, Calendar.MAY, 23)
-        val initFree = CalendarDate(cal.time)
-        cal.set(2022, Calendar.MAY, 27)
-        val initFour = CalendarDate(cal.time)
-
-        val current = Date("2022/5/14")
-        // val formatter = DateTimeFormatter.ofPattern("yyyy/M/dd HH:mm")
-        //val formatted = current.format(formatter)
-        val initFive = CalendarDate(current)
-        //val formatter = DateTimeFormatter.ofPattern("yyyy/M/dd HH:mm")
-        //val formatted = current.format(formatter)
-        //   log(current.toString())
-        return listOf(initOne, initTwo, initFree, initFour, initFive)
-        //return listOf(cal.set(2022, Calendar.MONTH.3, 16), cal.set(2022, 6, 12))
+            return when (resources.configuration.orientation) {
+                Configuration.ORIENTATION_PORTRAIT -> false
+                Configuration.ORIENTATION_LANDSCAPE -> true
+                else -> false
+            }
         }
 
 
-
-
-        interface OnEditingFinishedListener {
-
-        fun onEditingFinished()
-        }
+   interface OnEditingFinishedListener {
+            fun onEditingFinished()
+   }
 
 
 
 }
-

@@ -394,27 +394,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
      }
     }
 
-    fun goGroupFragment() {
-     if (!isOnePaneMode()) {
-         launchFragment(GroupItemFragment())
-     } else {
-        // recyclerMainGone()
-         launchFragmentTemp(GroupItemFragment())
-       //  Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
-     }
-    }
-
-    fun goLessonsFragment() {
-     if (!isOnePaneMode()) {
-         launchFragment(LessonsItemFragment())
-     } else {
-        // recyclerMainGone()
-         launchFragmentTemp(LessonsItemFragment())
-    //     Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
-     }
-    }
-
-
 
 
     fun goPaymentFragment() {

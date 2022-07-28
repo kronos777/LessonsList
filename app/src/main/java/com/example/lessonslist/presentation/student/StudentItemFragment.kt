@@ -1,6 +1,5 @@
 package com.example.lessonslist.presentation.student
 
-import android.R
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -11,28 +10,22 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.databinding.FragmentStudentItemBinding
-import com.example.lessonslist.databinding.FragmentStudentItemEditBinding
 import com.example.lessonslist.domain.student.StudentItem
-import com.example.lessonslist.presentation.group.DataStudentGroupModel
-import com.example.lessonslist.presentation.lessons.LessonsItemFragment
-import com.example.lessonslist.presentation.payment.PaymentItemListFragment
+import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.squareup.picasso.Picasso
 import java.io.*
-import java.util.ArrayList
 import java.util.concurrent.Executors
 
 
@@ -99,51 +92,35 @@ class StudentItemFragment : Fragment() {
 
 
 
-
-        dataPaymentStudentModel = ArrayList<DataPaymentStudentModel>()
-        listView = binding.listView
-        val args = requireArguments()
-        val mode = args.getString(SCREEN_MODE)
-        if (mode == MODE_EDIT || mode == "mode_edit") {
-
-            viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
-            viewModelPayment.paymentList.observe(viewLifecycleOwner) {
-                if(it.size > 0) {
-                    for (payment in it) {
-                        if(payment.studentId == studentItemId) {
-
-                            if (payment.enabled == true) {
-                                dataPaymentStudentModel!!.add(DataPaymentStudentModel("Оплачен: " + payment.title, payment.price.toString()))
-                            } else {
-                                dataPaymentStudentModel!!.add(DataPaymentStudentModel("Долг: " + payment.title, "-" + payment.price.toString()))
-                            }
-
-
-                        }
-                    }
-                }
-/*                adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
-
-                listView.adapter = adapter*/
-                val adapter =  ListPaymentAdapter(dataPaymentStudentModel!!, requireContext().applicationContext)
-                listView.adapter = adapter
-
-            }
-
-            binding.paymentStudent.setOnClickListener {
-                launchFragment(PaymentItemListFragment.newInstanceStudentId(studentItemId))
-            }
-
-        } else {
-            binding.paymentStudent?.setVisibility (View.GONE)
-        }
-
-
         mImageView = binding.imageView
 
         mImageView.setOnClickListener {
             actionChangeImage()
         }
+
+
+        binding.etPaymentBalance.addTextChangedListener(PhoneTextFormatter(binding.etPaymentBalance, "### ### ### ### ### ### ### ###"))
+        binding.etTelephone.addTextChangedListener(PhoneTextFormatter(binding.etTelephone, "+7 (###) ###-####"))
+
+     /*   binding.etTelephone.addTextChangedListener(object : TextWatcher {
+            var length_before = 0
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                length_before = s.length
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                if (length_before < s.length) {
+                    if (s.length == 3 || s.length == 7) s.append("-")
+                    if (s.length > 3) {
+                        if (Character.isDigit(s[3])) s.insert(3, "-")
+                    }
+                    if (s.length > 7) {
+                        if (Character.isDigit(s[7])) s.insert(7, "-")
+                    }
+                }
+            }
+        })*/
 
 
     }
@@ -290,8 +267,8 @@ class StudentItemFragment : Fragment() {
                 binding.etName.text?.toString(),
                 binding.etLastname.text?.toString(),
                 binding.etPaymentBalance.text.toString(),
-                binding.etNotes.text.toString(),
-                binding.etGroup.text.toString(),
+                "",
+                "",
                 pathImageSrc,
                 binding.etTelephone.text.toString()
 
@@ -313,8 +290,8 @@ class StudentItemFragment : Fragment() {
                 binding.etName.text?.toString(),
                 binding.etLastname.text?.toString(),
                 binding.etPaymentBalance.text.toString(),
-                binding.etNotes.text.toString(),
-                binding.etGroup.text.toString(),
+                "",
+                "",
                 inputImage = pathImageSrc ?: " ",
                 binding.etTelephone.text.toString()
             )

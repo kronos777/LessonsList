@@ -20,12 +20,12 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/til_name"
-            android:src="@drawable/calendar_days_of_week_bar_shadow"
+            android:src="@drawable/ic_baseline_add_a_photo_24"
             />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -86,7 +86,7 @@
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
             app:errorInputPaymentBalance="@{viewModel.errorInputPaymentBalance}"
-            app:layout_constraintBottom_toTopOf="@id/til_notes"
+            app:layout_constraintBottom_toTopOf="@id/til_telephone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/til_lastname">
@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/count_hint"
                 android:inputType="number"
-                android:text="@{String.valueOf(viewModel.studentItem.paymentBalance)}" />
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -108,7 +108,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
             app:errorInputName="@{viewModel.errorInputName}"
-            app:layout_constraintBottom_toTopOf="@id/til_group"
+            app:layout_constraintBottom_toTopOf="@id/save_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/til_paymentBalance"
@@ -120,87 +120,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/student_telephone"
-                android:inputType="textCapWords"
+                android:inputType="phone"
+                android:maxLength="12"
                 android:text="@{viewModel.studentItem.telephone}"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_notes"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="4dp"
-            app:errorInputName="@{viewModel.errorInputName}"
-            app:layout_constraintBottom_toTopOf="@id/til_group"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_paymentBalance"
-            app:layout_constraintVertical_chainStyle="packed"
-            >
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_notes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/student_telephone"
-                android:inputType="number"
-                android:text="@{viewModel.studentItem.telephone}"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_group"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="4dp"
-            app:errorInputName="@{viewModel.errorInputName}"
-            app:layout_constraintBottom_toTopOf="@id/save_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_notes"
-            app:layout_constraintVertical_chainStyle="packed"
-            >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/group_hint"
-                android:inputType="textCapWords"
-                android:text="@{viewModel.studentItem.group}"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <ListView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toTopOf="@id/payment_student"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_group"
-
-            />
-        <Button
-            android:id="@+id/payment_student"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/payment_student_btn"
-            app:layout_constraintBottom_toBottomOf="@id/save_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/listView"
-            />
         <Button
             android:id="@+id/save_button"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/save_btn"
