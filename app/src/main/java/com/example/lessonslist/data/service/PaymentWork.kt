@@ -101,6 +101,8 @@ class PaymentWork(
                             val stIds = getStudentIds(lessonsItem.student)
                             log("в противном случае на каждого ученика необходимо создать платеж" + stIds)
                             var namesStudentArrayList: ArrayList<String> = ArrayList()
+                            var okPay = 0
+                            var noPay = 0
                             if(stIds.size > 0) {
                                 for (ids in stIds){
                                     var student = dbStudent.getStudentItem(ids)
@@ -116,26 +118,41 @@ class PaymentWork(
                                     if(newBalanceStudent > 0) {
                                         if(lessonsItem.price > student.paymentBalance) {
                                             val price = calculatePaymentPriceAddPlus(student.paymentBalance, lessonsItem.price)
-                                            viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, price.toString(), false)
+                                            viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description,
+                                                idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, price.toString(), false)
                                             dbStudent.editStudentItemPaymentBalance(student.id, (0).toFloat())
+                                            noPay++
                                         } else {
-                                            viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString(), true)
+                                            viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description,
+                                                idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString(), true)
                                             dbStudent.editStudentItemPaymentBalance(student.id, (student.paymentBalance - lessonsItem.price).toFloat())
+                                            okPay++
                                         }
                                      } else if (newBalanceStudent <= 0) {
                                         val price = calculatePaymentPriceAddPlus(student.paymentBalance, lessonsItem.price)
-                                        viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, price.toString(), false)
+                                        viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description,
+                                            idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, price.toString(), false)
                                         dbStudent.editStudentItemPaymentBalance(student.id, (0).toFloat())
                                         log("создан отрицательный платеж" + studentData)
+                                        noPay++
                                     } else if (student.paymentBalance <= 0) {
-                                        viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description, idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, (- lessonsItem.price).toString(), false)
+                                        viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description,
+                                            idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, (- lessonsItem.price).toString(), false)
                                         dbStudent.editStudentItemPaymentBalance(student.id, (0).toFloat())
+                                        noPay++
                                     }
 
 
                                 }
                             }
-                            createNotification("Список уроков", "выставлены счета ученикам:" + namesStudentArrayList.toString())
+                            var notificationString = ""
+                            if (noPay == 0) {
+                                notificationString = "Выставлены счета " + namesStudentArrayList.size + " ученикам и все оплаты прошли успешно."
+                            } else {
+                                notificationString = "Выставлены счета " + namesStudentArrayList.size + " ученикам, " + okPay + " оплат успешных и " + noPay + " остались неоплаченными."
+                            }
+
+                            createNotification("Список уроков", notificationString, lessonsItem.id)
                         }
 
                         /*dt*/
@@ -204,11 +221,11 @@ class PaymentWork(
     }
 
 
-    private fun createNotification(title: String, description: String) {
+    private fun createNotification(title: String, description: String, lessonsId: Int) {
 
 
         // Create PendingIntent
-        val resultIntent = Intent(applicationContext, MainActivity::class.java).putExtra("extra", "PARAMS_EXTRA")
+        val resultIntent = Intent(applicationContext, MainActivity::class.java).putExtra("extra", lessonsId.toString())
         val resultPendingIntent = PendingIntent.getActivity(
             applicationContext, 0, resultIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
@@ -229,8 +246,11 @@ class PaymentWork(
 
         val notificationBuilder = NotificationCompat.Builder(applicationContext, "101")
             .setContentTitle(title)
-            .setContentText(description)
+            .setStyle(NotificationCompat.BigTextStyle()
+                .bigText(description))
+            //.setContentText(description)
             .setSound(ringtoneManager)
+            .addAction(R.drawable.ic_baseline_phone_forwarded_24, "Подробнее", resultPendingIntent)
             .setSmallIcon(R.drawable.ic_baseline_menu_book_24)
             .setContentIntent(resultPendingIntent)
             .setAutoCancel(true) // закрыть по нажатию

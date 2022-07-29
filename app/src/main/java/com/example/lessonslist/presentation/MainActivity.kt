@@ -17,6 +17,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -38,7 +39,6 @@ import com.example.lessonslist.presentation.settings.SettingsItemFragment
 import com.example.lessonslist.presentation.student.StudentItemEditFragment
 import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentItemListFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 
 
@@ -60,14 +60,31 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        launchMainFragment(CalendarItemFragment(), "calendar")
 
+
+        launchMainFragment(CalendarItemFragment(), "calendar")
 
         if (intent.getStringExtra("extra") != null) {
             Toast.makeText(this, "extra params" + intent.getStringExtra("extra"), Toast.LENGTH_SHORT).show()
+            val lessonIdForFragment = intent.getStringExtra("extra")
+            if (lessonIdForFragment != null) {
+                launchFragment(LessonsItemEditFragment.newInstanceEditItem(lessonIdForFragment.toInt()))
+            }
+        /*
+            * fragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_item_container, LessonsItemEditFragment.newInstanceEditItem(intent.getStringExtra("extra")), "OtherFragment")
+                ?.addToBackStack(name)
+                ?.commit()
+                *
+                *
+                *
+                *      supportFragmentManager.beginTransaction()
+         .replace(R.id.fragment_item_container, fragment, "OtherFragment")
+         .addToBackStack(name)
+         //.addToBackStack("CalendarItemFragment")
+         .commit()
+            * */
         }
-
-
     /*    if (currentFragment == null) {
             if (isOnePaneMode()) {
                 launchFragmentTemp(CalendarItemFragment())
@@ -248,7 +265,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     override fun onBackPressed() {
         //super.onBackPressed()
         supportFragmentManager.popBackStack("calendar", 0)
-        val myFragment: Fragment = supportFragmentManager.findFragmentByTag("MainCalendarFragment") as Fragment
+        val myFragment: Fragment? = supportFragmentManager.findFragmentByTag("MainCalendarFragment") as Fragment
         if (doubleBackToExitPressedOnce) {
             // super.onBackPressed()
             //return
@@ -256,6 +273,13 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 this.finishAffinity()
                 Toast.makeText(this, "Текущий форагмент календарь, можно выходить.", Toast.LENGTH_SHORT).show()
             }
+
+
+            if (myFragment == null) {
+                    launchMainFragment(CalendarItemFragment(), "calendar")
+                    Toast.makeText(this, "Вызов нужного блока.", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
         this.doubleBackToExitPressedOnce = true
@@ -383,6 +407,16 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
      }
     }
 
+    fun getVisibleFragment(): Fragment? {
+        val fragmentManager: FragmentManager = this@MainActivity.supportFragmentManager
+        val fragments: List<Fragment> = fragmentManager.getFragments()
+        if (fragments != null) {
+            for (fragment in fragments) {
+                if (fragment != null && fragment.isVisible) return fragment
+            }
+        }
+        return null
+    }
 
     fun goGroupListFragment() {
      if (!isOnePaneMode()) {

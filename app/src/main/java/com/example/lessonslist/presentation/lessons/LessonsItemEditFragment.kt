@@ -25,6 +25,9 @@ import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
+import com.example.lessonslist.presentation.payment.PaymentListViewModel
+import com.example.lessonslist.presentation.student.DataPaymentStudentModel
+import com.example.lessonslist.presentation.student.ListPaymentAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.time.Duration
@@ -54,7 +57,9 @@ class LessonsItemEditFragment : Fragment() {
     private var dataStudentGroupModel: ArrayList<DataStudentGroupModel>? = null
     private lateinit var dataStudentlList: MainViewModel
 
+    private lateinit var viewModelPayment: PaymentListViewModel
 
+    private var dataPaymentStudentModel: ArrayList<DataPaymentStudentModel>? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,6 +104,32 @@ class LessonsItemEditFragment : Fragment() {
         dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
         dataStudentGroupModel = ArrayList<DataStudentGroupModel>()
         var studentName: Array<String> = emptyArray()
+
+
+
+        dataPaymentStudentModel = ArrayList<DataPaymentStudentModel>()
+        viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
+        viewModelPayment.paymentList.observe(viewLifecycleOwner) {
+            if(it.size > 0) {
+                for (payment in it) {
+                    if(payment.lessonsId == lessonsItemId) {
+                        //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
+                        if (payment.enabled == true) {
+                            dataPaymentStudentModel!!.add(DataPaymentStudentModel("Оплачен: " + payment.title, payment.price.toString()))
+                        } else {
+                            dataPaymentStudentModel!!.add(DataPaymentStudentModel("Долг: " + payment.title, "-" + payment.price.toString()))
+                        }
+
+                    }
+                }
+            }
+/*                adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
+
+                listView.adapter = adapter*/
+            val adapter =  ListPaymentAdapter(dataPaymentStudentModel!!, requireContext().applicationContext)
+            listView.adapter = adapter
+
+        }
 
 
         dataStudentlList.studentList.observe(viewLifecycleOwner) {
@@ -291,7 +322,6 @@ class LessonsItemEditFragment : Fragment() {
     }
 
     interface OnEditingFinishedListener {
-
         fun onEditingFinished()
     }
 

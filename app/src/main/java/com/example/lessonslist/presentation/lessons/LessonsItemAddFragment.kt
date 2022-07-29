@@ -395,7 +395,7 @@ class LessonsItemAddFragment : Fragment()  {
 
         if (valueCheck1.length > 0 && valueCheck2.length > 0) {
 
-            val formatter = DateTimeFormatter.ofPattern("yyyy-M-dd HH:m")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-M-dd H:m")
             val dt: LocalDateTime = LocalDateTime.parse(valueCheck1, formatter)
             val dt2: LocalDateTime = LocalDateTime.parse(valueCheck2, formatter)
 
