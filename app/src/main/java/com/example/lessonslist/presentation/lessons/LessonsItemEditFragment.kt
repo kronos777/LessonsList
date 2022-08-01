@@ -59,7 +59,7 @@ class LessonsItemEditFragment : Fragment() {
 
     private lateinit var viewModelPayment: PaymentListViewModel
 
-    private var dataPaymentStudentModel: ArrayList<DataPaymentStudentModel>? = null
+    private var dataPaymentStudentModel: ArrayList<DataPaymentStudentLessonsModel>? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,7 +107,7 @@ class LessonsItemEditFragment : Fragment() {
 
 
 
-        dataPaymentStudentModel = ArrayList<DataPaymentStudentModel>()
+        dataPaymentStudentModel = ArrayList<DataPaymentStudentLessonsModel>()
         viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelPayment.paymentList.observe(viewLifecycleOwner) {
             if(it.size > 0) {
@@ -115,9 +115,9 @@ class LessonsItemEditFragment : Fragment() {
                     if(payment.lessonsId == lessonsItemId) {
                         //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
                         if (payment.enabled == true) {
-                            dataPaymentStudentModel!!.add(DataPaymentStudentModel("Оплачен: " + payment.title, payment.price.toString()))
+                            dataPaymentStudentModel!!.add(DataPaymentStudentLessonsModel(payment.student ," Оплачен: " + payment.title, payment.price.toString()))
                         } else {
-                            dataPaymentStudentModel!!.add(DataPaymentStudentModel("Долг: " + payment.title, "-" + payment.price.toString()))
+                            dataPaymentStudentModel!!.add(DataPaymentStudentLessonsModel(payment.student, " Долг: " + payment.title, "-" + payment.price.toString()))
                         }
 
                     }
@@ -126,52 +126,60 @@ class LessonsItemEditFragment : Fragment() {
 /*                adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
 
                 listView.adapter = adapter*/
-            val adapter =  ListPaymentAdapter(dataPaymentStudentModel!!, requireContext().applicationContext)
-            listView.adapter = adapter
+
 
         }
 
 
-        dataStudentlList.studentList.observe(viewLifecycleOwner) {
-            if(it.size > 0) {
-                for(student in it){
-                    val name = student.name + " " + student.lastname
-                    val id = student.id
-                    studentName += name
-                    if(viewModel.lessonsItem.value != null) {
-                        viewModel.lessonsItem.observe(viewLifecycleOwner) {
-                            var dataString = it.student
-                            dataString = dataString.replace("]", "")
-                            dataString = dataString.replace("[", "")
-                            val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
-                            if(lstValues.contains(id)) {
-                                dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
-                            } else {
-                                dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+        if(dataPaymentStudentModel!!.size > 0) {
+            val adapter =  ListPaymentLessonsAdapter(dataPaymentStudentModel!!, requireContext().applicationContext)
+            listView.adapter = adapter
+        } else {
+            dataStudentlList.studentList.observe(viewLifecycleOwner) {
+                if(it.size > 0) {
+                    for(student in it){
+                        val name = student.name + " " + student.lastname
+                        val id = student.id
+                        studentName += name
+                        if(viewModel.lessonsItem.value != null) {
+                            viewModel.lessonsItem.observe(viewLifecycleOwner) {
+                                var dataString = it.student
+                                dataString = dataString.replace("]", "")
+                                dataString = dataString.replace("[", "")
+                                val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
+                                if(lstValues.contains(id)) {
+                                    dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
+                                } else {
+                                    dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+                                }
                             }
+                        } else {
+                            dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
                         }
-                    } else {
-                        dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+
+
+
                     }
 
 
+                    adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
 
+                    listView.adapter = adapter
+
+                } else {
+
+                    studentName += "в учениках пока нет значений"
                 }
-
-
-                adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
-
-                listView.adapter = adapter
-
-            } else {
-                log("в учениках пока нет значений")
-                studentName += "в учениках пока нет значений"
             }
+        }
+
+/*
+
 
 
         }
 
-
+*/
 
 
         val mTimePicker: TimePickerDialog

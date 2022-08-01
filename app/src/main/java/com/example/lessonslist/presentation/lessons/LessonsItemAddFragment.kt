@@ -23,6 +23,7 @@ import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
+import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -341,6 +342,9 @@ class LessonsItemAddFragment : Fragment()  {
             override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
                 binding.etDateend.setText(String.format("%d/%d/%d %d : %d", year, month + 1, day, hourOfDay, minute))
                 timePicker2 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + hourOfDay.toString() + ":" + minute.toString()
+              /*  val timePicker2Date = LocalDateTime.parse((year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + hourOfDay.toString() + ":" + minute.toString()),
+                    DateTimeFormatter.ofPattern("yyyy-M-d H:m"))
+                Toast.makeText(activity, "Время начала " + timePicker2Date, Toast.LENGTH_SHORT).show()*/
                 if (timePicker1.length > 0 && timePicker2.length > 0) {
                     checkAddDateTime(timePicker1, timePicker2)
                 }
@@ -395,9 +399,22 @@ class LessonsItemAddFragment : Fragment()  {
 
         if (valueCheck1.length > 0 && valueCheck2.length > 0) {
 
-            val formatter = DateTimeFormatter.ofPattern("yyyy-M-dd H:m")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m")
             val dt: LocalDateTime = LocalDateTime.parse(valueCheck1, formatter)
             val dt2: LocalDateTime = LocalDateTime.parse(valueCheck2, formatter)
+
+  /*
+
+
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+            val dt: LocalDateTime = LocalDateTime.parse(dtTemp.toString(), formatter)
+            val dt2: LocalDateTime = LocalDateTime.parse(dt2Temp.toString(), formatter)
+
+                    val format = SimpleDateFormat("yyyy-MM-dd HH:mm")
+            val dt = format.parse(valueCheck1)
+            val dt2 = format.parse(valueCheck2)
+
+            */
 
 
             if(dt == dt2) {
@@ -412,6 +429,10 @@ class LessonsItemAddFragment : Fragment()  {
                 val minutes = diff.toMinutes()
                 if(minutes < 30) {
                     Toast.makeText(activity, "урок не может быть менее 30 минут",
+                        Toast.LENGTH_SHORT).show()
+                    return false
+                } else if (minutes > 180) {
+                    Toast.makeText(activity, "урок не может быть больше  3 часов",
                         Toast.LENGTH_SHORT).show()
                     return false
                 } else {
