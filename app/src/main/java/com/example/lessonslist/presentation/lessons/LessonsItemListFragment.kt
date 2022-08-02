@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemListBinding
 import com.example.lessonslist.domain.lessons.LessonsItem
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -54,7 +55,10 @@ class LessonsItemListFragment: Fragment() {
         setupRecyclerView()
         val args = requireArguments()
         val dateFilter = args.getString(DATE_ID)
-      //  Toast.makeText(getActivity(),"Работает эта часть кода!" + dateFilter.toString(),Toast.LENGTH_SHORT).show();
+
+        val bottomNavigationView =
+            requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        bottomNavigationView.menu.findItem(R.id.bottomItem4).isChecked = true
 
 
         if(dateFilter != null) {

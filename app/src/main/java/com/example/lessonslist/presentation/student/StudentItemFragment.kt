@@ -20,10 +20,12 @@ import android.widget.*
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentStudentItemBinding
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
 import java.io.*
 import java.util.concurrent.Executors
@@ -98,7 +100,9 @@ class StudentItemFragment : Fragment() {
             actionChangeImage()
         }
 
-
+        val bottomNavigationView =
+            requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
         binding.etPaymentBalance.addTextChangedListener(PhoneTextFormatter(binding.etPaymentBalance, "### ### ### ### ### ### ### ###"))
         binding.etTelephone.addTextChangedListener(PhoneTextFormatter(binding.etTelephone, "+7 (###) ###-####"))
 

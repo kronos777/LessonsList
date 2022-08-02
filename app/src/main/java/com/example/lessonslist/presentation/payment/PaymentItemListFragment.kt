@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentPaymentItemListBinding
 import com.example.lessonslist.domain.payment.PaymentItem
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -46,6 +47,12 @@ class PaymentItemListFragment: Fragment() {
         (activity as AppCompatActivity).supportActionBar?.title = "Список платежей"
 
         setupRecyclerView()
+
+        val bottomNavigationView =
+            requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        bottomNavigationView.menu.findItem(R.id.bottomItem2).isChecked = true
+
+
 
         val args = requireArguments()
         val mode = args.getString(SCREEN_MODE)

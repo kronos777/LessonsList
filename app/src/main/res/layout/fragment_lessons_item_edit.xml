@@ -43,7 +43,6 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_student"
             android:layout_width="match_parent"
@@ -64,6 +63,7 @@
                 android:inputType="textCapWords"
                 android:text="@{viewModel.lessonsItem.student}" />
         </com.google.android.material.textfield.TextInputLayout>
+
         <TextView
             android:id="@+id/textViewPriceInfo"
             android:layout_width="match_parent"

@@ -1,7 +1,6 @@
 package com.example.lessonslist.presentation.lessons
 
 import android.app.AlertDialog
-import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
@@ -11,30 +10,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
-import com.example.lessonslist.databinding.FragmentLessonsItemBinding
 import com.example.lessonslist.databinding.FragmentLessonsItemEditBinding
 import com.example.lessonslist.domain.group.GroupItem
 import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
-import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
-import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
-import com.example.lessonslist.presentation.student.DataPaymentStudentModel
-import com.example.lessonslist.presentation.student.ListPaymentAdapter
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class LessonsItemEditFragment : Fragment() {
@@ -99,13 +89,21 @@ class LessonsItemEditFragment : Fragment() {
         observeViewModel()
 
 
+        binding.tilStudent.setVisibility (View.GONE)
+
+
+        val bottomNavigationView =
+            requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        bottomNavigationView.menu.findItem(R.id.bottomItem4).isChecked = true
+
+
         listView = binding.listView
 
         dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
         dataStudentGroupModel = ArrayList<DataStudentGroupModel>()
         var studentName: Array<String> = emptyArray()
 
-
+       // binding.layoutInfo.setVisibility (View.GONE)
 
         dataPaymentStudentModel = ArrayList<DataPaymentStudentLessonsModel>()
         viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
@@ -113,73 +111,66 @@ class LessonsItemEditFragment : Fragment() {
             if(it.size > 0) {
                 for (payment in it) {
                     if(payment.lessonsId == lessonsItemId) {
-                        //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
                         if (payment.enabled == true) {
-                            dataPaymentStudentModel!!.add(DataPaymentStudentLessonsModel(payment.student ," Оплачен: " + payment.title, payment.price.toString()))
+                            dataPaymentStudentModel!!.add(DataPaymentStudentLessonsModel(payment.student ," Оплачен: ", payment.price.toString()))
                         } else {
-                            dataPaymentStudentModel!!.add(DataPaymentStudentLessonsModel(payment.student, " Долг: " + payment.title, "-" + payment.price.toString()))
+                            dataPaymentStudentModel!!.add(DataPaymentStudentLessonsModel(payment.student, " Долг: ", "-" + payment.price.toString()))
                         }
 
                     }
                 }
             }
-/*                adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
-
-                listView.adapter = adapter*/
 
 
-        }
-
-
-        if(dataPaymentStudentModel!!.size > 0) {
-            val adapter =  ListPaymentLessonsAdapter(dataPaymentStudentModel!!, requireContext().applicationContext)
-            listView.adapter = adapter
-        } else {
-            dataStudentlList.studentList.observe(viewLifecycleOwner) {
-                if(it.size > 0) {
-                    for(student in it){
-                        val name = student.name + " " + student.lastname
-                        val id = student.id
-                        studentName += name
-                        if(viewModel.lessonsItem.value != null) {
-                            viewModel.lessonsItem.observe(viewLifecycleOwner) {
-                                var dataString = it.student
-                                dataString = dataString.replace("]", "")
-                                dataString = dataString.replace("[", "")
-                                val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
-                                if(lstValues.contains(id)) {
-                                    dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
-                                } else {
-                                    dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+            if(dataPaymentStudentModel!!.size > 0) {
+                val adapter =  ListPaymentLessonsAdapter(dataPaymentStudentModel!!, requireContext().applicationContext)
+                listView.adapter = adapter
+                setFocusableEditText()
+            } else {
+                dataStudentlList.studentList.observe(viewLifecycleOwner) {
+                    if(it.size > 0) {
+                        for(student in it){
+                            val name = student.name + " " + student.lastname
+                            val id = student.id
+                            studentName += name
+                            if(viewModel.lessonsItem.value != null) {
+                                viewModel.lessonsItem.observe(viewLifecycleOwner) {
+                                    var dataString = it.student
+                                    dataString = dataString.replace("]", "")
+                                    dataString = dataString.replace("[", "")
+                                    val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
+                                    if(lstValues.contains(id)) {
+                                        dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
+                                    } else {
+                                        dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+                                    }
                                 }
+                            } else {
+                                dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
                             }
-                        } else {
-                            dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+
+
+
                         }
 
 
+                        adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
 
+                        listView.adapter = adapter
+
+                    } else {
+
+                        studentName += "в учениках пока нет значений"
                     }
-
-
-                    adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
-
-                    listView.adapter = adapter
-
-                } else {
-
-                    studentName += "в учениках пока нет значений"
                 }
             }
-        }
-
-/*
 
 
 
         }
 
-*/
+
+
 
 
         val mTimePicker: TimePickerDialog
@@ -224,6 +215,36 @@ class LessonsItemEditFragment : Fragment() {
         binding.etDateend.setOnClickListener{
             mTimePickerEnd.show()
         }
+    }
+
+
+
+
+    fun setFocusableEditText() {
+        //binding.saveButton.setVisibility (View.GONE)
+        binding.saveButton.text = "Список уроков."
+        binding.etTitle.setBackgroundResource(R.color.white)
+        binding.etTitle.isFocusable = false
+        binding.etDatestart.setBackgroundResource(R.color.white)
+        binding.etDateend.setBackgroundResource(R.color.white)
+        binding.textViewChangeStateCheckbox.text = "Список платежей:"
+        binding.etDatestart.setOnClickListener{
+             false
+        }
+        binding.etDateend.setOnClickListener{
+             false
+        }
+        binding.saveButton.setOnClickListener {
+            launchFragment(LessonsItemListFragment.newInstanceNoneParams())
+        }
+
+//        binding.saveButton
+
+     /*   binding.saveButton.setVisibility (View.GONE)
+        binding.layoutInfo.setVisibility (View.VISIBLE)
+        //binding.textViewChangeStateCheckbox.setVisibility (View.GONE)
+
+        binding.textViewChangeStateCheckbox.isFocusable = false*/
     }
 
     fun withMultiChoiceList(listData: Array<String>): ArrayList<String> {

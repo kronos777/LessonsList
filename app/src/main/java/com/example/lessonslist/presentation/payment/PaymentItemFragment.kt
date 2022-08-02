@@ -25,6 +25,7 @@ import com.example.lessonslist.presentation.group.GroupItemViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.student.StudentItemViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class PaymentItemFragment: Fragment() {
 
@@ -86,7 +87,9 @@ class PaymentItemFragment: Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         launchRightMode()
         observeViewModel()
-
+        val bottomNavigationView =
+            requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        bottomNavigationView.menu.findItem(R.id.bottomItem2).isChecked = true
 
         viewModel.paymentItem.observe(viewLifecycleOwner) {
 

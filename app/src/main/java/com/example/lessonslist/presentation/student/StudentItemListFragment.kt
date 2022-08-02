@@ -19,6 +19,7 @@ import com.example.lessonslist.databinding.FragmentGroupItemListBinding
 import com.example.lessonslist.databinding.FragmentLessonsItemListBinding
 import com.example.lessonslist.databinding.FragmentStudentItemListBinding
 import com.example.lessonslist.presentation.MainViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class StudentItemListFragment: Fragment() {
@@ -50,7 +51,9 @@ class StudentItemListFragment: Fragment() {
         viewModel.studentList.observe(viewLifecycleOwner) {
             studentListAdapter.submitList(it)
         }
-
+        val bottomNavigationView =
+            requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
         binding.buttonAddStudentItem.setOnClickListener {
             val fragmentTransaction = fragmentManager?.beginTransaction()
                 ?.replace(R.id.fragment_item_container, StudentItemFragment.newInstanceAddItem())

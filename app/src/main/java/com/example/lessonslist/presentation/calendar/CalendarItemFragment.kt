@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,11 +18,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentCalndarBinding
 import com.example.lessonslist.presentation.lessons.LessonsItemAddFragment
-import com.example.lessonslist.presentation.lessons.LessonsItemFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsListViewModel
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import ru.cleverpumpkin.calendar.CalendarDate
 import ru.cleverpumpkin.calendar.CalendarView
 import ru.cleverpumpkin.calendar.extension.getColorInt
@@ -48,7 +47,7 @@ class CalendarItemFragment() : Fragment() {
 
     lateinit var viewModel: LessonsListViewModel
     lateinit var viewModelPaymentList: PaymentListViewModel
-    val dateTitleMutableMap: MutableMap<String, String> =
+    private val dateTitleMutableMap: MutableMap<String, String> =
         mutableMapOf()
 
     override fun onAttach(context: Context) {
@@ -76,6 +75,11 @@ class CalendarItemFragment() : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.title = "Календарь уроков"
 
         getDate()
+
+
+        val bottomNavigationView =
+            requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        bottomNavigationView.menu.findItem(R.id.bottomItem1).isChecked = true
 
     }
 
@@ -118,7 +122,7 @@ class CalendarItemFragment() : Fragment() {
              //   calendarList.add(dd)
                 calendarPicList += EventItemsList(dd, "lessons", nameLessons)
                 calendarShowMessgeList += EventItemsList(dd, "lessons", nameLessons)
-                dateTitleMutableMap.put(dd.toString(), nameLessons)
+                dateTitleMutableMap[dd.toString()] = nameLessons
             }
 
 
@@ -190,13 +194,11 @@ class CalendarItemFragment() : Fragment() {
                 val currentYear = calendarTimeZone[Calendar.YEAR]
                 val currentMonth = calendarTimeZone[Calendar.MONTH]
                 val currentDay = calendarTimeZone[Calendar.DAY_OF_MONTH]
-// Initial date
+
                 calendar.set(currentYear, currentMonth, 1)
                 val initialDate = CalendarDate(calendar.time)
 
-// Minimum available date
-                // get first date lessons
-              //  calendar.set(2022, Calendar.FEBRUARY, 1)
+
                 val minDate: CalendarDate
                 calendar.set(2000, Calendar.JANUARY, 1)
                 val checkDate: CalendarDate =  CalendarDate(calendar.time)

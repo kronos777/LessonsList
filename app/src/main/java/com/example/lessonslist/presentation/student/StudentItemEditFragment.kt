@@ -29,6 +29,7 @@ import com.example.lessonslist.presentation.student.notes.DataNotesStudentModel
 import com.example.lessonslist.presentation.student.notes.ListNotesAdapter
 import com.example.lessonslist.presentation.student.parentContact.DataParentContactStudentModel
 import com.example.lessonslist.presentation.student.parentContact.ListParentContactAdapter
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
 import java.io.*
 import java.net.HttpURLConnection
@@ -108,7 +109,9 @@ class StudentItemEditFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         launchRightMode()
       //  observeViewModel()
-
+        val bottomNavigationView =
+            requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
         //viewModel.studentItem.
         dataPaymentStudentModel = ArrayList<DataPaymentStudentModel>()
         listView = binding.listView

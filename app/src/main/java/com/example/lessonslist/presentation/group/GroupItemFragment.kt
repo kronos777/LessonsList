@@ -12,9 +12,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentGroupItemBinding
 import com.example.lessonslist.domain.group.GroupItem
 import com.example.lessonslist.presentation.MainViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class GroupItemFragment : Fragment() {
@@ -81,6 +83,13 @@ class GroupItemFragment : Fragment() {
         launchRightMode()
         observeViewModel()
 
+        val bottomNavigationView =
+            requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        bottomNavigationView.menu.findItem(R.id.bottomItem3).isChecked = true
+
+
+
+        binding.tilStudent.setVisibility (View.GONE)
 
         /*get data student*/
 
