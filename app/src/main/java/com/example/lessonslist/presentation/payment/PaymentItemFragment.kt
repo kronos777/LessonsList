@@ -4,25 +4,16 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
-import com.example.lessonslist.databinding.FragmentGroupItemBinding
 import com.example.lessonslist.databinding.FragmentPaymentItemBinding
-import com.example.lessonslist.domain.group.GroupItem
+import com.example.lessonslist.databinding.PaymentCardBinding
 import com.example.lessonslist.domain.payment.PaymentItem
-import com.example.lessonslist.presentation.MainViewModel
-import com.example.lessonslist.presentation.group.DataStudentGroupModel
-import com.example.lessonslist.presentation.group.GroupItemFragment
-import com.example.lessonslist.presentation.group.GroupItemViewModel
-import com.example.lessonslist.presentation.group.ListStudentAdapter
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.student.StudentItemViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -43,7 +34,7 @@ class PaymentItemFragment: Fragment() {
 
     private var _binding: FragmentPaymentItemBinding? = null
     private val binding: FragmentPaymentItemBinding
-        get() = _binding ?: throw RuntimeException("FragmentGroupItemBinding == null")
+        get() = _binding ?: throw RuntimeException("PaymentCardBinding == null")
 
     private var screenMode: String = MODE_UNKNOWN
     private var paymentItemId: Int = PaymentItem.UNDEFINED_ID
@@ -84,7 +75,7 @@ class PaymentItemFragment: Fragment() {
 
         viewModel = ViewModelProvider(this)[PaymentItemViewModel::class.java]
         binding.viewModel = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
+        binding.lifecycleOwner = viewLifecycleOwner/**/
         launchRightMode()
         observeViewModel()
         val bottomNavigationView =
@@ -96,7 +87,12 @@ class PaymentItemFragment: Fragment() {
             viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
 
                 if (it.enabled) {
-                    binding.paymentOff.visibility = (View.GONE)
+                   // binding.paymentOff.visibility = (View.GONE)
+                    binding.valueStatusPayment.text = "Оплачен"
+                    binding.paymentPicture.setBackgroundResource(R.drawable.ic_baseline_check_circle_24)
+                } else {
+                    binding.valueStatusPayment.text = "Долг"
+                    binding.paymentPicture.setBackgroundResource(R.drawable.ic_baseline_indeterminate_check_box_24)
                 }
             val paymentCount = it.price
             viewModelStudent.getStudentItem(it.studentId)
@@ -118,7 +114,7 @@ class PaymentItemFragment: Fragment() {
                                 viewModelStudent.studentItem.observe(viewLifecycleOwner) {
                                     if(it.paymentBalance.toInt() > ( - payOff.toInt())) {
 
-                                        /* */
+
                                         //производит замену прайса с учетом списания долга в записи студента
                                         viewModelStudent.editPaymentBalance(it.id, (it.paymentBalance + payOff.toFloat()))
 
@@ -165,8 +161,27 @@ class PaymentItemFragment: Fragment() {
             // else -> launchEditMode()
         }
     }
+    private fun launchEditMode() {
+        viewModel.getPaymentItem(paymentItemId)
+        binding.saveButton.setOnClickListener{
+            viewModel.editPaymentItem(
+                binding.valueTitle.text.toString(),
+                "",//binding.etDescription.text.toString(),
+                "",//binding.etLessonId.text.toString(),
+                "",//binding.etStudentId.text.toString(),
+                binding.valueDatepayment.text.toString(),
+                binding.valueStudent.text.toString(),
+                binding.valuePricePayment.text.toString(),
+                true
+            )
 
+        }
+    }
 
+    private fun launchAddMode() {
+        TODO()
+    }
+/*
     private fun launchEditMode() {
         viewModel.getPaymentItem(paymentItemId)
         binding.saveButton.setOnClickListener{
@@ -180,15 +195,7 @@ class PaymentItemFragment: Fragment() {
                 binding.etPrice.text.toString(),
                 true
             )
-            //               inputTitle: String, +
-        //                    inputDescription: String, +
-            // inputLessonsId: String,
-        //                    inputStudentId: String,
-            //                inputDatePayment: String,
-        //                    inputStudent: String,
-            //              inputPrice: String,
-        //                    enabledPayment: Boolean
-            //                    //val item add parametrs StudentItems
+
         }
     }
 
@@ -206,6 +213,7 @@ class PaymentItemFragment: Fragment() {
             )
         }
     }
+    */
 
     private fun observeViewModel() {
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {

@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.lessonslist.presentation.payment.PaymentItemViewModel"
+            />
+    </data>
 <androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
     <RelativeLayout
         android:id="@+id/layout_info"
@@ -15,11 +24,11 @@
             android:id="@+id/idIVCourse"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginStart="@drawable/iconlogo"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="@drawable/ic_baseline_add_a_photo_24"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:src="@drawable/iconlogo" />
+            android:src="@drawable/ic_baseline_add_a_photo_24" />
 
         <!--text view for displaying course name-->
         <TextView
@@ -29,7 +38,7 @@
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@id/idIVCourse"
             android:layout_toRightOf="@id/idIVCourse"
-            android:text="@{viewModel.lessonsItem.title}"
+            android:text="Название урока:"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -40,7 +49,7 @@
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@id/idTVCourseTitle"
             android:layout_toRightOf="@id/idTVCourseTitle"
-            android:text="@{viewModel.lessonsItem.title}"
+            android:text="@{viewModel.paymentItem.title}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -62,7 +71,7 @@
             android:layout_below="@id/idTVCourseTitle"
             android:layout_alignRight ="@+id/idTVCourseTracksTitle"
             android:layout_marginTop="10dp"
-            android:text="Цена урока:"
+            android:text="@{viewModel.paymentItem.price}"
             android:textColor="@color/black"
             android:textSize="15sp" />
 
@@ -75,7 +84,7 @@
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@id/idIVCourse"
             android:layout_toRightOf="@id/idIVCourse"
-            android:text="Время начала урока : "
+            android:text="Время начала урока:"
             android:textColor="@color/black"
             android:textSize="15sp" />
         <TextView
@@ -84,8 +93,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/idTVCourseTitle"
             android:layout_alignRight ="@+id/idTVCourseDurationTitle"
-            android:layout_marginTop="10dp"
-            android:text="Цена урока:"
+            android:layout_marginTop="40dp"
+            android:text="@{viewModel.paymentItem.datePayment}"
             android:textColor="@color/black"
             android:textSize="15sp" />
         <!--text view for displaying course duration-->
@@ -97,7 +106,7 @@
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@id/idIVCourse"
             android:layout_toRightOf="@id/idIVCourse"
-            android:text="Время конца урока :"
+            android:text="Оплачен:"
             android:textColor="@color/black"
             android:textSize="15sp" />
         <TextView
@@ -107,7 +116,7 @@
             android:layout_below="@+id/idTVCourseDurationValue"
             android:layout_alignRight ="@+id/idTVCourseDurationTitle2"
             android:layout_marginTop="10dp"
-            android:text="Цена урока:"
+            android:text="да"
             android:textColor="@color/black"
             android:textSize="15sp" />
         <!--button for dismissing our dialog-->
@@ -117,7 +126,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/idIVCourse"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:text="без базара"
@@ -126,3 +135,4 @@
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
+</layout>
