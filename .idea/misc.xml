@@ -6,14 +6,26 @@
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable-v24/border_card.xml" value="0.214" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable-v24/border_card_disabled.xml" value="0.3675" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable-v24/ic_add.xml" value="0.251" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable-v24/ic_launcher_background.xml" value="0.217" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.252" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_add_a_photo_24.xml" value="0.217" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_attach_money_24.xml" value="0.214" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_calendar_today_24.xml" value="0.217" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_check_circle_24.xml" value="0.334" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.214" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_group_24.xml" value="0.217" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_indeterminate_check_box_24.xml" value="0.217" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_list_24.xml" value="0.217" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_menu_book_24.xml" value="0.217" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_payment_24.xml" value="0.251" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_people_24.xml" value="0.217" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_perm_media_24.xml" value="0.214" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_phone_forwarded_24.xml" value="0.217" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_save_24.xml" value="0.217" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_launcher_background.xml" value="0.251" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout-land/activity_main.xml" value="0.30687830687830686" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout-land/item_notes.xml" value="0.17504409171075838" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout-land/payment_card.xml" value="0.30687830687830686" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout-land/row_lessons_group_item.xml" value="0.31040564373897706" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout-land/row_notes_student_item.xml" value="0.17504409171075838" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/activity_backup.xml" value="0.35054347826086957" />
@@ -48,6 +60,7 @@
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/item_student_enabled.xml" value="0.36666666666666664" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/list_view_ex.xml" value="0.3582427536231884" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/nav_header.xml" value="0.10277777777777777" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/payment_card.xml" value="0.36096014492753625" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/row_contact_parent_item.xml" value="0.3582427536231884" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/row_group_student_item.xml" value="0.35688405797101447" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/row_payment_student_item.xml" value="0.22864583333333333" />

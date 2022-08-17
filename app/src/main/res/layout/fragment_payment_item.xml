@@ -14,196 +14,192 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.group.GroupItemFragment"
+        tools:context=".presentation.payment.PaymentItemFragment"
+        android:padding="16dp"
         >
-
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="4dp"
-            app:errorInputName="@{viewModel.errorInputTitle}"
-            app:layout_constraintBottom_toTopOf="@id/til_description"
-            app:layout_constraintEnd_toEndOf="parent"
+        <ImageView
+            android:id="@+id/payment_picture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/til_title"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed"
-            >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/payment_name"
-                android:inputType="textCapWords"
-                android:text="@{viewModel.paymentItem.title}" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_description"
-            android:layout_width="0dp"
+             />
+        <TextView
+            android:id="@+id/til_title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
-            app:errorInputName="@{viewModel.errorInputDescription}"
-            app:layout_constraintBottom_toTopOf="@id/til_student"
+            app:layout_constraintBottom_toTopOf="@id/til_studentfio"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/payment_picture"
+            android:text="Название урока"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:textSize="16sp"
+            />
+        <TextView
+            android:id="@+id/value_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintBottom_toTopOf="@id/til_studentfio"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/payment_picture"
+            android:text="@{viewModel.paymentItem.title}"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:id="@+id/til_studentfio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            android:text="ФИО студента:"
+            app:layout_constraintBottom_toTopOf="@id/til_datepayment"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/til_title"
             app:layout_constraintVertical_chainStyle="packed"
-            >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/payment_desc"
-                android:inputType="textCapWords"
-                android:text="@{viewModel.paymentItem.description}"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_student"
-            android:layout_width="0dp"
+            android:textSize="16sp"
+            />
+        <TextView
+            android:id="@+id/value_student"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
-            app:errorInputPaymentBalance="@{viewModel.errorInputStudent}"
-            app:layout_constraintBottom_toTopOf="@id/til_price"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintTop_toBottomOf="@id/til_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_description">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_student"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/payment_student"
-                android:inputType="textCapWords"
-                android:text="@{String.valueOf(viewModel.paymentItem.student)}" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_price"
-            android:layout_width="0dp"
+            app:layout_constraintBottom_toTopOf="@id/til_datepayment"
+            android:text="@{viewModel.paymentItem.student}"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:textSize="20sp"
+            />
+        <TextView
+            android:id="@+id/til_datepayment"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
-            app:errorInputPaymentBalance="@{viewModel.errorInputStudent}"
-            app:layout_constraintBottom_toTopOf="@id/til_student_id"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="4dp"
+            android:text="Дата платежа:"
+            app:layout_constraintBottom_toTopOf="@id/til_price_payment"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_student">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_price"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/payment_price"
-                android:inputType="textCapWords"
-                android:text="@{String.valueOf(viewModel.paymentItem.price)}" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_student_id"
-            android:layout_width="0dp"
+            app:layout_constraintTop_toBottomOf="@id/til_studentfio"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:textSize="16sp"
+            />
+        <TextView
+            android:id="@+id/value_datepayment"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
-            app:errorInputPaymentBalance="@{viewModel.errorInputStudent}"
-            app:layout_constraintBottom_toTopOf="@id/til_date_id"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintTop_toBottomOf="@id/til_studentfio"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_price">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_student_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/payment_student_id"
-                android:inputType="textCapWords"
-                android:text="@{String.valueOf(viewModel.paymentItem.studentId)}" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_date_id"
-            android:layout_width="0dp"
+            app:layout_constraintBottom_toTopOf="@id/til_price_payment"
+            android:text="@{viewModel.paymentItem.datePayment}"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:textSize="20sp"
+            />
+        <TextView
+            android:id="@+id/til_price_payment"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
-            app:errorInputPaymentBalance="@{viewModel.errorInputStudent}"
-            app:layout_constraintBottom_toTopOf="@id/til_lesson_id"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="4dp"
+            android:text="Сумма платежа:"
+            app:layout_constraintBottom_toTopOf="@id/til_status_payment"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_student_id">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_date_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="время"
-                android:inputType="textCapWords"
-                android:text="@{String.valueOf(viewModel.paymentItem.studentId)}" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_lesson_id"
-            android:layout_width="0dp"
+            app:layout_constraintTop_toBottomOf="@id/til_datepayment"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:textSize="16sp"
+            />
+        <TextView
+            android:id="@+id/value_price_payment"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
-            app:errorInputPaymentBalance="@{viewModel.errorInputStudent}"
-            app:layout_constraintBottom_toTopOf="@id/payment_off"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintTop_toBottomOf="@id/til_datepayment"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_date_id">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_lesson_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/payment_lessons_id"
-                android:inputType="textCapWords"
-                android:text="@{String.valueOf(viewModel.paymentItem.lessonsId)}" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Button
-            android:id="@+id/payment_off"
-            android:layout_width="0dp"
+            app:layout_constraintBottom_toTopOf="@id/til_status_payment"
+            android:text="@{String.valueOf(viewModel.paymentItem.price)}"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:textSize="20sp"
+            />
+        <TextView
+            android:id="@+id/til_status_payment"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/payment_payment_off"
-            app:layout_constraintBottom_toTopOf="@id/save_button"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            android:text="Статус платежа:"
+            app:layout_constraintBottom_toTopOf="@id/relative_button"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_lesson_id"
+            app:layout_constraintTop_toBottomOf="@id/til_price_payment"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:textSize="16sp"
+            />
+        <TextView
+            android:id="@+id/value_status_payment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintTop_toBottomOf="@id/til_price_payment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/relative_button"
+            android:text="пп"
+            android:textSize="20sp"
+            app:layout_constraintVertical_chainStyle="packed"
             />
 
-        <Button
-            android:id="@+id/save_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/save_btn"
+
+        <RelativeLayout
+            android:id="@+id/relative_button"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            />
+            app:layout_constraintTop_toBottomOf="@id/til_status_payment"
+            >
+            <Button
+                android:id="@+id/payment_off"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/payment_payment_off"
+
+                app:layout_constraintBottom_toTopOf="@id/save_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+            <Button
+                android:id="@+id/save_button"
+                android:layout_below="@+id/payment_off"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save_btn"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+        </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
