@@ -69,7 +69,6 @@ class StudentItemEditFragment : Fragment() {
 
 
     private lateinit var mImageView: ImageView
-    private lateinit var mButton: Button
 
     val myExecutor = Executors.newSingleThreadExecutor()
     val myHandler = Handler(Looper.getMainLooper())
@@ -312,9 +311,6 @@ class StudentItemEditFragment : Fragment() {
         TODO()
     }
     private fun actionGetGroup() {
-        TODO()
-    }
-    private fun actionAddContactparent() {
         TODO()
     }
 

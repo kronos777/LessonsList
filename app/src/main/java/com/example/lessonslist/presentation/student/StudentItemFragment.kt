@@ -103,7 +103,7 @@ class StudentItemFragment : Fragment() {
         val bottomNavigationView =
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
-        binding.etPaymentBalance.addTextChangedListener(PhoneTextFormatter(binding.etPaymentBalance, "### ### ### ### ### ### ### ###"))
+      //  binding.etPaymentBalance.addTextChangedListener(PhoneTextFormatter(binding.etPaymentBalance, "### ### ### ### ### ### ### ###"))
         binding.etTelephone.addTextChangedListener(PhoneTextFormatter(binding.etTelephone, "+7 (###) ###-####"))
 
      /*   binding.etTelephone.addTextChangedListener(object : TextWatcher {

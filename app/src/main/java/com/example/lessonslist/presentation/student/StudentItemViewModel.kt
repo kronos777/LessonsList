@@ -94,7 +94,7 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
     fun editPaymentBalance(studentId: Int, paymentBalance: Float) {
         viewModelScope.launch {
             editStudentItemPaymentBalanceUseCase.editStudentItemPaymentBalance(studentId, paymentBalance)
-            finishWork()
+            //finishWork()
         }
     }
 

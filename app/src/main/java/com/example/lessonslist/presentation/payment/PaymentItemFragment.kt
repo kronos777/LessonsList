@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentPaymentItemBinding
@@ -75,19 +76,20 @@ class PaymentItemFragment: Fragment() {
 
         viewModel = ViewModelProvider(this)[PaymentItemViewModel::class.java]
         binding.viewModel = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner/**/
+        binding.lifecycleOwner = viewLifecycleOwner
         launchRightMode()
         observeViewModel()
         val bottomNavigationView =
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem2).isChecked = true
 
-        viewModel.paymentItem.observe(viewLifecycleOwner) {
+
+         viewModel.paymentItem.observe(viewLifecycleOwner) {
 
             viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
 
                 if (it.enabled) {
-                   // binding.paymentOff.visibility = (View.GONE)
+                    binding.paymentOff.visibility = (View.GONE)
                     binding.valueStatusPayment.text = "Оплачен"
                     binding.paymentPicture.setBackgroundResource(R.drawable.ic_baseline_check_circle_24)
                 } else {
@@ -106,7 +108,6 @@ class PaymentItemFragment: Fragment() {
                         viewModelLessons = ViewModelProvider(this)[LessonsItemViewModel::class.java]
                         viewModel.paymentItem.observe(viewLifecycleOwner) {
                             if(!it.enabled) {
-
                                 val payOff = it.price
                                 val itemPaymentId = it.id
                                 val idLessons = it.lessonsId
@@ -122,8 +123,12 @@ class PaymentItemFragment: Fragment() {
                                         viewModelLessons.getLessonsItem(idLessons)
                                         viewModelLessons.lessonsItem.observe(viewLifecycleOwner) {
                                             viewModel.changeEnableState(it.price, itemPaymentId)
+                                            binding.valuePricePayment.text = it.price.toString() //заменит значение платежа
                                         }
 
+                                        binding.paymentOff.visibility = (View.GONE)
+                                        binding.valueStatusPayment.text = "Оплачен"
+                                        binding.paymentPicture.setBackgroundResource(R.drawable.ic_baseline_check_circle_24)
 
                                         Toast.makeText(getActivity(),"Баланс: " + it.paymentBalance + " Долг:  " + payOff,Toast.LENGTH_SHORT).show();
 
@@ -133,6 +138,7 @@ class PaymentItemFragment: Fragment() {
                                 }
 
                             }
+
                         }
                     }
 
@@ -149,9 +155,31 @@ class PaymentItemFragment: Fragment() {
 
     }
 
+/*
+    public void reLoadFragment(Fragment fragment)
+    {
+        Log.i(LogGeneratorHelper.INFO_TAG, "reloading fragment");
+        Fragment currentFragment = fragment;
+        if (currentFragment instanceof "FRAGMENT CLASS NAME") {
+            FragmentTransaction fragTransaction =   (getActivity()).getFragmentManager().beginTransaction();
+            fragTransaction.detach(currentFragment);
+            fragTransaction.attach(currentFragment);
+            fragTransaction.commit();
+            Log.i(LogGeneratorHelper.INFO_TAG, "reloading fragment finish");
+        }
+        else Log.i(LogGeneratorHelper.INFO_TAG, "fragment reloading failed");
+    }*/
 
-
-
+    private fun reLoafFragment(fragment: Fragment){
+        val currentFragment: Fragment = fragment
+        if(currentFragment is PaymentItemFragment) {
+            val fragTransaction = requireActivity().supportFragmentManager.beginTransaction()
+            fragTransaction.detach(currentFragment)
+            fragTransaction.attach(currentFragment)
+            fragTransaction.commit()
+        }
+        Toast.makeText(getActivity(),"Фрагмент перезагружен.",Toast.LENGTH_SHORT).show();
+    }
 
     private fun launchRightMode() {
         Log.d("screenMode", screenMode)
