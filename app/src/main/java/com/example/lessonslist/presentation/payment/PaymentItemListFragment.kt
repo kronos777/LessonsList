@@ -104,6 +104,18 @@ class PaymentItemListFragment: Fragment() {
                 }
                 paymentListAdapter.submitList(listArrayPayment)
             }
+        } else if (mode == "payment_enabled") {
+            val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
+            viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
+            viewModel.paymentList.observe(viewLifecycleOwner) {
+                for (payment in it) {
+                    var enabledPay = payment.enabled
+                    if(!enabledPay) {
+                        listArrayPayment.add(payment)
+                    }
+                }
+                paymentListAdapter.submitList(listArrayPayment)
+            }
         } else {
             viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
             viewModel.paymentList.observe(viewLifecycleOwner) {
@@ -191,6 +203,7 @@ class PaymentItemListFragment: Fragment() {
         private const val STUDENT_ID_LIST = "student_id_list"
         private const val LESSONS_ID_LIST = "lesson_id_list"
         private const val DATE_ID_LIST = "date_id_list"
+        private const val PAYMENT_ENABLED = "payment_enabled"
 
 
         private const val DATE_ID = "date_id"
@@ -227,6 +240,14 @@ class PaymentItemListFragment: Fragment() {
                 arguments = Bundle().apply {
                     putString(DATE_ID, dateId)
                     putString(SCREEN_MODE, DATE_ID_LIST)
+                }
+            }
+        }
+
+        fun newInstanceEnabledPayment(): PaymentItemListFragment {
+            return PaymentItemListFragment().apply {
+                arguments = Bundle().apply {
+                    putString(SCREEN_MODE, PAYMENT_ENABLED)
                 }
             }
         }

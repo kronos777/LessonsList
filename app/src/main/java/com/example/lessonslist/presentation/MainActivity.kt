@@ -11,20 +11,25 @@ import android.os.Looper
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.FrameLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.data.service.PaymentWork
 import com.example.lessonslist.databinding.ActivityMainBinding
+import com.example.lessonslist.domain.payment.PaymentItem
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
 import com.example.lessonslist.presentation.group.GroupItemFragment
@@ -35,10 +40,12 @@ import com.example.lessonslist.presentation.lessons.LessonsItemFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
+import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.settings.SettingsItemFragment
 import com.example.lessonslist.presentation.student.StudentItemEditFragment
 import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentItemListFragment
+import com.google.android.material.appbar.MaterialToolbar
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 
 
@@ -52,6 +59,12 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private lateinit var backup: RoomBackup
 
     private var doubleBackToExitPressedOnce = false
+
+    private var alertCount = 0
+    private var redCircle: FrameLayout? = null
+    private var countTextView: TextView? = null
+
+    private lateinit var viewModel: PaymentListViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,15 +123,15 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             }
         }*/
 
-        val drawerLayout: DrawerLayout? = binding.drawerLayoutId
-        //val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
-        drawerLayout?.addDrawerListener(toggle)
-        toggle.syncState()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
-
+        toggle = getActionBarDrawerToggle(binding.drawerLayoutId, binding.toolBar!!).apply {
+            setToolbarNavigationClickListener {
+                // Back to home fragment for any hit to the back button
+                //   navController.navigate(R.id.app_bar_top)
+            }
+            // Intialize the icon at the app start
+            enableHomeBackIcon(false)
+        }
 
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
@@ -135,6 +148,18 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             }
             true
         }
+
+       /* val drawerLayout: DrawerLayout? = binding.drawerLayoutId
+        //val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
+        drawerLayout?.addDrawerListener(toggle)
+        toggle.syncState()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+
+
+
+*/
 
 
 
@@ -196,6 +221,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         val accManager : AccountManager = AccountManager.get(getApplicationContext())
         val acc = accManager.getAccountsByType("com.google")
         Log.d("accountName", acc.size.toString())
+        /*get account*/
         /*  val accCount = acc.size
           Log.d("accountName", acc.get(0).name)
           for (i in 0 until accCount) {
@@ -256,12 +282,40 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             .restore()
         */
 
+        redCircle = findViewById(R.id.view_alert_red_circle)
+        countTextView = findViewById(R.id.view_alert_count_textview)
+
+        val materialToolbar: MaterialToolbar = binding.toolBar!!
+        val paymentBtnAppBarTop = findViewById<View>(R.id.payment)
+        paymentBtnAppBarTop.setOnClickListener {
+            if(alertCount > 0) {
+                launchFragment(PaymentItemListFragment.newInstanceEnabledPayment())
+            } else {
+                goPaymentFragment()
+            }
+        }
+
+        materialToolbar.setOnMenuItemClickListener {
+            // Toast.makeText(this, "Favorites Clsadsaicked"+it.itemId, Toast.LENGTH_SHORT).show()
+            when (it.itemId) {
+                R.id.backup -> {
+                    getDialogBackup()
+                    true
+                }
+                else -> false
+            }
+        }
 
 
+        getDeptPayment()
 
     }
 
-
+/*
+*                     Toast.makeText(this, "Search Clicked", Toast.LENGTH_SHORT).show()
+                    alertCount = (alertCount + 1) % 11; // cycle through 0 - 10
+                    updateAlertIcon()
+* */
     override fun onBackPressed() {
         //super.onBackPressed()
         supportFragmentManager.popBackStack("calendar", 0)
@@ -343,6 +397,27 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         val dialog = builder.create()
         dialog.show()
+    }
+
+    private fun getDeptPayment() {
+        val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
+        viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
+        viewModel.paymentList.observe(this) {
+            for (payment in it) {
+                if(payment.enabled == false){
+                    listArrayPayment.add(payment)
+                }
+            }
+            if(listArrayPayment.size > 0) {
+                //Toast.makeText(this, "Search Clicked", Toast.LENGTH_SHORT).show()
+                //alertCount = (alertCount + 1) % 11; // cycle through 0 - 10
+                alertCount = listArrayPayment.size
+                updateAlertIcon()
+            } else {
+                clearAlertIcon()
+            }
+            //Toast.makeText(this, listArrayPayment.toString(), Toast.LENGTH_SHORT).show()
+        }
     }
 
 
@@ -547,6 +622,50 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
          viewModel.changeEnableState(it)
      }
     }*/
+
+    fun enableHomeBackIcon(enabled: Boolean) {
+        // Enable/Disable opening the drawer from the start side
+        toggle?.isDrawerIndicatorEnabled = !enabled
+
+        // Change the default burger icon
+        supportActionBar?.setHomeAsUpIndicator(
+            if (enabled) R.drawable.ic_baseline_navigate_next_24
+            else R.drawable.ic_baseline_menu_24
+        )
+    }
+
+    private fun getActionBarDrawerToggle(
+        drawerLayout: DrawerLayout,
+        toolbar: Toolbar
+    ): ActionBarDrawerToggle {
+        toggle = ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            toolbar,
+            R.string.open,
+            R.string.close
+        )
+        drawerLayout.addDrawerListener(toggle!!)
+        toggle?.syncState()
+        return toggle as ActionBarDrawerToggle
+    }
+
+    private fun updateAlertIcon() {
+        // if alert count extends into two digits, just show the red circle
+        if (0 < alertCount && alertCount < 10) {
+            countTextView?.setText(java.lang.String.valueOf(alertCount))
+        } else {
+            countTextView?.setText("")
+        }
+        redCircle?.setVisibility(if (alertCount > 0) View.VISIBLE else View.GONE)
+    }
+
+    private fun clearAlertIcon() {
+        // if alert count extends into two digits, just show the red circle
+        alertCount = 0
+
+        redCircle?.setVisibility(View.GONE)
+    }
 
     companion object {
              const val BACK_STACK_ROOT_TAG = "root_fragment"

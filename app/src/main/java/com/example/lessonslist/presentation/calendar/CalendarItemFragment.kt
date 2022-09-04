@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
@@ -72,7 +73,7 @@ class CalendarItemFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as AppCompatActivity).supportActionBar?.title = "Календарь уроков"
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = "Календарь уроков"
 
         getDate()
 
@@ -80,6 +81,7 @@ class CalendarItemFragment() : Fragment() {
         val bottomNavigationView =
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem1).isChecked = true
+
 
     }
 
