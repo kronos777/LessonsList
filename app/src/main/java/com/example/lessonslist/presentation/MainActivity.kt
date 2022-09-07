@@ -67,220 +67,28 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private lateinit var viewModel: PaymentListViewModel
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         launchMainFragment(CalendarItemFragment(), "calendar")
-
-        if (intent.getStringExtra("extra") != null) {
-            Toast.makeText(this, "extra params" + intent.getStringExtra("extra"), Toast.LENGTH_SHORT).show()
-            val lessonIdForFragment = intent.getStringExtra("extra")
-            if (lessonIdForFragment != null) {
-                launchFragment(LessonsItemEditFragment.newInstanceEditItem(lessonIdForFragment.toInt()))
-            }
-        /*
-            * fragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment_item_container, LessonsItemEditFragment.newInstanceEditItem(intent.getStringExtra("extra")), "OtherFragment")
-                ?.addToBackStack(name)
-                ?.commit()
-                *
-                *
-                *
-                *      supportFragmentManager.beginTransaction()
-         .replace(R.id.fragment_item_container, fragment, "OtherFragment")
-         .addToBackStack(name)
-         //.addToBackStack("CalendarItemFragment")
-         .commit()
-            * */
-        }
-    /*    if (currentFragment == null) {
-            if (isOnePaneMode()) {
-                launchFragmentTemp(CalendarItemFragment())
-            } else {
-                launchFragment(CalendarItemFragment())
-            }
-        }*/
+        parseParamsExtra()
 
         backup = RoomBackup(this)
 
-        /* setupRecyclerView()
+        initDrawerNavigation()
+        initBottomNavigation()
+        initWorkManager()
+        initMaterialToolBar()
+        getDeptPayment()
 
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel.studentList.observe(this) {
-            shopListAdapter.submitList(it)
-        }
-        binding.buttonAddShopItem.setOnClickListener {
-            if (isOnePaneMode()) {
-                val intent = StudentItemActivity.newIntentAddItem(this)
-                startActivity(intent)
-            } else {
-                launchFragment(StudentItemFragment.newInstanceAddItem())
-            }
-        }*/
+    }
 
 
-        toggle = getActionBarDrawerToggle(binding.drawerLayoutId, binding.toolBar!!).apply {
-            setToolbarNavigationClickListener {
-                // Back to home fragment for any hit to the back button
-                //   navController.navigate(R.id.app_bar_top)
-            }
-            // Intialize the icon at the app start
-            enableHomeBackIcon(false)
-        }
-
-        binding.navView.setNavigationItemSelectedListener {
-            when (it.itemId) {
-                //    R.id.muItem1 -> goGroupFragment()
-                //      R.id.muItem2 -> launchFragment(SettingsItemFragment())
-                R.id.muItem2 -> getDialogBackup()
-                R.id.muItem3 -> launchFragment(CalendarItemFragment())
-                R.id.muItem4 -> goPaymentFragment()
-                R.id.muItem5 -> goGroupListFragment()
-                R.id.muItem6 -> goLessonsListFragment()
-                R.id.muItem7 -> goStudentListFragment()
-                R.id.muItem8 -> goTestAddLessons()
-
-            }
-            true
-        }
-
-       /* val drawerLayout: DrawerLayout? = binding.drawerLayoutId
-        //val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
-        drawerLayout?.addDrawerListener(toggle)
-        toggle.syncState()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-
-
-
-*/
-
-
-
-
-        binding.navViewBottom?.setOnNavigationItemSelectedListener {
-            when(it.itemId) {
-                R.id.bottomItem1 -> {
-                    // Respond to navigation item 1 click
-                    launchMainFragment(CalendarItemFragment(), "calendar")
-                    true
-                }
-                R.id.bottomItem2 -> {
-                    // Respond to navigation item 2 click
-                  //  Log.d("menuitem", "ite2")
-                    //Toast.makeText(this, "item2", Toast.LENGTH_SHORT).show()
-                    goPaymentFragment()
-                    true
-                }
-                R.id.bottomItem3 -> {
-                    // Respond to navigation item 2 click
-                    goGroupListFragment()
-                    true
-                }
-                R.id.bottomItem4 -> {
-                    // Respond to navigation item 2 click
-                    goLessonsListFragment()
-                    true
-                }
-                R.id.bottomItem5 -> {
-                    // Respond to navigation item 2 click
-                    goStudentListFragment()
-                    true
-                }
-                else -> false
-            }
-            true
-        }
-        /*foreggroundservice */
-/* ContextCompat.startForegroundService(
-     this,
-     MyForegroundService.newIntent(this)
- )*/
- /*foreggroundseice */
- /*work manager */
-        //        PeriodicWorkRequest myWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class, 30, TimeUnit.MINUTES, 25, TimeUnit.MINUTES).build();
-
-        //val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES).build()
-        val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
-        WorkManager.getInstance(this).enqueue(request)
-        WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
-            .observe(this, Observer {
-
-                val status: String = it.state.name
-             //   Toast.makeText(this,status, Toast.LENGTH_SHORT).show()
-            })
-           /**/
- /*work manager */
-        /*get account*/
-        val accManager : AccountManager = AccountManager.get(getApplicationContext())
-        val acc = accManager.getAccountsByType("com.google")
-        Log.d("accountName", acc.size.toString())
-        /*get account*/
-        /*  val accCount = acc.size
-          Log.d("accountName", acc.get(0).name)
-          for (i in 0 until accCount) {
-              //Do your task here...
-              //Toast.makeText(applicationContext, acc[i].name, Toast.LENGTH_SHORT).show()
-              Log.d("accountName", acc[i].name)
-          }*/
-        /*get account*/
-        //RoomBackup.BACKUP_FILE_LOCATION_INTERNAL
-
-
-
-   //     val database: String = AppDatabase.DB_NAME
-     //   val path = applicationContext.filesDir.absolutePath
-     //  Toast.makeText(this, "database path!" + RoomBackup.BACKUP_FILE_LOCATION_INTERNAL, Toast.LENGTH_SHORT).show();
-     //   Toast.makeText(this, "path name!" + path.toString(), Toast.LENGTH_SHORT).show();
-
-
-
-/*
-
-  val backup = RoomBackup(this)
-        backup
-            .database(AppDatabase.getInstance(applicationContext as Application))
-            .enableLogDebug(true)
-            .backupIsEncrypted(true)
-            .customEncryptPassword("YOUR_SECRET_PASSWORD")
-            .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_CUSTOM_DIALOG)
-            //.backupLocation(RoomBackup.BACKUP_FILE_LOCATION_INTERNAL)
-            .maxFileCount(5)
-            .apply {
-                onCompleteListener { success, message, exitCode ->
-                    //Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
-                //    Toast.makeText(this, "vse ok!", Toast.LENGTH_SHORT).show();
-
-                    //  if (success) restartApp(Intent(this@MainActivity, MainActivity::class.java))
-                }
-            }
-            .backup()
-*/
-
-        /*
-  Восстановить
-        val backup = RoomBackup(this)
-
-        backup
-            .database(AppDatabase.getInstance(applicationContext as Application))
-            .enableLogDebug(true)
-            .backupIsEncrypted(true)
-            .customEncryptPassword("YOUR_SECRET_PASSWORD")
-            .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_INTERNAL)
-            .apply {
-                onCompleteListener { success, message, exitCode ->
-                    Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
-                    if (success) restartApp(Intent(this@MainActivity, MainActivity::class.java))
-                }
-            }
-            .restore()
-        */
+    private fun initMaterialToolBar() {
 
         redCircle = findViewById(R.id.view_alert_red_circle)
         countTextView = findViewById(R.id.view_alert_count_textview)
@@ -306,8 +114,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             }
         }
 
-
-        getDeptPayment()
 
     }
 
@@ -397,6 +203,17 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         val dialog = builder.create()
         dialog.show()
+    }
+
+
+    private fun parseParamsExtra() {
+        if (intent.getStringExtra("extra") != null) {
+            Toast.makeText(this, "extra params" + intent.getStringExtra("extra"), Toast.LENGTH_SHORT).show()
+            val lessonIdForFragment = intent.getStringExtra("extra")
+            if (lessonIdForFragment != null) {
+                launchFragment(LessonsItemEditFragment.newInstanceEditItem(lessonIdForFragment.toInt()))
+            }
+        }
     }
 
     private fun getDeptPayment() {
@@ -516,6 +333,92 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
      }
     }
 
+    private fun initDrawerNavigation() {
+
+        toggle = getActionBarDrawerToggle(binding.drawerLayoutId, binding.toolBar!!).apply {
+            setToolbarNavigationClickListener {
+                // Back to home fragment for any hit to the back button
+                //   navController.navigate(R.id.app_bar_top)
+            }
+            // Intialize the icon at the app start
+            enableHomeBackIcon(false)
+        }
+
+        binding.navView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                //    R.id.muItem1 -> goGroupFragment()
+                //      R.id.muItem2 -> launchFragment(SettingsItemFragment())
+                R.id.muItem2 -> getDialogBackup()
+                R.id.muItem3 -> launchFragment(CalendarItemFragment())
+                R.id.muItem4 -> goPaymentFragment()
+                R.id.muItem5 -> goGroupListFragment()
+                R.id.muItem6 -> goLessonsListFragment()
+                R.id.muItem7 -> goStudentListFragment()
+                R.id.muItem8 -> goTestAddLessons()
+
+            }
+            true
+        }
+
+    }
+
+
+    private fun initBottomNavigation() {
+        binding.navViewBottom?.setOnNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.bottomItem1 -> {
+                    // Respond to navigation item 1 click
+                    launchMainFragment(CalendarItemFragment(), "calendar")
+                    true
+                }
+                R.id.bottomItem2 -> {
+                    // Respond to navigation item 2 click
+                    //  Log.d("menuitem", "ite2")
+                    //Toast.makeText(this, "item2", Toast.LENGTH_SHORT).show()
+                    goPaymentFragment()
+                    true
+                }
+                R.id.bottomItem3 -> {
+                    // Respond to navigation item 2 click
+                    goGroupListFragment()
+                    true
+                }
+                R.id.bottomItem4 -> {
+                    // Respond to navigation item 2 click
+                    goLessonsListFragment()
+                    true
+                }
+                R.id.bottomItem5 -> {
+                    // Respond to navigation item 2 click
+                    goStudentListFragment()
+                    true
+                }
+                else -> false
+            }
+            true
+        }
+    }
+
+    private fun initWorkManager() {
+        /*work manager */
+        //PeriodicWorkRequest myWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class, 30, TimeUnit.MINUTES, 25, TimeUnit.MINUTES).build();
+        //val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES).build()
+        val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
+        WorkManager.getInstance(this).enqueue(request)
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
+            .observe(this, Observer {
+                val status: String = it.state.name
+                //   Toast.makeText(this,status, Toast.LENGTH_SHORT).show()
+            })
+        /**/
+        /*work manager */
+    }
+
+    private fun testGetAccount() {
+        val accManager : AccountManager = AccountManager.get(getApplicationContext())
+        val acc = accManager.getAccountsByType("com.google")
+        Log.d("accountName", acc.size.toString())
+    }
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
