@@ -343,8 +343,6 @@ class StudentItemEditFragment : Fragment() {
         alert.setPositiveButton("Добавить") { _, _ ->
             val name = mobileNoET.text.toString()
             val number = amountET.text.toString()
-
-
             Toast.makeText(activity, "Saved Sucessfully", Toast.LENGTH_LONG).show()
             viewModelParentContact.addParentContact(name, number, studentItemId)
         }

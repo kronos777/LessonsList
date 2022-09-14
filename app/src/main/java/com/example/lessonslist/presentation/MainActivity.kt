@@ -34,6 +34,8 @@ import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupItemListFragment
+import com.example.lessonslist.presentation.info.AboutFragment
+import com.example.lessonslist.presentation.info.InstructionFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemAddFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemEditFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemFragment
@@ -348,13 +350,13 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             when (it.itemId) {
                 //    R.id.muItem1 -> goGroupFragment()
                 //      R.id.muItem2 -> launchFragment(SettingsItemFragment())
-                R.id.muItem2 -> getDialogBackup()
-                R.id.muItem3 -> launchFragment(CalendarItemFragment())
-                R.id.muItem4 -> goPaymentFragment()
-                R.id.muItem5 -> goGroupListFragment()
+             //   R.id.muItem2 -> getDialogBackup()
+                R.id.muItem3 -> launchFragment(InstructionFragment())
+                R.id.muItem4 -> launchFragment(AboutFragment())
+               /* R.id.muItem5 -> goGroupListFragment()
                 R.id.muItem6 -> goLessonsListFragment()
                 R.id.muItem7 -> goStudentListFragment()
-                R.id.muItem8 -> goTestAddLessons()
+                R.id.muItem8 -> goTestAddLessons()*/
 
             }
             true

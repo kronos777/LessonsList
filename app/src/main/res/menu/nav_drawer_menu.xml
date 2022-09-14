@@ -2,26 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/muItem3"
-        android:title="Календарь" />
-    <!--item
-        android:id="@+id/muItem8"
-        android:title="Календарь платежей" /-->
+        android:title="Инструкция" />
     <item
         android:id="@+id/muItem4"
-        android:title="Платежи" />
-    <item
-        android:id="@+id/muItem5"
-        android:title="Группы" />
-    <item
-        android:id="@+id/muItem6"
-        android:title="Уроки" />
-    <item
-        android:id="@+id/muItem7"
-        android:title="Ученики" />
-    <item
-        android:id="@+id/muItem2"
-        android:title="Резервное копирование." />
-    <item
-        android:id="@+id/muItem8"
-        android:title="тестовое добавление уроков." />
+        android:title="О приложение" />
+
 </menu>
