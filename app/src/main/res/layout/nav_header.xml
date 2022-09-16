@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="400dp"
+    android:layout_height="600dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white">
 
@@ -9,7 +9,7 @@
         android:id="@+id/nav_head_avatar"
         android:layout_width="100dp"
         android:layout_height="80dp"
-        android:paddingTop="20dp"
+        android:layout_marginTop="50dp"
         android:layout_marginLeft="-10dp"
         android:src="@drawable/iconlogo"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,7 +23,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:textSize="16dp"
+        android:textSize="26dp"
+        android:textFontWeight="600"
         android:text="@string/app_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintTop_toBottomOf="@id/nav_head_avatar"
@@ -37,22 +38,115 @@
         android:layout_height="wrap_content"
         android:text="nav_head_username"
         android:textSize="20dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@id/nav_head_appname"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/nav_log_in_out"/>
+        app:layout_constraintBottom_toTopOf="@id/nav_title_count_lessons"/>
 
-    <Button
-        android:id="@+id/nav_log_in_out"
+    <TextView
+        android:layout_marginTop="25dp"
+        android:id="@+id/nav_title_count_lessons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Количество всех уроков:"
+        android:textSize="16dp"
         app:layout_constraintTop_toBottomOf="@id/nav_head_username"
         app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="15dp"
+        app:layout_constraintBottom_toTopOf="@id/nav_scheduled_count_lessons"/>
+    <TextView
+        android:id="@+id/nav_scheduled_count_lessons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Запланированных"
+        android:textSize="16dp"
+        app:layout_constraintTop_toBottomOf="@id/nav_title_count_lessons"
+        android:layout_marginRight="15dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:background="@color/black"
-        android:text="login"
-        style="?android:attr/borderlessButtonStyle"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:clickable="true"
+       />
+    <TextView
+        android:id="@+id/nav_conducted_count_lessons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Проведенных"
+        android:textSize="16dp"
+        app:layout_constraintTop_toBottomOf="@id/nav_scheduled_count_lessons"
+        android:layout_marginRight="15dp"
+        app:layout_constraintRight_toRightOf="parent"
+       />
+    <TextView
+        android:layout_marginTop="25dp"
+        android:id="@+id/nav_title_list_all_pay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Список всех оплат:"
+        android:textSize="16dp"
+        app:layout_constraintTop_toBottomOf="@id/nav_conducted_count_lessons"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="15dp"
         />
+    <TextView
+        android:id="@+id/nav_no_paymenet_count_pay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Неоплаченных"
+        android:textSize="16dp"
+        app:layout_constraintTop_toBottomOf="@id/nav_title_list_all_pay"
+       android:layout_marginRight="15dp"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+    <TextView
+        android:id="@+id/nav_yes_paymenet_count_pay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Оплаченных"
+        android:textSize="16dp"
+        app:layout_constraintTop_toBottomOf="@id/nav_no_paymenet_count_pay"
+        android:layout_marginRight="15dp"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+    <TextView
+        android:id="@+id/nav_title_count_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Количество групп"
+        android:textSize="16dp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintTop_toBottomOf="@id/nav_yes_paymenet_count_pay"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="15dp"
+        />
+    <TextView
+        android:id="@+id/nav_value_count_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="значение групп"
+        android:textSize="16dp"
+        app:layout_constraintTop_toBottomOf="@id/nav_title_count_group"
+        android:layout_marginRight="15dp"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+    <TextView
+        android:layout_marginTop="25dp"
+        android:id="@+id/nav_title_count_student"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Количество учеников"
+        android:textSize="16dp"
+        app:layout_constraintTop_toBottomOf="@id/nav_value_count_group"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="15dp"
+        />
+    <TextView
+        android:id="@+id/nav_value_count_student"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="значение учеников"
+        android:textSize="16dp"
+        app:layout_constraintTop_toBottomOf="@id/nav_title_count_student"
+        android:layout_marginRight="15dp"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

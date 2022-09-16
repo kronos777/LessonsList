@@ -34,21 +34,26 @@ import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupItemListFragment
+import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.info.AboutFragment
 import com.example.lessonslist.presentation.info.InstructionFragment
-import com.example.lessonslist.presentation.lessons.LessonsItemAddFragment
-import com.example.lessonslist.presentation.lessons.LessonsItemEditFragment
-import com.example.lessonslist.presentation.lessons.LessonsItemFragment
-import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
+import com.example.lessonslist.presentation.lessons.*
 import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
+import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.settings.SettingsItemFragment
 import com.example.lessonslist.presentation.student.StudentItemEditFragment
 import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentItemListFragment
+import com.example.lessonslist.presentation.student.StudentItemViewModel
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.navigation.NavigationView
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
+import org.w3c.dom.Text
+import ru.cleverpumpkin.calendar.CalendarDate
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, CalendarPaymentItemFragment.OnEditingFinishedListener, SettingsItemFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener, LessonsItemAddFragment.OnEditingFinishedListener, LessonsItemEditFragment.OnEditingFinishedListener {
@@ -66,7 +71,10 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private var redCircle: FrameLayout? = null
     private var countTextView: TextView? = null
 
-    private lateinit var viewModel: PaymentListViewModel
+    private lateinit var viewModelPayment: PaymentListViewModel
+    private lateinit var viewModelLessons: LessonsListViewModel
+    private lateinit var viewModelGroup: GroupListViewModel
+    private lateinit var viewModelStudent: MainViewModel
 
 
 
@@ -86,6 +94,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         initWorkManager()
         initMaterialToolBar()
         getDeptPayment()
+
+        initNavHeader()
 
     }
 
@@ -220,8 +230,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     private fun getDeptPayment() {
         val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
-        viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
-        viewModel.paymentList.observe(this) {
+        viewModelPayment = ViewModelProvider(this).get(PaymentListViewModel::class.java)
+        viewModelPayment.paymentList.observe(this) {
             for (payment in it) {
                 if(payment.enabled == false){
                     listArrayPayment.add(payment)
@@ -468,6 +478,116 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
          .commit()
     }
 
+    fun initNavHeader() {
+
+        val navigationView : NavigationView = binding.navView
+        val headerView : View = navigationView.getHeaderView(0)
+        val navSheduledCount : TextView = headerView.findViewById(R.id.nav_scheduled_count_lessons)
+        val navConductedCount : TextView = headerView.findViewById(R.id.nav_conducted_count_lessons)
+        val navStudentCount : TextView = headerView.findViewById(R.id.nav_value_count_student)
+        val navPaidLessons : TextView = headerView.findViewById(R.id.nav_yes_paymenet_count_pay)
+        val navNoPaidLessons : TextView = headerView.findViewById(R.id.nav_no_paymenet_count_pay)
+        val navGroupCount : TextView = headerView.findViewById(R.id.nav_value_count_group)
+
+        val calendar = Calendar.getInstance()
+        val calendarTimeZone: Calendar = Calendar.getInstance(TimeZone.getDefault())
+        val currentYear = calendarTimeZone[Calendar.YEAR]
+        val currentMonth = calendarTimeZone[Calendar.MONTH]
+        val currentDay = calendarTimeZone[Calendar.DAY_OF_MONTH]
+        val currentHour = calendarTimeZone[Calendar.HOUR_OF_DAY]
+        val currentMinute = calendarTimeZone[Calendar.MINUTE]
+
+        calendar.set(currentYear, currentMonth, currentDay, currentHour, currentMinute)
+        val initialDate = calendar.time
+
+        viewModelLessons = ViewModelProvider(this)[LessonsListViewModel::class.java]
+        viewModelStudent = ViewModelProvider(this)[MainViewModel::class.java]
+        viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
+        viewModelGroup = ViewModelProvider(this)[GroupListViewModel::class.java]
+
+      //  val countLessonsP = findViewById<TextView>(R.id.nav_conducted_count_lessons)
+        //val countLessonsZ = findViewById<TextView>(R.id.nav_scheduled_count_lessons)
+        //Toast.makeText(this, initialDate.toString(), Toast.LENGTH_SHORT).show()
+        //Log.d("datelessons", initialDate.toString())
+        //Log.d("currentMonth", currentMonth.toString())
+        //val dataTime = parseStringDate("2022/9/15 20 : 50")
+        //Log.d("datelessons", dataTime[4].toString())
+        //countLessonsZ.setText("asgadfgdafgfadg")
+        viewModelLessons.lessonsList.observe(this) {
+            var provedLessons = 0
+            var zaplanLessons = 0
+            for (index in it.indices) {
+                val dateTimeLessons = parseStringDate(it[index].dateEnd)
+             //   Log.d("datelessons", it[index].dateEnd)
+
+                calendar.set(dateTimeLessons[0], dateTimeLessons[1]  - 1, dateTimeLessons[2], dateTimeLessons[3], dateTimeLessons[4])
+                val lessonsDate = calendar.time
+
+                if(initialDate > lessonsDate) {
+                    provedLessons++
+                    Log.d("datelessons", lessonsDate.toString())
+                } else {
+                    zaplanLessons++
+                    Log.d("datelessons1", lessonsDate.toString())
+                }
+
+            }
+            //Toast.makeText(this, it.count().toString(), Toast.LENGTH_SHORT).show()
+            navSheduledCount.text = "Запланировано: " + zaplanLessons.toString()
+            navConductedCount.text = "Проведено: " + provedLessons.toString()
+
+        }
+        viewModelStudent.studentList.observe(this) {
+            //Toast.makeText(this, it.size.toString(), Toast.LENGTH_SHORT).show()
+            navStudentCount.text = it.size.toString()
+        }
+
+        viewModelPayment.paymentList.observe(this) {
+            var paidLessons = 0
+            var noPaidLessons = 0
+
+            for (index in it.indices) {
+                if(it[index].enabled) {
+                    paidLessons++
+                } else {
+                    noPaidLessons++
+                }
+
+            }
+
+            navPaidLessons.text = "Оплаченных: " + paidLessons
+            navNoPaidLessons.text = "Неоплаченные: " + noPaidLessons
+
+        }
+
+        viewModelGroup.groupList.observe(this) {
+            navGroupCount.text = it.size.toString()
+        }
+
+    //countLessons.setText(initialDate.toString())
+    }
+
+   fun parseStringDate(string: String): ArrayList<Int> {
+       val valueReturn: ArrayList<Int> = ArrayList()
+       val allData = string.split(" ")
+       val dataDate = allData[0].split("/")
+       val year = dataDate[0]
+       val month = dataDate[1]
+       val day = dataDate[2]
+
+     //  var dataTimeMinute = allData[1].split(":")
+
+       val hour = allData[1]
+       val minute = allData[3]
+
+       valueReturn.add(year.toInt())
+       valueReturn.add(month.toInt())
+       valueReturn.add(day.toInt())
+       valueReturn.add(hour.toInt())
+       valueReturn.add(minute.toInt())
+
+       return valueReturn
+   }
 /*
     private fun setupRecyclerView() {
      with(binding.rvShopList) {
