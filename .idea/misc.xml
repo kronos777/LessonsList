@@ -71,15 +71,27 @@
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/menu/nav_drawer_menu.xml" value="0.10277777777777777" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/menu/nav_student_menu.xml" value="0.24635416666666668" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/menu/student_menu_fragment.xml" value="0.2453125" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/drawable/bottomsheetbackground.xml" value="0.2755" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/drawable/ic_baseline_account_balance_wallet_24.xml" value="0.2755" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/drawable/ic_baseline_add_a_photo_24.xml" value="0.2755" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/drawable/ic_baseline_money_off_24.xml" value="0.2755" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/drawable/ic_baseline_notes_24.xml" value="0.2755" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/drawable/ic_baseline_payments_24.xml" value="0.2755" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/drawable/ic_baseline_save_24.xml" value="0.2755" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout-land/activity_main.xml" value="0.31040564373897706" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout-land/row_lessons_group_item.xml" value="0.31040564373897706" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/activity_main.xml" value="0.358695652173913" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/bottom_sheet_layout.xml" value="0.36666666666666664" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/button_in_bsheet.xml" value="0.36666666666666664" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_calendar_payment.xml" value="0.358695652173913" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_group_item.xml" value="0.358695652173913" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_lessons_item.xml" value="0.21603260869565216" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_lessons_item_list.xml" value="0.3619791666666667" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_payment_item.xml" value="0.18854166666666666" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_payment_item_list.xml" value="0.358695652173913" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_student_item.xml" value="0.21603260869565216" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_student_item_edit.xml" value="0.36666666666666664" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/fragment_student_item_list.xml" value="0.18802083333333333" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/item_group_enabled.xml" value="0.21603260869565216" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/item_lessons_enabled.xml" value="0.358695652173913" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/item_payment_enabled.xml" value="0.358695652173913" />
@@ -89,6 +101,7 @@
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/row_group_student_item.xml" value="0.21603260869565216" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/row_payment_student_item.xml" value="0.18802083333333333" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/menu/nav_drawer_menu.xml" value="0.18854166666666666" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/menu/nav_student_menu.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>

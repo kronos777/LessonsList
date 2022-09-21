@@ -568,6 +568,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
    fun parseStringDate(string: String): ArrayList<Int> {
+
        val valueReturn: ArrayList<Int> = ArrayList()
        val allData = string.split(" ")
        val dataDate = allData[0].split("/")
@@ -575,8 +576,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
        val month = dataDate[1]
        val day = dataDate[2]
 
-     //  var dataTimeMinute = allData[1].split(":")
-
+      // var dataTimeMinute = allData[1].split(":")
        val hour = allData[1]
        val minute = allData[3]
 
@@ -587,6 +587,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
        valueReturn.add(minute.toInt())
 
        return valueReturn
+
    }
 /*
     private fun setupRecyclerView() {

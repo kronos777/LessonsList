@@ -36,7 +36,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
             app:errorInputName="@{viewModel.errorInputName}"
-            app:layout_constraintBottom_toTopOf="@id/til_lastname"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/imageView"
@@ -62,7 +62,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
             app:errorInputName="@{viewModel.errorInputLastName}"
-            app:layout_constraintBottom_toTopOf="@id/textViewPaymentBalance"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/til_name"
@@ -90,7 +90,6 @@
             android:layout_weight="1"
             android:textSize="18dp"
             android:textAlignment="center"
-            app:layout_constraintBottom_toTopOf="@id/textViewPaymentBalance"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/til_lastname"
@@ -108,12 +107,266 @@
                 android:layout_weight="1"
                 android:textSize="32dp"
                 android:textAlignment="center"
-                app:layout_constraintBottom_toTopOf="@id/listView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewTelephone"
                 android:text="@{String.valueOf(viewModel.studentItem.paymentBalance)}" />
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_add_notes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/card_add_balance"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="0dp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="66dp">
+
+                <ImageView
+                    android:id="@+id/imageViewAddNotes"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/ic_baseline_notes_24" />
+
+                <TextView
+                    android:id="@+id/banks_notes_h1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="left"
+                    android:layout_toRightOf="@id/imageViewAddNotes"
+                    android:layout_weight="1"
+                    android:lineHeight="24dp"
+                    android:text="Заметки о стеденте"
+                    android:textColor="@color/black"
+                    android:textFontWeight="500"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_baseline_chevron_right_24" />
+
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_add_balance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/card_payment_student"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="0dp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="66dp">
+
+                <ImageView
+                    android:id="@+id/imageViewBanksCard"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/ic_baseline_account_balance_wallet_24" />
+
+                <TextView
+                    android:id="@+id/banks_card_h1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="left"
+                    android:layout_toRightOf="@id/imageViewBanksCard"
+                    android:layout_weight="1"
+                    android:lineHeight="24dp"
+                    android:text="Пополнить баланс"
+                    android:textColor="@color/black"
+                    android:textFontWeight="500"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_baseline_chevron_right_24" />
+
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_payment_student"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/card_payment_off"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="0dp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="66dp">
+
+                <ImageView
+                    android:id="@+id/imageViewSafetyCard"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/ic_baseline_payments_24" />
+
+                <TextView
+                    android:id="@+id/safety_card_h1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="left"
+                    android:layout_toRightOf="@id/imageViewSafetyCard"
+                    android:layout_weight="1"
+                    android:lineHeight="24dp"
+                    android:text="Платежи студента"
+                    android:textColor="@color/black"
+                    android:textFontWeight="500"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_baseline_chevron_right_24" />
+
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_payment_off"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/card_save_data"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="0dp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="66dp">
+
+                <ImageView
+                    android:id="@+id/imageViewPaymentoff"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/ic_baseline_money_off_24" />
+
+                <TextView
+                    android:id="@+id/payment_off_h1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="left"
+                    android:layout_toRightOf="@id/imageViewPaymentoff"
+                    android:layout_weight="1"
+                    android:lineHeight="24dp"
+                    android:text="Списать долг"
+                    android:textColor="@color/black"
+                    android:textFontWeight="500"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_baseline_chevron_right_24" />
+
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_save_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="0dp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="66dp">
+
+                <ImageView
+                    android:id="@+id/imageViewSettingsCard"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/ic_baseline_save_24" />
+
+                <TextView
+                    android:id="@+id/banks_settings_h1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="left"
+                    android:layout_toRightOf="@id/imageViewSettingsCard"
+                    android:layout_weight="1"
+                    android:lineHeight="24dp"
+                    android:text="Сохранить"
+                    android:textColor="@color/black"
+                    android:textFontWeight="500"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_baseline_chevron_right_24" />
+
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
         <!--com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_notes"
             android:layout_width="0dp"
@@ -164,45 +417,6 @@
                 />
         </com.google.android.material.textfield.TextInputLayout-->
 
-        <ListView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toTopOf="@id/listViewNotes"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewPaymentBalance"
-            />
-        <ListView
-            android:id="@+id/listViewNotes"
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toTopOf="@id/listViewParentContact"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/listView"
-            />
-        <ListView
-            android:id="@+id/listViewParentContact"
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toTopOf="@id/save_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/listViewNotes"
-            />
         <!--Button
             android:id="@+id/add_image_student"
             android:layout_width="0dp"
@@ -233,7 +447,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/payment_student_add"
             /-->
-
+<!--
         <Button
             android:id="@+id/save_button"
             android:layout_width="0dp"
@@ -242,7 +456,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-             />
+             />-->
 
 
         <!-- <com.google.android.material.bottomnavigation.BottomNavigationView

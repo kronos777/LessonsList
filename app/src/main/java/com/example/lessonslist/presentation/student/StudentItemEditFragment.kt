@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentStudentItemEditBinding
 import com.example.lessonslist.domain.student.StudentItem
+import com.example.lessonslist.presentation.helpers.BottomFragment
 import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
@@ -112,81 +113,14 @@ class StudentItemEditFragment : Fragment() {
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
         //viewModel.studentItem.
-        dataPaymentStudentModel = ArrayList<DataPaymentStudentModel>()
-        listView = binding.listView
-        val args = requireArguments()
-        val mode = args.getString(SCREEN_MODE)
-            viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
-            viewModelPayment.paymentList.observe(viewLifecycleOwner) {
-                if(it.size > 0) {
-                    for (payment in it) {
-                        if(payment.studentId == studentItemId) {
-                            //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
-                            if (payment.enabled == true) {
-                                dataPaymentStudentModel!!.add(DataPaymentStudentModel("Оплачен: " + payment.title, payment.price.toString()))
-                            } else {
-                                dataPaymentStudentModel!!.add(DataPaymentStudentModel("Долг: " + payment.title, "-" + payment.price.toString()))
-                            }
 
-                            Log.d("nowmodeadd", "aaa" + payment.title + " " + payment.price)
-                        }
-                    }
-                }
-/*                adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
-
-                listView.adapter = adapter*/
-                val adapter =  ListPaymentAdapter(dataPaymentStudentModel!!, requireContext().applicationContext)
-                listView.adapter = adapter
-
-            }
 
 /*           binding.paymentStudent.setOnClickListener {
                 launchFragment(PaymentItemListFragment.newInstanceStudentId(studentItemId))
             }
  */
 
-        listViewNotes = binding.listViewNotes
-        dataNotesStudentModel = ArrayList<DataNotesStudentModel>()
-        viewModelNotesItem = ViewModelProvider(this)[NotesItemViewModel::class.java]
-        viewModelNotesItem.notesList.getNotesList().observe(viewLifecycleOwner) {
 
-            for (item in it) {
-                if(item.student == studentItemId) {
-                    dataNotesStudentModel!!.add(DataNotesStudentModel(item.text, item.date))
-                    Log.d("notes current student", item.text + item.date)
-                 //   Toast.makeText(activity, "notes current student" + item.text + item.date, Toast.LENGTH_LONG).show()
-                }
-            }
-
-            val adapterNotes = ListNotesAdapter(dataNotesStudentModel!!, requireContext().applicationContext)
-
-            listViewNotes.adapter = adapterNotes
-
-        }
-
-        listViewParentContact = binding.listViewParentContact
-        viewModelParentContact = ViewModelProvider(this)[ParentContactViewModel::class.java]
-        dataParentContactStudentModel = ArrayList<DataParentContactStudentModel>()
-        viewModelParentContact.parentContactList.getParentList().observe(viewLifecycleOwner) {
-            for (item in it) {
-
-                if (item.student == studentItemId){
-                    dataParentContactStudentModel!!.add(DataParentContactStudentModel(item.name, item.number))
-                }
-
-            }
-
-            val adapterParentContact = ListParentContactAdapter(dataParentContactStudentModel!!, requireContext().applicationContext)
-            listViewParentContact.adapter = adapterParentContact
-
-
-        }
-
-       listViewParentContact.setOnItemClickListener { parent, _, position, _ ->
-            val selectedItem = parent.getItemAtPosition(position)
-           call(dataParentContactStudentModel?.get(position)?.phone)
-           Toast.makeText(getActivity(), "item click^" + dataParentContactStudentModel?.get(position)?.phone.toString(), Toast.LENGTH_LONG).show()
-        }
 
 
 
@@ -224,7 +158,9 @@ class StudentItemEditFragment : Fragment() {
                 }
             }
 
-
+            binding.cardPaymentStudent.setOnClickListener {
+                getActivity()?.let { BottomFragment.newInstancePaymentBalance(studentItemId).show(it.supportFragmentManager, "tag") }
+            }
 
 
     }
@@ -689,7 +625,7 @@ class StudentItemEditFragment : Fragment() {
 
     private fun launchEditMode() {
         viewModel.getStudentItem(studentItemId)
-        /**/binding.saveButton.setOnClickListener {
+        /**/binding.cardSaveData.setOnClickListener {
             viewModel.editStudentItem(
                 binding.etName.text?.toString(),
                 binding.etLastname.text?.toString(),
