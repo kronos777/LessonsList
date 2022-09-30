@@ -44,6 +44,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_top">
 
+        <!--
         <TextView
             android:layout_width="match_parent"
             android:layout_height="30dp"
@@ -58,6 +59,18 @@
             android:gravity="center"
             android:text="Some element, for example RecyclerView"
             android:textSize="32sp" />
+        -->
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="175dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="8dp"
+
+            />
 
     </LinearLayout>
 
@@ -71,7 +84,7 @@
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_top">
-
+<!--
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="72dp"
@@ -81,21 +94,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
                 android:gravity="center"
-                android:text="First Line"
+                android:text="Первая линия"
                 android:textSize="20sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
                 android:gravity="center"
-                android:text="Second Line"
+                android:text="Вторая линия"
                 android:textSize="20sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
                 android:gravity="center"
-                android:text="Third Line"
+                android:text="Третья линия"
                 android:textSize="20sp" />
 
         </LinearLayout>
@@ -105,16 +118,25 @@
             android:layout_height="30dp"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="Text about something"
+            android:text="Текст еще о чем о чем то"
             android:textSize="24sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="380dp"
             android:gravity="center"
-            android:text="Some bigger element, for example bigger RecyclerView"
+            android:text="Какой-то более крупный элемент, например больший RecyclerView"
             android:textSize="36sp" />
-
+-->
+        <ListView
+            android:id="@+id/listView2"
+            android:layout_width="match_parent"
+            android:layout_height="175dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="8dp"
+            />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

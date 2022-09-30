@@ -107,6 +107,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         val materialToolbar: MaterialToolbar = binding.toolBar!!
         val paymentBtnAppBarTop = findViewById<View>(R.id.payment)
+
         paymentBtnAppBarTop.setOnClickListener {
             if(alertCount > 0) {
                 launchFragment(PaymentItemListFragment.newInstanceEnabledPayment())
@@ -351,6 +352,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             setToolbarNavigationClickListener {
                 // Back to home fragment for any hit to the back button
                 //   navController.navigate(R.id.app_bar_top)
+
             }
             // Intialize the icon at the app start
             enableHomeBackIcon(false)
@@ -371,6 +373,9 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             }
             true
         }
+
+
+
 
     }
 
@@ -658,6 +663,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             if (enabled) R.drawable.ic_baseline_navigate_next_24
             else R.drawable.ic_baseline_menu_24
         )
+
+
     }
 
     private fun getActionBarDrawerToggle(

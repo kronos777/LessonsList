@@ -1,15 +1,24 @@
 package com.example.lessonslist.presentation.helpers
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ListView
+import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.BottomSheetLayoutBinding
 import com.example.lessonslist.domain.student.StudentItem
+import com.example.lessonslist.presentation.payment.PaymentItemFragment
+import com.example.lessonslist.presentation.payment.PaymentListViewModel
+import com.example.lessonslist.presentation.student.DataPaymentStudentModel
+import com.example.lessonslist.presentation.student.ListPaymentAdapter
 import com.example.lessonslist.presentation.student.StudentItemEditFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -22,6 +31,13 @@ class BottomFragment : BottomSheetDialogFragment() {
     private var screenMode: String = BottomFragment.MODE_UNKNOWN
     private var studentItemId: Int = StudentItem.UNDEFINED_ID
 
+    //по листам
+    private lateinit var listView: ListView
+    private lateinit var listView2: ListView
+
+    private lateinit var viewModelPayment: PaymentListViewModel
+
+    private var dataPaymentStudentModel: ArrayList<DataPaymentStudentModel>? = null
 
     // Можно обойтись без биндинга и использовать findViewById
     lateinit var binding: BottomSheetLayoutBinding
@@ -33,6 +49,63 @@ class BottomFragment : BottomSheetDialogFragment() {
         binding = BottomSheetLayoutBinding.bind(inflater.inflate(R.layout.bottom_sheet_layout, container))
         return binding.root
     }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        parseParams()
+
+        if(screenMode == "mode_payment") {
+            Toast.makeText(getActivity(), "payment mode", Toast.LENGTH_SHORT).show()
+            binding.simpleTextTitle.text = "Платежи студента"
+
+            showPaymentsList()
+        }
+
+
+    }
+
+    private fun showPaymentsList() {
+        dataPaymentStudentModel = ArrayList<DataPaymentStudentModel>()
+        listView = binding.listView
+        listView2 = binding.listView2
+        viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
+        viewModelPayment.paymentList.observe(viewLifecycleOwner) {
+            if(it.size > 0) {
+                for (payment in it) {
+                    if(payment.studentId == studentItemId) {
+                        //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
+                        if (payment.enabled == true) {
+                            dataPaymentStudentModel!!.add(DataPaymentStudentModel(payment.id, "Оплачен: " + payment.title, payment.price.toString()))
+                        } else {
+                            dataPaymentStudentModel!!.add(DataPaymentStudentModel(payment.id,"Долг: " + payment.title, "-" + payment.price.toString()))
+                        }
+
+                    }
+                }
+            }
+/*                adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
+                listView.adapter = adapter*/
+            val adapter =  ListPaymentAdapter(dataPaymentStudentModel!!, requireContext().applicationContext)
+            listView.adapter = adapter
+            listView2.adapter = adapter
+
+            listView.setOnItemClickListener { parent, _, position, _ ->
+                val selectedItem = parent.getItemAtPosition(position) as DataPaymentStudentModel
+                launchFragment(PaymentItemFragment.newInstanceEditItem(selectedItem.id))
+                //Log.d("strpayment", "The best football player is $selectedItem")
+                //Toast.makeText(getActivity(), "this item selected"+selectedItem.id.toString(), Toast.LENGTH_SHORT).show()
+            }
+
+        }
+
+
+
+
+
+    }
+
 
     // Я выбрал этот метод ЖЦ, и считаю, что это удачное место
     // Вы можете попробовать производить эти действия не в этом методе ЖЦ, а например в onCreateDialog()
@@ -136,6 +209,12 @@ class BottomFragment : BottomSheetDialogFragment() {
         }
     }
 
+    fun launchFragment(fragment: Fragment) {
+        fragmentManager?.beginTransaction()
+            ?.replace(R.id.fragment_item_container, fragment)
+            ?.addToBackStack(null)
+            ?.commit()
+    }
 
     companion object {
 

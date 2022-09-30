@@ -57,5 +57,4 @@ class ListPaymentAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
     }
 
 
-
 }

@@ -18,7 +18,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:menu="@menu/app_bar_top_menu"
                 app:navigationIcon="@drawable/ic_baseline_menu_24"
-                app:title="Судный день"
+                app:title="Список уроков"
                 android:fitsSystemWindows="true"/>
 
         </com.google.android.material.appbar.AppBarLayout>
