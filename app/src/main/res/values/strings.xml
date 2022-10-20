@@ -36,5 +36,17 @@
     <string name="open">open</string>
     <string name="close">close</string>
     <string name="add_lessons_item_content_description">добавить урок</string>
+    <string name="registration_name">Ваше имя</string>
+    <string name="registration_ser_name">Ваша фамилия</string>
+    <string name="registration_phone">Ваш телефон</string>
+    <string name="registration_email">Ваша почта</string>
+    <string name="registration_password">Ваш пароль</string>
+    <string name="registration_repeat_password">Повторите пароль</string>
+    <string name="registration_button">Зарегистрироваться</string>
+    <string name="register_checkbox">Я принимаю условия Пользовательского соглашения и условия Политики конфиденциальности.</string>
+    <string name="login_button">Войти</string>
+    <string name="login_checkbox">Запомнить меня</string>
+    <string name="link_login_fragment">войти</string>
+    <string name="link_register_fragment">зарегистрироваться</string>
 
 </resources>

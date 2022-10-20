@@ -9,7 +9,7 @@ import android.widget.TextView
 import com.example.lessonslist.R
 
 class ListParentContactAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
-    ArrayAdapter<Any?>(mContext, R.layout.row_payment_student_item, dataSet) {
+    ArrayAdapter<Any?>(mContext, R.layout.row_contact_parent_item, dataSet) {
     private class ViewHolder {
         lateinit var txtName: TextView
         lateinit var txtPhone: TextView

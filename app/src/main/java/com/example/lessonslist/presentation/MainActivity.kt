@@ -30,6 +30,8 @@ import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.data.service.PaymentWork
 import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.domain.payment.PaymentItem
+import com.example.lessonslist.domain.user.UserItem
+import com.example.lessonslist.presentation.authuser.SignInFragment
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
 import com.example.lessonslist.presentation.group.GroupItemFragment
@@ -49,6 +51,12 @@ import com.example.lessonslist.presentation.student.StudentItemListFragment
 import com.example.lessonslist.presentation.student.StudentItemViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 import org.w3c.dom.Text
 import ru.cleverpumpkin.calendar.CalendarDate
@@ -75,7 +83,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private lateinit var viewModelLessons: LessonsListViewModel
     private lateinit var viewModelGroup: GroupListViewModel
     private lateinit var viewModelStudent: MainViewModel
-
+    // create Firebase authentication object
+    private lateinit var auth: FirebaseAuth
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,8 +92,17 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // Initialising auth object
 
-        launchMainFragment(CalendarItemFragment(), "calendar")
+        auth = Firebase.auth
+        /*launchMainFragment(SignInFragment(), "registration")*/
+        if(auth.uid == null) {
+            launchMainFragment(SignInFragment(), "registration")
+        } else {
+            launchMainFragment(CalendarItemFragment(), "calendar")
+            getUserFireStore()
+        }
+
         parseParamsExtra()
 
         backup = RoomBackup(this)
@@ -94,7 +112,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         initWorkManager()
         initMaterialToolBar()
         getDeptPayment()
-
         initNavHeader()
 
     }
@@ -571,6 +588,42 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     //countLessons.setText(initialDate.toString())
     }
+
+    private fun getUserFireStore() {
+
+        val db = Firebase.firestore
+
+        auth.uid?.let {
+            val docRef = db.collection("Users").document(it)
+            docRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                     //   val users = document.data.toObject(UserItem::class.java)
+                        //val users = document.toObject<UserItem>()
+                        //Log.d(TAG, "Данные DocumentSnapshot: ${document.data}")
+                        //Log.d(TAG, "Данные DocumentSnapshot: ${document.data?.get("name")}")
+                        val users = UserItem(document.data?.get("name").toString(), document.data?.get("sername").toString(),
+                            document.data?.get("phone").toString(), document.data?.get("email").toString(),
+                            document.data?.get("password").toString(), document.data?.get("id").toString())
+                        (this as AppCompatActivity).findViewById<TextView>(R.id.nav_head_username).text = users.name + users.sername + "\n" + users.email
+                    } else {
+                        Log.d(TAG, "No such document")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "get failed with ", exception)
+                }
+        }
+
+
+
+    }
+
+
+    fun testAuthEmailValidation() {
+        TODO()
+    }
+
 
    fun parseStringDate(string: String): ArrayList<Int> {
 

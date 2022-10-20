@@ -23,6 +23,7 @@ import com.example.lessonslist.databinding.FragmentStudentItemEditBinding
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.helpers.BottomFragment
 import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
+import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
@@ -114,7 +115,39 @@ class StudentItemEditFragment : Fragment() {
         bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
         //viewModel.studentItem.
 
+        viewModel.studentItem.observe(viewLifecycleOwner) {
+            val payBalance = it.paymentBalance
+            if (it.paymentBalance <= 0) {
+                //Toast.makeText(getActivity(), "it.paymentBalance count^" + it.paymentBalance, Toast.LENGTH_LONG).show()
+                totalDebt()
+            }
+         /*   binding.cardPaymentOff.setOnClickListener {
+                if(payBalance <= 0) {
+                    Toast.makeText(getActivity(), "Пополните баланс и сможете списать долг.", Toast.LENGTH_LONG).show()
+                } else {
+                    payOffDebtsAll(studentItemId, payBalance)
+                }
+            }*/
 
+            if(it.image.isNotBlank()) {
+                myHandler.post {
+                    val file = File(it.image)
+                    //    Log.d("imageTag", it.image)
+                    Picasso.get()
+                        .load(file)
+                        .resize(200, 200)
+                        .rotate(90f)
+                        .into(mImageView)
+                    pathImageSrc = file.toString()
+                    /*Picasso.get()
+                        .load(it.image)
+                        .resize(400, 300)
+                        // .transform(CropCircleTransformation())
+                        .rotate(90f)
+                        .into(mImageView)*/
+                }
+            }
+        }
 /*           binding.paymentStudent.setOnClickListener {
                 launchFragment(PaymentItemListFragment.newInstanceStudentId(studentItemId))
             }
@@ -130,38 +163,29 @@ class StudentItemEditFragment : Fragment() {
             Toast.makeText(getActivity(), "item click^" + it.toString(), Toast.LENGTH_LONG).show()
         }*/
 
+
+
         mImageView = binding.imageView
 
         mImageView.setOnClickListener {
             actionChangeImage()
         }
 
+        binding.cardAddBalance.setOnClickListener {
+            actionAddMoney()
+        }
 
-        viewModel.studentItem.observe(viewLifecycleOwner) {
-                if(it.image != "") {
-                    myHandler.post {
-                        val file = File(it.image)
-                    //    Log.d("imageTag", it.image)
-                        Picasso.get()
-                            .load(file)
-                            .resize(200, 200)
-                            .rotate(90f)
-                            .into(mImageView)
-                        pathImageSrc = file.toString()
-                        /*Picasso.get()
-                            .load(it.image)
-                            .resize(400, 300)
-                            // .transform(CropCircleTransformation())
-                            .rotate(90f)
-                            .into(mImageView)*/
-                    }
-                }
-            }
+        binding.cardAddNotes.setOnClickListener {
+            getActivity()?.let { BottomFragment.newInstanceNotesStudent(studentItemId).show(it.supportFragmentManager, "tag") }
+        }
 
-            binding.cardPaymentStudent.setOnClickListener {
+       binding.cardPaymentStudent.setOnClickListener {
                 getActivity()?.let { BottomFragment.newInstancePaymentBalance(studentItemId).show(it.supportFragmentManager, "tag") }
-            }
+       }
 
+       binding.cardParentContact.setOnClickListener {
+           getActivity()?.let { BottomFragment.newInstanceParentsContacts(studentItemId).show(it.supportFragmentManager, "tag") }
+       }
 
     }
 
@@ -249,6 +273,32 @@ class StudentItemEditFragment : Fragment() {
     private fun actionGetGroup() {
         TODO()
     }
+
+    fun totalDebt() {
+        var summDept = 0
+        viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
+        viewModelPayment.paymentList.observe(viewLifecycleOwner) {
+            if(it.size > 0) {
+                for (payment in it) {
+                    if(payment.studentId == studentItemId) {
+                        //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
+                        if (payment.enabled == false) {
+                            summDept += payment.price
+                             //dataPaymentStudentModel!!.add(DataPaymentStudentModel(payment.id,"Долг: " + payment.title, "-" + payment.price.toString()))
+                        }
+
+                    }
+                }
+                //Log.d("summDept", summDept.toString())
+                binding.textViewPaymentBalance.text = summDept.toString()
+                binding.textViewPaymentBalance.setTextColor(R.color.custom_calendar_weekend_days_bar_text_color.dec())
+                //binding.textViewPaymentBalance.setTextColor(-0x000000ff)
+            }
+
+        }
+    }
+
+
 
     private fun addParentContactStudent() {
 
@@ -520,6 +570,7 @@ class StudentItemEditFragment : Fragment() {
         }
         return image
     }
+
     private fun isNumeric(toCheck: String): Boolean {
         val regex = "-?[0-9]+(\\.[0-9]+)?".toRegex()
         return toCheck.matches(regex)
@@ -594,7 +645,7 @@ class StudentItemEditFragment : Fragment() {
             Toast.makeText(getActivity(), "obsii summa dolga!" + summPaymentDolg.sum().toString(), Toast.LENGTH_SHORT).show();
 
         }
-        return summPaymentDolg?.sum()
+        return summPaymentDolg?.sum()?.toInt() ?: 0
     }
 
 
@@ -625,10 +676,10 @@ class StudentItemEditFragment : Fragment() {
 
     private fun launchEditMode() {
         viewModel.getStudentItem(studentItemId)
-        /**/binding.cardSaveData.setOnClickListener {
+        binding.cardSaveData.setOnClickListener {
             viewModel.editStudentItem(
-                binding.etName.text?.toString(),
-                binding.etLastname.text?.toString(),
+                viewModel.studentItem.value?.name,
+                viewModel.studentItem.value?.lastname,
                 binding.textViewPaymentBalance.text.toString(),
                 " ",
                 " ",

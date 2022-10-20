@@ -8,15 +8,19 @@
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable-v24/ic_add.xml" value="0.251" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable-v24/ic_launcher_background.xml" value="0.217" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.252" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/bottomsheetbackground.xml" value="0.247" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_account_balance_wallet_24.xml" value="0.22" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_add_a_photo_24.xml" value="0.217" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_attach_money_24.xml" value="0.214" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_calendar_today_24.xml" value="0.217" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_check_circle_24.xml" value="0.334" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.214" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_family_restroom_24.xml" value="0.2735" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_group_24.xml" value="0.217" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_indeterminate_check_box_24.xml" value="0.217" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_list_24.xml" value="0.217" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_menu_book_24.xml" value="0.217" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_notes_24.xml" value="0.2735" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_payment_24.xml" value="0.251" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_people_24.xml" value="0.217" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_perm_media_24.xml" value="0.214" />
@@ -36,6 +40,7 @@
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/border_card.xml" value="0.20677083333333332" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/bottom_sheet.xml" value="0.3582427536231884" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/bottom_sheet_layout.xml" value="0.2617753623188406" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/button_in_bsheet.xml" value="0.28396739130434784" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_about.xml" value="0.365036231884058" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_calendar_payment.xml" value="0.3582427536231884" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_group_item.xml" value="0.36666666666666664" />
@@ -46,9 +51,11 @@
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_lessons_item_add.xml" value="0.1" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_lessons_item_edit.xml" value="0.1" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_lessons_item_list.xml" value="0.35688405797101447" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_login.xml" value="0.29393115942028986" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_payment_item.xml" value="0.33246753246753247" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_payment_item_list.xml" value="0.24583333333333332" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_recycler_main.xml" value="0.35688405797101447" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_register.xml" value="0.29393115942028986" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_settings.xml" value="0.3365036231884058" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_settings_item.xml" value="0.35688405797101447" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_student_item.xml" value="0.3625" />
@@ -68,6 +75,7 @@
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/row_group_student_item.xml" value="0.35688405797101447" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/row_payment_student_item.xml" value="0.22864583333333333" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/row_payment_student_lessons_item.xml" value="0.2078125" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/menu/app_bar_top_menu.xml" value="0.3625" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/menu/bottom_nav_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/menu/nav_drawer_menu.xml" value="0.10277777777777777" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/menu/nav_student_menu.xml" value="0.24635416666666668" />

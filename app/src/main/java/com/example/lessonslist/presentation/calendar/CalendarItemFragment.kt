@@ -24,6 +24,7 @@ import com.example.lessonslist.presentation.lessons.LessonsListViewModel
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import ru.cleverpumpkin.calendar.CalendarDate
 import ru.cleverpumpkin.calendar.CalendarView
 import ru.cleverpumpkin.calendar.extension.getColorInt
@@ -77,15 +78,21 @@ class CalendarItemFragment() : Fragment() {
 
         getDate()
 
-
         val bottomNavigationView =
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem1).isChecked = true
 
+        showToolbarAndBottomNavigation()
 
     }
 
 
+    private fun showToolbarAndBottomNavigation() {
+        (activity as AppCompatActivity).findViewById<BottomNavigationView>(R.id.nav_view_bottom).visibility = View.VISIBLE
+        (activity as AppCompatActivity).findViewById<NavigationView>(R.id.navView).visibility = View.VISIBLE
+        (activity as AppCompatActivity).findViewById<View>(R.id.payment).visibility = View.VISIBLE
+        (activity as AppCompatActivity).findViewById<View>(R.id.backup).visibility = View.VISIBLE
+    }
 
     private fun getDate() {
         val calendarView = binding.calendarView

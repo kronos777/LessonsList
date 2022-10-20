@@ -4,7 +4,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    >
 
     <!-- В данном layout содержится верхняя часть, которая не будет изменяться при изменении состояния
     В данном кейсе его можно заменить на TextView с compound drawable, но я оставлю LinearLayout для наглядности-->
@@ -16,13 +19,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/simple_image"
-            android:layout_width="75dp"
-            android:layout_height="match_parent"
-            android:importantForAccessibility="no"
-            app:srcCompat="@drawable/iconlogo"
-            app:tint="#0061A5" />
 
         <TextView
             android:id="@+id/simple_text_title"
@@ -60,6 +56,51 @@
             android:text="Some element, for example RecyclerView"
             android:textSize="32sp" />
         -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_name"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_alignParentLeft="true"
+            app:layout_constraintVertical_chainStyle="packed"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_notes"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_alignParentLeft="true"
+            app:layout_constraintVertical_chainStyle="packed"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/image_add_notes"
+            android:layout_width="60dp"
+            android:layout_gravity="center"
+            android:layout_height="60dp"
+            android:importantForAccessibility="no"
+            app:srcCompat="@drawable/ic_add"
+            android:layout_toRightOf="@id/til_notes"
+            app:tint="#0061A5"
+            />
+
+
 
         <ListView
             android:id="@+id/listView"
@@ -137,7 +178,14 @@
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="8dp"
             />
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragment_bottom_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="@id/guideline_middle"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="58dp"
+            />
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
-    </layout>
+</layout>

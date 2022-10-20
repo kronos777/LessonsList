@@ -39,7 +39,7 @@ class NotesItemViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    fun addNotesItem(inputName: String, inputDate: String, inputStudentid: Int) {
+    fun addNotesItem(inputName: String, inputDate: String, inputStudentid: Int): Boolean {
         val name = parseName(inputName)
         val date = inputDate
         val idStudent = inputStudentid
@@ -50,7 +50,11 @@ class NotesItemViewModel(application: Application) : AndroidViewModel(applicatio
                 val notesItem = NotesItem(name, date, idStudent)
                 addNotesItemUseCase.addNotesItem(notesItem)
                 finishWork()
+
             }
+            return true
+        } else {
+            return false
         }
     }
 

@@ -9,11 +9,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentPaymentItemBinding
-import com.example.lessonslist.databinding.PaymentCardBinding
 import com.example.lessonslist.domain.payment.PaymentItem
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.student.StudentItemViewModel
@@ -63,7 +61,7 @@ class PaymentItemFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentPaymentItemBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -103,43 +101,7 @@ class PaymentItemFragment: Fragment() {
                 Log.d("enabledpay", "paymentCount " + ( - paymentCount))
                 if(it.paymentBalance > ( - paymentCount)) {
                     binding.paymentOff.setOnClickListener {
-                        //val paymentItem = viewModel.getPaymentItem(paymentItemId)
-                        viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
-                        viewModelLessons = ViewModelProvider(this)[LessonsItemViewModel::class.java]
-                        viewModel.paymentItem.observe(viewLifecycleOwner) {
-                            if(!it.enabled) {
-                                val payOff = it.price
-                                val itemPaymentId = it.id
-                                val idLessons = it.lessonsId
-                                viewModelStudent.getStudentItem(it.studentId)
-                                viewModelStudent.studentItem.observe(viewLifecycleOwner) {
-                                    if(it.paymentBalance.toInt() > ( - payOff.toInt())) {
-
-
-                                        //производит замену прайса с учетом списания долга в записи студента
-                                        viewModelStudent.editPaymentBalance(it.id, (it.paymentBalance + payOff.toFloat()))
-
-                                        //выстаявляет значение платежа в соответствии со стоимостью урока
-                                        viewModelLessons.getLessonsItem(idLessons)
-                                        viewModelLessons.lessonsItem.observe(viewLifecycleOwner) {
-                                            viewModel.changeEnableState(it.price, itemPaymentId)
-                                            binding.valuePricePayment.text = it.price.toString() //заменит значение платежа
-                                        }
-
-                                        binding.paymentOff.visibility = (View.GONE)
-                                        binding.valueStatusPayment.text = "Оплачен"
-                                        binding.paymentPicture.setBackgroundResource(R.drawable.ic_baseline_check_circle_24)
-
-                                        Toast.makeText(getActivity(),"Баланс: " + it.paymentBalance + " Долг:  " + payOff,Toast.LENGTH_SHORT).show();
-
-                                    } else {
-                                        Toast.makeText(getActivity(),"Баланс студента не позволяет списать долг.",Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-
-                            }
-
-                        }
+                        deptOff()
                     }
 
                 } else {
@@ -155,6 +117,46 @@ class PaymentItemFragment: Fragment() {
 
     }
 
+
+    private fun deptOff() {
+        //val paymentItem = viewModel.getPaymentItem(paymentItemId)
+        viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
+        viewModelLessons = ViewModelProvider(this)[LessonsItemViewModel::class.java]
+        viewModel.paymentItem.observe(viewLifecycleOwner) {
+            if(!it.enabled) {
+                val payOff = it.price
+                val itemPaymentId = it.id
+                val idLessons = it.lessonsId
+                viewModelStudent.getStudentItem(it.studentId)
+                viewModelStudent.studentItem.observe(viewLifecycleOwner) {
+                    if(it.paymentBalance > ( - payOff)) {
+
+
+                        //производит замену прайса с учетом списания долга в записи студента
+                        viewModelStudent.editPaymentBalance(it.id, (it.paymentBalance + payOff.toFloat()))
+
+                        //выстаявляет значение платежа в соответствии со стоимостью урока
+                        viewModelLessons.getLessonsItem(idLessons)
+                        viewModelLessons.lessonsItem.observe(viewLifecycleOwner) {
+                            viewModel.changeEnableState(it.price, itemPaymentId)
+                            binding.valuePricePayment.text = it.price.toString() //заменит значение платежа
+                        }
+
+                        binding.paymentOff.visibility = (View.GONE)
+                        binding.valueStatusPayment.text = "Оплачен"
+                        binding.paymentPicture.setBackgroundResource(R.drawable.ic_baseline_check_circle_24)
+
+                        Toast.makeText(getActivity(),"Баланс: " + it.paymentBalance + " Долг:  " + payOff,Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        Toast.makeText(getActivity(),"Баланс студента не позволяет списать долг.",Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+
+        }
+    }
 /*
     public void reLoadFragment(Fragment fragment)
     {
@@ -178,7 +180,7 @@ class PaymentItemFragment: Fragment() {
             fragTransaction.attach(currentFragment)
             fragTransaction.commit()
         }
-        Toast.makeText(getActivity(),"Фрагмент перезагружен.",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),"Фрагмент перезагружен.",Toast.LENGTH_SHORT).show()
     }
 
     private fun launchRightMode() {
