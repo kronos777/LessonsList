@@ -23,17 +23,16 @@ import com.example.lessonslist.databinding.FragmentStudentItemEditBinding
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.helpers.BottomFragment
 import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
-import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.student.notes.DataNotesStudentModel
-import com.example.lessonslist.presentation.student.notes.ListNotesAdapter
 import com.example.lessonslist.presentation.student.parentContact.DataParentContactStudentModel
-import com.example.lessonslist.presentation.student.parentContact.ListParentContactAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.delay
 import java.io.*
+import java.lang.Thread.sleep
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
@@ -115,9 +114,9 @@ class StudentItemEditFragment : Fragment() {
         bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
         //viewModel.studentItem.
 
-        viewModel.studentItem.observe(viewLifecycleOwner) {
-            val payBalance = it.paymentBalance
-            if (it.paymentBalance <= 0) {
+        viewModel.studentItem.observe(viewLifecycleOwner) { stItem ->
+            val payBalance = stItem.paymentBalance
+            if (stItem.paymentBalance <= 0) {
                 //Toast.makeText(getActivity(), "it.paymentBalance count^" + it.paymentBalance, Toast.LENGTH_LONG).show()
                 totalDebt()
             }
@@ -129,9 +128,9 @@ class StudentItemEditFragment : Fragment() {
                 }
             }*/
 
-            if(it.image.isNotBlank()) {
+            if(stItem.image.isNotBlank()) {
                 myHandler.post {
-                    val file = File(it.image)
+                    val file = File(stItem.image)
                     //    Log.d("imageTag", it.image)
                     Picasso.get()
                         .load(file)
@@ -147,6 +146,20 @@ class StudentItemEditFragment : Fragment() {
                         .into(mImageView)*/
                 }
             }
+
+            val textTelephone = stItem.telephone.toString()
+               // binding.textViewTelephone.text.toString()
+            binding.textViewTelephone.setOnClickListener {
+                //Toast.makeText(getActivity(),"phone number"+stItem.telephone.toString(),Toast.LENGTH_SHORT).show();
+                if(textTelephone.count() > 0) {
+                       askEditNumber()
+                   } else {
+                       addPhoneNumber()
+                   }
+
+                binding.textViewTelephone.text = stItem.telephone
+            }
+
         }
 /*           binding.paymentStudent.setOnClickListener {
                 launchFragment(PaymentItemListFragment.newInstanceStudentId(studentItemId))
@@ -187,6 +200,35 @@ class StudentItemEditFragment : Fragment() {
            getActivity()?.let { BottomFragment.newInstanceParentsContacts(studentItemId).show(it.supportFragmentManager, "tag") }
        }
 
+
+
+
+
+
+    }
+
+    private fun askEditNumber() {
+        val alert = AlertDialog.Builder(requireContext())
+        alert.setTitle("Телефон студента содержит значение, желаете его изменить ?")
+        //alert.setMessage("Enter phone details and amount to buy airtime.")
+
+        val layout = LinearLayout(requireContext())
+        layout.orientation = LinearLayout.VERTICAL
+
+        layout.setPadding(50, 40, 50, 10)
+
+        alert.setView(layout)
+
+        alert.setPositiveButton("Добавить") { _, _ ->
+            addPhoneNumber()
+        }
+
+        alert.setNegativeButton("отмена") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        alert.setCancelable(false)
+        alert.show()
     }
 
     fun call(number: String?) {
@@ -235,7 +277,7 @@ class StudentItemEditFragment : Fragment() {
                     newBalance = editTextInput.toInt()
                     viewModel.studentItem.observe(viewLifecycleOwner) {
                         //Log.d("new balance", it.paymentBalance.toString())
-                        viewModel.editPaymentBalance(it.id, (it.paymentBalance + newBalance).toFloat())
+                        viewModel.editPaymentBalance(it.id, (it.paymentBalance + newBalance))
                         if(it.paymentBalance < 0) {
                             Toast.makeText(getActivity(),"payment balance"+(it.paymentBalance).toString(),Toast.LENGTH_SHORT).show();
                         }
@@ -341,6 +383,73 @@ class StudentItemEditFragment : Fragment() {
         alert.show()
     }
 
+    private fun addPhoneNumber() {
+        val alert = AlertDialog.Builder(requireContext())
+        alert.setTitle("Добавить телефон студента.")
+
+        val layout = LinearLayout(requireContext())
+        layout.orientation = LinearLayout.VERTICAL
+
+
+        val amountET = EditText(requireContext())
+        amountET.setSingleLine()
+        amountET.hint = "Телефон"
+        amountET.inputType = TYPE_CLASS_NUMBER
+        amountET.addTextChangedListener(PhoneTextFormatter(amountET, "+7 (###) ###-####"))
+        layout.addView(amountET)
+
+        layout.setPadding(50, 40, 50, 10)
+
+        alert.setView(layout)
+
+        alert.setPositiveButton("Добавить") { _, _ ->
+            val number = amountET.text.toString()
+            Toast.makeText(activity, "Saved Sucessfully", Toast.LENGTH_LONG).show()
+            viewModel.editPhoneNumber(studentItemId, number)
+            sleep(100)
+            viewModel.studentItem.observe(viewLifecycleOwner) {
+                binding.textViewTelephone.text = it.telephone
+            }
+        }
+
+        alert.setNegativeButton("отмена") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        alert.setCancelable(false)
+        alert.show()
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+
+        Log.d("Fragment1", "onResume")
+    }
+
+    override fun onStop() {
+        Log.d("Fragment1", "onStop")
+
+        super.onStop()
+    }
+
+    override fun onDestroyView() {
+        Log.d("Fragment1", "onDestroyView")
+
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        Log.d("Fragment1", "onDestroy")
+
+        super.onDestroy()
+    }
+
+    override fun onDetach() {
+        Log.d("Fragment1", "onDetach")
+
+        super.onDetach()
+    }
 
     private fun addNotesStudent() {
 
@@ -350,9 +459,6 @@ class StudentItemEditFragment : Fragment() {
         val currentDay = calendarTimeZone[Calendar.DAY_OF_MONTH]
         val currentHour = calendarTimeZone[Calendar.HOUR]
         val currentMinute = calendarTimeZone[Calendar.MINUTE]
-
-
-
 
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
         val currentDate = sdf.format(Date())
@@ -597,7 +703,7 @@ class StudentItemEditFragment : Fragment() {
 
                             val balance = studentBalance + payment.price
                             Toast.makeText(getActivity(), "new balance!" + balance.toString(), Toast.LENGTH_SHORT).show();
-                            viewModel.editPaymentBalance(payment.studentId, balance.toFloat())
+                            viewModel.editPaymentBalance(payment.studentId, balance)
                             Toast.makeText(getActivity(), "paymentBalance!" + (payment.studentId + payment.price.toFloat()).toString(), Toast.LENGTH_SHORT).show();
 //idPaymnet: Int, inputTitle: String, inputDescription: String, inputLessonsId: String, inputStudentId: String, inputDatePayment: String, inputStudent: String, inputPrice: String, enabledPayment: Boolean
                             summPaymentDolg.add(payment.price)
@@ -673,6 +779,14 @@ class StudentItemEditFragment : Fragment() {
         }
     }
 
+   private fun isLessthanZero(number: Int): Int {
+       if(number < 0) {
+           return 0
+       } else {
+           return number
+       }
+   }
+
 
     private fun launchEditMode() {
         viewModel.getStudentItem(studentItemId)
@@ -680,7 +794,7 @@ class StudentItemEditFragment : Fragment() {
             viewModel.editStudentItem(
                 viewModel.studentItem.value?.name,
                 viewModel.studentItem.value?.lastname,
-                binding.textViewPaymentBalance.text.toString(),
+                isLessthanZero(binding.textViewPaymentBalance.text.toString().toInt()).toString(),
                 " ",
                 " ",
                 pathImageSrc,

@@ -18,7 +18,10 @@ interface StudentListDao {
     suspend fun deleteStudentItem(studentItemId: Int)
 
     @Query("UPDATE student_items SET paymentBalance =:paymentBalance WHERE id=:studentItemId")
-    suspend fun editStudentItemPaymentBalance(studentItemId: Int, paymentBalance: Float)
+    suspend fun editStudentItemPaymentBalance(studentItemId: Int, paymentBalance: Int)
+
+    @Query("UPDATE student_items SET telephone =:phoneNumber WHERE id=:studentItemId")
+    suspend fun editStudentItemPhoneNumber(studentItemId: Int, phoneNumber: String)
 
     @Query("SELECT * FROM student_items WHERE id=:studentItemId LIMIT 1")
     suspend fun getStudentItem(studentItemId: Int): StudentItemDbModel

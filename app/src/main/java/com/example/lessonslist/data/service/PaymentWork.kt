@@ -103,7 +103,7 @@ class PaymentWork(
                             var namesStudentArrayList: ArrayList<String> = ArrayList()
                             var okPay = 0
                             var noPay = 0
-                            if(stIds.size > 0) {
+                            if(stIds.isNotEmpty()) {
                                 for (ids in stIds){
                                     var student = dbStudent.getStudentItem(ids)
                                     log(student.name + student.lastname + student.paymentBalance)
@@ -120,25 +120,26 @@ class PaymentWork(
                                             val price = calculatePaymentPriceAddPlus(student.paymentBalance, lessonsItem.price)
                                             viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description,
                                                 idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, price.toString(), false)
-                                            dbStudent.editStudentItemPaymentBalance(student.id, (0).toFloat())
+                                            dbStudent.editStudentItemPaymentBalance(student.id, (0).toInt())
                                             noPay++
                                         } else {
                                             viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description,
                                                 idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString(), true)
-                                            dbStudent.editStudentItemPaymentBalance(student.id, (student.paymentBalance - lessonsItem.price).toFloat())
+                                            dbStudent.editStudentItemPaymentBalance(student.id, (student.paymentBalance - lessonsItem.price).toInt())
                                             okPay++
                                         }
-                                     } else if (newBalanceStudent <= 0) {
-                                        val price = calculatePaymentPriceAddPlus(student.paymentBalance, lessonsItem.price)
+                                     } else if (newBalanceStudent == 0) {
+                                        //val price = calculatePaymentPriceAddPlus(student.paymentBalance, lessonsItem.price)
                                         viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description,
-                                            idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, price.toString(), false)
-                                        dbStudent.editStudentItemPaymentBalance(student.id, (0).toFloat())
-                                        log("создан отрицательный платеж" + studentData)
-                                        noPay++
-                                    } else if (student.paymentBalance <= 0) {
+                                            idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString(), true)
+                                        dbStudent.editStudentItemPaymentBalance(student.id, (0).toInt())
+                                        okPay++
+                                    } else if (newBalanceStudent < 0) {
+                                    //} else if (student.paymentBalance < 0) {
+                                        val pricePayment = calculatePaymentPriceAddPlus(student.paymentBalance, lessonsItem.price)
                                         viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description,
-                                            idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, (- lessonsItem.price).toString(), false)
-                                        dbStudent.editStudentItemPaymentBalance(student.id, (0).toFloat())
+                                            idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, (pricePayment).toString(), false)
+                                        dbStudent.editStudentItemPaymentBalance(student.id, (0).toInt())
                                         noPay++
                                     }
 

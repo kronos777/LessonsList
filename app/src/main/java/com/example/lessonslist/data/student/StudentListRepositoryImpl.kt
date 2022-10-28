@@ -33,10 +33,13 @@ class StudentListRepositoryImpl(
         return mapper.mapDbModelToEntity(dbModel)
     }
 
-    override suspend fun editStudentItemPaymentBalance(studentItemId: Int, paymentBalance: Float) {
+    override suspend fun editStudentItemPaymentBalance(studentItemId: Int, paymentBalance: Int) {
         studentListDao.editStudentItemPaymentBalance(studentItemId, paymentBalance)
     }
 
+    override suspend fun editStudentItemPhoneNumber(studentItemId: Int, phoneNumber: String) {
+        studentListDao.editStudentItemPhoneNumber(studentItemId, phoneNumber)
+    }
 
     override fun getStudentList(): LiveData<List<StudentItem>> = Transformations.map(
         studentListDao.getStudentList()

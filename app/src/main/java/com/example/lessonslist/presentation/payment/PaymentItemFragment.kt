@@ -133,7 +133,7 @@ class PaymentItemFragment: Fragment() {
 
 
                         //производит замену прайса с учетом списания долга в записи студента
-                        viewModelStudent.editPaymentBalance(it.id, (it.paymentBalance + payOff.toFloat()))
+                        viewModelStudent.editPaymentBalance(it.id, (it.paymentBalance + payOff))
 
                         //выстаявляет значение платежа в соответствии со стоимостью урока
                         viewModelLessons.getLessonsItem(idLessons)

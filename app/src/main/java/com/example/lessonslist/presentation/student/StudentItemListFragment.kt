@@ -57,7 +57,7 @@ class StudentItemListFragment: Fragment() {
         binding.buttonAddStudentItem.setOnClickListener {
             val fragmentTransaction = fragmentManager?.beginTransaction()
                 ?.replace(R.id.fragment_item_container, StudentItemFragment.newInstanceAddItem())
-                ?.addToBackStack(null)
+                ?.addToBackStack("listStudent")
                 ?.commit()
         }
     }
@@ -84,7 +84,7 @@ class StudentItemListFragment: Fragment() {
             fragmentManager?.beginTransaction()
              //   ?.replace(R.id.fragment_item_container, StudentItemFragment.newInstanceEditItem(it.id))
                 ?.replace(R.id.fragment_item_container, StudentItemEditFragment.newInstanceEditItem(it.id))
-                ?.addToBackStack(null)
+                ?.addToBackStack("listStudent")
                 ?.commit()
        }
     }

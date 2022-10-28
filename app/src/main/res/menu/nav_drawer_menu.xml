@@ -6,5 +6,7 @@
     <item
         android:id="@+id/muItem4"
         android:title="О приложение" />
-
+    <item
+        android:id="@+id/muItem5"
+        android:title="Выход" />
 </menu>

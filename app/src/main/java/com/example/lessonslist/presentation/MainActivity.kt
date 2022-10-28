@@ -31,6 +31,7 @@ import com.example.lessonslist.data.service.PaymentWork
 import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.domain.payment.PaymentItem
 import com.example.lessonslist.domain.user.UserItem
+import com.example.lessonslist.presentation.authuser.LoginFragment
 import com.example.lessonslist.presentation.authuser.SignInFragment
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
@@ -153,8 +154,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                     updateAlertIcon()
 * */
     override fun onBackPressed() {
-        //super.onBackPressed()
-        supportFragmentManager.popBackStack("calendar", 0)
+        super.onBackPressed()
+        //    supportFragmentManager.popBackStack("calendar", 0)
         val myFragment: Fragment? = supportFragmentManager.findFragmentByTag("MainCalendarFragment") as Fragment
         if (doubleBackToExitPressedOnce) {
             // super.onBackPressed()
@@ -166,15 +167,17 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
             if (myFragment == null) {
-                    launchMainFragment(CalendarItemFragment(), "calendar")
-                    Toast.makeText(this, "Вызов нужного блока.", Toast.LENGTH_SHORT).show()
+            //    launchMainFragment(CalendarItemFragment(), "calendar")
+                Toast.makeText(this, "Вызов нужного блока.", Toast.LENGTH_SHORT).show()
             }
+
 
         }
 
         this.doubleBackToExitPressedOnce = true
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
-        Handler(Looper.getMainLooper()).postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
+        Toast.makeText(this, "Нажмите еще раз назад для выхода.", Toast.LENGTH_SHORT).show()
+        Handler(Looper.getMainLooper()).postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 1000)
+        /*supportFragmentManager.popBackStack("listStudent", 0)*/
     }
 
     private fun backup() {
@@ -382,8 +385,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
              //   R.id.muItem2 -> getDialogBackup()
                 R.id.muItem3 -> launchFragment(InstructionFragment())
                 R.id.muItem4 -> launchFragment(AboutFragment())
-               /* R.id.muItem5 -> goGroupListFragment()
-                R.id.muItem6 -> goLessonsListFragment()
+                R.id.muItem5 -> exitApplication()
+               /* R.id.muItem6 -> goLessonsListFragment()
                 R.id.muItem7 -> goStudentListFragment()
                 R.id.muItem8 -> goTestAddLessons()*/
 
@@ -391,11 +394,12 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             true
         }
 
-
-
-
     }
 
+    private fun exitApplication() {
+        auth.signOut()
+        launchFragment(LoginFragment())
+    }
 
     private fun initBottomNavigation() {
         binding.navViewBottom?.setOnNavigationItemSelectedListener {

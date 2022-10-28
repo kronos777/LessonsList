@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,6 @@ import com.example.lessonslist.R
 import com.example.lessonslist.databinding.BottomSheetLayoutBinding
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
-import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.student.*
@@ -313,7 +311,7 @@ class BottomFragment : BottomSheetDialogFragment() {
                 viewModelStudent.studentItem.observe(viewLifecycleOwner) { studentItem ->
                     if(studentItem.paymentBalance > ( - payOff)) {
                         //производит замену прайса с учетом списания долга в записи студента
-                        viewModelStudent.editPaymentBalance(studentItem.id, (studentItem.paymentBalance + payOff.toFloat()))
+                        viewModelStudent.editPaymentBalance(studentItem.id, (studentItem.paymentBalance + payOff))
                         //выстаявляет значение платежа в соответствии со стоимостью урока
                         viewModelLessons.getLessonsItem(idLessons)
                         viewModelLessons.lessonsItem.observe(viewLifecycleOwner) { lessItem ->

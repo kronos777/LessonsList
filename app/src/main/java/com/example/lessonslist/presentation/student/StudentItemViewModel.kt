@@ -19,6 +19,7 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
     private val getStudentItemUseCase = GetStudentItemUseCase(repository)
     private val addStudentItemUseCase = AddStudentItemUseCase(repository)
     private val editStudentItemUseCase = EditStudentItemUseCase(repository)
+    private val editStudentItemPhoneNumberUseCase = EditStudentItemPhoneNumberUseCase(repository)
     private val editStudentItemPaymentBalanceUseCase = EditStudentItemPaymentBalanceUseCase(repository)
 
     private val _errorInputName = MutableLiveData<Boolean>()
@@ -91,9 +92,16 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun editPaymentBalance(studentId: Int, paymentBalance: Float) {
+    fun editPaymentBalance(studentId: Int, paymentBalance: Int) {
         viewModelScope.launch {
             editStudentItemPaymentBalanceUseCase.editStudentItemPaymentBalance(studentId, paymentBalance)
+            //finishWork()
+        }
+    }
+
+   fun editPhoneNumber(studentId: Int, phoneNumber: String) {
+        viewModelScope.launch {
+            editStudentItemPhoneNumberUseCase.editStudentItemPhoneNumber(studentId, phoneNumber)
             //finishWork()
         }
     }
