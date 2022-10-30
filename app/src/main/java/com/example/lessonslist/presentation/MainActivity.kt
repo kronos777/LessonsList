@@ -96,14 +96,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         // Initialising auth object
 
         auth = Firebase.auth
+        checkAuth()
         /*launchMainFragment(SignInFragment(), "registration")*/
-        if(auth.uid == null) {
-            launchMainFragment(SignInFragment(), "registration")
-        } else {
-            launchMainFragment(CalendarItemFragment(), "calendar")
-            getUserFireStore()
-        }
-
         parseParamsExtra()
 
         backup = RoomBackup(this)
@@ -117,7 +111,14 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     }
 
-
+    private fun checkAuth() {
+        if(auth.uid == null) {
+            launchMainFragment(SignInFragment(), "registration")
+        } else {
+            launchMainFragment(CalendarItemFragment(), "calendar")
+            getUserFireStore()
+        }
+    }
     private fun initMaterialToolBar() {
 
         redCircle = findViewById(R.id.view_alert_red_circle)
@@ -398,7 +399,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     private fun exitApplication() {
         auth.signOut()
-        launchFragment(LoginFragment())
+        checkAuth()
+       // launchFragment(LoginFragment())
     }
 
     private fun initBottomNavigation() {

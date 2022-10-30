@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager.TYPE_NOTIFICATION
 import android.media.RingtoneManager.getDefaultUri
-import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
@@ -17,7 +16,6 @@ import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.presentation.MainActivity
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
-import com.example.lessonslist.presentation.student.StudentItemViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
@@ -35,11 +33,10 @@ class PaymentWork(
 
     private val appDatabase = AppDatabase
 
-    fun getStudentIds(dataString: String) : List<Int> {
+    fun getStudentIds(dataString: String): List<Int> {
         var dataStr = dataString.replace("]", "")
         dataStr = dataStr.replace("[", "")
-        var lstValues: List<Int> = dataStr.split(",").map { it -> it.trim().toInt() }
-        return lstValues
+        return dataStr.split(",").map { it.trim().toInt() }
     }
 
 
@@ -51,10 +48,9 @@ class PaymentWork(
             val dbLessonGet = appDatabase.getInstance(applicationContext as Application).LessonsListDao()
             val dbStudent = appDatabase.getInstance(applicationContext as Application).StudentListDao()
             val dbPayment = appDatabase.getInstance(applicationContext as Application).PaymentListDao().getPaymentAllList()
-            val viewModelPayment: PaymentItemViewModel = PaymentItemViewModel(applicationContext as Application)
-            val viewModelStudent: StudentItemViewModel = StudentItemViewModel(applicationContext as Application)
-            var listIdsLessons: ArrayList<Int> = ArrayList()
-            var listIdsPayment: ArrayList<Int> = ArrayList()
+            val viewModelPayment = PaymentItemViewModel(applicationContext as Application)
+            val listIdsLessons: ArrayList<Int> = ArrayList()
+            val listIdsPayment: ArrayList<Int> = ArrayList()
 
 
             dbLessons.let {
@@ -63,16 +59,16 @@ class PaymentWork(
 
 
                 }
-               // log(it.get(0).title)
+
             }
-            log("arrlist"+listIdsLessons.toString())
+          //  log("arrlist"+listIdsLessons.toString())
             dbPayment.let {
                 for (payItem in it) {
                     listIdsPayment.add(payItem.lessonsId)
                 }
             }
 
-            log("arrlistPayment"+listIdsPayment.toString())
+          //  log("arrlistPayment"+listIdsPayment.toString())
 
 
             if (listIdsLessons.size > 0) {
@@ -100,18 +96,18 @@ class PaymentWork(
                           //  log("поле студенты " + lessonsItem.student.toString() + lessonsItem.title)
                             val stIds = getStudentIds(lessonsItem.student)
                             log("в противном случае на каждого ученика необходимо создать платеж" + stIds)
-                            var namesStudentArrayList: ArrayList<String> = ArrayList()
+                            val namesStudentArrayList: ArrayList<String> = ArrayList()
                             var okPay = 0
                             var noPay = 0
                             if(stIds.isNotEmpty()) {
                                 for (ids in stIds){
-                                    var student = dbStudent.getStudentItem(ids)
+                                    val student = dbStudent.getStudentItem(ids)
                                     log(student.name + student.lastname + student.paymentBalance)
                                     val studentData = student.name + " " + student.lastname
 
                                     //тут необходимо на каждого студента создать платеж и
                                     //(inputTitle: String, inputDescription: String, inputLessonsId: Int, inputStudentId: Int, inputStudent: String, inputPrice: String)
-                                    val newBalanceStudent = calculatePaymentPriceAdd(student.paymentBalance.toInt(), lessonsItem.price.toInt())
+                                    val newBalanceStudent = calculatePaymentPriceAdd(student.paymentBalance, lessonsItem.price)
                                     namesStudentArrayList.add(studentData + ' ' + newBalanceStudent.toString())
                                     log(newBalanceStudent.toString())
 
@@ -125,7 +121,7 @@ class PaymentWork(
                                         } else {
                                             viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description,
                                                 idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString(), true)
-                                            dbStudent.editStudentItemPaymentBalance(student.id, (student.paymentBalance - lessonsItem.price).toInt())
+                                            dbStudent.editStudentItemPaymentBalance(student.id, (student.paymentBalance - lessonsItem.price))
                                             okPay++
                                         }
                                      } else if (newBalanceStudent == 0) {
@@ -146,7 +142,7 @@ class PaymentWork(
 
                                 }
                             }
-                            var notificationString = ""
+                            lateinit var notificationString: String
                             if (noPay == 0) {
                                 notificationString = "Выставлены счета " + namesStudentArrayList.size + " ученикам и все оплаты прошли успешно."
                             } else {
@@ -174,46 +170,23 @@ class PaymentWork(
 
 
     private fun calculatePaymentPriceAddPlus(paymentBalance: Int, priceLessons: Int): Int {
-        val calculatePaymentPrice: Int = paymentBalance - priceLessons
 
-        /*if(priceLessons > paymentBalance) {
-            for (it in 0..paymentBalance) {
-            //priceLessons?.let {
-                if (it < priceLessons) {
-                    log(it.toString() + "menee")
-                } else {
-                    log(it.toString() + "bolee")
-                }
+        return paymentBalance - priceLessons
 
-            }
-        }*/
-        return calculatePaymentPrice
-        //   return l
     }
 
 
 
 
     private fun calculatePaymentPriceAdd(paymentBalance: Int, priceLessons: Int): Int {
-        val calculatePaymentPrice: Int
-        if(paymentBalance > 0){
-            calculatePaymentPrice = paymentBalance - priceLessons
+        val calculatePaymentPrice: Int = if(paymentBalance > 0){
+            paymentBalance - priceLessons
         } else {
-            calculatePaymentPrice = paymentBalance + priceLessons
+            paymentBalance + priceLessons
         }
-        /*if(priceLessons > paymentBalance) {
-            for (it in 0..paymentBalance) {
-            //priceLessons?.let {
-                if (it < priceLessons) {
-                    log(it.toString() + "menee")
-                } else {
-                    log(it.toString() + "bolee")
-                }
 
-            }
-        }*/
         return calculatePaymentPrice
-    //   return l
+   
     }
 
 
@@ -233,14 +206,12 @@ class PaymentWork(
         )
 
 
-        var notificationManager =
+        val notificationManager =
             applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel =
-                NotificationChannel("101", "channel", NotificationManager.IMPORTANCE_DEFAULT)
-            notificationManager.createNotificationChannel(notificationChannel)
-        }
+        val notificationChannel =
+            NotificationChannel("101", "channel", NotificationManager.IMPORTANCE_DEFAULT)
+        notificationManager.createNotificationChannel(notificationChannel)
 
         val ringtoneManager = getDefaultUri(TYPE_NOTIFICATION)
 
