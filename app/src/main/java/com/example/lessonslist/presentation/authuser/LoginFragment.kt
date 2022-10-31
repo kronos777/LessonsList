@@ -67,10 +67,10 @@ class LoginFragment: Fragment() {
 
 
     private fun launchFragment(fragment: Fragment) {
-       // this.supportFragmentManager.popBackStack()
-        getActivity()?.supportFragmentManager?.beginTransaction()
+        activity?.supportFragmentManager?.popBackStack()
+        activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.fragment_item_container, fragment)
-            ?.addToBackStack("login")
+            ?.addToBackStack(null)
             ?.commit()
     }
 
@@ -80,14 +80,15 @@ class LoginFragment: Fragment() {
         // calling signInWithEmailAndPassword(email, pass) "i.ziborov2018@yandex.ru" "123456"
         // function using Firebase auth object
         // On successful response Display a Toast
-        getActivity()?.let {
+        activity?.let {
             auth.signInWithEmailAndPassword(mail, pass).addOnCompleteListener(it) {
                 if (it.isSuccessful) {
                     val user = Firebase.auth.currentUser
-                    Toast.makeText(getActivity(), "Successfully LoggedIn your user id " + user?.uid.toString() + "user mail " + user?.email.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "Successfully LoggedIn your user id " + user?.uid.toString() + "user mail " + user?.email.toString(), Toast.LENGTH_SHORT).show()
                     //    binding.textView2.text = "Successfully login"
+                    launchFragment(CalendarItemFragment())
                 } else
-                    Toast.makeText(getActivity(), "Log In failed ", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "Log In failed ", Toast.LENGTH_SHORT).show()
             }
         }
     }

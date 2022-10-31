@@ -119,6 +119,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             getUserFireStore()
         }
     }
+
+
     private fun initMaterialToolBar() {
 
         redCircle = findViewById(R.id.view_alert_red_circle)

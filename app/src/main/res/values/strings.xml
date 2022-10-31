@@ -48,5 +48,8 @@
     <string name="login_checkbox">Запомнить меня</string>
     <string name="link_login_fragment">войти</string>
     <string name="link_register_fragment">зарегистрироваться</string>
+    <string name="drawerMenuItem1">Инструкция</string>
+    <string name="drawerMenuItem2">О приложение</string>
+    <string name="drawerMenuItem3">Выход</string>
 
 </resources>

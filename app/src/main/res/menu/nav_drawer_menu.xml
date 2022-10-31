@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/muItem3"
-        android:title="Инструкция" />
+        android:title="@string/drawerMenuItem1" />
     <item
         android:id="@+id/muItem4"
-        android:title="О приложение" />
+        android:title="@string/drawerMenuItem2" />
     <item
         android:id="@+id/muItem5"
-        android:title="Выход" />
+        android:title="@string/drawerMenuItem3" />
 </menu>

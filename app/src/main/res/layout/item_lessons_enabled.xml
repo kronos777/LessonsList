@@ -26,22 +26,18 @@
             android:layout_height="wrap_content"
             android:background="@drawable/border_card"
             android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp">
+            android:padding="16dp">
 
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{lessonsItem.title + ' ' + lessonsItem.student + ' ' + lessonsItem.price}"
+                android:text="@{lessonsItem.title + ' ' + lessonsItem.dateEnd + ' ' + lessonsItem.price}"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="Салфетки" />
-
 
         </LinearLayout>
 

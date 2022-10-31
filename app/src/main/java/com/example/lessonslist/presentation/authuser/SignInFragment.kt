@@ -273,10 +273,10 @@ class SignInFragment() : Fragment(), CalendarItemFragment.OnEditingFinishedListe
     }
 
     private fun launchFragment(fragment: Fragment) {
-        // this.supportFragmentManager.popBackStack()
-        getActivity()?.supportFragmentManager?.beginTransaction()
+        activity?.supportFragmentManager?.popBackStack()
+        activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.fragment_item_container, fragment)
-            ?.addToBackStack("registration")
+            ?.addToBackStack(null)
             ?.commit()
     }
 
