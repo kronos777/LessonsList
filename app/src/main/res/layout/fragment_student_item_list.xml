@@ -6,7 +6,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/student_list_recycler_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_student_list"
             android:layout_width="0dp"

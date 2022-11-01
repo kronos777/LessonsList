@@ -6,6 +6,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/group_list_recycler_layout"
         android:layout_width="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:layout_height="match_parent">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_group_list"

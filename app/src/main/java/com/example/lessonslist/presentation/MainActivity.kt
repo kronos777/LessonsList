@@ -1,9 +1,7 @@
 package com.example.lessonslist.presentation
 
-import android.accounts.AccountManager
 import android.app.Application
 import android.content.ContentValues.TAG
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -20,9 +18,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.lessonslist.R
@@ -30,9 +27,6 @@ import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.data.service.PaymentWork
 import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.domain.payment.PaymentItem
-import com.example.lessonslist.domain.user.UserItem
-import com.example.lessonslist.presentation.authuser.LoginFragment
-import com.example.lessonslist.presentation.authuser.SignInFragment
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
 import com.example.lessonslist.presentation.group.GroupItemFragment
@@ -43,24 +37,15 @@ import com.example.lessonslist.presentation.info.InstructionFragment
 import com.example.lessonslist.presentation.lessons.*
 import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
-import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.settings.SettingsItemFragment
 import com.example.lessonslist.presentation.student.StudentItemEditFragment
 import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentItemListFragment
-import com.example.lessonslist.presentation.student.StudentItemViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ktx.database
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.ktx.Firebase
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
-import org.w3c.dom.Text
-import ru.cleverpumpkin.calendar.CalendarDate
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -84,8 +69,9 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private lateinit var viewModelLessons: LessonsListViewModel
     private lateinit var viewModelGroup: GroupListViewModel
     private lateinit var viewModelStudent: MainViewModel
+    private lateinit var viewModelLesson: LessonsItemViewModel
     // create Firebase authentication object
-    private lateinit var auth: FirebaseAuth
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,11 +81,10 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         setContentView(binding.root)
         // Initialising auth object
 
-        auth = Firebase.auth
-        checkAuth()
+
         /*launchMainFragment(SignInFragment(), "registration")*/
         parseParamsExtra()
-
+        launchMainFragment(CalendarItemFragment(), "calendar")
         backup = RoomBackup(this)
 
         initDrawerNavigation()
@@ -109,16 +94,10 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         getDeptPayment()
         initNavHeader()
 
+
     }
 
-    private fun checkAuth() {
-        if(auth.uid == null) {
-            launchMainFragment(SignInFragment(), "registration")
-        } else {
-            launchMainFragment(CalendarItemFragment(), "calendar")
-            getUserFireStore()
-        }
-    }
+
 
 
     private fun initMaterialToolBar() {
@@ -151,27 +130,17 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     }
 
-/*
-*                     Toast.makeText(this, "Search Clicked", Toast.LENGTH_SHORT).show()
-                    alertCount = (alertCount + 1) % 11; // cycle through 0 - 10
-                    updateAlertIcon()
-* */
+
     override fun onBackPressed() {
         super.onBackPressed()
         //    supportFragmentManager.popBackStack("calendar", 0)
-        val myFragment: Fragment? = supportFragmentManager.findFragmentByTag("MainCalendarFragment") as Fragment
+        val myFragment: Fragment = supportFragmentManager.findFragmentByTag("MainCalendarFragment") as Fragment
         if (doubleBackToExitPressedOnce) {
             // super.onBackPressed()
             //return
-            if (myFragment != null && myFragment.isVisible()) {
+            if (myFragment.isVisible) {
                 this.finishAffinity()
                 Toast.makeText(this, "Текущий форагмент календарь, можно выходить.", Toast.LENGTH_SHORT).show()
-            }
-
-
-            if (myFragment == null) {
-            //    launchMainFragment(CalendarItemFragment(), "calendar")
-                Toast.makeText(this, "Вызов нужного блока.", Toast.LENGTH_SHORT).show()
             }
 
 
@@ -179,7 +148,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         this.doubleBackToExitPressedOnce = true
         Toast.makeText(this, "Нажмите еще раз назад для выхода.", Toast.LENGTH_SHORT).show()
-        Handler(Looper.getMainLooper()).postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 1000)
+        Handler(Looper.getMainLooper()).postDelayed({ doubleBackToExitPressedOnce = false }, 1000)
         /*supportFragmentManager.popBackStack("listStudent", 0)*/
     }
 
@@ -223,19 +192,16 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         val builder = AlertDialog.Builder(this)
             .setTitle("Создать/Восстановить резервную копию.")
             .setCancelable(false)
-            .setPositiveButton("Создать резервную копию.", DialogInterface.OnClickListener {
-                    dialog, id ->
-                    backup()
-            })
-            .setNegativeButton("Восстановить из резервной копии.", DialogInterface.OnClickListener {
-                    dialog, id ->
+            .setPositiveButton("Создать резервную копию.") { _, _ ->
+                backup()
+            }
+            .setNegativeButton("Восстановить из резервной копии.") { _, _ ->
                 //    log(date.toString())
-                    restore()
-            })
-            .setNeutralButton("Закрыть", DialogInterface.OnClickListener {
-                    dialog, id ->
+                restore()
+            }
+            .setNeutralButton("Закрыть") { dialog, _ ->
                 dialog.dismiss()
-            })
+            }
 
         val dialog = builder.create()
         dialog.show()
@@ -274,58 +240,15 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
 
-    private fun goSettingsFragment() {
-        if (!isOnePaneMode()) {
-            launchFragment(SettingsItemFragment())
-        } else {
-            recyclerMainGone()
-            launchFragmentTemp(SettingsItemFragment())
-            Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun goTestAddLessons() {
-          //  launchFragment(LessonsItemAddFragment().newInstanceAdd(""))
-        launchFragmentTemp(LessonsItemAddFragment.addInstance(""))
-    }
-
-
-
-    private fun goPaymentCalendarFragment() {
-        if (!isOnePaneMode()) {
-            launchFragment(CalendarPaymentItemFragment())
-        } else {
-            recyclerMainGone()
-            launchFragmentTemp(CalendarPaymentItemFragment())
-            Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-
     private fun goStudentListFragment() {
         if (!isOnePaneMode()) {
             launchFragment(StudentItemListFragment())
         } else {
-         //   recyclerMainGone()
             launchFragmentTemp(StudentItemListFragment())
-           // Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
         }
     }
 
-
-    private fun goMainView() {
-         if (isOnePaneMode()) {
-             binding.parentRecyclerLayout?.setVisibility(View.VISIBLE)
-             binding.fragmentItemContainer?.setVisibility (View.GONE)
-         }
-    }
-
-    private fun recyclerMainGone() {
-     binding.parentRecyclerLayout?.setVisibility(View.GONE)
-     binding.fragmentItemContainer?.setVisibility (View.VISIBLE)
-    }
-
-    fun goLessonsListFragment() {
+    private fun goLessonsListFragment() {
      if (!isOnePaneMode()) {
          launchFragment(LessonsItemListFragment.newInstanceNoneParams())
      } else {
@@ -335,18 +258,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
      }
     }
 
-    fun getVisibleFragment(): Fragment? {
-        val fragmentManager: FragmentManager = this@MainActivity.supportFragmentManager
-        val fragments: List<Fragment> = fragmentManager.getFragments()
-        if (fragments != null) {
-            for (fragment in fragments) {
-                if (fragment != null && fragment.isVisible) return fragment
-            }
-        }
-        return null
-    }
 
-    fun goGroupListFragment() {
+    private fun goGroupListFragment() {
      if (!isOnePaneMode()) {
          launchFragment(GroupItemListFragment())
      } else {
@@ -358,14 +271,12 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
 
-    fun goPaymentFragment() {
+    private fun goPaymentFragment() {
      if (!isOnePaneMode()) {
         launchFragment(PaymentItemListFragment.newInstanceNoneParams())
      } else {
-       //  recyclerMainGone()
-         launchFragmentTemp(PaymentItemListFragment.newInstanceNoneParams())
-         //llaunchFragment(PaymentItemListFragment.newInstanceNoneParams())
-         Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+        launchFragmentTemp(PaymentItemListFragment.newInstanceNoneParams())
+        Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
      }
     }
 
@@ -400,13 +311,12 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
     private fun exitApplication() {
-        auth.signOut()
-        checkAuth()
-       // launchFragment(LoginFragment())
+        this.finishAffinity()
     }
 
     private fun initBottomNavigation() {
-        binding.navViewBottom?.setOnNavigationItemSelectedListener {
+        binding.navViewBottom?.setOnItemSelectedListener {
+        //binding.navViewBottom?.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.bottomItem1 -> {
                     // Respond to navigation item 1 click
@@ -448,18 +358,12 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
         WorkManager.getInstance(this).enqueue(request)
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
-            .observe(this, Observer {
-                val status: String = it.state.name
+            .observe(this) {
+                it.state.name
                 //   Toast.makeText(this,status, Toast.LENGTH_SHORT).show()
-            })
+            }
         /**/
         /*work manager */
-    }
-
-    private fun testGetAccount() {
-        val accManager : AccountManager = AccountManager.get(getApplicationContext())
-        val acc = accManager.getAccountsByType("com.google")
-        Log.d("accountName", acc.size.toString())
     }
 
 
@@ -508,7 +412,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
          .commit()
     }
 
-    fun initNavHeader() {
+    private fun initNavHeader() {
 
         val navigationView : NavigationView = binding.navView
         val headerView : View = navigationView.getHeaderView(0)
@@ -518,6 +422,9 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         val navPaidLessons : TextView = headerView.findViewById(R.id.nav_yes_paymenet_count_pay)
         val navNoPaidLessons : TextView = headerView.findViewById(R.id.nav_no_paymenet_count_pay)
         val navGroupCount : TextView = headerView.findViewById(R.id.nav_value_count_group)
+        val navZaplanMoneyCount : TextView = headerView.findViewById(R.id.nav_title_income_count_expected)
+        val navActualMoneyCount : TextView = headerView.findViewById(R.id.nav_title_income_count_actual)
+        val navDeptMoneyCount : TextView = headerView.findViewById(R.id.nav_title_count_debts)
 
         val calendar = Calendar.getInstance()
         val calendarTimeZone: Calendar = Calendar.getInstance(TimeZone.getDefault())
@@ -534,7 +441,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         viewModelStudent = ViewModelProvider(this)[MainViewModel::class.java]
         viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelGroup = ViewModelProvider(this)[GroupListViewModel::class.java]
-
+        viewModelLesson = ViewModelProvider(this)[LessonsItemViewModel::class.java]
       //  val countLessonsP = findViewById<TextView>(R.id.nav_conducted_count_lessons)
         //val countLessonsZ = findViewById<TextView>(R.id.nav_scheduled_count_lessons)
         //Toast.makeText(this, initialDate.toString(), Toast.LENGTH_SHORT).show()
@@ -546,12 +453,17 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         viewModelLessons.lessonsList.observe(this) {
             var provedLessons = 0
             var zaplanLessons = 0
+            var zaplanMoney = 0
+
             for (index in it.indices) {
                 val dateTimeLessons = parseStringDate(it[index].dateEnd)
              //   Log.d("datelessons", it[index].dateEnd)
 
                 calendar.set(dateTimeLessons[0], dateTimeLessons[1]  - 1, dateTimeLessons[2], dateTimeLessons[3], dateTimeLessons[4])
                 val lessonsDate = calendar.time
+                val countStudent = it[index].student.split(",").toTypedArray().size
+                //val countStudent1 = countStudent.size
+                zaplanMoney += it[index].price * countStudent
 
                 if(initialDate > lessonsDate) {
                     provedLessons++
@@ -562,9 +474,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 }
 
             }
+
+            navZaplanMoneyCount.text = "ожидаемый доход $zaplanMoney"
             //Toast.makeText(this, it.count().toString(), Toast.LENGTH_SHORT).show()
-            navSheduledCount.text = "Запланировано: " + zaplanLessons.toString()
-            navConductedCount.text = "Проведено: " + provedLessons.toString()
+            navSheduledCount.text = "Запланировано: $zaplanLessons"
+            navConductedCount.text = "Проведено: $provedLessons"
 
         }
         viewModelStudent.studentList.observe(this) {
@@ -573,18 +487,47 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         }
 
         viewModelPayment.paymentList.observe(this) {
+
             var paidLessons = 0
             var noPaidLessons = 0
-
+            var deptMoney = 0
+            var actualMoney = 0
             for (index in it.indices) {
+
                 if(it[index].enabled) {
+                    actualMoney += it[index].price
                     paidLessons++
                 } else {
+                    var actualMoneyInner = 0
+
+                    viewModelLesson.getLessonsItem(it[index].lessonsId)
+                    viewModelLesson.lessonsItem.observe(this@MainActivity) { lesson ->
+                        var actualMoneyInner2 = 0
+                        actualMoneyInner++
+                            if(lesson.price != it[index].price && actualMoneyInner == index) {
+                              // Log.d("lessIdPrice", (lesson.price + it[index].price).toString())
+                                actualMoneyInner2 += lesson.price + it[index].price
+                                //Log.d("lessIdPrice", actualMoneyInner.toString())
+                                //Log.d("lessIdPrice", index.toString())
+                            }
+
+                        Log.d("lessIdPrice", actualMoneyInner2.toString())
+                    }
+
+                   // Log.d("lessIdPrice",viewModelLesson.lessonsItem.value?.price.toString())
+                        /*  if(lesson.price != it[index].price) {
+                              actualMoney += lesson.price - it[index].price
+
+                          }*/
+
+                    deptMoney += it[index].price
                     noPaidLessons++
                 }
 
             }
 
+            navDeptMoneyCount.text = "долги $deptMoney"
+            navActualMoneyCount.text = "фактический доход $actualMoney"
             navPaidLessons.text = "Оплаченных: " + paidLessons
             navNoPaidLessons.text = "Неоплаченные: " + noPaidLessons
 
@@ -595,41 +538,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         }
 
     //countLessons.setText(initialDate.toString())
-    }
-
-    private fun getUserFireStore() {
-
-        val db = Firebase.firestore
-
-        auth.uid?.let {
-            val docRef = db.collection("Users").document(it)
-            docRef.get()
-                .addOnSuccessListener { document ->
-                    if (document != null) {
-                     //   val users = document.data.toObject(UserItem::class.java)
-                        //val users = document.toObject<UserItem>()
-                        //Log.d(TAG, "Данные DocumentSnapshot: ${document.data}")
-                        //Log.d(TAG, "Данные DocumentSnapshot: ${document.data?.get("name")}")
-                        val users = UserItem(document.data?.get("name").toString(), document.data?.get("sername").toString(),
-                            document.data?.get("phone").toString(), document.data?.get("email").toString(),
-                            document.data?.get("password").toString(), document.data?.get("id").toString())
-                        (this as AppCompatActivity).findViewById<TextView>(R.id.nav_head_username).text = users.name + users.sername + "\n" + users.email
-                    } else {
-                        Log.d(TAG, "No such document")
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.d(TAG, "get failed with ", exception)
-                }
-        }
-
-
-
-    }
-
-
-    fun testAuthEmailValidation() {
-        TODO()
     }
 
 
@@ -751,14 +659,14 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         } else {
             countTextView?.setText("")
         }
-        redCircle?.setVisibility(if (alertCount > 0) View.VISIBLE else View.GONE)
+        redCircle?.visibility = if (alertCount > 0) View.VISIBLE else View.GONE
     }
 
     private fun clearAlertIcon() {
         // if alert count extends into two digits, just show the red circle
         alertCount = 0
 
-        redCircle?.setVisibility(View.GONE)
+        redCircle?.visibility = View.GONE
     }
 
     companion object {

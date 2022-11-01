@@ -6,11 +6,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.lessonslist.data.group.GroupListRepositoryImpl
 import com.example.lessonslist.data.lessons.LessonsListRepositoryImpl
-import com.example.lessonslist.domain.group.*
 import com.example.lessonslist.domain.lessons.*
-import com.example.lessonslist.domain.student.StudentItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LessonsItemViewModel(application: Application) : AndroidViewModel(application) {
@@ -23,6 +22,10 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
     private val _lessonsItem = MutableLiveData<LessonsItem>()
     val lessonsItem: LiveData<LessonsItem>
         get() = _lessonsItem
+
+    private val _lessonsItemMain = LessonsItem
+    val lessonsItemMain: LessonsItem.Companion
+        get() = _lessonsItemMain
 
     private val _errorInputTitle = MutableLiveData<Boolean>()
     val errorInputTitle: LiveData<Boolean>
@@ -44,13 +47,9 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
     fun getLessonsItem(lessonsItemId: Int) {
         viewModelScope.launch {
             val item = getLessonsItemUseCase.getLessonsItem(lessonsItemId)
-
             _lessonsItem.value = item
         }
     }
-
-
-
 
     fun addLessonsItem(inputTitle: String, inputDescription: String, inputStudent: String, inputPrice: String, inputDateStart: String, inputDateEnd: String) {
         val title = inputTitle

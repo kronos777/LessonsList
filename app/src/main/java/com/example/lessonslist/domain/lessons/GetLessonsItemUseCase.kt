@@ -4,5 +4,4 @@ class GetLessonsItemUseCase(private val lessonsListRepository: LessonsListReposi
     suspend fun getLessonsItem(lessonsItemId: Int): LessonsItem {
         return lessonsListRepository.getLessonsItem(lessonsItemId)
     }
-
 }

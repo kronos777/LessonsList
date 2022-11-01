@@ -32,6 +32,7 @@ class LessonsListRepositoryImpl(
         return mapper.mapDbModelToEntity(dbModel)
     }
 
+
     override fun getLessonsList(): LiveData<List<LessonsItem>> = Transformations.map(
         lessonsListDao.getLessonsList()
     ) {
