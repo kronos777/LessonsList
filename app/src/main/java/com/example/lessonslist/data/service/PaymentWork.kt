@@ -115,26 +115,26 @@ class PaymentWork(
                                         if(lessonsItem.price > student.paymentBalance) {
                                             val price = calculatePaymentPriceAddPlus(student.paymentBalance, lessonsItem.price)
                                             viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description,
-                                                idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, price.toString(), false)
+                                                idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, price.toString(), lessonsItem.price, false)
                                             dbStudent.editStudentItemPaymentBalance(student.id, (0).toInt())
                                             noPay++
                                         } else {
                                             viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description,
-                                                idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString(), true)
+                                                idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString(), lessonsItem.price,true)
                                             dbStudent.editStudentItemPaymentBalance(student.id, (student.paymentBalance - lessonsItem.price))
                                             okPay++
                                         }
                                      } else if (newBalanceStudent == 0) {
                                         //val price = calculatePaymentPriceAddPlus(student.paymentBalance, lessonsItem.price)
                                         viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description,
-                                            idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString(), true)
+                                            idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, lessonsItem.price.toString(), lessonsItem.price, true)
                                         dbStudent.editStudentItemPaymentBalance(student.id, (0).toInt())
                                         okPay++
                                     } else if (newBalanceStudent < 0) {
                                     //} else if (student.paymentBalance < 0) {
                                         val pricePayment = calculatePaymentPriceAddPlus(student.paymentBalance, lessonsItem.price)
                                         viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description,
-                                            idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, (pricePayment).toString(), false)
+                                            idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, (pricePayment).toString(), lessonsItem.price ,false)
                                         dbStudent.editStudentItemPaymentBalance(student.id, (0).toInt())
                                         noPay++
                                     }

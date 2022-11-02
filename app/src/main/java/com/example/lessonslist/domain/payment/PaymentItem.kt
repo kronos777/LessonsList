@@ -8,6 +8,7 @@ data class PaymentItem (
     val datePayment: String,
     val student: String,
     val price: Int,
+    val allprice: Int,
     val enabled: Boolean,
     val id: Int = UNDEFINED_ID
 ){

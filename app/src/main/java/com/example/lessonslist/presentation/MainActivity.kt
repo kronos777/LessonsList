@@ -476,7 +476,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             }
 
             navZaplanMoneyCount.text = "ожидаемый доход $zaplanMoney"
-            //Toast.makeText(this, it.count().toString(), Toast.LENGTH_SHORT).show()
+
             navSheduledCount.text = "Запланировано: $zaplanLessons"
             navConductedCount.text = "Проведено: $provedLessons"
 
@@ -498,28 +498,9 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                     actualMoney += it[index].price
                     paidLessons++
                 } else {
-                    var actualMoneyInner = 0
-
-                    viewModelLesson.getLessonsItem(it[index].lessonsId)
-                    viewModelLesson.lessonsItem.observe(this@MainActivity) { lesson ->
-                        var actualMoneyInner2 = 0
-                        actualMoneyInner++
-                            if(lesson.price != it[index].price && actualMoneyInner == index) {
-                              // Log.d("lessIdPrice", (lesson.price + it[index].price).toString())
-                                actualMoneyInner2 += lesson.price + it[index].price
-                                //Log.d("lessIdPrice", actualMoneyInner.toString())
-                                //Log.d("lessIdPrice", index.toString())
-                            }
-
-                        Log.d("lessIdPrice", actualMoneyInner2.toString())
+                    if(it[index].price != it[index].allprice) {
+                        actualMoney += (it[index].allprice + it[index].price)
                     }
-
-                   // Log.d("lessIdPrice",viewModelLesson.lessonsItem.value?.price.toString())
-                        /*  if(lesson.price != it[index].price) {
-                              actualMoney += lesson.price - it[index].price
-
-                          }*/
-
                     deptMoney += it[index].price
                     noPaidLessons++
                 }
