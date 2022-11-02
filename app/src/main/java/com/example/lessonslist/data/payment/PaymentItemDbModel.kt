@@ -15,5 +15,6 @@ data class PaymentItemDbModel (
     val lessonsId: Int,
     val datePayment: String,
     val price: Int,
+    val allprice: Int,
     val enabled: Boolean
 )
