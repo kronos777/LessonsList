@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -36,7 +37,7 @@ class PaymentItemListFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentPaymentItemListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,8 +45,7 @@ class PaymentItemListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as AppCompatActivity).supportActionBar?.title = "Список платежей"
-
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = "Список платежей"
         setupRecyclerView()
 
         val bottomNavigationView =
@@ -92,7 +92,7 @@ class PaymentItemListFragment: Fragment() {
             viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
             viewModel.paymentList.observe(viewLifecycleOwner) {
                 for (payment in it) {
-                    var pay = payment.datePayment.split(" ")
+                    val pay = payment.datePayment.split(" ")
                     val datePay = Date(pay[0])
                     val dateFormated = SimpleDateFormat("d/M/yyyy").format(datePay)
                   ///  val dateString = Date(dateId)

@@ -6,16 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentGroupItemListBinding
-import com.example.lessonslist.domain.student.StudentItem
-import com.example.lessonslist.presentation.student.StudentItemActivity
-import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -33,7 +30,7 @@ class GroupItemListFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentGroupItemListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -41,7 +38,7 @@ class GroupItemListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as AppCompatActivity).supportActionBar?.title = "Список групп"
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = "Список групп"
 
         setupRecyclerView()
         viewModel = ViewModelProvider(this).get(GroupListViewModel::class.java)
@@ -55,7 +52,7 @@ class GroupItemListFragment: Fragment() {
 
 
         binding.buttonAddGroupItem.setOnClickListener {
-            val fragmentTransaction = fragmentManager?.beginTransaction()
+            fragmentManager?.beginTransaction()
                 ?.replace(R.id.fragment_item_container, GroupItemFragment.newInstanceAddItem())
                 ?.addToBackStack(null)
                 ?.commit()

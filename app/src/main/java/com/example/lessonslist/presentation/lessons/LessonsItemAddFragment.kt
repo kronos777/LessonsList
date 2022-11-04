@@ -23,6 +23,8 @@ import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
+import com.example.lessonslist.presentation.student.StudentItemListFragment
+import java.lang.Thread.sleep
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.LocalDateTime
@@ -154,8 +156,11 @@ class LessonsItemAddFragment : Fragment()  {
                 }
 
             } else {
-                log("в учениках пока нет значений")
-                studentName += "в учениках пока нет значений"
+                //log("в учениках пока нет значений")
+                //studentName += "в учениках пока нет значений"
+                Toast.makeText(getActivity(), "В приложении нет учеников, добавьте учеников.", Toast.LENGTH_LONG).show()
+                sleep(1_500)
+                launchFragment(StudentItemListFragment())
             }
 
 

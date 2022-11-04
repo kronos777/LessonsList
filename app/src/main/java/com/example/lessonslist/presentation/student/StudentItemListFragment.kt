@@ -2,21 +2,16 @@ package com.example.lessonslist.presentation.student
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.inflate
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ColorStateListInflaterCompat.inflate
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
-import com.example.lessonslist.databinding.ActivityMainBinding.inflate
-import com.example.lessonslist.databinding.FragmentGroupItemListBinding
-import com.example.lessonslist.databinding.FragmentLessonsItemListBinding
 import com.example.lessonslist.databinding.FragmentStudentItemListBinding
 import com.example.lessonslist.presentation.MainViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -36,7 +31,7 @@ class StudentItemListFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentStudentItemListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,7 +39,8 @@ class StudentItemListFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as AppCompatActivity).supportActionBar?.title = "Список учеников"
+        //(activity as AppCompatActivity).supportActionBar?.title = "Список учеников"
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = "Список учеников"
 
         setupRecyclerView()
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
@@ -55,7 +51,7 @@ class StudentItemListFragment: Fragment() {
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
         binding.buttonAddStudentItem.setOnClickListener {
-            val fragmentTransaction = fragmentManager?.beginTransaction()
+            fragmentManager?.beginTransaction()
                 ?.replace(R.id.fragment_item_container, StudentItemFragment.newInstanceAddItem())
                 ?.addToBackStack("listStudent")
                 ?.commit()

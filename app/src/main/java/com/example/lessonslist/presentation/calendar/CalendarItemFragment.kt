@@ -74,6 +74,7 @@ class CalendarItemFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //(activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = "Календарь уроков"
         (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = "Календарь уроков"
 
         getDate()

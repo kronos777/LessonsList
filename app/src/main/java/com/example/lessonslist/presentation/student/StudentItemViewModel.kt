@@ -35,6 +35,11 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
     val errorInputPaymentBalance: LiveData<Boolean>
         get() = _errorInputPaymentBalance
 
+
+    private val _errorInputPhone = MutableLiveData<Boolean>()
+    val errorInputPhone: LiveData<Boolean>
+        get() = _errorInputPhone
+
     private val _studentItem = MutableLiveData<StudentItem>()
     val studentItem: LiveData<StudentItem>
         get() = _studentItem
@@ -60,15 +65,15 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
         val phone = inputPhone
         //val count = parseCount(inputCount)
 
-        val fieldsValid = validateInput(name, lastName, paymentBalance)
-        if (fieldsValid) {
+      //  val fieldsValid = validateInput(name, lastName, paymentBalance, inputPhone)
+       // if (fieldsValid) {
             viewModelScope.launch {
                 val studentItem = StudentItem(paymentBalance.toInt(), name, lastName, group,  image, notes, phone,true)
                 //val studentItem = StudentItem(paymentBalance?.toFloat(), name, lastName, group, notes, true)
                 addStudentItemUseCase.addStudentItem(studentItem)
                 finishWork()
             }
-        }
+       // }
     }
 
     fun editStudentItem(inputName: String?, inputLastName: String?, inputPaymentBalance: String, inputNotes: String, inputGroup: String, inputImage: String, inputPhone: String) {
@@ -80,7 +85,7 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
         val image = inputImage
         val phone = inputPhone
         //val count = parseCount(inputCount)
-        val fieldsValid = validateInput(name, lastName, paymentBalance.toString())
+        val fieldsValid = validateInput(name, lastName, paymentBalance.toString(), inputPhone)
         if (fieldsValid) {
             _studentItem.value?.let {
                 viewModelScope.launch {
@@ -118,7 +123,7 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    private fun validateInput(name: String, lastName: String, paymentBalance: String): Boolean {
+    fun validateInput(name: String, lastName: String, paymentBalance: String, inputPhone: String): Boolean {
         var result = true
         if (name.isBlank()) {
             _errorInputName.value = true
@@ -131,6 +136,11 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
 
         if (paymentBalance.isBlank()) {
             _errorInputPaymentBalance.value = true
+            result = false
+        }
+
+        if (inputPhone.isBlank()) {
+            _errorInputPhone.value = true
             result = false
         }
 
@@ -148,6 +158,10 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
 
     fun resetErrorInputPaymentBalance() {
         _errorInputPaymentBalance.value = false
+    }
+
+    fun resetErrorInputPhone() {
+        _errorInputPhone.value = false
     }
 
     private fun finishWork() {

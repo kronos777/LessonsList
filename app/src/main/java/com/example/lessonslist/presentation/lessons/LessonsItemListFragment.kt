@@ -1,14 +1,13 @@
 package com.example.lessonslist.presentation.lessons
 
 
-import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -42,15 +41,11 @@ class LessonsItemListFragment: Fragment() {
     }
 
 
-    private fun log(message: String) {
-        Log.d("SERVICE_TAG", "LessonsListDate: $message")
-    }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as AppCompatActivity).supportActionBar?.title = "Список уроков"
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title  = "Список уроков"
 
         setupRecyclerView()
         val args = requireArguments()
@@ -77,7 +72,7 @@ class LessonsItemListFragment: Fragment() {
                     if(listArrayPayment.size > 0) {
                         lessonsListAdapter.submitList(listArrayPayment)
                     } else {
-                        Toast.makeText(getActivity(),"На эту дату уроков не запланировано!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"На эту дату уроков не запланировано!",Toast.LENGTH_SHORT).show()
                     }
                 }
         } else {
@@ -89,7 +84,7 @@ class LessonsItemListFragment: Fragment() {
 
 
         binding.buttonAddLessonsItem.setOnClickListener {
-            val fragmentTransaction = fragmentManager?.beginTransaction()
+            fragmentManager?.beginTransaction()
                 ?.replace(R.id.fragment_item_container, LessonsItemAddFragment.addInstance(""))
                 //?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem("10/5/2022"))
                 ?.addToBackStack(null)
@@ -157,14 +152,14 @@ class LessonsItemListFragment: Fragment() {
 
         private const val SCREEN_MODE = "screen_mode"
         private const val CUSTOM_LIST = "custom_list"
-        private const val STUDENT_ID_LIST = "student_id_list"
-        private const val LESSONS_ID_LIST = "lesson_id_list"
+       // private const val STUDENT_ID_LIST = "student_id_list"
+       // private const val LESSONS_ID_LIST = "lesson_id_list"
         private const val DATE_ID_LIST = "date_id_list"
 
 
         private const val DATE_ID = "date_id"
-        private const val STUDENT_ID = "student_id"
-        private const val LESSONS_ID = "lessons_id"
+       // private const val STUDENT_ID = "student_id"
+        //private const val LESSONS_ID = "lessons_id"
 
         fun newInstanceNoneParams(): LessonsItemListFragment {
             return LessonsItemListFragment().apply {
@@ -174,7 +169,7 @@ class LessonsItemListFragment: Fragment() {
             }
         }
 
-        fun newInstanceStudentId(studentId: Int): LessonsItemListFragment {
+        /*fun newInstanceStudentId(studentId: Int): LessonsItemListFragment {
             return LessonsItemListFragment().apply {
                 arguments = Bundle().apply {
                     putInt(STUDENT_ID, studentId)
@@ -189,7 +184,7 @@ class LessonsItemListFragment: Fragment() {
                     putString(SCREEN_MODE, LESSONS_ID_LIST)
                 }
             }
-        }
+        }*/
 
         fun newInstanceDateId(dateId: String): LessonsItemListFragment {
             return LessonsItemListFragment().apply {

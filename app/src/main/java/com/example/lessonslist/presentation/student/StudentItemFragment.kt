@@ -10,13 +10,14 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
-import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -34,7 +35,6 @@ import java.util.concurrent.Executors
 class StudentItemFragment : Fragment() {
 
     private lateinit var viewModel: StudentItemViewModel
-    private lateinit var viewModelPayment: PaymentListViewModel
 
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
@@ -43,10 +43,8 @@ class StudentItemFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentStudentItemBinding == null")
 
 
-    private lateinit var listView: ListView
     private var screenMode: String = MODE_UNKNOWN
     private var studentItemId: Int = StudentItem.UNDEFINED_ID
-    private var dataPaymentStudentModel: ArrayList<DataPaymentStudentModel>? = null
 
 
     private lateinit var chosenImageUri: Uri
@@ -84,7 +82,7 @@ class StudentItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = "Добавить ученика"
         viewModel = ViewModelProvider(this)[StudentItemViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
@@ -233,8 +231,8 @@ class StudentItemFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.resetErrorInputName()
-            }
+                    viewModel.resetErrorInputName()
+               }
 
             override fun afterTextChanged(s: Editable?) {
             }
@@ -279,26 +277,20 @@ class StudentItemFragment : Fragment() {
             )
         }
     }
-    /*    val paymentBalance: Int,
-        val name: String,
-        val lastname: String,
-        val group: String,
-        val image: String,
-        val notes: String,
-        val telephone: String,
-        val enabled: Boolean,
-        var id: Int = UNDEFINED_ID*/
+
     private fun launchAddMode() {
         binding.saveButton.setOnClickListener {
-            viewModel.addStudentItem(
-                binding.etName.text?.toString(),
-                binding.etLastname.text?.toString(),
-                binding.etPaymentBalance.text.toString(),
-                "",
-                "",
-                inputImage = pathImageSrc ?: " ",
-                binding.etTelephone.text.toString()
-            )
+            if (viewModel.validateInput(binding.etName.text.toString(), binding.etLastname.text.toString(), binding.etPaymentBalance.text.toString(), binding.etTelephone.text.toString())) {
+                viewModel.addStudentItem(
+                    binding.etName.text?.toString(),
+                    binding.etLastname.text?.toString(),
+                    binding.etPaymentBalance.text.toString(),
+                    "",
+                    "",
+                    inputImage = pathImageSrc ?: " ",
+                    binding.etTelephone.text.toString()
+                )
+            }
         }
     }
 
