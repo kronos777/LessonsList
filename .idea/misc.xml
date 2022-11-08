@@ -28,6 +28,7 @@
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_baseline_save_24.xml" value="0.217" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/drawable/ic_launcher_background.xml" value="0.251" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout-land/activity_main.xml" value="0.30687830687830686" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout-land/fragment_lessons_item.xml" value="0.13139329805996472" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout-land/item_notes.xml" value="0.17504409171075838" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout-land/payment_card.xml" value="0.30687830687830686" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout-land/row_lessons_group_item.xml" value="0.31040564373897706" />
@@ -48,7 +49,7 @@
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_group_list.xml" value="0.35688405797101447" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_instruction.xml" value="0.365036231884058" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_lessons_item.xml" value="0.35688405797101447" />
-        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_lessons_item_add.xml" value="0.1" />
+        <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_lessons_item_add.xml" value="0.25" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_lessons_item_edit.xml" value="0.1" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_lessons_item_list.xml" value="0.35688405797101447" />
         <entry key="..\:/PortfolioAndroidDevelopment/LessonsList/app/src/main/res/layout/fragment_login.xml" value="0.29393115942028986" />

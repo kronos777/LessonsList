@@ -56,18 +56,11 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
         val description = inputDescription
         val student = inputStudent
 
-        // add validation fun
-        val fieldsValid = validateInput(title, student)
-
-        if(fieldsValid) {
-            viewModelScope.launch {
+       viewModelScope.launch {
                 val groupItem = GroupItem(title, description, student)
                 addGroupItemUseCase.addGroupItem(groupItem)
                 finishWork()
             }
-        } else {
-            Log.d("errorinput", "error in add group")
-        }
 
     }
 
@@ -76,35 +69,34 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
         val description = inputDescription
         val student = inputStudent
 
-        // add validation fun
-        val fieldsValid = validateInput(title, student)
-        if (fieldsValid) {
-            _groupItem.value?.let {
+        _groupItem.value?.let {
                 viewModelScope.launch {
                  //   val groupItem = GroupItem(title, description, student)
                     val groupItem = it.copy(title = title, description = description, student = student)
                     editGroupItemUseCase.editGroupItem(groupItem)
                     finishWork()
                 }
-            }
-        } else {
-            Log.d("errorinput", "error in edit group")
-         }
+        }
+
 
     }
 
-    private fun validateInput(title: String, inputStudent: String): Boolean {
+    fun validateInput(title: String, inputStudent: String): Boolean {
         var result = true
         if (title.isBlank()) {
-            //_errorInputName.value = true
+            _errorInputTitle.value = true
             result = false
         }
         if (inputStudent.isBlank()) {
-            //_errorInputLastName.value = true
+            _errorInputStudent.value = true
             result = false
         }
 
         return result
+    }
+
+    fun resetErrorInputTitle() {
+        _errorInputTitle.value = false
     }
 
     fun deleteGroupItem(groupItem: GroupItem) {

@@ -33,6 +33,7 @@
     <string name="error_input_name">Некоректное имя</string>
     <string name="error_input_last_name">Некоректная фамилия</string>
     <string name="error_input_payment_balance">Некоректное значение баланса</string>
+    <string name="error_input_phone">Некоректное значение номера телефона</string>
     <string name="open">open</string>
     <string name="close">close</string>
     <string name="add_lessons_item_content_description">добавить урок</string>
@@ -51,5 +52,6 @@
     <string name="drawerMenuItem1">Инструкция</string>
     <string name="drawerMenuItem2">О приложение</string>
     <string name="drawerMenuItem3">Выход</string>
+    <string name="list_student_lessons">Список учеников.</string>
 
 </resources>

@@ -31,13 +31,21 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
     val errorInputTitle: LiveData<Boolean>
         get() = _errorInputTitle
 
-    private val _errorInputDescription = MutableLiveData<Boolean>()
-    val errorInputDescription: LiveData<Boolean>
-        get() = _errorInputDescription
+    private val _errorInputPrice = MutableLiveData<Boolean>()
+    val errorInputPrice: LiveData<Boolean>
+        get() = _errorInputPrice
 
     private val _errorInputStudent = MutableLiveData<Boolean>()
     val errorInputStudent: LiveData<Boolean>
         get() = _errorInputStudent
+
+    private val _errorInputDateStart = MutableLiveData<Boolean>()
+    val errorInputDateStart: LiveData<Boolean>
+        get() = _errorInputDateStart
+
+    private val _errorInputDateEnd = MutableLiveData<Boolean>()
+    val errorInputDateEnd: LiveData<Boolean>
+        get() = _errorInputDateEnd
 
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>
@@ -59,18 +67,12 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
         val dateStart = inputDateStart
         val dateEnd = inputDateEnd
 
-        // add validation fun
-        val fieldsValid = validateInput(title, student, price, dateStart, dateEnd)
-
-        if(fieldsValid) {
             viewModelScope.launch {
                 val lessonsItem = LessonsItem(title, description, student, price.toInt(), dateStart, dateEnd)
                 addLessonsItemUseCase.addLessonsItem(lessonsItem)
                 finishWork()
             }
-        } else {
-            Log.d("errorinput", "error in edit lessons")
-        }
+
 
     }
 
@@ -82,8 +84,6 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
     val dateStart = inputDateStart
     val dateEnd = inputDateEnd
         // add validation fun
-        val fieldsValid = validateInput(title, student, price, dateStart, dateEnd)
-        if (fieldsValid) {
             _lessonsItem.value?.let {
                 viewModelScope.launch {
                     val lessonsItem = it.copy(title = title, description = description, student = student, price = price.toInt(), dateStart = dateStart, dateEnd = dateEnd)
@@ -91,37 +91,58 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
                     finishWork()
                 }
             }
-        } else {
-            Log.d("errorinput", "error in edit lessons")
-        }
 
     }
 
 
-    private fun validateInput(title: String, student: String, price: String, dateStart: String, dateEnd: String): Boolean {
+    fun validateInput(title: String, student: HashSet<Int?>, price: String, dateStart: String, dateEnd: String): Boolean {
         var result = true
         if (title.isBlank()) {
-            //_errorInputName.value = true
+            _errorInputTitle.value = true
             result = false
         }
-        if (student.isBlank()) {
-            //_errorInputLastName.value = true
+        if (student.isEmpty()) {
+            _errorInputStudent.value = true
             result = false
         }
         if (price.isBlank()) {
-            //_errorInputLastName.value = true
+            _errorInputPrice.value = true
             result = false
         }
         if (dateStart.isBlank()) {
-            //_errorInputLastName.value = true
+            _errorInputDateStart.value = true
             result = false
         }
         if (dateEnd.isBlank()) {
-            //_errorInputLastName.value = true
+            _errorInputDateEnd.value = true
             result = false
         }
         return result
     }
+
+    fun resetErrorInputTitle() {
+        _errorInputTitle.value = false
+    }
+
+    fun resetErrorInputPrice() {
+    _errorInputPrice.value = false
+    }
+
+    fun resetErrorInputStudent() {
+        _errorInputStudent.value = false
+    }
+
+    fun resetErrorInputDateStart() {
+        _errorInputDateStart.value = false
+    }
+
+    fun resetErrorInputDateEnd() {
+        _errorInputDateEnd.value = false
+    }
+
+
+
+
 
     fun deleteLessonsItem(lessonsItem: LessonsItem) {
         viewModelScope.launch {

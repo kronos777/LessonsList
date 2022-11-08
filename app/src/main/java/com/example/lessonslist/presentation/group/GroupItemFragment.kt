@@ -2,14 +2,18 @@ package com.example.lessonslist.presentation.group
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
@@ -91,19 +95,6 @@ class GroupItemFragment : Fragment() {
 
         binding.tilStudent.setVisibility (View.GONE)
 
-        /*get data student*/
-
-        //var dataString: String = String()
-
-
-      // Log.d("dataString", dataString)
-            //viewModel.groupItem.student
-        //if (dataStudentCheckBox != null) {
-
-      //  }
-        /*get data student*/
-
-
         listView = binding.listView
 
         dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
@@ -159,7 +150,7 @@ class GroupItemFragment : Fragment() {
                     dataStudentGroupModel!![position] as DataStudentGroupModel
 
                 dataStudentGroupModel.checked = !dataStudentGroupModel.checked
-                Log.d("checkedItemPosition", listView[position].toString())
+               // Log.d("checkedItemPosition", listView[position].toString())
                 adapter.notifyDataSetChanged()
 
             }*/
@@ -177,10 +168,24 @@ class GroupItemFragment : Fragment() {
         }*/
        //    touchListener(listView)
        // onCheckboxClicked(listView.findViewWithTag("CheckBox"))
+        addTextChangeListeners()
+
     }
 
 
-
+    private fun setHideError() {
+        if(viewModel.errorInputTitle.value == true) {
+            binding.tilTitle.error = "Введите название группы"
+        } else {
+            binding.tilTitle.error = ""
+        }
+        if(viewModel.errorInputStudent.value == true) {
+            //binding.tilTitle.error = "Введите название группы"
+            Toast.makeText(activity, "Группа не может быть создана без учеников.", Toast.LENGTH_LONG).show()
+        } else {
+            //binding.tilTitle.error = ""
+        }
+    }
 
     private fun touchListener(view: View) {
         view.setOnTouchListener { v, event ->
@@ -191,81 +196,25 @@ class GroupItemFragment : Fragment() {
         }
     }
 
-       // Log.d("dataStudentList", dataStudentListArray.toString())
-/*     Log.d("dataStudentList", dataStudentList.toString())
-
-     if (dataStudentList != null) {
-         for(student in dataStudentList){
-             val name = student.name + " " + student.lastname
-             val id = student.id
-             Log.d("listname", name)
-             Log.d("id", id.toString())
-             //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
-         }
-     }
-
-*/
-     /*
-
-     .observe(viewLifecycleOwner) {
-         adapter.submitList(it)
-     }
-     listView.adapter = adapter
-
-
-
-
-
-     viewModelStudent = ViewModelProvider(this)[MainViewModel::class.java]
-     val dataStudentList = viewModelStudent.studentList.value
-     if (dataStudentList != null) {
-         for(student in dataStudentList){
-             val name = student.name + " " + student.lastname
-             val id = student.id
-             Log.d("listname", name)
-             Log.d("id", id.toString())
-             dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
-         }
-     }*/
-
-         /*.observe(viewLifecycleOwner) {
-        // shopListAdapter.submitList(it)
-         for(student in it){
-             val name = student.name + " " + student.lastname
-             val id = student.id
-             Log.d("listname", name)
-             Log.d("id", id.toString())
-             dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
-         }
-
-     }
-*/
-
-     /*
-           dataStudentGroupModel!!.add(DataStudentGroupModel("Apple Pie", 4,false))
-            dataStudentGroupModel!!.add(DataStudentGroupModel("Banana Bread", 5,false))
-            dataStudentGroupModel!!.add(DataStudentGroupModel("Cupcake", 6,false))
-            dataStudentGroupModel!!.add(DataStudentGroupModel("Donut", 7,true))
-            dataStudentGroupModel!!.add(DataStudentGroupModel("Eclair", 8,true))
-            dataStudentGroupModel!!.add(DataStudentGroupModel("Froyo", 9,true))
-            dataStudentGroupModel!!.add(DataStudentGroupModel("Gingerbread", 11, true))
-            dataStudentGroupModel!!.add(DataStudentGroupModel("Honeycomb", 12,false))
-            dataStudentGroupModel!!.add(DataStudentGroupModel("Ice Cream Sandwich", 14, false))
-            dataStudentGroupModel!!.add(DataStudentGroupModel("Jelly Bean", 15,false))
-            dataStudentGroupModel!!.add(DataStudentGroupModel("Kitkat", 45,false))
-            dataStudentGroupModel!!.add(DataStudentGroupModel("Lollipop",23, false))
-            dataStudentGroupModel!!.add(DataStudentGroupModel("Marshmallow", 33, false))*/
-
-
-
-    override fun onStart() {
-        super.onStart()
-
-    }
 
 
     private fun addTextChangeListeners() {
-    TODO("Nyet implemented")
+
+        binding.etTitle.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel.resetErrorInputTitle()
+                setHideError()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
+        })
     }
 
 
@@ -283,37 +232,49 @@ class GroupItemFragment : Fragment() {
     viewModel.getGroupItem(groupItemId)
     binding.saveButton.setOnClickListener{
         var studentIds: String = adapter.arrayList.toString()
-      viewModel.editGroupItem(
-          binding.etTitle.text.toString(),
-          binding.etDescription.text.toString(),
-        //  binding.etStudent.text.toString()
-          studentIds
-      )
-    }
+        studentIds = studentIds.replace("[", "")
+        studentIds = studentIds.replace("]", "")
+        if(viewModel.validateInput(binding.etTitle.text.toString(), studentIds)) {
+              viewModel.editGroupItem(
+                  binding.etTitle.text.toString(),
+                  binding.etDescription.text.toString(),
+                //  binding.etStudent.text.toString()
+                  studentIds
+              )
+            } else {
+                setHideError()
+            }
+        }
     }
 
     private fun launchAddMode() {
     binding.saveButton.setOnClickListener{
-      var studentIds: String = adapter.arrayList.toString()
-      viewModel.addGroupItem(
-          binding.etTitle.text.toString(),
-          binding.etDescription.text.toString(),
-      //    binding.etStudent.text.toString()
-          studentIds
-      )
-    }
+          var studentIds: String = adapter.arrayList.toString()
+            studentIds = studentIds.replace("[", "")
+            studentIds = studentIds.replace("]", "")
+
+          if(viewModel.validateInput(binding.etTitle.text.toString(), studentIds)) {
+              viewModel.addGroupItem(
+                  binding.etTitle.text.toString(),
+                  binding.etDescription.text.toString(),
+                  studentIds
+              )
+          } else {
+              setHideError()
+          }
+       }
     }
 
     private fun observeViewModel() {
-    viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-      onEditingFinishedListener.onEditingFinished()
-    }
+        viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
+          onEditingFinishedListener.onEditingFinished()
+        }
     }
 
     interface OnEditingFinishedListener {
-
-    fun onEditingFinished()
+        fun onEditingFinished()
     }
+
     private fun parseParams() {
         val args = requireArguments()
         if (!args.containsKey(SCREEN_MODE)) {
@@ -331,30 +292,31 @@ class GroupItemFragment : Fragment() {
           groupItemId = args.getInt(GROUP_ITEM_ID, GroupItem.UNDEFINED_ID)
         }
     }
+
     companion object {
 
-    private const val SCREEN_MODE = "extra_mode"
-    private const val GROUP_ITEM_ID = "extra_group_item_id"
-    private const val MODE_EDIT = "mode_edit"
-    private const val MODE_ADD = "mode_add"
-    private const val MODE_UNKNOWN = ""
+        private const val SCREEN_MODE = "extra_mode"
+        private const val GROUP_ITEM_ID = "extra_group_item_id"
+        private const val MODE_EDIT = "mode_edit"
+        private const val MODE_ADD = "mode_add"
+        private const val MODE_UNKNOWN = ""
 
-    fun newInstanceAddItem(): GroupItemFragment {
-      return GroupItemFragment().apply {
-          arguments = Bundle().apply {
-              putString(SCREEN_MODE, MODE_ADD)
+        fun newInstanceAddItem(): GroupItemFragment {
+          return GroupItemFragment().apply {
+              arguments = Bundle().apply {
+                  putString(SCREEN_MODE, MODE_ADD)
+              }
           }
-      }
-    }
+        }
 
-    fun newInstanceEditItem(groupItemId: Int): GroupItemFragment {
-      return GroupItemFragment().apply {
-          arguments = Bundle().apply {
-              putString(SCREEN_MODE, MODE_EDIT)
-              putInt(GROUP_ITEM_ID, groupItemId)
+        fun newInstanceEditItem(groupItemId: Int): GroupItemFragment {
+          return GroupItemFragment().apply {
+              arguments = Bundle().apply {
+                  putString(SCREEN_MODE, MODE_EDIT)
+                  putInt(GROUP_ITEM_ID, groupItemId)
+              }
           }
-      }
-    }
+        }
 
 
     }

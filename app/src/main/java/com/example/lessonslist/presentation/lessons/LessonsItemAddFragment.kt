@@ -1,36 +1,35 @@
 package com.example.lessonslist.presentation.lessons
 
-import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ListView
-import android.widget.TimePicker
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemAddBinding
-import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
 import com.example.lessonslist.presentation.student.StudentItemListFragment
 import java.lang.Thread.sleep
-import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
 class LessonsItemAddFragment : Fragment()  {
 
@@ -40,12 +39,6 @@ class LessonsItemAddFragment : Fragment()  {
     private var _binding: FragmentLessonsItemAddBinding? = null
     private val binding: FragmentLessonsItemAddBinding
         get() = _binding ?: throw RuntimeException("FragmentGroupItemBinding == null")
-
-
-    private var screenMode: String = MODE_UNKNOWN
-    private var lessonsItemId: Int = LessonsItem.UNDEFINED_ID
-
-    private var selectionStatesStudent: Boolean = false
 
 
     private lateinit var adapter: ListStudentAdapter
@@ -82,7 +75,7 @@ class LessonsItemAddFragment : Fragment()  {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentLessonsItemAddBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -99,35 +92,57 @@ class LessonsItemAddFragment : Fragment()  {
        // launchRightMode()
         launchAddMode()
         observeViewModel()
+        lessonsTextChangeListeners()
 
 
+        binding.tilStudent.visibility = View.GONE
+        binding.listViewGroup.visibility = View.GONE
 
-        binding.tilStudent!!.setVisibility (View.GONE)
-        binding.listViewGroup.setVisibility(View.GONE)
+        chooseDateLessons()
 
+        setListViewStudent()
+        setGroupViewStudent()
+        listenSwitchGroup()
 
+    }
 
+    private fun listenSwitchGroup() {
+        val switchChoose = binding.switch1
+        switchChoose.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) {
+                binding.listViewGroup.visibility = View.VISIBLE
+                binding.listView.visibility = View.GONE
+                binding.textViewChangeStateCheckbox.text = "Список групп."
+                Toast.makeText(activity, "isChecked", Toast.LENGTH_SHORT).show()
+            } else {
+                binding.listViewGroup.visibility = View.GONE
+                binding.listView.visibility = View.VISIBLE
+                binding.textViewChangeStateCheckbox.text = "Список учеников."
+                Toast.makeText(activity, "unchecked", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+    }
+
+    private fun setListViewStudent() {
 
         listView = binding.listView
-
+        dataStudentGroupModel = ArrayList()
         dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
-        dataStudentGroupModel = ArrayList<DataStudentGroupModel>()
         var studentName: Array<String> = emptyArray()
-        var groupName: Array<String> = emptyArray()
 
-
-        dataStudentlList.studentList.observe(viewLifecycleOwner) {
-            if(it.size > 0) {
+        dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
+            if(it.isNotEmpty()) {
                 for(student in it){
                     val name = student.name + " " + student.lastname
                     val id = student.id
                     studentName += name
                     if(viewModel.lessonsItem.value != null) {
-                        viewModel.lessonsItem.observe(viewLifecycleOwner) {
-                            var dataString = it.student
+                        viewModel.lessonsItem.observe(viewLifecycleOwner) { item ->
+                            var dataString = item.student
                             dataString = dataString.replace("]", "")
                             dataString = dataString.replace("[", "")
-                            val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
+                            val lstValues: List<Int> = dataString.split(",").map { it.trim().toInt() }
                             if(lstValues.contains(id)) {
                                 dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
                                 // ListStudentAdapter.arrayList.add(id)
@@ -149,7 +164,7 @@ class LessonsItemAddFragment : Fragment()  {
                 listView.adapter = adapter
 
                 listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                    val dataStudent: DataStudentGroupModel = dataStudentGroupModel!![position] as DataStudentGroupModel
+                    val dataStudent: DataStudentGroupModel = dataStudentGroupModel!![position]
                     dataStudent.checked = !dataStudent.checked
                     Log.d("checkstate", dataStudent.checked.toString())
                     adapter.notifyDataSetChanged()
@@ -158,7 +173,7 @@ class LessonsItemAddFragment : Fragment()  {
             } else {
                 //log("в учениках пока нет значений")
                 //studentName += "в учениках пока нет значений"
-                Toast.makeText(getActivity(), "В приложении нет учеников, добавьте учеников.", Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, "В приложении нет учеников, добавьте учеников.", Toast.LENGTH_LONG).show()
                 sleep(1_500)
                 launchFragment(StudentItemListFragment())
             }
@@ -166,79 +181,41 @@ class LessonsItemAddFragment : Fragment()  {
 
         }
 
+    }
 
-/**/
+    private fun setGroupViewStudent() {
         listViewGroup = binding.listViewGroup
-
+        var groupName: Array<String> = emptyArray()
         dataGroupList = ViewModelProvider(this)[GroupListViewModel::class.java]
-        dataGroupLessonsModel = ArrayList<DataGroupLessonsModel>()
+        dataGroupLessonsModel = ArrayList()
 
         dataGroupList.groupList.observe(viewLifecycleOwner) {
-            if(it.size > 0) {
+            if(it.isNotEmpty()) {
                 for(group in it){
                     val students = group.student
                     val name = group.title
                     val id = group.id
                     groupName += name
-                    Log.d("groupId", name)
                     dataGroupLessonsModel!!.add(DataGroupLessonsModel(name, students, id,false))
                     if(viewModel.lessonsItem.value != null) {
                         listViewGroup.isInvisible
                     }
-                    /* if(viewModel.groupItem.value != null) {
-                         viewModel.lessonsItem.observe(viewLifecycleOwner) {
-                             var dataString = it.student
-                             dataString = dataString.replace("]", "")
-                             dataString = dataString.replace("[", "")
-                             val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
-                             if(lstValues.contains(id)) {
-                                 dataGroupLessonsModel!!.add(DataGroupLessonsModel(name, id,true))
-                                 // ListStudentAdapter.arrayList.add(id)
-                             } else {
-                                 dataGroupLessonsModel!!.add(DataGroupLessonsModel(name, id,false))
-                             }
-                         }
-                     } else {
-                         dataGroupLessonsModel!!.add(DataGroupLessonsModel(name, id,false))
-                     }
-                 }*/
-
-
                     adapterGroup = ListGroupAdapter(dataGroupLessonsModel!!, requireContext().applicationContext)
                     listViewGroup.adapter = adapterGroup
 
                 }
             } else {
                 dataGroupListString = false
-                log("в группе пока значений нет.")
                 groupName += "в группе пока значений нет."
             }
 
 
         }
+    }
 
 
 
-
-        binding.textViewChangeStateCheckbox.setOnClickListener {
-            if(!selectionStatesStudent) {
-                binding.listViewGroup.setVisibility(View.VISIBLE)
-                binding.listView.setVisibility(View.GONE)
-                binding.textViewChangeStateCheckbox.text = "Выберите учеников из списка."
-                selectionStatesStudent = true
-            } else {
-                binding.listViewGroup.setVisibility(View.GONE)
-                binding.listView.setVisibility(View.VISIBLE)
-                binding.textViewChangeStateCheckbox.text = "Выбрать студентов из групп."
-                selectionStatesStudent = false
-            }
-
-        }
-
-
-        /*string list*/
-        // dataGroupListString = adapterGroup.arrayList.toString()
-        /*string list*/
+    private fun chooseDateLessons() {
 
         val mTimePicker: TimePickerDialog
         val mTimePickerEnd: TimePickerDialog
@@ -253,66 +230,38 @@ class LessonsItemAddFragment : Fragment()  {
 
         val args = requireArguments()
         val dateAdd = args.getString(DATE_ADD)
-
-
         val mode = args.getString(SCREEN_MODE)
+
         if (mode == MODE_ADD) {
-
-
-
             if (dateAdd == "") {
-
                 val cal = Calendar.getInstance()
                 val year1 = cal.get(Calendar.YEAR)
                 val month1 = cal.get(Calendar.MONTH)
                 val day1 = cal.get(Calendar.DAY_OF_MONTH)
-
-
                 year = mcurrentTime.get(Calendar.YEAR)
                 month = mcurrentTime.get(Calendar.MONTH)
                 day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
 
 
                 val dpd =
-                    getActivity()?.let {
-                        DatePickerDialog(it, DatePickerDialog.OnDateSetListener { view, yearcur, monthOfYear, dayOfMonth ->
-                            //  val monthOfYear = monthOfYear - 1
-                            // Display Selected date in textbox
-                            Toast.makeText(activity, "need date lessons" + "You Selected: $dayOfMonth/$monthOfYear/$yearcur", Toast.LENGTH_SHORT).show()
-
-                            cal.set(yearcur, monthOfYear, dayOfMonth)
-
-                            year = cal[Calendar.YEAR]
-                            month = cal[Calendar.MONTH]
-                            day = cal[Calendar.DAY_OF_MONTH]
-
-
+                    activity?.let {
+                            DatePickerDialog(it, { _, yearcur, monthOfYear, dayOfMonth ->
+                                cal.set(yearcur, monthOfYear, dayOfMonth)
+                                year = cal[Calendar.YEAR]
+                                month = cal[Calendar.MONTH]
+                                day = cal[Calendar.DAY_OF_MONTH]
                         }, year1, month1, day1)
-
                     }
-
                 dpd!!.show()
-
-
-                //year = mcurrentTime.get(Calendar.YEAR)
-                //month = mcurrentTime.get(Calendar.MONTH)
-                //day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
-
             } else {
-                log(dateAdd.toString())
+                //log(dateAdd.toString())
                 val dateTime = dateAdd!!.split("/")
-                //val dateTime = Date(dateAdd)
                 val cal = Calendar.getInstance()
-                /*log(dateTime[0].toString())
-                log(dateTime[1].toString())
-                log(dateTime[2].toString())*/
                 cal.set(dateTime[2].toInt(), dateTime[1].toInt()-1, dateTime[0].toInt())
                 year = cal[Calendar.YEAR]
                 month = cal[Calendar.MONTH]
                 day = cal[Calendar.DAY_OF_MONTH]
-                /* log(year.toString())
-                 log(month.toString())
-                 log(day.toString())*/
+
             }
         } else {
             year = mcurrentTime.get(Calendar.YEAR)
@@ -321,40 +270,26 @@ class LessonsItemAddFragment : Fragment()  {
 
         }
 
-
         var timePicker1 = ""
         var timePicker2 = ""
 
-        /*    val str = "2022-7-19 16:4"
-            val formatter = DateTimeFormatter.ofPattern("yyyy-M-dd HH:m")
-            val dateTime: LocalDateTime = LocalDateTime.parse(str, formatter)
-            Toast.makeText(activity, "Время начала " + dateTime, Toast.LENGTH_SHORT).show()
-    */
-
-
-
-        mTimePicker = TimePickerDialog(context, object : TimePickerDialog.OnTimeSetListener {
-            override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+        mTimePicker = TimePickerDialog(context,
+            { _, hourOfDay, minute ->
                 binding.etDatestart.setText(String.format("%d/%d/%d %d : %d", year, month + 1, day, hourOfDay, minute))
                 timePicker1 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + hourOfDay.toString() + ":" + minute.toString()
-                if (timePicker1.length > 0 && timePicker2.length > 0) {
+                if (timePicker1.isNotEmpty() && timePicker2.isNotEmpty()) {
                     checkAddDateTime(timePicker1, timePicker2)
                 }
-            }
-        }, hour, minute, true)
+            }, hour, minute, true)
 
-        mTimePickerEnd = TimePickerDialog(context, object : TimePickerDialog.OnTimeSetListener {
-            override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+        mTimePickerEnd = TimePickerDialog(context,
+            { _, hourOfDay, minute ->
                 binding.etDateend.setText(String.format("%d/%d/%d %d : %d", year, month + 1, day, hourOfDay, minute))
                 timePicker2 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + hourOfDay.toString() + ":" + minute.toString()
-              /*  val timePicker2Date = LocalDateTime.parse((year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + hourOfDay.toString() + ":" + minute.toString()),
-                    DateTimeFormatter.ofPattern("yyyy-M-d H:m"))
-                Toast.makeText(activity, "Время начала " + timePicker2Date, Toast.LENGTH_SHORT).show()*/
-                if (timePicker1.length > 0 && timePicker2.length > 0) {
+                if (timePicker1.isNotEmpty() && timePicker2.isNotEmpty()) {
                     checkAddDateTime(timePicker1, timePicker2)
                 }
-            }
-        }, hour, minute, true)
+            }, hour, minute, true)
 
         binding.etDatestart.setOnClickListener{
             mTimePicker.show()
@@ -365,62 +300,13 @@ class LessonsItemAddFragment : Fragment()  {
         }
     }
 
-    fun withMultiChoiceList(listData: Array<String>): ArrayList<String> {
-
-        //val items = arrayOf("Microsoft", "Apple", "Amazon", "Google")
-        val items = listData
-        val selectedList = ArrayList<Int>()
-        val builder = AlertDialog.Builder(getContext())
-        val selectedStrings = ArrayList<String>()
-        builder.setTitle("Выберите студентов")
-        builder.setMultiChoiceItems(items, null
-        ) { dialog, which, isChecked ->
-            if (isChecked) {
-                selectedList.add(which)
-            } else if (selectedList.contains(which)) {
-                selectedList.remove(Integer.valueOf(which))
-            }
-        }
-
-        builder.setPositiveButton("ок") { dialogInterface, i ->
-
-
-            for (j in selectedList.indices) {
-                selectedStrings.add(items[selectedList[j]])
-            }
-
-            Toast.makeText(getContext(), "Items selected are: " + Arrays.toString(selectedStrings.toTypedArray()), Toast.LENGTH_SHORT).show()
-
-
-        }
-
-        builder.show()
-
-        return selectedStrings
-
-    }
-
     private fun checkAddDateTime(valueCheck1: String, valueCheck2: String): Boolean {
 
-        if (valueCheck1.length > 0 && valueCheck2.length > 0) {
+        if (valueCheck1.isNotEmpty() && valueCheck2.isNotEmpty()) {
 
             val formatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m")
             val dt: LocalDateTime = LocalDateTime.parse(valueCheck1, formatter)
             val dt2: LocalDateTime = LocalDateTime.parse(valueCheck2, formatter)
-
-  /*
-
-
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-            val dt: LocalDateTime = LocalDateTime.parse(dtTemp.toString(), formatter)
-            val dt2: LocalDateTime = LocalDateTime.parse(dt2Temp.toString(), formatter)
-
-                    val format = SimpleDateFormat("yyyy-MM-dd HH:mm")
-            val dt = format.parse(valueCheck1)
-            val dt2 = format.parse(valueCheck2)
-
-            */
-
 
             if(dt == dt2) {
                 Toast.makeText(activity, "Время начала и конца урока не могут совпадать.",
@@ -432,18 +318,18 @@ class LessonsItemAddFragment : Fragment()  {
             } else if (dt < dt2) {
                 val diff: Duration = Duration.between(dt, dt2)
                 val minutes = diff.toMinutes()
-                if(minutes < 30) {
+                return if(minutes < 30) {
                     Toast.makeText(activity, "урок не может быть менее 30 минут",
                         Toast.LENGTH_SHORT).show()
-                    return false
+                    false
                 } else if (minutes > 180) {
                     Toast.makeText(activity, "урок не может быть больше  3 часов",
                         Toast.LENGTH_SHORT).show()
-                    return false
+                    false
                 } else {
-                    Toast.makeText(activity, "разница минут" + minutes.toString(),
+                    Toast.makeText(activity, "разница минут $minutes",
                         Toast.LENGTH_SHORT).show()
-                    return true
+                    true
                 }
 
             }
@@ -456,106 +342,150 @@ class LessonsItemAddFragment : Fragment()  {
         return true
     }
 
-    private fun getStudentsOfString(student: String) : List<Int> {
-        //val ss = student.joinToString()
-        val ss = student
-        ss.replace("]", "")
-        ss.replace("[", "")
-        val lstValues: List<Int> = ss.split(",").map { it -> it.trim().toInt() }
-        return lstValues.distinct()
-    }
-
-    fun convertDate(dateString: String): String {
-//        return SimpleDateFormat("yyyy-MM-dd HH:mm").parse(dateString)
-        val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
-        return dateString.format(formatter)
-    }
-
-    private fun addTextChangeListeners() {
-        TODO("Not yet implemented")
-    }
-
-
-    private fun launchRightMode() {
-        Log.d("screenMode", screenMode)
-        when (screenMode) {
-            MODE_ADD -> launchAddMode()
-            // else -> launchEditMode()
-        }
-    }
-
-
-
-
     private fun launchAddMode() {
-        binding.tilStudent?.setVisibility(View.GONE)
+        binding.tilStudent.visibility = View.GONE
             // binding.etPrice?.setVisibility(View.GONE)
-        binding.etStudent.setVisibility(View.GONE)
+        binding.etStudent.visibility = View.GONE
         binding.saveButton.setOnClickListener{
-            Toast.makeText(getActivity(), "btn click", Toast.LENGTH_SHORT).show()
-
-            var studentIds: String = adapter.arrayList.toString()
-            /* var groupStudentIds: String
-             if(adapterGroup.arrayList.toString().length > 0) {
-                 groupStudentIds = adapterGroup.arrayList.toString()
-             }*/
-            var groupStudentIds: String
-            var allStudent: String
-            if(dataGroupListString) {
-                groupStudentIds = adapterGroup.arrayList.toString()
-                allStudent = studentIds + groupStudentIds
+            val valueStudent = checkValidStudent()
+            val checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
+                binding.etDatestart.text.toString(), binding.etDateend.text.toString())
+            if(checkField) {
+                viewModel.addLessonsItem(
+                    binding.etTitle.text.toString(),
+                    "",
+                    valueStudent.toString(),
+                    //binding.etStudent.text.toString(),
+                    binding.etPrice.text.toString(),
+                    binding.etDatestart.text.toString(),
+                    binding.etDateend.text.toString()
+                )
             } else {
-                allStudent = studentIds
+                setHideError()
             }
-
-            var lstValues: ArrayList<Int> = ArrayList()
-
-            allStudent.forEach {
-                if(it.isDigit()) {
-                    var str = it.toString()
-                    lstValues.add(str.toInt())
-                    Log.d("allStudent", it.toString())
-                }
-            }
-            var noD = HashSet(lstValues)
-            Toast.makeText(getActivity(), "value student string"+noD.toString(), Toast.LENGTH_SHORT).show()
-           /* if(stdlistName.size > 0) {
-
-
-                for (index in dataStudentGroupModel!!.indices) {
-                    if(stdlistName.contains(dataStudentGroupModel!!.get(index).name)) {
-                        Toast.makeText(getActivity(), dataStudentGroupModel!!.get(index).name, Toast.LENGTH_SHORT).show()
-                        Toast.makeText(getActivity(), dataStudentGroupModel!!.get(index).id.toString(), Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-
-                return@setOnClickListener
-            }*/
-
-            if(noD.size <= 0) {
-                Toast.makeText(activity, "Без учеников урок не может быть создан.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-
-            /*   Log.d("allStudent", noD.toString())
-             var allStudent: ArrayList<String> = ArrayList()
-              allStudent.add(studentIds)
-              allStudent.add(groupStudentIds)*/
-            //  var resultStudent = getStudentsOfString(studentIds)
-
-            viewModel.addLessonsItem(
-                binding.etTitle.text.toString(),
-                "",
-                noD.toString(),
-                //binding.etStudent.text.toString(),
-                binding.etPrice.text.toString(),
-                binding.etDatestart.text.toString(),
-                binding.etDateend.text.toString()
-            )
         }
     }
+
+    private fun checkValidStudent(): HashSet<Int?> {
+        val studentIds: String = adapter.arrayList.toString()
+        val groupStudentIds: String
+        val allStudent: String
+        if (dataGroupListString) {
+            groupStudentIds = adapterGroup.arrayList.toString()
+            allStudent = studentIds + groupStudentIds
+        } else {
+            allStudent = studentIds
+        }
+
+        val lstValues: ArrayList<Int> = ArrayList()
+
+        allStudent.forEach {
+            if (it.isDigit()) {
+                val str = it.toString()
+                lstValues.add(str.toInt())
+            }
+        }
+
+        return HashSet(lstValues)
+    }
+
+    private fun lessonsTextChangeListeners() {
+        binding.etTitle.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel.resetErrorInputTitle()
+                setHideError()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+
+        binding.etPrice.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel.resetErrorInputPrice()
+                setHideError()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+
+        binding.etDatestart.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel.resetErrorInputDateStart()
+                setHideError()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+
+        binding.etDateend.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel.resetErrorInputDateEnd()
+                setHideError()
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+
+    }
+
+    private fun setHideError() {
+        if(viewModel.errorInputTitle.value == true) {
+            binding.tilTitle.error = "Введите название урока"
+        } else {
+            binding.tilTitle.error = ""
+        }
+        if(viewModel.errorInputPrice.value == true) {
+            binding.tilPrice.error = "Введите значение цены урока"
+        } else {
+            binding.tilPrice.error = ""
+        }
+        if(viewModel.errorInputStudent.value == true) {
+            if(checkValidStudent().isNotEmpty()) {
+                viewModel.resetErrorInputStudent()
+                with(binding) { textViewChangeStateCheckbox.setTextColor(ContextCompat.getColor(requireContext().applicationContext,R.color.custom_calendar_days_bar_background)) }
+            } else {
+                with(binding) { textViewChangeStateCheckbox.setTextColor(ContextCompat.getColor(requireContext().applicationContext,R.color.custom_calendar_weekend_days_bar_text_color)) }
+            }
+        } else {
+            with(binding) { textViewChangeStateCheckbox.setTextColor(ContextCompat.getColor(requireContext().applicationContext,R.color.custom_calendar_days_bar_background)) }
+        }
+        if(viewModel.errorInputDateStart.value == true) {
+            binding.tilDatestart.error = "Выберите время начала урока"
+        } else {
+            binding.tilDatestart.error = ""
+        }
+        if(viewModel.errorInputDateEnd.value == true) {
+            binding.tilDateend.error = "Выберите время конца урока"
+        } else {
+            binding.tilDateend.error = ""
+        }
+    }
+
+
 
     private fun observeViewModel() {
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
@@ -571,7 +501,7 @@ class LessonsItemAddFragment : Fragment()  {
     private fun launchFragment(fragment: Fragment) {
         requireActivity().supportFragmentManager.popBackStack()
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(com.example.lessonslist.R.id.fragment_item_container, fragment)
+            .replace(R.id.fragment_item_container, fragment)
             .addToBackStack(null)
             .commit()
     }
@@ -582,35 +512,27 @@ class LessonsItemAddFragment : Fragment()  {
         if (!args.containsKey(SCREEN_MODE)) {
             throw RuntimeException("Param screen mode is absent")
         }
-        val mode = args.getString(SCREEN_MODE)
+        args.getString(SCREEN_MODE)
 
     }
-
-    private fun log(message: String) {
-        Log.d("SERVICE_TAG", "DateCalendar: $message")
-    }
-
 
 
 
     companion object {
 
         private const val SCREEN_MODE = "extra_mode"
-
         private const val MODE_ADD = "mode_add"
-        private const val MODE_UNKNOWN = ""
         private const val DATE_ADD = "date_add"
 
         fun addInstance(date: String): LessonsItemAddFragment {
             return LessonsItemAddFragment().apply {
                 arguments = Bundle().apply {
-                    putString(LessonsItemAddFragment.SCREEN_MODE, LessonsItemAddFragment.MODE_ADD)
-                    putString(LessonsItemAddFragment.DATE_ADD, date)
+                    putString(SCREEN_MODE, MODE_ADD)
+                    putString(DATE_ADD, date)
                 }
             }
         }
-
-
     }
-}
 
+
+}

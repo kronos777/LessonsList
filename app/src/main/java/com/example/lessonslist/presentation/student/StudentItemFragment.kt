@@ -207,7 +207,7 @@ class StudentItemFragment : Fragment() {
     private fun launchFragment(fragment: Fragment) {
         requireActivity().supportFragmentManager.popBackStack()
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(com.example.lessonslist.R.id.fragment_item_container, fragment)
+            .replace(R.id.fragment_item_container, fragment)
             .addToBackStack(null)
             .commit()
     }
@@ -232,6 +232,7 @@ class StudentItemFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     viewModel.resetErrorInputName()
+                    setHideErrorInput()
                }
 
             override fun afterTextChanged(s: Editable?) {
@@ -243,6 +244,7 @@ class StudentItemFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 viewModel.resetErrorInputLastName()
+                setHideErrorInput()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -254,12 +256,24 @@ class StudentItemFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 viewModel.resetErrorInputPaymentBalance()
+                setHideErrorInput()
             }
 
             override fun afterTextChanged(s: Editable?) {
             }
         })
+        binding.etTelephone.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
 
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.resetErrorInputPhone()
+                setHideErrorInput()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
     }
 
     private fun launchEditMode() {
@@ -280,7 +294,8 @@ class StudentItemFragment : Fragment() {
 
     private fun launchAddMode() {
         binding.saveButton.setOnClickListener {
-            if (viewModel.validateInput(binding.etName.text.toString(), binding.etLastname.text.toString(), binding.etPaymentBalance.text.toString(), binding.etTelephone.text.toString())) {
+            if (viewModel.validateInput(binding.etName.text.toString(), binding.etLastname.text.toString(),
+                    binding.etPaymentBalance.text.toString(), binding.etTelephone.text.toString())) {
                 viewModel.addStudentItem(
                     binding.etName.text?.toString(),
                     binding.etLastname.text?.toString(),
@@ -290,7 +305,33 @@ class StudentItemFragment : Fragment() {
                     inputImage = pathImageSrc ?: " ",
                     binding.etTelephone.text.toString()
                 )
+            } else {
+                setHideErrorInput()
             }
+        }
+    }
+
+
+    private fun setHideErrorInput() {
+        if(viewModel.errorInputName.value == true) {
+            binding.tilName.error = "Проверьте правиальность введенного имени"
+        } else {
+            binding.tilName.error = ""
+        }
+        if(viewModel.errorInputLastName.value == true) {
+            binding.tilLastname.error = "Проверьте правиальность введенной фамилии"
+        } else {
+            binding.tilLastname.error = ""
+        }
+        if(viewModel.errorInputPaymentBalance.value == true) {
+            binding.tilPaymentBalance.error = "Неправильно введен платежный баланс"
+        } else {
+            binding.tilPaymentBalance.error = ""
+        }
+        if(viewModel.errorInputPhone.value == true) {
+            binding.tilTelephone.error = "Неправильно введен телефон"
+        } else {
+            binding.tilTelephone.error = ""
         }
     }
 
