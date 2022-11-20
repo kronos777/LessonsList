@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs'
     id 'com.google.gms.google-services'
 }
 
@@ -55,6 +56,9 @@ dependencies {
     implementation "javax.annotation:javax.annotation-api:1.3.2"
     implementation "de.raphaelebner:roomdatabasebackup:1.0.0-beta10"
     implementation 'com.squareup.picasso:picasso:2.8'
+    //Android Navigation Architecture
+    implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
+    implementation "androidx.navigation:navigation-ui-ktx:2.5.3"
 //firebase
     implementation platform('com.google.firebase:firebase-bom:31.0.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'

@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentCalndarBinding
 import com.example.lessonslist.presentation.lessons.LessonsItemAddFragment
@@ -87,6 +89,11 @@ class CalendarItemFragment() : Fragment() {
 
     }
 
+    fun goToStList() {
+      //  val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+      //  val navController = navHostFragment.navController
+        findNavController().navigate(R.id.action_calendarItemFragment_to_studentItemListFragment)
+    }
 
     private fun showToolbarAndBottomNavigation() {
         (activity as AppCompatActivity).findViewById<BottomNavigationView>(R.id.nav_view_bottom).visibility = View.VISIBLE
