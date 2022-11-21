@@ -3,7 +3,6 @@ package com.example.lessonslist.presentation.calendar
 
 import android.content.Context
 import android.content.DialogInterface
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -355,7 +354,7 @@ class CalendarItemFragment() : Fragment() {
 
         // Set date long click callback
         calendarView.onDateLongClickListener = { date ->
-                if(getScreenOrientation()){
+               /* if(getScreenOrientation()){
                     val fragmentTransaction = fragmentManager?.beginTransaction()
                      ?.replace(R.id.shop_item_container, LessonsItemAddFragment.addInstance(date.toString()))
                      ?.addToBackStack(null)
@@ -365,15 +364,52 @@ class CalendarItemFragment() : Fragment() {
                      ?.replace(R.id.fragment_item_container, LessonsItemAddFragment.addInstance(date.toString()))
                      ?.addToBackStack(null)
                      ?.commit()
-                }
-
+                }*/
+            launchLessonsAddFragment(date.toString())
 
         }
 
    }
 
 
+    private fun launchLessonsAddFragment(date: String) {
 
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val btnArgsLessons = Bundle().apply {
+            putString(LessonsItemAddFragment.SCREEN_MODE, LessonsItemAddFragment.MODE_ADD)
+            putString(LessonsItemAddFragment.DATE_ADD, date)
+        }
+
+        navController.navigate(R.id.lessonsItemAddFragment, btnArgsLessons)
+    }
+
+    private fun launchLessonsListFragment(date: String) {
+
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val btnArgsLessons = Bundle().apply {
+            putString(LessonsItemListFragment.DATE_ID, date)
+            putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.DATE_ID_LIST)
+        }
+
+        navController.navigate(R.id.lessonsItemListFragment, btnArgsLessons)
+    }
+
+    private fun launchPaymentListFragment(date: String) {
+
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val btnArgsPayments = Bundle().apply {
+            putString(PaymentItemListFragment.DATE_ID, date)
+            putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.DATE_ID_LIST)
+        }
+
+        navController.navigate(R.id.paymentItemListFragment, btnArgsPayments)
+    }
 
     private fun dialogWindow(date: CalendarDate, dataDate: MutableList<EventItemsList>) {
 
@@ -385,10 +421,7 @@ class CalendarItemFragment() : Fragment() {
 
             alert.setPositiveButton("Добавить урок", DialogInterface.OnClickListener {
                     dialog, id ->
-                val fragmentTransaction = fragmentManager?.beginTransaction()
-                    ?.replace(R.id.fragment_item_container, LessonsItemAddFragment.addInstance(date.toString()))
-                    ?.addToBackStack(null)
-                    ?.commit()
+                launchLessonsAddFragment(date.toString())
             })
             alert.setNeutralButton("Закрыть", DialogInterface.OnClickListener {
                     dialog, id ->
@@ -403,11 +436,6 @@ class CalendarItemFragment() : Fragment() {
 
             val layout = LinearLayout(requireContext())
             layout.orientation = LinearLayout.VERTICAL
-
-
-
-
-
 
             val lessonsLabel = TextView(requireContext())
             lessonsLabel.setSingleLine()
@@ -480,7 +508,8 @@ class CalendarItemFragment() : Fragment() {
             if(countPayYes != 0 || countPayNo != 0) {
                 alert.setPositiveButton("Платежи", DialogInterface.OnClickListener {
                         dialog, id ->
-                    launchFragment(PaymentItemListFragment.newInstanceDateId(date.toString()))
+                   // launchFragment(PaymentItemListFragment.newInstanceDateId(date.toString()))
+                    launchPaymentListFragment(date.toString())
                 })
             }
 
@@ -488,7 +517,8 @@ class CalendarItemFragment() : Fragment() {
 
             alert.setNegativeButton("Уроки", DialogInterface.OnClickListener {
                     dialog, id ->
-                   launchFragment(LessonsItemListFragment.newInstanceDateId(date.toString()))
+                 //  launchFragment(LessonsItemListFragment.newInstanceDateId(date.toString()))
+                launchLessonsListFragment(date.toString())
             })
             alert.setNeutralButton("Закрыть", DialogInterface.OnClickListener {
                     dialog, id ->
@@ -549,81 +579,6 @@ class CalendarItemFragment() : Fragment() {
     }
 
 
-        private fun showDialogWithEventsForSpecificDate(date: CalendarDate) {
-            val eventItems = binding.calendarView.getDateIndicators(date)
-                .filterIsInstance<EventItem>()
-                .toTypedArray()
-
-
-
-            if (eventItems.isNotEmpty()) {
-                val adapter = EventDialogAdapter(requireContext(), eventItems)
-
-                val builder = AlertDialog.Builder(requireContext())
-                .setTitle("$date")
-                .setAdapter(adapter, null)
-                .setCancelable(false)
-                .setPositiveButton("Платежи", DialogInterface.OnClickListener {
-                     dialog, id ->
-                 launchFragment(PaymentItemListFragment.newInstanceDateId(date.toString()))
-                })
-                .setNegativeButton("Уроки", DialogInterface.OnClickListener {
-                     dialog, id ->
-                 //    log(date.toString())
-                 launchFragment(LessonsItemListFragment.newInstanceDateId(date.toString()))
-                })
-                .setNeutralButton("Закрыть", DialogInterface.OnClickListener {
-                     dialog, id ->
-                 dialog.dismiss()
-                })
-
-                val dialog = builder.create()
-                dialog.show()
-            }
-        }
-
-
-
-        private fun getDatesIndicators(): List<EventItem> {
-        val context = requireContext()
-        val calendar = Calendar.getInstance()
-
-        val eventItems = mutableListOf<EventItem>()
-
-        repeat(10) {
-
-
-            eventItems += EventItem(
-                eventName = "Event #3",
-                date = CalendarDate(calendar.time),
-                color = context.getColorInt(R.color.event_3_color)
-            )
-
-            eventItems += EventItem(
-                eventName = "Event #4",
-                date = CalendarDate(calendar.time),
-                color = context.getColorInt(R.color.event_4_color)
-            )
-
-            eventItems += EventItem(
-                eventName = "Event #5",
-                date = CalendarDate(calendar.time),
-                color = context.getColorInt(R.color.event_1_color)
-            )
-
-            calendar.add(Calendar.DAY_OF_MONTH, 5)
-        }
-
-        return eventItems
-        }
-
-        private fun getScreenOrientation(): Boolean {
-            return when (resources.configuration.orientation) {
-                Configuration.ORIENTATION_PORTRAIT -> false
-                Configuration.ORIENTATION_LANDSCAPE -> true
-                else -> false
-            }
-        }
 
 
    interface OnEditingFinishedListener {

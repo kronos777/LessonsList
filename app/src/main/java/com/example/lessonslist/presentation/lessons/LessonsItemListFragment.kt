@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
@@ -84,15 +86,26 @@ class LessonsItemListFragment: Fragment() {
 
 
         binding.buttonAddLessonsItem.setOnClickListener {
-            fragmentManager?.beginTransaction()
+           /* fragmentManager?.beginTransaction()
                 ?.replace(R.id.fragment_item_container, LessonsItemAddFragment.addInstance(""))
                 //?.replace(R.id.fragment_item_container, LessonsItemFragment.newInstanceAddItem("10/5/2022"))
                 ?.addToBackStack(null)
-                ?.commit()
+                ?.commit()*/
+            navigateBtnAddLessons("")
         }
+
+        goCalendarFragmentBackPressed()
 
     }
 
+    private fun goCalendarFragmentBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+            val navController = navHostFragment.navController
+            navController.popBackStack(R.id.calendarItemFragment, true)
+            navController.navigate(R.id.calendarItemFragment)
+        }
+    }
 
     private fun setupRecyclerView() {
         with(binding.rvLessonsList) {
@@ -111,17 +124,39 @@ class LessonsItemListFragment: Fragment() {
 
 
     private fun setupClickListener() {
-
         lessonsListAdapter.onLessonsItemClickListener = {
-            fragmentManager?.beginTransaction()
+           /* fragmentManager?.beginTransaction()
                 ?.replace(R.id.fragment_item_container, LessonsItemEditFragment.newInstanceEditItem(it.id))
                 ?.addToBackStack(null)
-                ?.commit()
+                ?.commit()*/
+            navigateBtnEditLessons(it.id)
+        }
+    }
+
+    private fun navigateBtnEditLessons(id: Int) {
+
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val btnArgsLessons = Bundle().apply {
+            putString(LessonsItemEditFragment.SCREEN_MODE, LessonsItemEditFragment.MODE_EDIT)
+            putInt(LessonsItemEditFragment.LESSONS_ITEM_ID, id)
         }
 
+        navController.navigate(R.id.lessonsItemEditFragment, btnArgsLessons)
+    }
 
+    private fun navigateBtnAddLessons(dateId: String) {
 
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
 
+        val btnArgsLessons = Bundle().apply {
+            putString(LessonsItemAddFragment.SCREEN_MODE, LessonsItemAddFragment.MODE_ADD)
+            putString(LessonsItemAddFragment.DATE_ADD, dateId)
+        }
+
+        navController.navigate(R.id.lessonsItemAddFragment, btnArgsLessons)
     }
 
     private fun setupSwipeListener(rvLessonsList: RecyclerView) {
@@ -150,14 +185,14 @@ class LessonsItemListFragment: Fragment() {
 
     companion object {
 
-        private const val SCREEN_MODE = "screen_mode"
-        private const val CUSTOM_LIST = "custom_list"
+        const val SCREEN_MODE = "screen_mode"
+        const val CUSTOM_LIST = "custom_list"
        // private const val STUDENT_ID_LIST = "student_id_list"
        // private const val LESSONS_ID_LIST = "lesson_id_list"
-        private const val DATE_ID_LIST = "date_id_list"
+        const val DATE_ID_LIST = "date_id_list"
 
 
-        private const val DATE_ID = "date_id"
+        const val DATE_ID = "date_id"
        // private const val STUDENT_ID = "student_id"
         //private const val LESSONS_ID = "lessons_id"
 

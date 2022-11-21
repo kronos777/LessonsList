@@ -5,15 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentStudentItemListBinding
 import com.example.lessonslist.presentation.MainViewModel
+import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -51,12 +54,51 @@ class StudentItemListFragment: Fragment() {
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
         binding.buttonAddStudentItem.setOnClickListener {
-            fragmentManager?.beginTransaction()
+            /*fragmentManager?.beginTransaction()
                 ?.replace(R.id.fragment_item_container, StudentItemFragment.newInstanceAddItem())
                 ?.addToBackStack("listStudent")
-                ?.commit()
+                ?.commit()*/
+            navigateBtnAddStudent()
+        }
+
+        goCalendarFragmentBackPressed()
+    }
+
+
+    private fun goCalendarFragmentBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+            val navController = navHostFragment.navController
+            navController.popBackStack(R.id.calendarItemFragment, true)
+            navController.navigate(R.id.calendarItemFragment)
         }
     }
+
+    private fun navigateBtnAddStudent() {
+
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val btnArgsLessons = Bundle().apply {
+            putString(StudentItemFragment.SCREEN_MODE, StudentItemFragment.MODE_ADD)
+        }
+
+        navController.navigate(R.id.studentItemFragment, btnArgsLessons)
+    }
+
+    private fun navigateBtnEditStudent(id: Int) {
+
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val btnArgsLessons = Bundle().apply {
+            putString(StudentItemEditFragment.SCREEN_MODE, StudentItemEditFragment.MODE_EDIT)
+            putInt(StudentItemEditFragment.SHOP_ITEM_ID, id)
+        }
+
+        navController.navigate(R.id.studentItemEditFragment, btnArgsLessons)
+    }
+
 
 
     private fun setupRecyclerView() {
@@ -77,11 +119,12 @@ class StudentItemListFragment: Fragment() {
 
     private fun setupClickListener() {
         studentListAdapter.onStudentItemClickListener = {
-            fragmentManager?.beginTransaction()
+           /* fragmentManager?.beginTransaction()
              //   ?.replace(R.id.fragment_item_container, StudentItemFragment.newInstanceEditItem(it.id))
                 ?.replace(R.id.fragment_item_container, StudentItemEditFragment.newInstanceEditItem(it.id))
                 ?.addToBackStack("listStudent")
-                ?.commit()
+                ?.commit()*/
+            navigateBtnEditStudent(it.id)
        }
     }
 

@@ -15,7 +15,8 @@
             app:destination="@id/lessonsItemListFragment" />
         <action
             android:id="@+id/action_calendarItemFragment_to_groupItemListFragment"
-            app:destination="@id/groupItemListFragment" />
+            app:destination="@id/groupItemListFragment"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_calendarItemFragment_to_paymentItemListFragment"
             app:destination="@id/paymentItemListFragment" />
@@ -40,7 +41,9 @@
         android:label="GroupItemListFragment" >
         <action
             android:id="@+id/action_groupItemListFragment_to_groupItemFragment"
-            app:destination="@id/groupItemFragment" />
+            app:destination="@id/groupItemFragment"
+            app:popUpTo="@id/groupItemListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/instructionFragment"
@@ -60,10 +63,14 @@
         android:label="LessonsItemListFragment" >
         <action
             android:id="@+id/action_lessonsItemListFragment_to_lessonsItemAddFragment"
-            app:destination="@id/lessonsItemAddFragment" />
+            app:destination="@id/lessonsItemAddFragment"
+            app:popUpTo="@id/lessonsItemListFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_lessonsItemListFragment_to_lessonsItemEditFragment"
-            app:destination="@id/lessonsItemEditFragment" />
+            app:destination="@id/lessonsItemEditFragment"
+            app:popUpTo="@id/lessonsItemListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/paymentItemListFragment"
@@ -71,7 +78,9 @@
         android:label="PaymentItemListFragment" >
         <action
             android:id="@+id/action_paymentItemListFragment_to_paymentItemFragment"
-            app:destination="@id/paymentItemFragment" />
+            app:destination="@id/paymentItemFragment"
+            app:popUpTo="@id/paymentItemListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/paymentItemFragment"
@@ -87,10 +96,14 @@
         android:label="StudentItemListFragment" >
         <action
             android:id="@+id/action_studentItemListFragment_to_studentItemEditFragment"
-            app:destination="@id/studentItemEditFragment" />
+            app:destination="@id/studentItemEditFragment"
+            app:popUpTo="@id/studentItemListFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_studentItemListFragment_to_studentItemFragment"
-            app:destination="@id/studentItemFragment" />
+            app:destination="@id/studentItemFragment"
+            app:popUpTo="@id/studentItemListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/studentItemFragment"

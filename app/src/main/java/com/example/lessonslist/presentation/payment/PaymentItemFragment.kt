@@ -274,11 +274,11 @@ class PaymentItemFragment: Fragment() {
     }
     companion object {
 
-        private const val SCREEN_MODE = "extra_mode"
-        private const val PAYMENT_ITEM_ID = "extra_payment_item_id"
-        private const val MODE_EDIT = "mode_edit"
-        private const val MODE_ADD = "mode_add"
-        private const val MODE_UNKNOWN = ""
+        const val SCREEN_MODE = "extra_mode"
+        const val PAYMENT_ITEM_ID = "extra_payment_item_id"
+        const val MODE_EDIT = "mode_edit"
+        const val MODE_ADD = "mode_add"
+        const val MODE_UNKNOWN = ""
 
         fun newInstanceAddItem(): PaymentItemFragment {
             return PaymentItemFragment().apply {

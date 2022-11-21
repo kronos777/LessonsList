@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemEditBinding
 import com.example.lessonslist.domain.group.GroupItem
@@ -235,7 +236,8 @@ class LessonsItemEditFragment : Fragment() {
              false
         }
         binding.saveButton.setOnClickListener {
-            launchFragment(LessonsItemListFragment.newInstanceNoneParams())
+            //launchFragment(LessonsItemListFragment.newInstanceNoneParams())
+            launchLessonsListFragment()
         }
 
 //        binding.saveButton
@@ -246,6 +248,21 @@ class LessonsItemEditFragment : Fragment() {
 
         binding.textViewChangeStateCheckbox.isFocusable = false*/
     }
+
+
+
+    private fun launchLessonsListFragment() {
+
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val btnArgsLessons = Bundle().apply {
+            putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.CUSTOM_LIST)
+        }
+
+        navController.navigate(R.id.lessonsItemListFragment, btnArgsLessons)
+    }
+
 
     fun withMultiChoiceList(listData: Array<String>): ArrayList<String> {
 
@@ -389,10 +406,10 @@ class LessonsItemEditFragment : Fragment() {
 
     companion object {
 
-        private const val SCREEN_MODE = "extra_mode"
-        private const val LESSONS_ITEM_ID = "extra_lessons_item_id"
-        private const val MODE_EDIT = "mode_edit"
-        private const val MODE_UNKNOWN = ""
+        const val SCREEN_MODE = "extra_mode"
+        const val LESSONS_ITEM_ID = "extra_lessons_item_id"
+        const val MODE_EDIT = "mode_edit"
+        const val MODE_UNKNOWN = ""
 
 
         fun newInstanceEditItem(lessonsItemId: Int): LessonsItemEditFragment {

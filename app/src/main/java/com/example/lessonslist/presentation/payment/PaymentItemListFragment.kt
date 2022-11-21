@@ -6,15 +6,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentPaymentItemListBinding
 import com.example.lessonslist.domain.payment.PaymentItem
+import com.example.lessonslist.presentation.student.StudentItemEditFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
 import java.util.*
@@ -123,16 +126,16 @@ class PaymentItemListFragment: Fragment() {
             }
         }
 
+        goCalendarFragmentBackPressed()
+    }
 
-
-
-/*
-        binding.buttonAddPaymentItem.setOnClickListener {
-            val fragmentTransaction = fragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment_item_container, PaymentItemFragment.newInstanceAddItem())
-                ?.addToBackStack(null)
-                ?.commit()
-        }*/
+    private fun goCalendarFragmentBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+            val navController = navHostFragment.navController
+            navController.popBackStack(R.id.calendarItemFragment, true)
+            navController.navigate(R.id.calendarItemFragment)
+        }
     }
 
 
@@ -154,13 +157,27 @@ class PaymentItemListFragment: Fragment() {
 
     private fun setupClickListener() {
         paymentListAdapter.onPaymentItemClickListener = {
-            fragmentManager?.beginTransaction()
+            /*fragmentManager?.beginTransaction()
                 ?.replace(R.id.fragment_item_container, PaymentItemFragment.newInstanceEditItem(it.id))
                 ?.addToBackStack(null)
-                ?.commit()
+                ?.commit()*/
+            navigateBtnEditStudent(it.id)
        }
     }
 
+
+    private fun navigateBtnEditStudent(id: Int) {
+
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val btnArgsLessons = Bundle().apply {
+            putString(PaymentItemFragment.SCREEN_MODE, PaymentItemFragment.MODE_EDIT)
+            putInt(PaymentItemFragment.PAYMENT_ITEM_ID, id)
+        }
+
+        navController.navigate(R.id.paymentItemFragment, btnArgsLessons)
+    }
 
     private fun setupSwipeListener(rvPaymentList: RecyclerView) {
         val callback = object : ItemTouchHelper.SimpleCallback(
@@ -198,17 +215,17 @@ class PaymentItemListFragment: Fragment() {
 
     companion object {
 
-        private const val SCREEN_MODE = "screen_mode"
-        private const val CUSTOM_LIST = "custom_list"
-        private const val STUDENT_ID_LIST = "student_id_list"
-        private const val LESSONS_ID_LIST = "lesson_id_list"
-        private const val DATE_ID_LIST = "date_id_list"
-        private const val PAYMENT_ENABLED = "payment_enabled"
+        const val SCREEN_MODE = "screen_mode"
+        const val CUSTOM_LIST = "custom_list"
+        const val STUDENT_ID_LIST = "student_id_list"
+        const val LESSONS_ID_LIST = "lesson_id_list"
+        const val DATE_ID_LIST = "date_id_list"
+        const val PAYMENT_ENABLED = "payment_enabled"
 
 
-        private const val DATE_ID = "date_id"
-        private const val STUDENT_ID = "student_id"
-        private const val LESSONS_ID = "lessons_id"
+        const val DATE_ID = "date_id"
+        const val STUDENT_ID = "student_id"
+        const val LESSONS_ID = "lessons_id"
 
         fun newInstanceNoneParams(): PaymentItemListFragment {
             return PaymentItemListFragment().apply {

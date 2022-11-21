@@ -110,6 +110,12 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         val bottomNavigationView =
             findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         setupWithNavController(bottomNavigationView, navController)
+        val btnArgsLessons = Bundle().apply {
+            putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.CUSTOM_LIST)
+        }
+        val btnArgsPayment = Bundle().apply {
+            putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.CUSTOM_LIST)
+        }
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.bottomItem1 -> {
@@ -123,7 +129,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                     //  Log.d("menuitem", "ite2")
                     //Toast.makeText(this, "item2", Toast.LENGTH_SHORT).show()
                     //goPaymentFragment()
-                    navController.navigate(R.id.action_calendarItemFragment_to_paymentItemListFragment)
+                    navController.navigate(R.id.paymentItemListFragment, btnArgsPayment)
                     true
                 }
                 R.id.bottomItem3 -> {
@@ -134,7 +140,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 R.id.bottomItem4 -> {
                     // Respond to navigation item 2 click
                     //goLessonsListFragment()
-                    navController.navigate(R.id.lessonsItemListFragment)
+                    navController.navigate(R.id.lessonsItemListFragment, btnArgsLessons)
                     true
                 }
                 R.id.bottomItem5 -> {
@@ -187,21 +193,29 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     override fun onBackPressed() {
         super.onBackPressed()
+        /*val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+        */
+        //Toast.makeText(this, "содержимое бекстека." + navController.toString(), Toast.LENGTH_SHORT).show()
+      //  navController.popBackStack()
+      //  navController.popBackStack(R.id.calendarItemFragment, true)
+      //  navController.navigate(R.id.calendarItemFragment)
         //    supportFragmentManager.popBackStack("calendar", 0)
-       /* val myFragment: Fragment = supportFragmentManager.findFragmentByTag("MainCalendarFragment") as Fragment
+       //val myFragment: Fragment = supportFragmentManager.findFragmentByTag("MainCalendarFragment") as Fragment
+     /*  val myFragment: Fragment = supportFragmentManager.findFragmentById(R.id.calendarItemFragment) as Fragment
         if (doubleBackToExitPressedOnce) {
             // super.onBackPressed()
             //return
             if (myFragment.isVisible) {
                 this.finishAffinity()
-                Toast.makeText(this, "Текущий форагмент календарь, можно выходить.", Toast.LENGTH_SHORT).show()
+              //  Toast.makeText(this, "Текущий форагмент календарь, можно выходить.", Toast.LENGTH_SHORT).show()
             }
 
 
         }
 
         this.doubleBackToExitPressedOnce = true
-        Toast.makeText(this, "Нажмите еще раз назад для выхода.", Toast.LENGTH_SHORT).show()
+       // Toast.makeText(this, "Нажмите еще раз назад для выхода.", Toast.LENGTH_SHORT).show()
         Handler(Looper.getMainLooper()).postDelayed({ doubleBackToExitPressedOnce = false }, 1000)*/
         /*supportFragmentManager.popBackStack("listStudent", 0)*/
     }

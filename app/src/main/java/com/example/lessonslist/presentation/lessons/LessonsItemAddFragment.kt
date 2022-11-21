@@ -207,6 +207,8 @@ class LessonsItemAddFragment : Fragment()  {
             } else {
                 dataGroupListString = false
                 groupName += "в группе пока значений нет."
+                binding.switch1.visibility = View.GONE
+
             }
 
 
@@ -520,9 +522,9 @@ class LessonsItemAddFragment : Fragment()  {
 
     companion object {
 
-        private const val SCREEN_MODE = "extra_mode"
-        private const val MODE_ADD = "mode_add"
-        private const val DATE_ADD = "date_add"
+        const val SCREEN_MODE = "extra_mode"
+        const val MODE_ADD = "mode_add"
+        const val DATE_ADD = "date_add"
 
         fun addInstance(date: String): LessonsItemAddFragment {
             return LessonsItemAddFragment().apply {

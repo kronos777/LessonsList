@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
@@ -52,10 +54,22 @@ class GroupItemListFragment: Fragment() {
 
 
         binding.buttonAddGroupItem.setOnClickListener {
-            fragmentManager?.beginTransaction()
+            /*fragmentManager?.beginTransaction()
                 ?.replace(R.id.fragment_item_container, GroupItemFragment.newInstanceAddItem())
                 ?.addToBackStack(null)
-                ?.commit()
+                ?.commit()*/
+            navigateBtnAddGroup()
+        }
+
+        goCalendarFragmentBackPressed()
+    }
+
+    private fun goCalendarFragmentBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+            val navController = navHostFragment.navController
+            navController.popBackStack(R.id.calendarItemFragment, true)
+            navController.navigate(R.id.calendarItemFragment)
         }
     }
 
@@ -78,13 +92,38 @@ class GroupItemListFragment: Fragment() {
 
     private fun setupClickListener() {
         groupListAdapter.onGroupItemClickListener = {
-            fragmentManager?.beginTransaction()
+           /* fragmentManager?.beginTransaction()
                 ?.replace(R.id.fragment_item_container, GroupItemFragment.newInstanceEditItem(it.id))
                 ?.addToBackStack(null)
-                ?.commit()
+                ?.commit()*/
+            navigateBtnEditGroup(it.id)
        }
     }
 
+    private fun navigateBtnAddGroup() {
+
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val btnArgsGroup = Bundle().apply {
+            putString(GroupItemFragment.SCREEN_MODE, GroupItemFragment.MODE_ADD)
+        }
+
+        navController.navigate(R.id.groupItemFragment, btnArgsGroup)
+    }
+
+    private fun navigateBtnEditGroup(id: Int) {
+
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val btnArgsGroup = Bundle().apply {
+            putString(GroupItemFragment.SCREEN_MODE, GroupItemFragment.MODE_EDIT)
+            putInt(GroupItemFragment.GROUP_ITEM_ID, id)
+        }
+
+        navController.navigate(R.id.groupItemFragment, btnArgsGroup)
+    }
 
     private fun setupSwipeListener(rvGroupList: RecyclerView) {
         val callback = object : ItemTouchHelper.SimpleCallback(
