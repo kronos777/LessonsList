@@ -10,9 +10,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentPaymentItemBinding
 import com.example.lessonslist.domain.payment.PaymentItem
+import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.student.StudentItemViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -187,14 +189,21 @@ class PaymentItemFragment: Fragment() {
         Log.d("screenMode", screenMode)
         when (screenMode) {
             MODE_EDIT -> launchEditMode()
-            MODE_ADD -> launchAddMode()
-            // else -> launchEditMode()
+
         }
     }
+
+    private fun goListNavigation() {
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+        navController.navigate(R.id.paymentItemListFragment)
+    }
+
     private fun launchEditMode() {
         viewModel.getPaymentItem(paymentItemId)
         binding.saveButton.setOnClickListener{
-            viewModel.editPaymentItem(
+            goListNavigation()
+            /*viewModel.editPaymentItem(
                 binding.valueTitle.text.toString(),
                 "",//binding.etDescription.text.toString(),
                 "",//binding.etLessonId.text.toString(),
@@ -203,14 +212,11 @@ class PaymentItemFragment: Fragment() {
                 binding.valueStudent.text.toString(),
                 binding.valuePricePayment.text.toString(),
                 true
-            )
-
+            )*/
         }
     }
 
-    private fun launchAddMode() {
-        TODO()
-    }
+
 /*
     private fun launchEditMode() {
         viewModel.getPaymentItem(paymentItemId)

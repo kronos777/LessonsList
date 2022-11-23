@@ -191,14 +191,13 @@
 
             <Button
                 android:id="@+id/save_button"
-                android:layout_below="@+id/payment_off"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/save_btn"
+                android:layout_below="@+id/payment_off"
+                android:text="@string/go_list_btn"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                />
+                app:layout_constraintStart_toStartOf="parent" />
         </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

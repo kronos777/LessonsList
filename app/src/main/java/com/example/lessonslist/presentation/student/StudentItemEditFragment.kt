@@ -231,14 +231,7 @@ class StudentItemEditFragment : Fragment() {
         alert.show()
     }
 
-    fun call(number: String?) {
-        val dialIntent = Intent(Intent.ACTION_DIAL)
-        dialIntent.data = Uri.parse("tel:" + number)
-        startActivity(dialIntent)
-    }
-
-
-
+   /*
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.student_menu_fragment, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -260,6 +253,7 @@ class StudentItemEditFragment : Fragment() {
         return super.onOptionsItemSelected(item)
 
     }
+*/
 
     private fun actionAddMoney() {
         var newBalance: Int
@@ -306,15 +300,7 @@ class StudentItemEditFragment : Fragment() {
             getImageLocal()
         }
     }
-    private fun actionPaymentStudent() {
-        TODO()
-    }
-    private fun actionGetLessons() {
-        TODO()
-    }
-    private fun actionGetGroup() {
-        TODO()
-    }
+
 
     fun totalDebt() {
         var summDept = 0
@@ -341,7 +327,7 @@ class StudentItemEditFragment : Fragment() {
     }
 
 
-
+/*
     private fun addParentContactStudent() {
 
         val alert = AlertDialog.Builder(requireContext())
@@ -381,7 +367,7 @@ class StudentItemEditFragment : Fragment() {
 
         alert.setCancelable(false)
         alert.show()
-    }
+    }*/
 
     private fun addPhoneNumber() {
         val alert = AlertDialog.Builder(requireContext())
@@ -421,135 +407,9 @@ class StudentItemEditFragment : Fragment() {
     }
 
 
-    override fun onResume() {
-        super.onResume()
-
-        Log.d("Fragment1", "onResume")
-    }
-
-    override fun onStop() {
-        Log.d("Fragment1", "onStop")
-
-        super.onStop()
-    }
-
-    override fun onDestroyView() {
-        Log.d("Fragment1", "onDestroyView")
-
-        super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        Log.d("Fragment1", "onDestroy")
-
-        super.onDestroy()
-    }
-
-    override fun onDetach() {
-        Log.d("Fragment1", "onDetach")
-
-        super.onDetach()
-    }
-
-    private fun addNotesStudent() {
-
-        val calendarTimeZone: Calendar = Calendar.getInstance(TimeZone.getDefault())
-        val currentYear = calendarTimeZone[Calendar.YEAR]
-        val currentMonth = calendarTimeZone[Calendar.MONTH]
-        val currentDay = calendarTimeZone[Calendar.DAY_OF_MONTH]
-        val currentHour = calendarTimeZone[Calendar.HOUR]
-        val currentMinute = calendarTimeZone[Calendar.MINUTE]
-
-        val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
-        val currentDate = sdf.format(Date())
-
-        val alert = AlertDialog.Builder(requireContext())
-        alert.setTitle("Добавить заметку")
-        //alert.setMessage("Enter phone details and amount to buy airtime.")
-
-        val layout = LinearLayout(requireContext())
-        layout.orientation = LinearLayout.VERTICAL
 
 
-        val mobileNoET = EditText(requireContext())
-        mobileNoET.setSingleLine()
-        mobileNoET.hint = "Текст заметки"
-        layout.addView(mobileNoET)
 
-        val amountET = EditText(requireContext())
-        amountET.setSingleLine()
-        amountET.hint = "дата" + currentDate
-        layout.addView(amountET)
-
-        layout.setPadding(50, 40, 50, 10)
-
-        alert.setView(layout)
-
-        alert.setPositiveButton("Добавить") { _, _ ->
-            val mobileNo = mobileNoET.text.toString()
-            val amount = amountET.text.toString()
-
-            Log.i("xxx",mobileNo )
-            Log.i("xxx",amount )
-
-            Toast.makeText(activity, "Saved Sucessfully", Toast.LENGTH_LONG).show()
-            viewModelNotesItem.addNotesItem(mobileNo, amount, studentItemId)
-        }
-
-        alert.setNegativeButton("отмена") { dialog, _ ->
-            dialog.dismiss()
-        }
-
-        alert.setCancelable(false)
-        alert.show()
-    }
-
-    fun expopupshow() {
-        val alert = AlertDialog.Builder(requireContext())
-        alert.setTitle("Buy Airtime")
-        alert.setMessage("Enter phone details and amount to buy airtime.")
-    
-        val layout = LinearLayout(requireContext())
-        layout.orientation = LinearLayout.VERTICAL
-    
-        val mobileNoET = EditText(requireContext())
-        mobileNoET.setSingleLine()
-        mobileNoET.hint = "Mobile Number"
-        layout.addView(mobileNoET)
-    
-        val amountET = EditText(requireContext())
-        amountET.setSingleLine()
-        amountET.hint = "Amount"
-        layout.addView(amountET)
-    
-        val networkET = EditText(requireContext())
-        networkET.setSingleLine()
-        networkET.hint = "Network"
-        layout.addView(networkET)
-    
-        layout.setPadding(50, 40, 50, 10)
-    
-        alert.setView(layout)
-    
-        alert.setPositiveButton("Proceed") { _, _ ->
-            val mobileNo = mobileNoET.text.toString()
-            val amount = amountET.text.toString()
-            val network = networkET.text.toString()
-    
-            Log.i("xxx",mobileNo )
-            Log.i("xxx",amount )
-            Log.i("xxx",network )
-    
-            Toast.makeText(activity, "Saved Sucessfully", Toast.LENGTH_LONG).show()
-        }
-    
-        alert.setNegativeButton("Cancel") { dialog, _ ->
-            dialog.dismiss()
-        }
-    
-        alert.setCancelable(false)
-        alert.show()
-    }
     fun getImageLocal() {
         val photoPickerIntent = Intent(Intent.ACTION_GET_CONTENT)
         photoPickerIntent.type = "image/*"
@@ -610,22 +470,8 @@ class StudentItemEditFragment : Fragment() {
         }
         return null
     }
-    // Function to establish connection and load image
-    private fun mLoad(string: String): Bitmap? {
-        val url: URL = mStringToURL(string)!!
-        val connection: HttpURLConnection?
-        try {
-            connection = url.openConnection() as HttpURLConnection
-            connection.connect()
-            val inputStream: InputStream = connection.inputStream
-            val bufferedInputStream = BufferedInputStream(inputStream)
-            return BitmapFactory.decodeStream(bufferedInputStream)
-        } catch (e: IOException) {
-            e.printStackTrace()
-            Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show()
-        }
-        return null
-    }
+
+
 
     private fun mLoadLocal(string: String): Bitmap? {
     //private fun mLoadLocal(string: String): Bitmap? {
@@ -682,90 +528,8 @@ class StudentItemEditFragment : Fragment() {
         return toCheck.matches(regex)
     }
 
-    private fun payOffDebtsAll(studentId: Int, studentBalance: Int): Int {
-        var summPaymentDolg: ArrayList<Int> = ArrayList()
-        /// if(dataPaymentStudentModel != null) {
-        viewModel = ViewModelProvider(this)[StudentItemViewModel::class.java]
-        //viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
-        viewModelPaymentItem = ViewModelProvider(this)[PaymentItemViewModel::class.java]
-        viewModelPayment.paymentList.observe(viewLifecycleOwner) {
-            if(it.size > 0) {
-                for (payment in it) {
-                    if(!payment.enabled && studentId == payment.studentId) {
-                       // Log.d("tagView:", studentItemId.toString())
-                        if(studentBalance >= payment.price) {
-                            viewModelPaymentItem.getPaymentItem(payment.id)
-                            viewModelPaymentItem.editPaymentItem(payment.title, payment.description, payment.lessonsId.toString(),
-                                payment.studentId.toString(), payment.datePayment, payment.student, (payment.price + payment.price).toString(), true)
-
-                            //(inputTitle: String, inputDescription: String, inputLessonsId: String, inputStudentId: String,
-                            // inputDatePayment: String, inputStudent: String, inputPrice: String, enabledPayment: Boolean)
-
-                            val balance = studentBalance + payment.price
-                            Toast.makeText(getActivity(), "new balance!" + balance.toString(), Toast.LENGTH_SHORT).show();
-                            viewModel.editPaymentBalance(payment.studentId, balance)
-                            Toast.makeText(getActivity(), "paymentBalance!" + (payment.studentId + payment.price.toFloat()).toString(), Toast.LENGTH_SHORT).show();
-//idPaymnet: Int, inputTitle: String, inputDescription: String, inputLessonsId: String, inputStudentId: String, inputDatePayment: String, inputStudent: String, inputPrice: String, enabledPayment: Boolean
-                            summPaymentDolg.add(payment.price)
-                            //dolgPay.add(payment.id.toString() + " " + payment.title + ' ' + payment.price + ' ' + payment.enabled)
-                        } else {
-                            Toast.makeText(getActivity(), "На оплату оставшихся долгов не хватает средств!", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                }
-            }
 
 
-
-        }
-
-        return summPaymentDolg.sum()
-    }
-
-    private fun alertDialogSetMove(studentBalance: Int) {
-        val dialog = AlertDialog.Builder(requireContext())
-            .setTitle("Сумма баланса позволяет списать все долги студента.")
-            .setPositiveButton("Списать долги") { _, _ ->
-                //Toast.makeText(getActivity(), "Долги в количестве " + payOffDebtsAll().toString() + " были списаны и неолаченных платежей нет.", Toast.LENGTH_SHORT).show();
-              // payOffDebtsAll(studentBalance)
-            }
-            .setNegativeButton("Отмена", null)
-            .create()
-        dialog.show()
-    }
-
-    private fun sumOffDebts(): Int {
-        var summPaymentDolg: ArrayList<Int> = ArrayList()
-        /// if(dataPaymentStudentModel != null) {
-        viewModelPayment.paymentList.observe(viewLifecycleOwner) {
-            if(it.size > 0) {
-                for (payment in it) {
-                    if(!payment.enabled && studentItemId == payment.studentId) {
-                        summPaymentDolg.add(payment.price)
-                    }
-                }
-            }
-
-
-            Toast.makeText(getActivity(), "obsii summa dolga!" + summPaymentDolg.sum().toString(), Toast.LENGTH_SHORT).show();
-
-        }
-        return summPaymentDolg?.sum()?.toInt() ?: 0
-    }
-
-
-
-
-
-
-    private fun launchFragment(fragment: Fragment) {
-        requireActivity().supportFragmentManager.popBackStack()
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(com.example.lessonslist.R.id.fragment_item_container, fragment)
-            .addToBackStack(null)
-            .commit()
-    }
 
     private fun observeViewModel() {
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
@@ -798,7 +562,7 @@ class StudentItemEditFragment : Fragment() {
                 " ",
                 " ",
                 pathImageSrc,
-                " "
+                viewModel.studentItem.value?.telephone.toString()
                 //binding.etNotes.text.toString(),
                 //binding.etGroup.text.toString()
             )

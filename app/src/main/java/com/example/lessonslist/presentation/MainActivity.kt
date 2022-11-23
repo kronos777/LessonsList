@@ -4,8 +4,6 @@ import android.app.Application
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -19,10 +17,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.work.OneTimeWorkRequestBuilder
@@ -33,12 +27,9 @@ import com.example.lessonslist.data.service.PaymentWork
 import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.domain.payment.PaymentItem
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
-import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupItemListFragment
 import com.example.lessonslist.presentation.group.GroupListViewModel
-import com.example.lessonslist.presentation.info.AboutFragment
-import com.example.lessonslist.presentation.info.InstructionFragment
 import com.example.lessonslist.presentation.lessons.*
 import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
@@ -54,7 +45,7 @@ import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, CalendarPaymentItemFragment.OnEditingFinishedListener, SettingsItemFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener, LessonsItemAddFragment.OnEditingFinishedListener, LessonsItemEditFragment.OnEditingFinishedListener {
+class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, SettingsItemFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener, LessonsItemAddFragment.OnEditingFinishedListener, LessonsItemEditFragment.OnEditingFinishedListener {
 
 
     private lateinit var binding: ActivityMainBinding
@@ -317,7 +308,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
     private fun goStudentListFragment() {
-        if (!isOnePaneMode()) {
+        if (true) {
             launchFragment(StudentItemListFragment())
         } else {
             launchFragmentTemp(StudentItemListFragment())
@@ -328,35 +319,38 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
     private fun goLessonsListFragment() {
-     if (!isOnePaneMode()) {
-         launchFragment(LessonsItemListFragment.newInstanceNoneParams())
-     } else {
-        // recyclerMainGone()
-         launchFragmentTemp(LessonsItemListFragment.newInstanceNoneParams())
-      //   Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
-     }
+    // if (!isOnePaneMode()) {
+        if (true) {
+             launchFragment(LessonsItemListFragment.newInstanceNoneParams())
+         } else {
+            // recyclerMainGone()
+             launchFragmentTemp(LessonsItemListFragment.newInstanceNoneParams())
+          //   Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+         }
     }
 
 
     private fun goGroupListFragment() {
-     if (!isOnePaneMode()) {
-         launchFragment(GroupItemListFragment())
-     } else {
-      //   recyclerMainGone()
-         launchFragmentTemp(GroupItemListFragment())
-     //    Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
-     }
+     //if (!isOnePaneMode()) {
+         if (true) {
+             launchFragment(GroupItemListFragment())
+         } else {
+          //   recyclerMainGone()
+             launchFragmentTemp(GroupItemListFragment())
+         //    Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+         }
     }
 
 
 
     private fun goPaymentFragment() {
-     if (!isOnePaneMode()) {
-        launchFragment(PaymentItemListFragment.newInstanceNoneParams())
-     } else {
-        launchFragmentTemp(PaymentItemListFragment.newInstanceNoneParams())
-       // Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
-     }
+     //if (!isOnePaneMode()) {
+         if (true) {
+            launchFragment(PaymentItemListFragment.newInstanceNoneParams())
+         } else {
+            launchFragmentTemp(PaymentItemListFragment.newInstanceNoneParams())
+           // Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
+         }
     }
 
     private fun initDrawerNavigation() {
@@ -507,10 +501,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
      supportFragmentManager.popBackStack()
     }
 
+    /*
     private fun isOnePaneMode(): Boolean {
      return binding.shopItemContainer == null
     }
-
+*/
 
     private fun launchMainFragment(fragment: Fragment, name: String) {
      //   supportFragmentManager.popBackStack()
@@ -776,7 +771,4 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         redCircle?.visibility = View.GONE
     }
 
-    companion object {
-             const val BACK_STACK_ROOT_TAG = "root_fragment"
-    }
 }
