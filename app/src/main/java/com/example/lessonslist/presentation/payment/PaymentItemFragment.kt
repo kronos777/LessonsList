@@ -96,6 +96,7 @@ class PaymentItemFragment: Fragment() {
                     binding.valueStatusPayment.text = "Долг"
                     binding.paymentPicture.setBackgroundResource(R.drawable.ic_baseline_indeterminate_check_box_24)
                 }
+
             val paymentCount = it.price
             viewModelStudent.getStudentItem(it.studentId)
             viewModelStudent.studentItem.observe(viewLifecycleOwner) {
@@ -132,8 +133,6 @@ class PaymentItemFragment: Fragment() {
                 viewModelStudent.getStudentItem(it.studentId)
                 viewModelStudent.studentItem.observe(viewLifecycleOwner) {
                     if(it.paymentBalance > ( - payOff)) {
-
-
                         //производит замену прайса с учетом списания долга в записи студента
                         viewModelStudent.editPaymentBalance(it.id, (it.paymentBalance + payOff))
 

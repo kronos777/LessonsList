@@ -128,6 +128,7 @@ class LessonsItemEditFragment : Fragment() {
                 listView.adapter = adapter
                 setFocusableEditText()
             } else {
+                binding.textViewPriceInfo.setVisibility (View.GONE)
                 dataStudentlList.studentList.observe(viewLifecycleOwner) {
                     if(it.size > 0) {
                         for(student in it){
@@ -223,6 +224,7 @@ class LessonsItemEditFragment : Fragment() {
 
     fun setFocusableEditText() {
         //binding.saveButton.setVisibility (View.GONE)
+        binding.etPrice.setVisibility (View.GONE)
         binding.saveButton.text = "Список уроков."
         binding.etTitle.setBackgroundResource(R.color.white)
         binding.etTitle.isFocusable = false
@@ -353,7 +355,7 @@ class LessonsItemEditFragment : Fragment() {
                 binding.etTitle.text.toString(),
                 "",
                 studentIds,
-                binding.textViewPriceInfo.text.toString(),
+                binding.etPrice.text.toString(),
                 binding.etDatestart.text.toString(),
                 binding.etDateend.text.toString()
             )

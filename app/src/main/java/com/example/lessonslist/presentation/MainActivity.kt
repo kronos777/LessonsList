@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
@@ -43,19 +44,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, SettingsItemFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener, LessonsItemAddFragment.OnEditingFinishedListener, LessonsItemEditFragment.OnEditingFinishedListener {
 
-
     private lateinit var binding: ActivityMainBinding
-
     lateinit var toggle: ActionBarDrawerToggle
-
     private lateinit var backup: RoomBackup
-
-    private var doubleBackToExitPressedOnce = false
-
+     //private var doubleBackToExitPressedOnce = false
     private var alertCount = 0
     private var redCircle: FrameLayout? = null
     private var countTextView: TextView? = null
@@ -71,23 +68,21 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // Initialising auth object
-
-
-        /*launchMainFragment(SignInFragment(), "registration")*/
+       /*launchMainFragment(SignInFragment(), "registration")*/
         parseParamsExtra()
       //  launchMainFragment(CalendarItemFragment(), "calendar")
         backup = RoomBackup(this)
 
         initDrawerNavigation()
-      //  initBottomNavigation()
+        //initBottomNavigation()
         initWorkManager()
         initMaterialToolBar()
         getDeptPayment()
         initNavHeader()
+        initBottomNavigationJetpack()
        /* val navController: NavController =
             findNavController(this, R.id.fragment_item_container)
         val bottomNavigationView =
@@ -95,7 +90,10 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         setupWithNavController(bottomNavigationView, navController)
 
 */
+    }
 
+
+    private fun initBottomNavigationJetpack() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
         val bottomNavigationView =
@@ -145,11 +143,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             true
         }
 
-
     }
-
-
-
 
     private fun initMaterialToolBar() {
 
@@ -161,9 +155,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         paymentBtnAppBarTop.setOnClickListener {
             if(alertCount > 0) {
-                launchFragment(PaymentItemListFragment.newInstanceEnabledPayment())
+               // launchFragment(PaymentItemListFragment.newInstanceEnabledPayment())
+                launchPaymentListEnabledFragment()
             } else {
-                goPaymentFragment()
+                //goPaymentFragment()
+                launchPaymentListNoParamsFragment()
             }
         }
 
@@ -182,8 +178,31 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
 
+    private fun launchPaymentListEnabledFragment() {
+         val navHostFragment = supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val btnArgsLessons = Bundle().apply {
+            putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.PAYMENT_ENABLED)
+        }
+
+        navController.navigate(R.id.paymentItemListFragment, btnArgsLessons)
+    }
+
+    private fun launchPaymentListNoParamsFragment() {
+        val navHostFragment = supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val btnArgsLessons = Bundle().apply {
+            putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.CUSTOM_LIST)
+        }
+
+        navController.navigate(R.id.paymentItemListFragment, btnArgsLessons)
+    }
+
+
     override fun onBackPressed() {
-        super.onBackPressed()
+       super.onBackPressed()
         /*val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
         */
@@ -201,10 +220,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 this.finishAffinity()
               //  Toast.makeText(this, "Текущий форагмент календарь, можно выходить.", Toast.LENGTH_SHORT).show()
             }
-
-
         }
-
         this.doubleBackToExitPressedOnce = true
        // Toast.makeText(this, "Нажмите еще раз назад для выхода.", Toast.LENGTH_SHORT).show()
         Handler(Looper.getMainLooper()).postDelayed({ doubleBackToExitPressedOnce = false }, 1000)*/
@@ -224,8 +240,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 onCompleteListener { success, message, exitCode ->
                     //Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
                     //    Toast.makeText(this, "vse ok!", Toast.LENGTH_SHORT).show();
-
-                    //  if (success) restartApp(Intent(this@MainActivity, MainActivity::class.java))
+                     //  if (success) restartApp(Intent(this@MainActivity, MainActivity::class.java))
                 }
             }
             .backup()
@@ -295,6 +310,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 }
             }
             if(listArrayPayment.size > 0) {
+                alertCount = 0
                 //Toast.makeText(this, "Search Clicked", Toast.LENGTH_SHORT).show()
                 //alertCount = (alertCount + 1) % 11; // cycle through 0 - 10
                 alertCount = listArrayPayment.size
@@ -475,8 +491,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private fun initWorkManager() {
         /*work manager */
         //PeriodicWorkRequest myWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class, 30, TimeUnit.MINUTES, 25, TimeUnit.MINUTES).build();
-        //val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES).build()
-        val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
+         val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES).build()
+        // val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
         WorkManager.getInstance(this).enqueue(request)
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
             .observe(this) {
@@ -489,10 +505,10 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-     if(toggle.onOptionsItemSelected(item)){
-         return true
-     }
-     return super.onOptionsItemSelected(item)
+         if(toggle.onOptionsItemSelected(item)){
+             return true
+         }
+         return super.onOptionsItemSelected(item)
     }
 
 
@@ -505,7 +521,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private fun isOnePaneMode(): Boolean {
      return binding.shopItemContainer == null
     }
-*/
+    */
 
     private fun launchMainFragment(fragment: Fragment, name: String) {
      //   supportFragmentManager.popBackStack()
@@ -729,14 +745,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private fun enableHomeBackIcon(enabled: Boolean) {
         // Enable/Disable opening the drawer from the start side
         toggle.isDrawerIndicatorEnabled = !enabled
-
         // Change the default burger icon
         supportActionBar?.setHomeAsUpIndicator(
             if (enabled) R.drawable.ic_baseline_navigate_next_24
             else R.drawable.ic_baseline_menu_24
         )
-
-
     }
 
     private fun getActionBarDrawerToggle(
@@ -757,11 +770,12 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     private fun updateAlertIcon() {
         // if alert count extends into two digits, just show the red circle
-        if (alertCount in 1..9) {
+        countTextView?.text = java.lang.String.valueOf(alertCount)
+        /*if (alertCount in 1..100) {
             countTextView?.text = java.lang.String.valueOf(alertCount)
         } else {
             countTextView?.text = ""
-        }
+        }*/
         redCircle?.visibility = if (alertCount > 0) View.VISIBLE else View.GONE
     }
 
