@@ -295,10 +295,24 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             Toast.makeText(this, "extra params" + intent.getStringExtra("extra"), Toast.LENGTH_SHORT).show()
             val lessonIdForFragment = intent.getStringExtra("extra")
             if (lessonIdForFragment != null) {
-                launchFragment(LessonsItemEditFragment.newInstanceEditItem(lessonIdForFragment.toInt()))
+                //launchFragment(LessonsItemEditFragment.newInstanceEditItem(lessonIdForFragment.toInt()))
+                launchLessonsItemEditFragmentId(lessonIdForFragment)
             }
         }
     }
+
+    private fun launchLessonsItemEditFragmentId(lessonIdForFragment: String) {
+        val navHostFragment = supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val btnArgsLessons = Bundle().apply {
+            putString(LessonsItemEditFragment.SCREEN_MODE, LessonsItemEditFragment.MODE_EDIT)
+            putInt(LessonsItemEditFragment.LESSONS_ITEM_ID, lessonIdForFragment.toInt())
+        }
+
+        navController.navigate(R.id.lessonsItemEditFragment, btnArgsLessons)
+    }
+
 
     private fun getDeptPayment() {
         val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
