@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -167,7 +168,7 @@ class LessonsItemEditFragment : Fragment() {
                 }
             }
 
-
+            goLessonsListFragmentBackPressed()
 
         }
 
@@ -402,9 +403,18 @@ class LessonsItemEditFragment : Fragment() {
 
     }
 
-    private fun log(message: String) {
-        Log.d("SERVICE_TAG", "DateCalendar: $message")
+    private fun goLessonsListFragmentBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+            val navController = navHostFragment.navController
+            val arguments = Bundle().apply {
+                putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.CUSTOM_LIST)
+            }
+            navController.popBackStack(R.id.lessonsItemListFragment, true)
+            navController.navigate(R.id.lessonsItemListFragment, arguments)
+        }
     }
+
 
     companion object {
 

@@ -43,7 +43,8 @@ class PaymentWork(
 
 
     override suspend fun doWork(): Result {
-        withContext(Dispatchers.IO) {
+      //  withContext(Dispatchers.IO) {
+        withContext(Dispatchers.Default) {
             val dbLessons = appDatabase.getInstance(applicationContext as Application).LessonsListDao().getAllLessonsList()
             val dbLessonGet = appDatabase.getInstance(applicationContext as Application).LessonsListDao()
             val dbStudent = appDatabase.getInstance(applicationContext as Application).StudentListDao()
