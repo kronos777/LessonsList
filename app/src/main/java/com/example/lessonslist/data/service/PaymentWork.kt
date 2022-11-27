@@ -56,8 +56,6 @@ class PaymentWork(
             dbLessons.let {
                 for (item in it){
                     listIdsLessons.add(item.id)
-
-
                 }
 
             }

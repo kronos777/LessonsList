@@ -318,6 +318,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
         viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelPayment.paymentList.observe(this) {
+            listArrayPayment.clear()
             for (payment in it) {
                 if(!payment.enabled){
                     listArrayPayment.add(payment)
@@ -784,7 +785,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     private fun updateAlertIcon() {
         // if alert count extends into two digits, just show the red circle
-        countTextView?.text = java.lang.String.valueOf(alertCount)
+        Toast.makeText(this, alertCount.toString(), Toast.LENGTH_SHORT).show()
+        countTextView?.text = alertCount.toString()
         /*if (alertCount in 1..100) {
             countTextView?.text = java.lang.String.valueOf(alertCount)
         } else {
