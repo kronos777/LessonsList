@@ -14,6 +14,9 @@ interface PaymentListRepository {
 
     suspend fun getPaymentItem(paymentItemId: Int): PaymentItem
 
+    fun getPaymentItemExists(studentId: Int, lessonsId: Int): Boolean
+
     fun getPaymentList(): LiveData<List<PaymentItem>>
+
 }
 

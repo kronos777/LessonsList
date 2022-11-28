@@ -111,14 +111,8 @@ class PaymentWork(
                                     val newBalanceStudent = calculatePaymentPriceAdd(student.paymentBalance, lessonsItem.price)
                                     namesStudentArrayList.add(studentData + ' ' + newBalanceStudent.toString())
                                     log(newBalanceStudent.toString())
-
-                                   /* val dbPaymentExists = appDatabase.getInstance(applicationContext as Application).PaymentListDao().getPaymentItemExists(student.id, lessonsItem.id)
-
-                                        if(dbPaymentExists.studentId == student.id){
-                                            log("платеж создан")
-                                        }*/
-
-
+                                    val curPayment = viewModelPayment.checkExistsPaymentItem(student.id, idLessons)
+                                    if(!curPayment) {
                                         if(newBalanceStudent > 0) {
                                             if(lessonsItem.price > student.paymentBalance) {
                                                 val price = calculatePaymentPriceAddPlus(student.paymentBalance, lessonsItem.price)
@@ -140,14 +134,14 @@ class PaymentWork(
                                             okPay++
                                         } else if (newBalanceStudent < 0) {
                                             //} else if (student.paymentBalance < 0) {
+
                                             val pricePayment = calculatePaymentPriceAddPlus(student.paymentBalance, lessonsItem.price)
                                             viewModelPayment.addPaymentItem(lessonsItem.title, lessonsItem.description,
                                                 idLessons.toString(), student.id.toString(), lessonsItem.dateEnd, studentData, (pricePayment).toString(), lessonsItem.price ,false)
                                             dbStudent.editStudentItemPaymentBalance(student.id, (0).toInt())
                                             noPay++
                                         }
-
-
+                                    }
                                 }
                             }
                             lateinit var notificationString: String

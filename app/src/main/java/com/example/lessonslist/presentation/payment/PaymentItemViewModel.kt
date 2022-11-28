@@ -20,6 +20,7 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
 
     private val repository = PaymentListRepositoryImpl(application)
     private val getPaymentItemUseCase = GetPaymentItemUseCase(repository)
+    private val checkExistsPaymentUseCase = CheckExistsPaymentUseCase(repository)
     private val addPaymentItemUseCase = AddPaymentItemUseCase(repository)
     private val editPaymentItemUseCase = EditPaymentItemUseCase(repository)
     private val deletePaymentItemUseCase = DeletePaymentItemUseCase(repository)
@@ -52,6 +53,11 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
 
             _paymentItem.value = item
         }
+    }
+
+    fun checkExistsPaymentItem(studentId: Int, lessonsId: Int): Boolean {
+       val item = checkExistsPaymentUseCase.getPaymentItemExists(studentId, lessonsId)
+       return item
     }
 
 
