@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -85,7 +86,17 @@ class CalendarItemFragment() : Fragment() {
         bottomNavigationView.menu.findItem(R.id.bottomItem1).isChecked = true
 
         showToolbarAndBottomNavigation()
+        goCalendarFragmentBackPressed()
 
+    }
+
+    private fun goCalendarFragmentBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+            val navController = navHostFragment.navController
+            navController.popBackStack(R.id.calendarItemFragment, true)
+            //navController.navigate(R.id.lessonsItemListFragment, arguments)
+        }
     }
 
     fun goToStList() {

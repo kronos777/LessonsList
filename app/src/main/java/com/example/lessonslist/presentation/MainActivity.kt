@@ -203,6 +203,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     override fun onBackPressed() {
        super.onBackPressed()
+
         /*val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
         */
@@ -514,7 +515,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 it.state.name
                 //   Toast.makeText(this,status, Toast.LENGTH_SHORT).show()
             }
-        /**/
         /*work manager */
     }
 
@@ -785,7 +785,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     private fun updateAlertIcon() {
         // if alert count extends into two digits, just show the red circle
-        Toast.makeText(this, alertCount.toString(), Toast.LENGTH_SHORT).show()
+      //  Toast.makeText(this, alertCount.toString(), Toast.LENGTH_SHORT).show()
         countTextView?.text = alertCount.toString()
         /*if (alertCount in 1..100) {
             countTextView?.text = java.lang.String.valueOf(alertCount)
