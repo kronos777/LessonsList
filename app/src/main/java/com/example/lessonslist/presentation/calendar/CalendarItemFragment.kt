@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -33,14 +32,12 @@ import ru.cleverpumpkin.calendar.extension.getColorInt
 import ru.cleverpumpkin.calendar.sample.events.EventItem
 import ru.cleverpumpkin.calendar.sample.events.EventItemsList
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class CalendarItemFragment() : Fragment() {
 
 
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
-
     private var _binding: FragmentCalndarBinding? = null
     private val binding: FragmentCalndarBinding
         get() = _binding ?: throw RuntimeException("FragmentCalndarBinding == null")
@@ -68,7 +65,7 @@ class CalendarItemFragment() : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentCalndarBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -86,23 +83,15 @@ class CalendarItemFragment() : Fragment() {
         bottomNavigationView.menu.findItem(R.id.bottomItem1).isChecked = true
 
         showToolbarAndBottomNavigation()
-        goCalendarFragmentBackPressed()
+      //  goCalendarFragmentBackPressed()
 
     }
 
-    private fun goCalendarFragmentBackPressed() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-            val navController = navHostFragment.navController
-            navController.popBackStack(R.id.calendarItemFragment, true)
-            //navController.navigate(R.id.lessonsItemListFragment, arguments)
-        }
-    }
 
     fun goToStList() {
       //  val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
       //  val navController = navHostFragment.navController
-        findNavController().navigate(R.id.action_calendarItemFragment_to_studentItemListFragment)
+        findNavController().navigate(R.id.studentItemListFragment)
     }
 
     private fun showToolbarAndBottomNavigation() {
@@ -135,7 +124,7 @@ class CalendarItemFragment() : Fragment() {
 
 
             if(calendarShowMessgeList.size > 0) {
-                Toast.makeText(getActivity(),"Размер больше 0 ", Toast.LENGTH_SHORT).show()
+               // Toast.makeText(getActivity(),"Размер больше 0 ", Toast.LENGTH_SHORT).show()
                 calendarShowMessgeList.clear()
                 calendarPicList.clear()
             }
@@ -425,7 +414,7 @@ class CalendarItemFragment() : Fragment() {
     private fun dialogWindow(date: CalendarDate, dataDate: MutableList<EventItemsList>) {
 
         if(dataDate.size == 0) {
-            Toast.makeText(getActivity(),"На сегодня ничего нет", Toast.LENGTH_SHORT).show()
+           // Toast.makeText(getActivity(),"На сегодня ничего нет", Toast.LENGTH_SHORT).show()
             val alert = AlertDialog.Builder(requireContext())
             alert.setTitle("$date")
             alert.setMessage("Запланированных занятий нет.")

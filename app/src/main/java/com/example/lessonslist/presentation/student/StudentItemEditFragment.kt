@@ -196,6 +196,10 @@ class StudentItemEditFragment : Fragment() {
                 getActivity()?.let { BottomFragment.newInstancePaymentBalance(studentItemId).show(it.supportFragmentManager, "tag") }
        }
 
+        binding.cardGroupStudent.setOnClickListener {
+            getActivity()?.let { BottomFragment.newInstanceGroupStudent(studentItemId).show(it.supportFragmentManager, "tag") }
+        }
+
        binding.cardParentContact.setOnClickListener {
            getActivity()?.let { BottomFragment.newInstanceParentsContacts(studentItemId).show(it.supportFragmentManager, "tag") }
        }

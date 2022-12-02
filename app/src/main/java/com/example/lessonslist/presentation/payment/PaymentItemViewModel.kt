@@ -1,19 +1,13 @@
 package com.example.lessonslist.presentation.payment
 
 import android.app.Application
-import android.icu.text.CaseMap
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.lessonslist.data.group.GroupListRepositoryImpl
 import com.example.lessonslist.data.payment.PaymentListRepositoryImpl
-import com.example.lessonslist.domain.group.*
 import com.example.lessonslist.domain.payment.*
-import com.example.lessonslist.domain.student.StudentItem
-import com.google.android.material.internal.ContextUtils.getActivity
 import kotlinx.coroutines.launch
 
 class PaymentItemViewModel(application: Application) : AndroidViewModel(application) {
@@ -22,8 +16,8 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
     private val getPaymentItemUseCase = GetPaymentItemUseCase(repository)
     private val checkExistsPaymentUseCase = CheckExistsPaymentUseCase(repository)
     private val addPaymentItemUseCase = AddPaymentItemUseCase(repository)
-    private val editPaymentItemUseCase = EditPaymentItemUseCase(repository)
-    private val deletePaymentItemUseCase = DeletePaymentItemUseCase(repository)
+    //private val editPaymentItemUseCase = EditPaymentItemUseCase(repository)
+    //private val deletePaymentItemUseCase = DeletePaymentItemUseCase(repository)
     private val ChangeEnableStatePaymentItemUseCase = ChangeEnableStatePaymentItemUseCase(repository)
 
     private val _paymentItem = MutableLiveData<PaymentItem>()
@@ -34,13 +28,13 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
     val errorInputTitle: LiveData<Boolean>
         get() = _errorInputTitle
 
-    private val _errorInputDescription = MutableLiveData<Boolean>()
+   /* private val _errorInputDescription = MutableLiveData<Boolean>()
     val errorInputDescription: LiveData<Boolean>
         get() = _errorInputDescription
 
     private val _errorInputStudent = MutableLiveData<Boolean>()
     val errorInputStudent: LiveData<Boolean>
-        get() = _errorInputStudent
+        get() = _errorInputStudent*/
 
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>
@@ -62,21 +56,24 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
 
 
     fun addPaymentItem(inputTitle: String, inputDescription: String, inputLessonsId: String, inputStudentId: String, inputDatePayment: String, inputStudent: String, inputPrice: String, allPrice: Int, enabled: Boolean) {
-        val title = inputTitle
-        val description = inputDescription
-        val student = inputStudent
         val price = inputPrice.toInt()
-        val studentId = inputStudentId
-        val datePayment = inputDatePayment
-        val lessonsId = inputLessonsId
-        val allprice = allPrice
         // add validation fun
-        val fieldsValid = validateInput(title, student)
+        val fieldsValid = validateInput(inputTitle, inputStudent)
 
         if(fieldsValid) {
             viewModelScope.launch {
                // val paymentItem = PaymentItem(title, description, student, studentId.toInt(), lessonsId.toInt(), datePayment, price, true)
-                val paymentItem = PaymentItem(title, description, studentId.toInt(), lessonsId.toInt(), datePayment, student, price, allprice, enabled)
+                val paymentItem = PaymentItem(
+                    inputTitle,
+                    inputDescription,
+                    inputStudentId.toInt(),
+                    inputLessonsId.toInt(),
+                    inputDatePayment,
+                    inputStudent,
+                    price,
+                    allPrice,
+                    enabled
+                )
                 addPaymentItemUseCase.addPaymentItem(paymentItem)
                 finishWork()
             }
@@ -86,7 +83,7 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
 
     }
 
-    fun editPaymentItem(inputTitle: String, inputDescription: String, inputLessonsId: String, inputStudentId: String, inputDatePayment: String, inputStudent: String, inputPrice: String, enabledPayment: Boolean) {
+   /* fun editPaymentItem(inputTitle: String, inputDescription: String, inputLessonsId: String, inputStudentId: String, inputDatePayment: String, inputStudent: String, inputPrice: String, enabledPayment: Boolean) {
         val title = inputTitle
         val description = inputDescription
         val student = inputStudent
@@ -136,7 +133,7 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
             Log.d("errorinput", "error in edit group")
         }
 
-    }
+    }*/
 
 
 
@@ -162,11 +159,6 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun deleteGroupItem(paymentItem: PaymentItem) {
-        viewModelScope.launch {
-            deletePaymentItemUseCase.deletePaymentItem(paymentItem)
-        }
-    }
 
     private fun finishWork() {
         _shouldCloseScreen.value = Unit

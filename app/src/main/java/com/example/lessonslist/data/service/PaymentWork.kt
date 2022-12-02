@@ -16,10 +16,11 @@ import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.presentation.MainActivity
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.lang.Thread.sleep
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 
 class PaymentWork(
@@ -42,11 +43,13 @@ class PaymentWork(
 
 
    // @OptIn(DelicateCoroutinesApi::class)
-    override suspend fun doWork(): Result {
-         withContext(Dispatchers.Unconfined) {
+   override suspend fun doWork(): Result {
 
-        //withContext(newSingleThreadContext("Worker Thread")) {
-        val dbLessons = appDatabase.getInstance(applicationContext as Application).LessonsListDao().getAllLessonsList()
+       withContext(Dispatchers.Default) {
+
+       // withContext(newSingleThreadContext("paymentWork")) {
+
+            val dbLessons = appDatabase.getInstance(applicationContext as Application).LessonsListDao().getAllLessonsList()
             val dbLessonGet = appDatabase.getInstance(applicationContext as Application).LessonsListDao()
             val dbStudent = appDatabase.getInstance(applicationContext as Application).StudentListDao()
             val dbPayment = appDatabase.getInstance(applicationContext as Application).PaymentListDao().getPaymentAllList()
@@ -71,7 +74,7 @@ class PaymentWork(
 
           //  log("arrlistPayment"+listIdsPayment.toString())
 
-            delay(2000)
+            sleep(2000)
             if (listIdsLessons.size > 0) {
                 for (idLessons in listIdsLessons) {
                     if(listIdsPayment.contains(idLessons)) {
@@ -91,7 +94,7 @@ class PaymentWork(
                        // val formatterLess = DateTimeFormatter.ofPattern("yyyy/M/dd HH:mm")
                        // val fLess = formattedLess.format(formattedLess)
                         log("время урока $newFormatLess")
-                        delay(100)
+                        //delay(100)
                         if(newFormatLess >= formatted) {
                             log("время начала урока больше текущего")
                         } else if(formatted >= newFormatLess) {
@@ -102,10 +105,13 @@ class PaymentWork(
                             val namesStudentArrayList: ArrayList<String> = ArrayList()
                             var okPay = 0
                             var noPay = 0
-                            delay(100)
+                         //   sleep(1000)
                             if(stIds.isNotEmpty()) {
-                                for (ids in stIds){
-                                    val student = dbStudent.getStudentItem(ids)
+                                for (id in stIds.indices){
+                                    val threadId = Thread.currentThread().id
+                                    log("id потока" + threadId)
+                                    log("id студента" + stIds[id])
+                                    val student = dbStudent.getStudentItem(stIds[id])
                                     log(student.name + student.lastname + student.paymentBalance)
                                     val studentData = student.name + " " + student.lastname
 
@@ -115,6 +121,7 @@ class PaymentWork(
                                     namesStudentArrayList.add(studentData + ' ' + newBalanceStudent.toString())
                                     log(newBalanceStudent.toString())
                                     val curPayment = viewModelPayment.checkExistsPaymentItem(student.id, idLessons)
+                                    sleep(2000)
                                     if(!curPayment) {
                                         if(newBalanceStudent > 0) {
                                             if(lessonsItem.price > student.paymentBalance) {

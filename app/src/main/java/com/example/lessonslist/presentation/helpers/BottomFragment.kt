@@ -14,10 +14,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.BottomSheetLayoutBinding
 import com.example.lessonslist.domain.student.StudentItem
+import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.student.*
+import com.example.lessonslist.presentation.student.group.DataStudentGroupModel
+import com.example.lessonslist.presentation.student.group.ListStudentGroupAdapter
 import com.example.lessonslist.presentation.student.notes.DataNotesStudentModel
 import com.example.lessonslist.presentation.student.notes.ListNotesAdapter
 import com.example.lessonslist.presentation.student.parentContact.DataParentContactStudentModel
@@ -46,11 +49,12 @@ class BottomFragment : BottomSheetDialogFragment() {
     private lateinit var viewModelParentContact: ParentContactViewModel
     private lateinit var viewModelStudent: StudentItemViewModel
     private lateinit var viewModelLessons: LessonsItemViewModel
-
+    private lateinit var viewModelGroup: GroupListViewModel
 
     private var dataPaymentStudentModel: ArrayList<DataPaymentStudentModel>? = null
     private var dataNotesStudentModel: ArrayList<DataNotesStudentModel>? = null
     private var dataParentContactStudentModel: ArrayList<DataParentContactStudentModel>? = null
+    private var dataStudentGroupModel: ArrayList<DataStudentGroupModel>? = null
     // Можно обойтись без биндинга и использовать findViewById
     lateinit var binding: BottomSheetLayoutBinding
 
@@ -110,6 +114,52 @@ class BottomFragment : BottomSheetDialogFragment() {
         }
 
 
+        /*group studentd*/
+        if(screenMode == "group_student") {
+            Toast.makeText(getActivity(), "group_student", Toast.LENGTH_SHORT).show()
+            binding.simpleTextTitle.text = "Группы студента"
+            binding.tilName.visibility = View.GONE
+            binding.tilNotes.visibility = View.GONE
+            binding.imageAddNotes.visibility = View.GONE
+            showGroupStudentList()
+        }
+        /*group studentd*/
+
+
+    }
+
+    private fun showGroupStudentList() {
+        listView = binding.listView
+        dataStudentGroupModel = ArrayList<DataStudentGroupModel>()
+        viewModelGroup = ViewModelProvider(this).get(GroupListViewModel::class.java)
+        viewModelGroup.groupList.observe(viewLifecycleOwner) { groups ->
+            for (group in groups) {
+                val studentIds = getStudentIds(group.student)
+                if(studentIds.isNotEmpty()) {
+                   if(studentIds.contains(studentItemId)) {
+                       //Toast.makeText(activity, "id студентов:" + id.toString(), Toast.LENGTH_LONG).show()
+                       dataStudentGroupModel!!.add(DataStudentGroupModel(group.id, group.title))
+
+                   }
+
+                }
+            }
+            val adapterGroup = ListStudentGroupAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
+            listView.adapter = adapterGroup
+            /*if(dataNotesStudentModel!!.isNotEmpty()) {
+                val adapterGroup = ListStudentGroupAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
+                listView.adapter = adapterGroup
+            } else {
+                Toast.makeText(activity, "Студент не содержится в группах", Toast.LENGTH_LONG).show()
+            }*/
+        }
+    }
+
+
+    private fun getStudentIds(dataString: String): List<Int> {
+        var dataStr = dataString.replace("]", "")
+        dataStr = dataStr.replace("[", "")
+        return dataStr.split(",").map { it.trim().toInt() }
     }
 
     private fun addParentContact() {
@@ -439,6 +489,13 @@ class BottomFragment : BottomSheetDialogFragment() {
             studentItemId = args.getInt(BottomFragment.STUDENT_ITEM_ID, StudentItem.UNDEFINED_ID)
         }
 
+        if (screenMode == BottomFragment.GROUP_STUDENT) {
+            if (!args.containsKey(BottomFragment.STUDENT_ITEM_ID)) {
+                throw RuntimeException("Param id is absent")
+            }
+            studentItemId = args.getInt(BottomFragment.STUDENT_ITEM_ID, StudentItem.UNDEFINED_ID)
+        }
+
         if (screenMode == BottomFragment.CONTACT_PARENT) {
             if (!args.containsKey(BottomFragment.STUDENT_ITEM_ID)) {
                 throw RuntimeException("Param id is absent")
@@ -464,6 +521,7 @@ class BottomFragment : BottomSheetDialogFragment() {
         private const val MODE_PAYMENT = "mode_payment"
         private const val MODE_NOTES = "mode_notes"
         private const val CONTACT_PARENT = "contact_parent"
+        private const val GROUP_STUDENT = "group_student"
       //  private const val MODE_ADD = "mode_add"
         private const val MODE_UNKNOWN = ""
 
@@ -494,6 +552,16 @@ class BottomFragment : BottomSheetDialogFragment() {
                 }
             }
         }
+
+        fun newInstanceGroupStudent(studentItemId: Int): BottomFragment {
+            return BottomFragment().apply {
+                arguments = Bundle().apply {
+                    putString(SCREEN_MODE, GROUP_STUDENT)
+                    putInt(STUDENT_ITEM_ID, studentItemId)
+                }
+            }
+        }
+
     }
 
 }

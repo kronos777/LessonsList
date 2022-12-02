@@ -15,13 +15,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.data.service.PaymentWork
@@ -29,7 +26,6 @@ import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.domain.payment.PaymentItem
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.group.GroupItemFragment
-import com.example.lessonslist.presentation.group.GroupItemListFragment
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.lessons.*
 import com.example.lessonslist.presentation.payment.PaymentItemFragment
@@ -38,7 +34,6 @@ import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.settings.SettingsItemFragment
 import com.example.lessonslist.presentation.student.StudentItemEditFragment
 import com.example.lessonslist.presentation.student.StudentItemFragment
-import com.example.lessonslist.presentation.student.StudentItemListFragment
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -52,7 +47,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private lateinit var binding: ActivityMainBinding
     lateinit var toggle: ActionBarDrawerToggle
     private lateinit var backup: RoomBackup
-     //private var doubleBackToExitPressedOnce = false
+    //private var doubleBackToExitPressedOnce = false
     private var alertCount = 0
     private var redCircle: FrameLayout? = null
     private var countTextView: TextView? = null
@@ -90,7 +85,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         setupWithNavController(bottomNavigationView, navController)
 
 */
+
+
+
     }
+
 
 
     private fun initBottomNavigationJetpack() {
@@ -150,7 +149,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         redCircle = findViewById(R.id.view_alert_red_circle)
         countTextView = findViewById(R.id.view_alert_count_textview)
 
-        val materialToolbar: MaterialToolbar = binding.toolBar!!
+        val materialToolbar: MaterialToolbar = binding.toolBar
         val paymentBtnAppBarTop = findViewById<View>(R.id.payment)
 
         paymentBtnAppBarTop.setOnClickListener {
@@ -179,7 +178,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
     private fun launchPaymentListEnabledFragment() {
-         val navHostFragment = supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
 
         val btnArgsLessons = Bundle().apply {
@@ -190,7 +189,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
     private fun launchPaymentListNoParamsFragment() {
-        val navHostFragment = supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
 
         val btnArgsLessons = Bundle().apply {
@@ -203,7 +202,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     override fun onBackPressed() {
        super.onBackPressed()
-
         /*val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
         */
@@ -213,7 +211,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
       //  navController.navigate(R.id.calendarItemFragment)
         //    supportFragmentManager.popBackStack("calendar", 0)
        //val myFragment: Fragment = supportFragmentManager.findFragmentByTag("MainCalendarFragment") as Fragment
-     /*  val myFragment: Fragment = supportFragmentManager.findFragmentById(R.id.calendarItemFragment) as Fragment
+      /* val myFragment: Fragment = supportFragmentManager.findFragmentById(R.id.calendarItemFragment) as Fragment
         if (doubleBackToExitPressedOnce) {
             // super.onBackPressed()
             //return
@@ -283,13 +281,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
 
-    private fun goStudentListFragmentNavigation() {
-    /*    val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-        navController.navigate(R.id.action_calendarItemFragment_to_studentItemListFragment)*/
-        CalendarItemFragment().goToStList()
-    }
-
 
     private fun parseParamsExtra() {
         if (intent.getStringExtra("extra") != null) {
@@ -303,7 +294,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
     private fun launchLessonsItemEditFragmentId(lessonIdForFragment: String) {
-        val navHostFragment = supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
 
         val btnArgsLessons = Bundle().apply {
@@ -339,56 +330,10 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
 
-    private fun goStudentListFragment() {
-        if (true) {
-            launchFragment(StudentItemListFragment())
-        } else {
-            launchFragmentTemp(StudentItemListFragment())
-        }
-    }
-
-
-
-
-    private fun goLessonsListFragment() {
-    // if (!isOnePaneMode()) {
-        if (true) {
-             launchFragment(LessonsItemListFragment.newInstanceNoneParams())
-         } else {
-            // recyclerMainGone()
-             launchFragmentTemp(LessonsItemListFragment.newInstanceNoneParams())
-          //   Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
-         }
-    }
-
-
-    private fun goGroupListFragment() {
-     //if (!isOnePaneMode()) {
-         if (true) {
-             launchFragment(GroupItemListFragment())
-         } else {
-          //   recyclerMainGone()
-             launchFragmentTemp(GroupItemListFragment())
-         //    Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
-         }
-    }
-
-
-
-    private fun goPaymentFragment() {
-     //if (!isOnePaneMode()) {
-         if (true) {
-            launchFragment(PaymentItemListFragment.newInstanceNoneParams())
-         } else {
-            launchFragmentTemp(PaymentItemListFragment.newInstanceNoneParams())
-           // Toast.makeText(this, "Иван!", Toast.LENGTH_SHORT).show()
-         }
-    }
-
     private fun initDrawerNavigation() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
-        toggle = getActionBarDrawerToggle(binding.drawerLayoutId, binding.toolBar!!).apply {
+        toggle = getActionBarDrawerToggle(binding.drawerLayoutId, binding.toolBar).apply {
 
             setToolbarNavigationClickListener {
                 // Back to home fragment for any hit to the back button
@@ -424,97 +369,38 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         this.finishAffinity()
     }
 
-    private fun initBottomNavigationWithNavigation() {
-        //binding.navViewBottom?.setOnItemSelectedListener {
-            binding.navViewBottom?.setOnNavigationItemSelectedListener {
-            when(it.itemId) {
-                R.id.bottomItem1 -> {
-                    // Respond to navigation item 1 click
-                    //launchMainFragment(CalendarItemFragment(), "calendar")
-                    goStudentListFragmentNavigation()
-                    true
-                }
-                R.id.bottomItem2 -> {
-                    // Respond to navigation item 2 click
-                    //  Log.d("menuitem", "ite2")
-                    //Toast.makeText(this, "item2", Toast.LENGTH_SHORT).show()
-                    //goPaymentFragment()
-                    goStudentListFragmentNavigation()
-                    true
-                }
-                R.id.bottomItem3 -> {
-                    // Respond to navigation item 2 click
-                    //goGroupListFragment()
-                    true
-                }
-                R.id.bottomItem4 -> {
-                    // Respond to navigation item 2 click
-                    //goLessonsListFragment()
-                    goStudentListFragmentNavigation()
-                    true
-                }
-                R.id.bottomItem5 -> {
-                    // Respond to navigation item 2 click
-                    goStudentListFragmentNavigation()
-                    //  goStudentListFragment()
-                    true
-                }
-                else -> false
-            }
-            true
-        }
-    }
 
-
-    private fun initBottomNavigation() {
-        binding.navViewBottom?.setOnItemSelectedListener {
-        //binding.navViewBottom?.setOnNavigationItemSelectedListener {
-            when(it.itemId) {
-                R.id.bottomItem1 -> {
-                    // Respond to navigation item 1 click
-                    launchMainFragment(CalendarItemFragment(), "calendar")
-                    true
-                }
-                R.id.bottomItem2 -> {
-                    // Respond to navigation item 2 click
-                    //  Log.d("menuitem", "ite2")
-                    //Toast.makeText(this, "item2", Toast.LENGTH_SHORT).show()
-                    goPaymentFragment()
-                    true
-                }
-                R.id.bottomItem3 -> {
-                    // Respond to navigation item 2 click
-                    goGroupListFragment()
-                    true
-                }
-                R.id.bottomItem4 -> {
-                    // Respond to navigation item 2 click
-                    goLessonsListFragment()
-                    true
-                }
-                R.id.bottomItem5 -> {
-                    // Respond to navigation item 2 click
-                     goStudentListFragmentNavigation()
-                    //  goStudentListFragment()
-                    true
-                }
-                else -> false
-            }
-            true
-        }
-    }
 
     private fun initWorkManager() {
         /*work manager */
         //PeriodicWorkRequest myWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class, 30, TimeUnit.MINUTES, 25, TimeUnit.MINUTES).build();
-         val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES).build()
-        // val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
-        WorkManager.getInstance(this).enqueue(request)
+         val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
+           /*.setConstraints(
+                 Constraints.Builder()
+                 .setRequiresCharging(true)
+                 .build()
+             )*/
+             .build()
+        //val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
+       // WorkManager.getInstance(this).enqueue(request)
+      /**  WorkManager.getInstance(this).enqueue(request)
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
             .observe(this) {
                 it.state.name
-                //   Toast.makeText(this,status, Toast.LENGTH_SHORT).show()
+
+            }*/
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "paymentWork",
+            ExistingPeriodicWorkPolicy.REPLACE,
+            request
+        )
+
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
+            .observe(this) {
+                it.state.name
+                Log.d("worker_info", it.state.name)
             }
+
         /*work manager */
     }
 
@@ -529,7 +415,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     override fun onEditingFinished() {
     // Toast.makeText(this@MainActivity, "Отработал финиш", Toast.LENGTH_SHORT).show()
-     supportFragmentManager.popBackStack()
+        supportFragmentManager.popBackStack()
     }
 
     /*
@@ -538,32 +424,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
     */
 
-    private fun launchMainFragment(fragment: Fragment, name: String) {
-     //   supportFragmentManager.popBackStack()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_item_container, fragment, "MainCalendarFragment")
-            .addToBackStack(name)
-            .commit()
-    }
-
-
-    private fun launchFragment(fragment: Fragment, name: String? = "other") {
-     //supportFragmentManager.popBackStack()
-     supportFragmentManager.beginTransaction()
-         .replace(R.id.fragment_item_container, fragment, "OtherFragment")
-         .addToBackStack(name)
-         //.addToBackStack("CalendarItemFragment")
-         .commit()
-    }
-
-    fun launchFragmentTemp(fragment: Fragment, name: String? = "other") {
-     //supportFragmentManager.popBackStack()
-     supportFragmentManager.beginTransaction()
-         //.add(R.id.fragment_item_container, fragment)
-         .replace(R.id.fragment_item_container, fragment, "OtherFragment")
-         .addToBackStack(name)
-         .commit()
-    }
 
     private fun initNavHeader() {
 
@@ -660,9 +520,9 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
             }
 
-            navDeptMoneyCount.text = "долги $deptMoney"
+            navDeptMoneyCount.text = R.string.nav_header_dept.toString() + " $deptMoney"
             navActualMoneyCount.text = "фактический доход $actualMoney"
-            navPaidLessons.text = "Оплаченных: " + paidLessons
+            navPaidLessons.text = "Оплаченных: $paidLessons"
             navNoPaidLessons.text = "Неоплаченные: " + noPaidLessons
 
         }
@@ -778,9 +638,9 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             R.string.open,
             R.string.close
         )
-        drawerLayout.addDrawerListener(toggle!!)
-        toggle?.syncState()
-        return toggle as ActionBarDrawerToggle
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+        return toggle
     }
 
     private fun updateAlertIcon() {

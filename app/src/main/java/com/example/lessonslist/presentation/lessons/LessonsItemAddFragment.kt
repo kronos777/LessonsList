@@ -277,8 +277,10 @@ class LessonsItemAddFragment : Fragment()  {
 
         mTimePicker = TimePickerDialog(context,
             { _, hourOfDay, minute ->
-                binding.etDatestart.setText(String.format("%d/%d/%d %d : %d", year, month + 1, day, hourOfDay, minute))
-                timePicker1 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + hourOfDay.toString() + ":" + minute.toString()
+                val minH = if (hourOfDay < 10) "0" + hourOfDay else hourOfDay
+                val minM = if (minute < 10) "0" + minute else minute
+                binding.etDatestart.setText(String.format("%d/%d/%d %s : %s", year, month + 1, day, minH, minM))
+                timePicker1 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + minH.toString() + ":" + minM.toString()
                 if (timePicker1.isNotEmpty() && timePicker2.isNotEmpty()) {
                     checkAddDateTime(timePicker1, timePicker2)
                 }
@@ -286,8 +288,11 @@ class LessonsItemAddFragment : Fragment()  {
 
         mTimePickerEnd = TimePickerDialog(context,
             { _, hourOfDay, minute ->
-                binding.etDateend.setText(String.format("%d/%d/%d %d : %d", year, month + 1, day, hourOfDay, minute))
-                timePicker2 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + hourOfDay.toString() + ":" + minute.toString()
+                val minH = if (hourOfDay < 10) "0" + hourOfDay else hourOfDay
+                val minM = if (minute < 10) "0" + minute else minute
+//                Toast.makeText(getActivity(), setValue.toString(), Toast.LENGTH_SHORT).show()
+                binding.etDateend.setText(String.format("%d/%d/%d %s : %s", year, month + 1, day, minH, minM))
+                timePicker2 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + minH.toString() + ":" + minM.toString()
                 if (timePicker1.isNotEmpty() && timePicker2.isNotEmpty()) {
                     checkAddDateTime(timePicker1, timePicker2)
                 }
@@ -350,8 +355,15 @@ class LessonsItemAddFragment : Fragment()  {
         binding.etStudent.visibility = View.GONE
         binding.saveButton.setOnClickListener{
             val valueStudent = checkValidStudent()
-            val checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
-                binding.etDatestart.text.toString(), binding.etDateend.text.toString())
+            var checkField = false
+            if (valueStudent.size <= 0) {
+                Toast.makeText(activity, "Урок не может создан без учеников", Toast.LENGTH_SHORT).show()
+            } else {
+                checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
+                    binding.etDatestart.text.toString(), binding.etDateend.text.toString())
+            }
+                /*val checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
+                binding.etDatestart.text.toString(), binding.etDateend.text.toString())*/
             if(checkField) {
                 viewModel.addLessonsItem(
                     binding.etTitle.text.toString(),
@@ -388,7 +400,9 @@ class LessonsItemAddFragment : Fragment()  {
             }
         }
 
+
         return HashSet(lstValues)
+
     }
 
     private fun lessonsTextChangeListeners() {
@@ -526,14 +540,6 @@ class LessonsItemAddFragment : Fragment()  {
         const val MODE_ADD = "mode_add"
         const val DATE_ADD = "date_add"
 
-        fun addInstance(date: String): LessonsItemAddFragment {
-            return LessonsItemAddFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_ADD)
-                    putString(DATE_ADD, date)
-                }
-            }
-        }
     }
 
 

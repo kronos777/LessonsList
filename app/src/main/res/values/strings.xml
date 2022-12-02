@@ -25,6 +25,7 @@
     <string name="lessons_date_end">Дата/Время конца урока:</string>
     <string name="save_btn">Сохранить</string>
     <string name="go_list_btn">назад к списку</string>
+    <string name="nav_header_dept">долги</string>
     <string name="change_btn">Изменить</string>
     <string name="payment_student_btn">Платежи студента</string>
     <string name="payment_lesson_btn">Платежи урока</string>
