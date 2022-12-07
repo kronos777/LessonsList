@@ -229,40 +229,73 @@ class GroupItemFragment : Fragment() {
 
 
     private fun launchEditMode() {
-    viewModel.getGroupItem(groupItemId)
-    binding.saveButton.setOnClickListener{
-        var studentIds: String = adapter.arrayList.toString()
-        studentIds = studentIds.replace("[", "")
-        studentIds = studentIds.replace("]", "")
-        if(viewModel.validateInput(binding.etTitle.text.toString(), studentIds)) {
-              viewModel.editGroupItem(
-                  binding.etTitle.text.toString(),
-                  binding.etDescription.text.toString(),
-                //  binding.etStudent.text.toString()
-                  studentIds
-              )
-            } else {
-                setHideError()
+
+        viewModel.getGroupItem(groupItemId)
+        binding.saveButton.setOnClickListener{
+            var studentIds: String = adapter.arrayList.toString()
+            studentIds = studentIds.replace("[", "")
+            studentIds = studentIds.replace("]", "")
+            if(viewModel.validateInput(binding.etTitle.text.toString())) {
+                  viewModel.editGroupItem(
+                      binding.etTitle.text.toString(),
+                      binding.etDescription.text.toString(),
+                    //  binding.etStudent.text.toString()
+                      studentIds
+                  )
+                } else {
+                    setHideError()
+                }
             }
-        }
     }
 
     private fun launchAddMode() {
     binding.saveButton.setOnClickListener{
-          var studentIds: String = adapter.arrayList.toString()
-            studentIds = studentIds.replace("[", "")
-            studentIds = studentIds.replace("]", "")
+        val valueStudent = checkValidStudent()
+        var checkField = false
+        if(valueStudent.size <= 0) {
+            Toast.makeText(activity, "Без учеников группа не может быть создана.", Toast.LENGTH_LONG).show()
+            binding.textViewChangeStateCheckbox.setTextColor(ContextCompat.getColor(requireContext().applicationContext,R.color.custom_calendar_weekend_days_bar_text_color))
+            checkField = viewModel.validateInput(binding.etTitle.text.toString())
+            setHideError()
+            //with(binding) { textViewChangeStateCheckbox.setTextColor(ContextCompat.getColor(requireContext().applicationContext,R.color.custom_calendar_weekend_days_bar_text_color)) }
+             return@setOnClickListener
+        } else {
+            binding.textViewChangeStateCheckbox.setTextColor(ContextCompat.getColor(requireContext().applicationContext,R.color.custom_calendar_date_weekend_background))
+            checkField = viewModel.validateInput(binding.etTitle.text.toString())
 
-          if(viewModel.validateInput(binding.etTitle.text.toString(), studentIds)) {
-              viewModel.addGroupItem(
-                  binding.etTitle.text.toString(),
-                  binding.etDescription.text.toString(),
-                  studentIds
-              )
-          } else {
-              setHideError()
-          }
+        }
+
+        if(checkField == true && valueStudent.size > 0) {
+            viewModel.addGroupItem(
+                binding.etTitle.text.toString(),
+                binding.etDescription.text.toString(),
+                valueStudent.toString()
+            )
+        } else {
+            setHideError()
+        }
        }
+    }
+    private fun checkValidStudent(): HashSet<Int?> {
+        val studentIds: String = adapter.arrayList.toString()
+        val lstValues: ArrayList<Int> = ArrayList()
+
+        studentIds.forEach {
+            if (it.isDigit()) {
+                val str = it.toString()
+                lstValues.add(str.toInt())
+            }
+        }
+
+
+        return HashSet(lstValues)
+
+    }
+
+    private fun getStudentIds(dataString: String): List<Int> {
+        var dataStr = dataString.replace("]", "")
+        dataStr = dataStr.replace("[", "")
+        return dataStr.split(",").map { it.trim().toInt() }
     }
 
     private fun observeViewModel() {

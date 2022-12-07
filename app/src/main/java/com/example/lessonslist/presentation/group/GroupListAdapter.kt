@@ -17,6 +17,7 @@ import com.example.lessonslist.domain.student.StudentItem
 class GroupListAdapter : ListAdapter<GroupItem, GroupItemViewHolder>(GroupItemDiffCallback()) {
 
     var onGroupItemClickListener: ((GroupItem) -> Unit)? = null
+    var onGroupItemLongClickListener: ((GroupItem) -> Unit)? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupItemViewHolder {
@@ -37,6 +38,10 @@ class GroupListAdapter : ListAdapter<GroupItem, GroupItemViewHolder>(GroupItemDi
         val binding = viewHolder.binding
         binding.root.setOnClickListener {
             onGroupItemClickListener?.invoke(groupItem)
+        }
+        binding.root.setOnLongClickListener {
+            onGroupItemLongClickListener?.invoke(groupItem)
+            true
         }
         binding.groupItem = groupItem
     }

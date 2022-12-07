@@ -358,13 +358,15 @@ class LessonsItemAddFragment : Fragment()  {
             var checkField = false
             if (valueStudent.size <= 0) {
                 Toast.makeText(activity, "Урок не может создан без учеников", Toast.LENGTH_SHORT).show()
+                checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
+                    binding.etDatestart.text.toString(), binding.etDateend.text.toString())
             } else {
                 checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
                     binding.etDatestart.text.toString(), binding.etDateend.text.toString())
             }
                 /*val checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
                 binding.etDatestart.text.toString(), binding.etDateend.text.toString())*/
-            if(checkField) {
+            if(checkField && valueStudent.size > 0) {
                 viewModel.addLessonsItem(
                     binding.etTitle.text.toString(),
                     "",

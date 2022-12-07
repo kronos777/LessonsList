@@ -225,7 +225,7 @@ class LessonsItemEditFragment : Fragment() {
 
     fun setFocusableEditText() {
         //binding.saveButton.setVisibility (View.GONE)
-        binding.etPrice.setVisibility (View.GONE)
+        binding.tilPrice.setVisibility (View.GONE)
         binding.saveButton.text = "Список уроков."
         binding.etTitle.setBackgroundResource(R.color.white)
         binding.etTitle.isFocusable = false

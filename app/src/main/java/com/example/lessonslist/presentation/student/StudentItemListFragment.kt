@@ -1,11 +1,17 @@
 package com.example.lessonslist.presentation.student
 
 
+import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -15,8 +21,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentStudentItemListBinding
+import com.example.lessonslist.domain.lessons.LessonsItem
+import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.MainViewModel
-import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
+import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
+import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -28,6 +37,9 @@ class StudentItemListFragment: Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var studentListAdapter: StudentListAdapter
+
+    private lateinit var viewModelLessonsEdit: LessonsItemViewModel
+    private lateinit var viewModelPayment: PaymentListViewModel
 
 
     override fun onCreateView(
@@ -111,9 +123,17 @@ class StudentItemListFragment: Fragment() {
             )
 
         }
-       // setupLongClickListener()
+        setupLongClickListener()
         setupClickListener()
-        setupSwipeListener(binding.rvStudentList)
+        //setupSwipeListener(binding.rvStudentList)
+    }
+
+    private fun setupLongClickListener() {
+        studentListAdapter.onStudentItemLongClickListener = {
+            val item = studentListAdapter.currentList[it.id -1]
+            // viewModel.deleteStudentItem(item)
+            dialogWindow(item.id, item, item.name + " " + item.lastname)
+        }
     }
 
 
@@ -144,7 +164,8 @@ class StudentItemListFragment: Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val item = studentListAdapter.currentList[viewHolder.adapterPosition]
-                viewModel.deleteStudentItem(item)
+               // viewModel.deleteStudentItem(item)
+                dialogWindow(item.id, item, item.name + " " + item.lastname)
             }
         }
         val itemTouchHelper = ItemTouchHelper(callback)
@@ -153,4 +174,103 @@ class StudentItemListFragment: Fragment() {
 
 
 
+    private fun dialogWindow(studentId: Int, student: StudentItem, title: String) {
+
+        val alert = AlertDialog.Builder(requireContext())
+        alert.setTitle("Удалить студента $title")
+
+        val layout = LinearLayout(requireContext())
+        layout.orientation = LinearLayout.HORIZONTAL
+
+        val paymentsLabel = TextView(requireContext())
+        paymentsLabel.setSingleLine()
+        paymentsLabel.text = """Будьте внимательны вместе со студентом удаляются все данные о нем.""".trimMargin()
+        paymentsLabel.height = 250
+        paymentsLabel.top = 15
+        layout.addView(paymentsLabel)
+
+
+        layout.setPadding(50, 40, 50, 10)
+
+        alert.setView(layout)
+
+        alert.setPositiveButton("удалить", DialogInterface.OnClickListener {
+                dialog, id ->
+            //deleteLessonsPay
+            deletePaymentToStudent(studentId)
+            viewModel.deleteStudentItem(student)
+        })
+
+        alert.setNegativeButton("не удалять урок", DialogInterface.OnClickListener {
+                dialog, id ->
+            dialog.dismiss()
+        })
+
+        alert.setCancelable(false)
+        alert.show()
+
+    }
+
+
+    private fun editLessonsItem(idLessons: Int, studentId: Int) {
+        viewModelLessonsEdit = ViewModelProvider(this).get(LessonsItemViewModel::class.java)
+        viewModelLessonsEdit.getLessonsItem(idLessons)
+       // val lessonsItem = viewModelLessonsEdit.lessonsItem
+        viewModelLessonsEdit.lessonsItem.observe(viewLifecycleOwner) {
+            //Log.d("valStudent", it.student)
+            val newValueStudent = dropElementList(getStudentIds(it.student), studentId)
+            //Log.d("delStudent", newValueStudent)
+            viewModelLessonsEdit.editLessonsItem(
+                it.title,
+                it.description,
+                newValueStudent,
+                it.price.toString(),
+                it.dateStart,
+                it.dateEnd
+            )
+        }
+
+        //Log.d("delStudent", newValueStudent)
+        //val newValueStudent = dropElementList(getStudentIds(lessonsItem.value?.student.toString()), studentId)
+
+       /* viewModelLessonsEdit.editLessonsItem(
+            lessonsItem.value?.title.toString(),
+            lessonsItem.value?.description.toString(),
+            newValueStudent,
+            lessonsItem.value?.price.toString(),
+            lessonsItem.value?.dateStart.toString(),
+            lessonsItem.value?.dateEnd.toString()
+        )*/
+    }
+
+    private fun dropElementList(arrayList: List<Int>, el: Int): String {
+        val elementList = mutableListOf<Int>()
+        for(item in arrayList) {
+            if(item != el){
+                elementList.add(item)
+            }
+
+        }
+        return elementList.toString()
+    }
+
+    private fun getStudentIds(dataString: String): List<Int> {
+        var dataStr = dataString.replace("]", "")
+        dataStr = dataStr.replace("[", "")
+        return dataStr.split(",").map { it.trim().toInt() }
+    }
+
+    private fun deletePaymentToStudent(studentId: Int) {
+        viewModelPayment = ViewModelProvider(this).get(PaymentListViewModel::class.java)
+        viewModelPayment.paymentList.observe(viewLifecycleOwner) {
+            for (payment in it) {
+                if(payment.studentId == studentId) {
+                    Log.d("payment.lessonsId", payment.lessonsId.toString())
+                    editLessonsItem(payment.lessonsId, studentId)
+                    viewModelPayment.deletePaymentItem(payment)
+                   // Toast.makeText(activity, payment.lessonsId.toString(), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 }

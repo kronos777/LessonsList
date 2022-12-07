@@ -84,9 +84,14 @@ class CalendarItemFragment() : Fragment() {
 
         showToolbarAndBottomNavigation()
       //  goCalendarFragmentBackPressed()
-
+        goExitBackPressed()
     }
 
+    private fun goExitBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            getActivity()?.finishAffinity()
+        }
+    }
 
     fun goToStList() {
       //  val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
@@ -340,8 +345,6 @@ class CalendarItemFragment() : Fragment() {
                     }
                 }
 
-
-
                 dialogWindow(date, calendarDateList)
             }
 
@@ -354,19 +357,7 @@ class CalendarItemFragment() : Fragment() {
 
         // Set date long click callback
         calendarView.onDateLongClickListener = { date ->
-               /* if(getScreenOrientation()){
-                    val fragmentTransaction = fragmentManager?.beginTransaction()
-                     ?.replace(R.id.shop_item_container, LessonsItemAddFragment.addInstance(date.toString()))
-                     ?.addToBackStack(null)
-                     ?.commit()
-                } else {
-                    val fragmentTransaction = fragmentManager?.beginTransaction()
-                     ?.replace(R.id.fragment_item_container, LessonsItemAddFragment.addInstance(date.toString()))
-                     ?.addToBackStack(null)
-                     ?.commit()
-                }*/
             launchLessonsAddFragment(date.toString())
-
         }
 
    }
@@ -535,14 +526,7 @@ class CalendarItemFragment() : Fragment() {
     }
 
 
-        private fun launchFragment(fragment: Fragment, name: String? = "other") {
-            requireActivity().supportFragmentManager.beginTransaction()
-            .replace(com.example.lessonslist.R.id.fragment_item_container, fragment)
-            .addToBackStack(name)
-            .commit()
-        }
-
-        private fun setDatesIndicators(calendarPicList: List<EventItemsList>): List<EventItem> {
+    private fun setDatesIndicators(calendarPicList: List<EventItemsList>): List<EventItem> {
 
         val context = requireContext()
         val eventItems = mutableListOf<EventItem>()

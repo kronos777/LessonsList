@@ -1,12 +1,16 @@
 package com.example.lessonslist.presentation.lessons
 
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -17,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemListBinding
 import com.example.lessonslist.domain.lessons.LessonsItem
+import com.example.lessonslist.domain.student.StudentItem
+import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,6 +37,10 @@ class LessonsItemListFragment: Fragment() {
 
     private lateinit var viewModel: LessonsListViewModel
     private lateinit var lessonsListAdapter: LessonsListAdapter
+    private lateinit var viewModelPayment: PaymentListViewModel
+
+
+
 
 
     override fun onCreateView(
@@ -78,10 +88,7 @@ class LessonsItemListFragment: Fragment() {
                     }
                 }
         } else {
-                viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
-                viewModel.lessonsList.observe(viewLifecycleOwner) {
-                    lessonsListAdapter.submitList(it)
-                }
+            setCustomDataLessons()
         }
 
 
@@ -96,6 +103,26 @@ class LessonsItemListFragment: Fragment() {
 
         goCalendarFragmentBackPressed()
 
+    }
+
+    private fun deletePaymentToLessons(lessonsId: Int) {
+        viewModelPayment = ViewModelProvider(this).get(PaymentListViewModel::class.java)
+        viewModelPayment.paymentList.observe(viewLifecycleOwner) {
+            for (payment in it) {
+                if(payment.lessonsId == lessonsId) {
+                    viewModelPayment.deletePaymentItem(payment)
+                    Toast.makeText(activity, payment.student, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+
+    private fun setCustomDataLessons() {
+        viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
+        viewModel.lessonsList.observe(viewLifecycleOwner) {
+            lessonsListAdapter.submitList(it)
+        }
     }
 
     private fun goCalendarFragmentBackPressed() {
@@ -117,9 +144,17 @@ class LessonsItemListFragment: Fragment() {
             )
 
         }
-       // setupLongClickListener()
+        setupLongClickListener()
         setupClickListener()
-        setupSwipeListener(binding.rvLessonsList)
+       // setupSwipeListener(binding.rvLessonsList)
+    }
+
+    private fun setupLongClickListener() {
+        lessonsListAdapter.onLessonsItemLongClickListener = {
+            val item = lessonsListAdapter.currentList[it.id -1]
+            // viewModel.deleteStudentItem(item)
+            dialogWindow(item.id, item, item.title)
+        }
     }
 
 
@@ -175,13 +210,57 @@ class LessonsItemListFragment: Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val item = lessonsListAdapter.currentList[viewHolder.adapterPosition]
-                viewModel.deleteLessonsItem(item)
+              //viewModel.deleteLessonsItem(item)
+
+                /*delete payment*/
+                dialogWindow(item.id, item, item.title)
+                /*delete payment*/
+
             }
         }
         val itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(rvLessonsList)
+       // sleep(2000)
+
+        //setCustomDataLessons()
     }
 
+    private fun dialogWindow(lessonId: Int, lesson: LessonsItem, title: String) {
+
+        val alert = AlertDialog.Builder(requireContext())
+        alert.setTitle("Удалить урок $title")
+
+        val layout = LinearLayout(requireContext())
+        layout.orientation = LinearLayout.HORIZONTAL
+
+        val paymentsLabel = TextView(requireContext())
+        paymentsLabel.setSingleLine()
+        paymentsLabel.text = """Вы действительно хотите удалить выбранный урок ?""".trimMargin()
+        paymentsLabel.height = 150
+        paymentsLabel.top = 15
+        layout.addView(paymentsLabel)
+
+
+        layout.setPadding(50, 40, 50, 10)
+
+        alert.setView(layout)
+
+        alert.setPositiveButton("удалить платежи урока", DialogInterface.OnClickListener {
+                dialog, id ->
+            //deleteLessonsPay
+            deletePaymentToLessons(lessonId)
+            viewModel.deleteLessonsItem(lesson)
+        })
+
+        alert.setNegativeButton("не удалять урок", DialogInterface.OnClickListener {
+                dialog, id ->
+            dialog.dismiss()
+        })
+
+        alert.setCancelable(false)
+        alert.show()
+
+    }
 
     companion object {
 

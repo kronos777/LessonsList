@@ -1,11 +1,15 @@
 package com.example.lessonslist.presentation.group
 
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -15,6 +19,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentGroupItemListBinding
+import com.example.lessonslist.domain.group.GroupItem
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -62,6 +67,50 @@ class GroupItemListFragment: Fragment() {
         }
 
         goCalendarFragmentBackPressed()
+        setupLongClickListener()
+    }
+
+    private fun setupLongClickListener() {
+        groupListAdapter.onGroupItemLongClickListener = { group ->
+            val item = groupListAdapter.currentList[group.id -1]
+            // viewModel.deleteStudentItem(item)
+            dialogWindow(item, item.title)
+        }
+    }
+
+    private fun dialogWindow(group: GroupItem, title: String) {
+        val alert = AlertDialog.Builder(requireContext())
+        alert.setTitle("Удалить группу $title")
+
+        val layout = LinearLayout(requireContext())
+        layout.orientation = LinearLayout.HORIZONTAL
+
+        val paymentsLabel = TextView(requireContext())
+        paymentsLabel.setSingleLine()
+        paymentsLabel.text = """Вы уверены что хотите удалить группу?""".trimMargin()
+        paymentsLabel.height = 250
+        paymentsLabel.top = 15
+        layout.addView(paymentsLabel)
+
+
+        layout.setPadding(50, 40, 50, 10)
+
+        alert.setView(layout)
+
+        alert.setPositiveButton("удалить", DialogInterface.OnClickListener {
+                dialog, id ->
+            //deleteLessonsPay
+            viewModel.deleteGroupItem(group)
+        })
+
+        alert.setNegativeButton("не удалять", DialogInterface.OnClickListener {
+                dialog, id ->
+            dialog.dismiss()
+        })
+
+        alert.setCancelable(false)
+        alert.show()
+
     }
 
     private fun goCalendarFragmentBackPressed() {

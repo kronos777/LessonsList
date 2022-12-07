@@ -16,7 +16,7 @@ import com.example.lessonslist.domain.lessons.LessonsItem
 class LessonsListAdapter : ListAdapter<LessonsItem, LessonsItemViewHolder>(LessonsItemDiffCallback()) {
 
     var onLessonsItemClickListener: ((LessonsItem) -> Unit)? = null
-
+    var onLessonsItemLongClickListener: ((LessonsItem) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LessonsItemViewHolder {
        // Log.d("viewType", viewType.toString())
@@ -36,6 +36,10 @@ class LessonsListAdapter : ListAdapter<LessonsItem, LessonsItemViewHolder>(Lesso
         val binding = viewHolder.binding
         binding.root.setOnClickListener {
             onLessonsItemClickListener?.invoke(lessonsItem)
+        }
+        binding.root.setOnLongClickListener {
+            onLessonsItemLongClickListener?.invoke(lessonsItem)
+            true
         }
         binding.lessonsItem = lessonsItem
     }

@@ -13,9 +13,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
-import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemBinding
 import com.example.lessonslist.domain.group.GroupItem
 import com.example.lessonslist.domain.lessons.LessonsItem
@@ -24,11 +22,6 @@ import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
-import com.example.lessonslist.presentation.student.StudentItemListFragment
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.coroutines.delay
-import java.lang.Thread.sleep
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

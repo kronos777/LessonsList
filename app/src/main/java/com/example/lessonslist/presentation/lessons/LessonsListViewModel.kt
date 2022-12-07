@@ -15,43 +15,32 @@ class LessonsListViewModel(application: Application) : AndroidViewModel(applicat
 
     private val repository = LessonsListRepositoryImpl(application)
 
+    private val getLessonsItemUseCase = GetLessonsItemUseCase(repository)
     private val getLessonsItemListUseCase = GetLessonsListItemUseCase(repository)
     private val getLessonsListItemDateUseCase = GetLessonsListItemDateUseCase(repository)
     private val deleteLessonsItemUseCase = DeleteLessonsItemUseCase(repository)
     private val editLessonsItemUseCase = EditLessonsItemUseCase(repository)
 
     val lessonsList = getLessonsItemListUseCase.getLessonsList()
-    val lessonsListDate = getLessonsListItemDateUseCase
 
-    /*val appDatabase = AppDatabase
-
-    fun getData(): ArrayList<String> {
-
-        val dbLessons = appDatabase.LessonsListDao().getAllLessonsList()
-        val arrList: ArrayList<String> = ArrayList()
-        dbLessons.let {
-            for (item in it){
-                arrList.add(item.dateEnd)
-            }
-            // log(it.get(0).title)
-        }
-        return arrList
-    }*/
-   /* private val _offers = MutableLiveData<LessonsItem>()
-    val offers: LiveData<LessonsItem> = _offers*/
-  // var products: LiveData<List<LessonsItem>> = getLessonsItemListUseCase.getLessonsList()
-
- //   products.value = getLessonsItemListUseCase.getLessonsList()
+    private val _lessonsItem = MutableLiveData<LessonsItem>()
+    val lessonsItem: LiveData<LessonsItem>
+        get() = _lessonsItem
 
 
-        fun deleteLessonsItem(lessonsItem: LessonsItem) {
+    fun deleteLessonsItem(lessonsItem: LessonsItem) {
         viewModelScope.launch {
             deleteLessonsItemUseCase.deleteLessonsItem(lessonsItem)
         }
     }
 
 
-
+    fun getLessonsItem(lessonsItemId: Int) {
+        viewModelScope.launch {
+            val item = getLessonsItemUseCase.getLessonsItem(lessonsItemId)
+            _lessonsItem.value = item
+        }
+    }
 
 
 }

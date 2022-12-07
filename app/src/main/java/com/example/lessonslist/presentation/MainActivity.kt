@@ -40,6 +40,7 @@ import com.google.android.material.navigation.NavigationView
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, SettingsItemFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener, LessonsItemAddFragment.OnEditingFinishedListener, LessonsItemEditFragment.OnEditingFinishedListener {
@@ -85,7 +86,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         setupWithNavController(bottomNavigationView, navController)
 
 */
-
 
 
     }

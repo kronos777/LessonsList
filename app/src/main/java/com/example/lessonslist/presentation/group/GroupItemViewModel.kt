@@ -81,14 +81,10 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
 
     }
 
-    fun validateInput(title: String, inputStudent: String): Boolean {
+    fun validateInput(title: String): Boolean {
         var result = true
         if (title.isBlank()) {
             _errorInputTitle.value = true
-            result = false
-        }
-        if (inputStudent.isBlank()) {
-            _errorInputStudent.value = true
             result = false
         }
 

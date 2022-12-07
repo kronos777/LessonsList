@@ -1,12 +1,16 @@
 package com.example.lessonslist.presentation.payment
 
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -17,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentPaymentItemListBinding
 import com.example.lessonslist.domain.payment.PaymentItem
+import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.student.StudentItemEditFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
@@ -151,7 +156,7 @@ class PaymentItemListFragment: Fragment() {
         }
        // setupLongClickListener()
         setupClickListener()
-        setupSwipeListener(binding.rvPaymentList)
+
     }
 
 
@@ -179,29 +184,39 @@ class PaymentItemListFragment: Fragment() {
         navController.navigate(R.id.paymentItemFragment, btnArgsLessons)
     }
 
-    private fun setupSwipeListener(rvPaymentList: RecyclerView) {
-        val callback = object : ItemTouchHelper.SimpleCallback(
-            0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
 
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
+    private fun dialogWindow() {
 
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = paymentListAdapter.currentList[viewHolder.adapterPosition]
-                viewModel.deletePaymentItem(item)
-            }
-        }
-        val itemTouchHelper = ItemTouchHelper(callback)
-        itemTouchHelper.attachToRecyclerView((rvPaymentList))
+        val alert = AlertDialog.Builder(requireContext())
+        alert.setTitle("Платежи не удаляются таким образом.")
+
+        val layout = LinearLayout(requireContext())
+        layout.orientation = LinearLayout.HORIZONTAL
+
+        val paymentsLabel = TextView(requireContext())
+        paymentsLabel.setSingleLine()
+        paymentsLabel.text = """Будьте внимательны платежи удаляются либо вместе с уроком, либо вместе со студентов.""".trimMargin()
+        paymentsLabel.height = 250
+        paymentsLabel.top = 15
+        layout.addView(paymentsLabel)
+
+
+        layout.setPadding(50, 40, 50, 10)
+
+        alert.setView(layout)
+
+        alert.setPositiveButton("ок", DialogInterface.OnClickListener {
+                dialog, id ->
+            //deleteLessonsPay
+            dialog.dismiss()
+        })
+
+
+
+        alert.setCancelable(false)
+        alert.show()
+
     }
-
 
 
     private fun setupLongClickListener() {
