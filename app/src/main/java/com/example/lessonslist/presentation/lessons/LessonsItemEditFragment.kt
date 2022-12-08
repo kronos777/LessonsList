@@ -291,7 +291,7 @@ class LessonsItemEditFragment : Fragment() {
                 selectedStrings.add(items[selectedList[j]])
             }
 
-            Toast.makeText(getContext(), "Items selected are: " + Arrays.toString(selectedStrings.toTypedArray()), Toast.LENGTH_SHORT).show()
+           // Toast.makeText(getContext(), "Items selected are: " + Arrays.toString(selectedStrings.toTypedArray()), Toast.LENGTH_SHORT).show()
 
 
         }

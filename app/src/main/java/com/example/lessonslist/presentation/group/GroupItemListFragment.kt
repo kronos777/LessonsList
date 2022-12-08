@@ -1,7 +1,6 @@
 package com.example.lessonslist.presentation.group
 
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -48,7 +47,7 @@ class GroupItemListFragment: Fragment() {
         (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = "Список групп"
 
         setupRecyclerView()
-        viewModel = ViewModelProvider(this).get(GroupListViewModel::class.java)
+        viewModel = ViewModelProvider(this)[GroupListViewModel::class.java]
         viewModel.groupList.observe(viewLifecycleOwner) {
             groupListAdapter.submitList(it)
         }
@@ -87,7 +86,8 @@ class GroupItemListFragment: Fragment() {
 
         val paymentsLabel = TextView(requireContext())
         paymentsLabel.setSingleLine()
-        paymentsLabel.text = """Вы уверены что хотите удалить группу?""".trimMargin()
+        paymentsLabel.text = "Вы уверены что хотите удалить группу?"
+        paymentsLabel.isSingleLine = false
         paymentsLabel.height = 250
         paymentsLabel.top = 15
         layout.addView(paymentsLabel)
@@ -97,16 +97,14 @@ class GroupItemListFragment: Fragment() {
 
         alert.setView(layout)
 
-        alert.setPositiveButton("удалить", DialogInterface.OnClickListener {
-                dialog, id ->
+        alert.setPositiveButton("удалить") { _, _ ->
             //deleteLessonsPay
             viewModel.deleteGroupItem(group)
-        })
+        }
 
-        alert.setNegativeButton("не удалять", DialogInterface.OnClickListener {
-                dialog, id ->
+        alert.setNegativeButton("не удалять") { dialog, _ ->
             dialog.dismiss()
-        })
+        }
 
         alert.setCancelable(false)
         alert.show()

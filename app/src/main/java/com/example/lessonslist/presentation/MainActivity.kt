@@ -284,7 +284,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     private fun parseParamsExtra() {
         if (intent.getStringExtra("extra") != null) {
-            Toast.makeText(this, "extra params" + intent.getStringExtra("extra"), Toast.LENGTH_SHORT).show()
+           // Toast.makeText(this, "extra params" + intent.getStringExtra("extra"), Toast.LENGTH_SHORT).show()
             val lessonIdForFragment = intent.getStringExtra("extra")
             if (lessonIdForFragment != null) {
                 //launchFragment(LessonsItemEditFragment.newInstanceEditItem(lessonIdForFragment.toInt()))
@@ -395,12 +395,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             request
         )
 
-        WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
-            .observe(this) {
-                it.state.name
-                Log.d("worker_info", it.state.name)
-            }
-
         /*work manager */
     }
 
@@ -488,7 +482,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
             }
 
-            navZaplanMoneyCount.text = "ожидаемый доход $zaplanMoney"
+            navZaplanMoneyCount.text = "Ожидаемый доход $zaplanMoney"
 
             navSheduledCount.text = "Запланировано: $zaplanLessons"
             navConductedCount.text = "Проведено: $provedLessons"
@@ -509,10 +503,13 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
                 if(it[index].enabled) {
                     actualMoney += it[index].price
+                    //actualMoney += it[index].allprice
                     paidLessons++
                 } else {
                     if(it[index].price != it[index].allprice) {
                         actualMoney += (it[index].allprice + it[index].price)
+                        // actualMoney += it[index].allprice
+                        Log.d("deptMoney", actualMoney.toString())
                     }
                     deptMoney += it[index].price
                     noPaidLessons++
@@ -520,10 +517,10 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
             }
 
-            navDeptMoneyCount.text = R.string.nav_header_dept.toString() + " $deptMoney"
-            navActualMoneyCount.text = "фактический доход $actualMoney"
+            navDeptMoneyCount.text = "Долги: $deptMoney"
+            navActualMoneyCount.text = "Фактический доход $actualMoney"
             navPaidLessons.text = "Оплаченных: $paidLessons"
-            navNoPaidLessons.text = "Неоплаченные: " + noPaidLessons
+            navNoPaidLessons.text = "Неоплаченные: $noPaidLessons"
 
         }
 

@@ -180,11 +180,12 @@ class StudentItemListFragment: Fragment() {
         alert.setTitle("Удалить студента $title")
 
         val layout = LinearLayout(requireContext())
-        layout.orientation = LinearLayout.HORIZONTAL
+        layout.orientation = LinearLayout.VERTICAL
 
         val paymentsLabel = TextView(requireContext())
         paymentsLabel.setSingleLine()
-        paymentsLabel.text = """Будьте внимательны вместе со студентом удаляются все данные о нем.""".trimMargin()
+        paymentsLabel.text = "Будьте внимательны вместе со студентом удаляются все данные о нем."
+        paymentsLabel.isSingleLine = false
         paymentsLabel.height = 250
         paymentsLabel.top = 15
         layout.addView(paymentsLabel)
@@ -201,7 +202,7 @@ class StudentItemListFragment: Fragment() {
             viewModel.deleteStudentItem(student)
         })
 
-        alert.setNegativeButton("не удалять урок", DialogInterface.OnClickListener {
+        alert.setNegativeButton("не удалять", DialogInterface.OnClickListener {
                 dialog, id ->
             dialog.dismiss()
         })

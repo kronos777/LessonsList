@@ -111,7 +111,7 @@ class LessonsItemListFragment: Fragment() {
             for (payment in it) {
                 if(payment.lessonsId == lessonsId) {
                     viewModelPayment.deletePaymentItem(payment)
-                    Toast.makeText(activity, payment.student, Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(activity, payment.student, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -160,10 +160,6 @@ class LessonsItemListFragment: Fragment() {
 
     private fun setupClickListener() {
         lessonsListAdapter.onLessonsItemClickListener = {
-           /* fragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment_item_container, LessonsItemEditFragment.newInstanceEditItem(it.id))
-                ?.addToBackStack(null)
-                ?.commit()*/
             navigateBtnEditLessons(it.id)
         }
     }
@@ -235,7 +231,8 @@ class LessonsItemListFragment: Fragment() {
 
         val paymentsLabel = TextView(requireContext())
         paymentsLabel.setSingleLine()
-        paymentsLabel.text = """Вы действительно хотите удалить выбранный урок ?""".trimMargin()
+        paymentsLabel.text = "Вы действительно хотите удалить выбранный урок ? Будьте внимательны с уроком удаляться и все его платежи."
+        paymentsLabel.isSingleLine = false
         paymentsLabel.height = 150
         paymentsLabel.top = 15
         layout.addView(paymentsLabel)
@@ -245,14 +242,14 @@ class LessonsItemListFragment: Fragment() {
 
         alert.setView(layout)
 
-        alert.setPositiveButton("удалить платежи урока", DialogInterface.OnClickListener {
+        alert.setPositiveButton("удалить урок и платежи", DialogInterface.OnClickListener {
                 dialog, id ->
             //deleteLessonsPay
             deletePaymentToLessons(lessonId)
             viewModel.deleteLessonsItem(lesson)
         })
 
-        alert.setNegativeButton("не удалять урок", DialogInterface.OnClickListener {
+        alert.setNegativeButton("не удалять", DialogInterface.OnClickListener {
                 dialog, id ->
             dialog.dismiss()
         })
