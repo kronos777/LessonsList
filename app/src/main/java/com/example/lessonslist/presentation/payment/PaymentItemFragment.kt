@@ -14,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentPaymentItemBinding
 import com.example.lessonslist.domain.payment.PaymentItem
+import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.student.StudentItemViewModel
@@ -39,6 +40,7 @@ class PaymentItemFragment: Fragment() {
 
     private var screenMode: String = MODE_UNKNOWN
     private var paymentItemId: Int = PaymentItem.UNDEFINED_ID
+    private var studentItemId: Int = StudentItem.UNDEFINED_ID
 
 
 
@@ -132,7 +134,7 @@ class PaymentItemFragment: Fragment() {
                 val idLessons = it.lessonsId
                 viewModelStudent.getStudentItem(it.studentId)
                 viewModelStudent.studentItem.observe(viewLifecycleOwner) {
-                    if(it.paymentBalance > ( - payOff)) {
+                    if(it.paymentBalance >= ( - payOff)) {
                         //производит замену прайса с учетом списания долга в записи студента
                         viewModelStudent.editPaymentBalance(it.id, (it.paymentBalance + payOff))
 
@@ -195,23 +197,16 @@ class PaymentItemFragment: Fragment() {
     private fun goListNavigation() {
         val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
-        navController.navigate(R.id.paymentItemListFragment)
+        val args = Bundle().apply {
+            putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.CUSTOM_LIST)
+        }
+        navController.navigate(R.id.paymentItemListFragment, args)
     }
 
     private fun launchEditMode() {
         viewModel.getPaymentItem(paymentItemId)
         binding.saveButton.setOnClickListener{
             goListNavigation()
-            /*viewModel.editPaymentItem(
-                binding.valueTitle.text.toString(),
-                "",//binding.etDescription.text.toString(),
-                "",//binding.etLessonId.text.toString(),
-                "",//binding.etStudentId.text.toString(),
-                binding.valueDatepayment.text.toString(),
-                binding.valueStudent.text.toString(),
-                binding.valuePricePayment.text.toString(),
-                true
-            )*/
         }
     }
 

@@ -204,11 +204,17 @@ class StudentItemEditFragment : Fragment() {
            getActivity()?.let { BottomFragment.newInstanceParentsContacts(studentItemId).show(it.supportFragmentManager, "tag") }
        }
 
+    }
 
 
+    override fun onPause() {
+        super.onPause()
+        Toast.makeText(activity, "fragment in pause", Toast.LENGTH_SHORT).show()
+    }
 
-
-
+    override fun onResume() {
+        super.onResume()
+        Toast.makeText(activity, "fragment resume", Toast.LENGTH_SHORT).show()
     }
 
     private fun askEditNumber() {
@@ -410,7 +416,9 @@ class StudentItemEditFragment : Fragment() {
         alert.show()
     }
 
-
+    fun updatePaymentBalance(money: Int) {
+        binding.textViewPaymentBalance.text = money.toString()
+    }
 
 
 
@@ -445,7 +453,6 @@ class StudentItemEditFragment : Fragment() {
                     //    binding.imagepath.setText(chosenImageUri.toString())
                         myHandler.post {
                             //mImageView.setImageBitmap(mImage)
-
                             Picasso.get()
                                 .load(chosenImageUri.toString())
                                 .resize(400, 300)
@@ -610,8 +617,6 @@ class StudentItemEditFragment : Fragment() {
         const val MODE_EDIT = "mode_edit"
         const val MODE_UNKNOWN = ""
 
-
-
         fun newInstanceEditItem(shopItemId: Int): StudentItemEditFragment {
             return StudentItemEditFragment().apply {
                 arguments = Bundle().apply {
@@ -620,6 +625,7 @@ class StudentItemEditFragment : Fragment() {
                 }
             }
         }
+
     }
 }
 

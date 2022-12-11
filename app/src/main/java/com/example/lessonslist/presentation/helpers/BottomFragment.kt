@@ -11,11 +11,13 @@ import android.widget.*
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.BottomSheetLayoutBinding
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
+import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.student.*
@@ -126,6 +128,20 @@ class BottomFragment : BottomSheetDialogFragment() {
         /*group studentd*/
 
 
+    }
+
+
+    private fun navigateEditPayment(id: Int) {
+
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val btnArgsLessons = Bundle().apply {
+            putString(PaymentItemFragment.SCREEN_MODE, PaymentItemFragment.MODE_EDIT)
+            putInt(PaymentItemFragment.PAYMENT_ITEM_ID, id)
+        }
+
+        navController.navigate(R.id.paymentItemFragment, btnArgsLessons)
     }
 
     private fun showGroupStudentList() {
@@ -286,7 +302,7 @@ class BottomFragment : BottomSheetDialogFragment() {
 
             dataParentContactStudentModel!!.clear()
             for ((key, value) in map)  {
-                dataParentContactStudentModel!!.add(DataParentContactStudentModel(value, key))
+                dataParentContactStudentModel!!.add(DataParentContactStudentModel(key, value))
             }
 
             val adapterParentContact = ListParentContactAdapter(dataParentContactStudentModel!!, requireContext().applicationContext)
@@ -299,7 +315,6 @@ class BottomFragment : BottomSheetDialogFragment() {
             val selectedItem = parent.getItemAtPosition(position)
             selectAction(dataParentContactStudentModel?.get(position)?.phone)
             //call(dataParentContactStudentModel?.get(position)?.phone)
-            Toast.makeText(getActivity(), "item click^" + dataParentContactStudentModel?.get(position)?.phone.toString(), Toast.LENGTH_LONG).show()
         }
 
     }
@@ -334,11 +349,14 @@ class BottomFragment : BottomSheetDialogFragment() {
             listView.setOnItemClickListener { parent, _, position, _ ->
                 val selectedItem = parent.getItemAtPosition(position) as DataPaymentStudentModel
                 deptOff(selectedItem.id)
+
+               // navigateEditPayment(selectedItem.id)
             }
 
             listView2.setOnItemClickListener { parent, _, position, _ ->
                 val selectedItem = parent.getItemAtPosition(position) as DataPaymentStudentModel
                 deptOff(selectedItem.id)
+                //navigateEditPayment(selectedItem.id)
             }
 
         }
@@ -358,16 +376,18 @@ class BottomFragment : BottomSheetDialogFragment() {
                 val itemPaymentId = it.id
                 val idLessons = it.lessonsId
                 viewModelStudent.getStudentItem(it.studentId)
-                viewModelStudent.studentItem.observe(viewLifecycleOwner) { studentItem ->
-                    if(studentItem.paymentBalance > ( - payOff)) {
+                viewModelStudent.studentItem.observe(viewLifecycleOwner) {
+                    if(it.paymentBalance >= ( - payOff)) {
                         //производит замену прайса с учетом списания долга в записи студента
-                        viewModelStudent.editPaymentBalance(studentItem.id, (studentItem.paymentBalance + payOff))
+                        viewModelStudent.editPaymentBalance(it.id, (it.paymentBalance + payOff))
+                        val newBalance = it.paymentBalance
                         //выстаявляет значение платежа в соответствии со стоимостью урока
                         viewModelLessons.getLessonsItem(idLessons)
-                        viewModelLessons.lessonsItem.observe(viewLifecycleOwner) { lessItem ->
-                            viewModelPayments.changeEnableState(lessItem.price, itemPaymentId)
+                        viewModelLessons.lessonsItem.observe(viewLifecycleOwner) {
+                            viewModelPayments.changeEnableState(it.price, itemPaymentId)
+
                         }
-                        Toast.makeText(getActivity(),"Баланс: " + studentItem.paymentBalance + " Долг:  " + payOff,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"Баланс: " + it.paymentBalance + " Долг:  " + payOff,Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getActivity(),"Баланс студента не позволяет списать долг.",Toast.LENGTH_SHORT).show();
                     }
