@@ -77,7 +77,19 @@ class PaymentItemListFragment: Fragment() {
                 }
                 paymentListAdapter.submitList(listArrayPayment)
             }
-
+        } else if(mode == "student_no_pay_list") {
+            studentId = args.getInt(STUDENT_ID)
+            //Log.d("studentId", studentId.toString())
+            val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
+            viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
+            viewModel.paymentList.observe(viewLifecycleOwner) {
+                for (payment in it) {
+                    if(payment.studentId == studentId && !payment.enabled){
+                        listArrayPayment.add(payment)
+                    }
+                }
+                paymentListAdapter.submitList(listArrayPayment)
+            }
         } else if (mode == "lesson_id_list") {
             lessonsId = args.getInt(LESSONS_ID)
             Log.d("lessonsId", lessonsId.toString())
@@ -233,6 +245,7 @@ class PaymentItemListFragment: Fragment() {
         const val SCREEN_MODE = "screen_mode"
         const val CUSTOM_LIST = "custom_list"
         const val STUDENT_ID_LIST = "student_id_list"
+        const val STUDENT_NO_PAY_LIST = "student_no_pay_list"
         const val LESSONS_ID_LIST = "lesson_id_list"
         const val DATE_ID_LIST = "date_id_list"
         const val PAYMENT_ENABLED = "payment_enabled"
@@ -258,6 +271,16 @@ class PaymentItemListFragment: Fragment() {
                 }
             }
         }
+
+        fun newInstanceStudentIdNoPay(studentId: Int): PaymentItemListFragment {
+            return PaymentItemListFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(STUDENT_ID, studentId)
+                    putString(SCREEN_MODE, STUDENT_NO_PAY_LIST)
+                }
+            }
+        }
+
         fun newInstanceLessonsId(lessonsId: Int): PaymentItemListFragment {
             return PaymentItemListFragment().apply {
                 arguments = Bundle().apply {

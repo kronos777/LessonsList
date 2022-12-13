@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentStudentItemEditBinding
 import com.example.lessonslist.domain.student.StudentItem
@@ -193,7 +194,8 @@ class StudentItemEditFragment : Fragment() {
         }
 
        binding.cardPaymentStudent.setOnClickListener {
-                getActivity()?.let { BottomFragment.newInstancePaymentBalance(studentItemId).show(it.supportFragmentManager, "tag") }
+                getDialogPaymentStudent()
+                //getActivity()?.let { BottomFragment.newInstancePaymentBalance(studentItemId).show(it.supportFragmentManager, "tag") }
        }
 
         binding.cardGroupStudent.setOnClickListener {
@@ -203,6 +205,60 @@ class StudentItemEditFragment : Fragment() {
        binding.cardParentContact.setOnClickListener {
            getActivity()?.let { BottomFragment.newInstanceParentsContacts(studentItemId).show(it.supportFragmentManager, "tag") }
        }
+
+    }
+
+    private fun getDialogPaymentStudent() {
+        val alert = AlertDialog.Builder(requireContext())
+        alert.setTitle("Платежи студента")
+        //alert.setMessage("Enter phone details and amount to buy airtime.")
+        val layout = LinearLayout(requireContext())
+        layout.orientation = LinearLayout.VERTICAL
+        val paymentsLabel = TextView(requireContext())
+        paymentsLabel.setSingleLine()
+        paymentsLabel.text = "Отсюда Вы можете посмотреть все платежи или все долги студента."
+        paymentsLabel.isSingleLine = false
+        paymentsLabel.height = 250
+        paymentsLabel.top = 15
+        layout.addView(paymentsLabel)
+        layout.setPadding(50, 40, 50, 10)
+
+        alert.setView(layout)
+
+        alert.setPositiveButton("Платежи") { _, _ ->
+            navigateBtnAddStudent("all_payment")
+        }
+
+        alert.setNegativeButton("Долги") { _, _ ->
+            navigateBtnAddStudent("all_false_payment")
+        }
+
+        alert.setCancelable(false)
+        alert.show()
+    }
+
+
+    private fun navigateBtnAddStudent(params: String) {
+
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        if(params == "all_payment") {
+            val btnArgsStudentNoParams = Bundle().apply {
+                putInt(PaymentItemListFragment.STUDENT_ID, studentItemId)
+                putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.STUDENT_ID_LIST)
+            }
+            navController.navigate(R.id.paymentItemListFragment, btnArgsStudentNoParams)
+        } else if(params == "all_false_payment") {
+            val btnArgsStudentFalsePayment = Bundle().apply {
+                putInt(PaymentItemListFragment.STUDENT_ID, studentItemId)
+                putString(
+                    PaymentItemListFragment.SCREEN_MODE,
+                    PaymentItemListFragment.STUDENT_NO_PAY_LIST
+                )
+            }
+            navController.navigate(R.id.paymentItemListFragment, btnArgsStudentFalsePayment)
+        }
 
     }
 
