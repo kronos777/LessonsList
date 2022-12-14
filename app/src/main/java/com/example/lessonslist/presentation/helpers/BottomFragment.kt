@@ -526,13 +526,6 @@ class BottomFragment : BottomSheetDialogFragment() {
 
     }
 
-    fun launchFragment(fragment: Fragment) {
-        fragmentManager?.beginTransaction()
-            // ?.replace(R.id.fragment_bottom_container, fragment)
-           ?.replace(R.id.fragment_item_container, fragment)
-            ?.addToBackStack(null)
-            ?.commit()
-    }
 
     companion object {
 

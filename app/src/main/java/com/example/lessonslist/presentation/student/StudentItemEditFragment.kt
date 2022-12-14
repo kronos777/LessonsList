@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentStudentItemEditBinding
@@ -242,13 +243,17 @@ class StudentItemEditFragment : Fragment() {
 
         val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
+        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+            .setExitAnim(R.anim.slide_in_right)
+            .setPopEnterAnim(R.anim.slide_out_left)
+            .setPopExitAnim(R.anim.slide_out_right).build()
 
         if(params == "all_payment") {
             val btnArgsStudentNoParams = Bundle().apply {
                 putInt(PaymentItemListFragment.STUDENT_ID, studentItemId)
                 putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.STUDENT_ID_LIST)
             }
-            navController.navigate(R.id.paymentItemListFragment, btnArgsStudentNoParams)
+            navController.navigate(R.id.paymentItemListFragment, btnArgsStudentNoParams, animationOptions)
         } else if(params == "all_false_payment") {
             val btnArgsStudentFalsePayment = Bundle().apply {
                 putInt(PaymentItemListFragment.STUDENT_ID, studentItemId)
@@ -257,21 +262,11 @@ class StudentItemEditFragment : Fragment() {
                     PaymentItemListFragment.STUDENT_NO_PAY_LIST
                 )
             }
-            navController.navigate(R.id.paymentItemListFragment, btnArgsStudentFalsePayment)
+            navController.navigate(R.id.paymentItemListFragment, btnArgsStudentFalsePayment, animationOptions)
         }
 
     }
 
-
-    override fun onPause() {
-        super.onPause()
-        Toast.makeText(activity, "fragment in pause", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Toast.makeText(activity, "fragment resume", Toast.LENGTH_SHORT).show()
-    }
 
     private fun askEditNumber() {
         val alert = AlertDialog.Builder(requireContext())

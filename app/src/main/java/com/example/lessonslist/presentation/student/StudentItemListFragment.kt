@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -82,7 +83,12 @@ class StudentItemListFragment: Fragment() {
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
             navController.popBackStack(R.id.calendarItemFragment, true)
-            navController.navigate(R.id.calendarItemFragment)
+            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+                .setExitAnim(R.anim.slide_in_right)
+                .setPopEnterAnim(R.anim.slide_out_left)
+                .setPopExitAnim(R.anim.slide_out_right).build()
+
+            navController.navigate(R.id.calendarItemFragment, null, animationOptions)
         }
     }
 
@@ -94,8 +100,11 @@ class StudentItemListFragment: Fragment() {
         val btnArgsLessons = Bundle().apply {
             putString(StudentItemFragment.SCREEN_MODE, StudentItemFragment.MODE_ADD)
         }
-
-        navController.navigate(R.id.studentItemFragment, btnArgsLessons)
+        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+            .setExitAnim(R.anim.slide_in_right)
+            .setPopEnterAnim(R.anim.slide_out_left)
+            .setPopExitAnim(R.anim.slide_out_right).build()
+        navController.navigate(R.id.studentItemFragment, btnArgsLessons, animationOptions)
     }
 
     private fun navigateBtnEditStudent(id: Int) {
@@ -107,8 +116,11 @@ class StudentItemListFragment: Fragment() {
             putString(StudentItemEditFragment.SCREEN_MODE, StudentItemEditFragment.MODE_EDIT)
             putInt(StudentItemEditFragment.SHOP_ITEM_ID, id)
         }
-
-        navController.navigate(R.id.studentItemEditFragment, btnArgsLessons)
+        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+            .setExitAnim(R.anim.slide_in_right)
+            .setPopEnterAnim(R.anim.slide_out_left)
+            .setPopExitAnim(R.anim.slide_out_right).build()
+        navController.navigate(R.id.studentItemEditFragment, btnArgsLessons, animationOptions)
     }
 
 

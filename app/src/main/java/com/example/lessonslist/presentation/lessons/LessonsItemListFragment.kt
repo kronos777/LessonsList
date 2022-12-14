@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -130,7 +131,11 @@ class LessonsItemListFragment: Fragment() {
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
             navController.popBackStack(R.id.calendarItemFragment, true)
-            navController.navigate(R.id.calendarItemFragment)
+            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+                .setExitAnim(R.anim.slide_in_right)
+                .setPopEnterAnim(R.anim.slide_out_left)
+                .setPopExitAnim(R.anim.slide_out_right).build()
+            navController.navigate(R.id.calendarItemFragment, null, animationOptions)
         }
     }
 
@@ -173,8 +178,11 @@ class LessonsItemListFragment: Fragment() {
             putString(LessonsItemEditFragment.SCREEN_MODE, LessonsItemEditFragment.MODE_EDIT)
             putInt(LessonsItemEditFragment.LESSONS_ITEM_ID, id)
         }
-
-        navController.navigate(R.id.lessonsItemEditFragment, btnArgsLessons)
+        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+            .setExitAnim(R.anim.slide_in_right)
+            .setPopEnterAnim(R.anim.slide_out_left)
+            .setPopExitAnim(R.anim.slide_out_right).build()
+        navController.navigate(R.id.lessonsItemEditFragment, btnArgsLessons, animationOptions)
     }
 
     private fun navigateBtnAddLessons(dateId: String) {
@@ -186,8 +194,11 @@ class LessonsItemListFragment: Fragment() {
             putString(LessonsItemAddFragment.SCREEN_MODE, LessonsItemAddFragment.MODE_ADD)
             putString(LessonsItemAddFragment.DATE_ADD, dateId)
         }
-
-        navController.navigate(R.id.lessonsItemAddFragment, btnArgsLessons)
+        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+            .setExitAnim(R.anim.slide_in_right)
+            .setPopEnterAnim(R.anim.slide_out_left)
+            .setPopExitAnim(R.anim.slide_out_right).build()
+        navController.navigate(R.id.lessonsItemAddFragment, btnArgsLessons, animationOptions)
     }
 
     private fun setupSwipeListener(rvLessonsList: RecyclerView) {

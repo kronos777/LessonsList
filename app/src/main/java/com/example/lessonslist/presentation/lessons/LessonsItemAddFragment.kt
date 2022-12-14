@@ -11,11 +11,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemAddBinding
 import com.example.lessonslist.presentation.MainViewModel
@@ -103,7 +106,24 @@ class LessonsItemAddFragment : Fragment()  {
         setListViewStudent()
         setGroupViewStudent()
         listenSwitchGroup()
+        goLessonsListFragmentBackPressed()
+    }
 
+
+    private fun goLessonsListFragmentBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+            val navController = navHostFragment.navController
+            val arguments = Bundle().apply {
+                putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.CUSTOM_LIST)
+            }
+            navController.popBackStack(R.id.lessonsItemListFragment, true)
+            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+                .setExitAnim(R.anim.slide_in_right)
+                .setPopEnterAnim(R.anim.slide_out_left)
+                .setPopExitAnim(R.anim.slide_out_right).build()
+            navController.navigate(R.id.lessonsItemListFragment, arguments, animationOptions)
+        }
     }
 
     private fun listenSwitchGroup() {
@@ -334,8 +354,8 @@ class LessonsItemAddFragment : Fragment()  {
                         Toast.LENGTH_SHORT).show()
                     false
                 } else {
-                    Toast.makeText(activity, "разница минут $minutes",
-                        Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(activity, "разница минут $minutes",
+                       // Toast.LENGTH_SHORT).show()
                     true
                 }
 
@@ -355,7 +375,7 @@ class LessonsItemAddFragment : Fragment()  {
         binding.etStudent.visibility = View.GONE
         binding.saveButton.setOnClickListener{
             val valueStudent = checkValidStudent()
-            var checkField = false
+            val checkField: Boolean
             if (valueStudent.size <= 0) {
                 Toast.makeText(activity, "Урок не может создан без учеников", Toast.LENGTH_SHORT).show()
                 checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),

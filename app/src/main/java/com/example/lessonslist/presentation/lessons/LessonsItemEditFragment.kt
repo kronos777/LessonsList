@@ -13,6 +13,7 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemEditBinding
@@ -262,8 +263,11 @@ class LessonsItemEditFragment : Fragment() {
         val btnArgsLessons = Bundle().apply {
             putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.CUSTOM_LIST)
         }
-
-        navController.navigate(R.id.lessonsItemListFragment, btnArgsLessons)
+        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+            .setExitAnim(R.anim.slide_in_right)
+            .setPopEnterAnim(R.anim.slide_out_left)
+            .setPopExitAnim(R.anim.slide_out_right).build()
+        navController.navigate(R.id.lessonsItemListFragment, btnArgsLessons, animationOptions)
     }
 
 
@@ -411,7 +415,11 @@ class LessonsItemEditFragment : Fragment() {
                 putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.CUSTOM_LIST)
             }
             navController.popBackStack(R.id.lessonsItemListFragment, true)
-            navController.navigate(R.id.lessonsItemListFragment, arguments)
+            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+                .setExitAnim(R.anim.slide_in_right)
+                .setPopEnterAnim(R.anim.slide_out_left)
+                .setPopExitAnim(R.anim.slide_out_right).build()
+            navController.navigate(R.id.lessonsItemListFragment, arguments, animationOptions)
         }
     }
 

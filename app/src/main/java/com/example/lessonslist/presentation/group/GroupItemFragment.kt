@@ -12,14 +12,18 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentGroupItemBinding
 import com.example.lessonslist.domain.group.GroupItem
 import com.example.lessonslist.presentation.MainViewModel
+import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -169,7 +173,20 @@ class GroupItemFragment : Fragment() {
        //    touchListener(listView)
        // onCheckboxClicked(listView.findViewWithTag("CheckBox"))
         addTextChangeListeners()
+        goGroupListFragmentBackPressed()
+    }
 
+    private fun goGroupListFragmentBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+            val navController = navHostFragment.navController
+            navController.popBackStack(R.id.groupItemListFragment, true)
+            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+                .setExitAnim(R.anim.slide_in_right)
+                .setPopEnterAnim(R.anim.slide_out_left)
+                .setPopExitAnim(R.anim.slide_out_right).build()
+            navController.navigate(R.id.groupItemListFragment, null, animationOptions)
+        }
     }
 
 

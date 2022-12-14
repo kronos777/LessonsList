@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -116,7 +117,11 @@ class GroupItemListFragment: Fragment() {
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
             navController.popBackStack(R.id.calendarItemFragment, true)
-            navController.navigate(R.id.calendarItemFragment)
+            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+                .setExitAnim(R.anim.slide_in_right)
+                .setPopEnterAnim(R.anim.slide_out_left)
+                .setPopExitAnim(R.anim.slide_out_right).build()
+            navController.navigate(R.id.calendarItemFragment, null, animationOptions)
         }
     }
 
@@ -155,8 +160,11 @@ class GroupItemListFragment: Fragment() {
         val btnArgsGroup = Bundle().apply {
             putString(GroupItemFragment.SCREEN_MODE, GroupItemFragment.MODE_ADD)
         }
-
-        navController.navigate(R.id.groupItemFragment, btnArgsGroup)
+        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+            .setExitAnim(R.anim.slide_in_right)
+            .setPopEnterAnim(R.anim.slide_out_left)
+            .setPopExitAnim(R.anim.slide_out_right).build()
+        navController.navigate(R.id.groupItemFragment, btnArgsGroup, animationOptions)
     }
 
     private fun navigateBtnEditGroup(id: Int) {
@@ -168,8 +176,11 @@ class GroupItemListFragment: Fragment() {
             putString(GroupItemFragment.SCREEN_MODE, GroupItemFragment.MODE_EDIT)
             putInt(GroupItemFragment.GROUP_ITEM_ID, id)
         }
-
-        navController.navigate(R.id.groupItemFragment, btnArgsGroup)
+        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+            .setExitAnim(R.anim.slide_in_right)
+            .setPopEnterAnim(R.anim.slide_out_left)
+            .setPopExitAnim(R.anim.slide_out_right).build()
+        navController.navigate(R.id.groupItemFragment, btnArgsGroup, animationOptions)
     }
 
     private fun setupSwipeListener(rvGroupList: RecyclerView) {

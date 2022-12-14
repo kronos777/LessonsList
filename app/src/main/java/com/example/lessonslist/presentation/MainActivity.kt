@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.work.*
@@ -104,12 +105,19 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         val btnArgsPayment = Bundle().apply {
             putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.CUSTOM_LIST)
         }
+
+        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+            .setExitAnim(R.anim.slide_in_right)
+            .setPopEnterAnim(R.anim.slide_out_left)
+            .setPopExitAnim(R.anim.slide_out_right).build()
+
+
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.bottomItem1 -> {
                     // Respond to navigation item 1 click
                     //launchMainFragment(CalendarItemFragment(), "calendar")
-                    navController.navigate(R.id.calendarItemFragment)
+                    navController.navigate(R.id.calendarItemFragment, null, animationOptions)
                     true
                 }
                 R.id.bottomItem2 -> {
@@ -117,23 +125,23 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                     //  Log.d("menuitem", "ite2")
                     //Toast.makeText(this, "item2", Toast.LENGTH_SHORT).show()
                     //goPaymentFragment()
-                    navController.navigate(R.id.paymentItemListFragment, btnArgsPayment)
+                    navController.navigate(R.id.paymentItemListFragment, btnArgsPayment, animationOptions)
                     true
                 }
                 R.id.bottomItem3 -> {
                     // Respond to navigation item 2 click
-                    navController.navigate(R.id.groupItemListFragment)
+                    navController.navigate(R.id.groupItemListFragment, null, animationOptions)
                     true
                 }
                 R.id.bottomItem4 -> {
                     // Respond to navigation item 2 click
                     //goLessonsListFragment()
-                    navController.navigate(R.id.lessonsItemListFragment, btnArgsLessons)
+                    navController.navigate(R.id.lessonsItemListFragment, btnArgsLessons, animationOptions)
                     true
                 }
                 R.id.bottomItem5 -> {
                     // Respond to navigation item 2 click
-                    navController.navigate(R.id.studentItemListFragment)
+                    navController.navigate(R.id.studentItemListFragment, null, animationOptions)
                     //  goStudentListFragment()
                     true
                 }
@@ -344,15 +352,22 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             enableHomeBackIcon(false)
         }
 
+
+        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+            .setExitAnim(R.anim.slide_in_right)
+            .setPopEnterAnim(R.anim.slide_out_left)
+            .setPopExitAnim(R.anim.slide_out_right).build()
+
+
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 //    R.id.muItem1 -> goGroupFragment()
                 //      R.id.muItem2 -> launchFragment(SettingsItemFragment())
              //   R.id.muItem2 -> getDialogBackup()
                 //R.id.muItem3 -> launchFragment(InstructionFragment())
-                R.id.muItem3 ->  navController.navigate(R.id.instructionFragment)
+                R.id.muItem3 ->  navController.navigate(R.id.instructionFragment, null, animationOptions)
                 //R.id.muItem4 -> launchFragment(AboutFragment())
-                R.id.muItem4 -> navController.navigate(R.id.aboutFragment)
+                R.id.muItem4 -> navController.navigate(R.id.aboutFragment, null, animationOptions)
                 //R.id.muItem5 -> exitApplication()
                 R.id.muItem5 -> exitApplication()
                /* R.id.muItem6 -> goLessonsListFragment()
