@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.Toast
 import androidx.activity.addCallback
@@ -23,7 +22,6 @@ import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentGroupItemBinding
 import com.example.lessonslist.domain.group.GroupItem
 import com.example.lessonslist.presentation.MainViewModel
-import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -72,7 +70,7 @@ class GroupItemFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
      //   return inflater.inflate(R.layout.fragment_group_item, container, false)
         _binding = FragmentGroupItemBinding.inflate(inflater, container, false)
         return binding.root
@@ -116,7 +114,7 @@ class GroupItemFragment : Fragment() {
                         var dataString = it.student
                         dataString = dataString.replace("]", "")
                         dataString = dataString.replace("[", "")
-                        val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
+                        val lstValues: List<Int> = dataString.split(",").map { it.trim().toInt() }
                         if(lstValues.contains(id)) {
                             dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
                             // ListStudentAdapter.arrayList.add(id)
@@ -204,7 +202,7 @@ class GroupItemFragment : Fragment() {
         }
     }
 
-    private fun touchListener(view: View) {
+    /*private fun touchListener(view: View) {
         view.setOnTouchListener { v, event ->
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                 Toast.makeText(activity, "you just touch the screen :-)", Toast.LENGTH_SHORT).show()
@@ -212,7 +210,7 @@ class GroupItemFragment : Fragment() {
             true
         }
     }
-
+    */
 
 
     private fun addTextChangeListeners() {
@@ -268,7 +266,7 @@ class GroupItemFragment : Fragment() {
     private fun launchAddMode() {
     binding.saveButton.setOnClickListener{
         val valueStudent = checkValidStudent()
-        var checkField = false
+        val checkField: Boolean
         if(valueStudent.size <= 0) {
             Toast.makeText(activity, "Без учеников группа не может быть создана.", Toast.LENGTH_LONG).show()
             binding.textViewChangeStateCheckbox.setTextColor(ContextCompat.getColor(requireContext().applicationContext,R.color.custom_calendar_weekend_days_bar_text_color))
