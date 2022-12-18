@@ -86,8 +86,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         setupWithNavController(bottomNavigationView, navController)
 
 */
-
-
     }
 
 
