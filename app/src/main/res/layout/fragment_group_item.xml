@@ -10,7 +10,10 @@
             type="com.example.lessonslist.presentation.group.GroupItemViewModel"
             />
     </data>
-
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -120,4 +123,5 @@
             app:layout_constraintStart_toStartOf="parent"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>

@@ -6,7 +6,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
@@ -280,7 +279,7 @@ class GroupItemFragment : Fragment() {
 
         }
 
-        if(checkField == true && valueStudent.size > 0) {
+        if(checkField && valueStudent.size > 0) {
             viewModel.addGroupItem(
                 binding.etTitle.text.toString(),
                 binding.etDescription.text.toString(),

@@ -18,11 +18,9 @@
         android:theme="@style/Theme.LessonsList">
 
         <activity
-            android:name=".presentation.student.StudentItemActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize"></activity>
-        <activity
             android:name=".presentation.MainActivity"
+            android:configChanges="screenSize|orientation"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
