@@ -1,7 +1,11 @@
 <layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,6 +19,7 @@
             android:layout_height="100dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
+            android:src="@drawable/iconlogo"
             android:layout_marginBottom="10dp"
             app:layout_constraintBottom_toTopOf="@id/til_title"
             app:layout_constraintStart_toStartOf="parent"
@@ -23,17 +28,74 @@
              />
         <TextView
             android:id="@+id/til_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/instructions_picture"
-            android:text="Название урока"
+            android:text="Инструкция:"
+            android:gravity="center"
             app:layout_constraintVertical_chainStyle="packed"
-            android:textSize="16sp"
+            android:textSize="24sp"
             />
-
+        <TextView
+            android:id="@+id/til_description1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/til_title"
+            android:gravity="left"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:textSize="18sp"
+            android:text="1 Перед началом работы необходимо добавить студентов."
+            />
+        <TextView
+            android:id="@+id/til_description2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/til_description1"
+            android:gravity="left"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:textSize="18sp"
+            android:text="2 Группы создаются по желанию и необязательны к добавлению."
+            />
+        <TextView
+            android:id="@+id/til_description3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/til_description2"
+            android:gravity="left"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:textSize="18sp"
+            android:text="3 После добавления учеников и групп создайте урок, в случае создания урока с главного экрана нажмите и удерживайте дату появится экран создания урока дата будет та что Вы выбрали, установите время  начала и конца урока выберите студентов, установите цену и нажмите сохранить."
+            />
+        <TextView
+            android:id="@+id/til_description4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/til_description3"
+            android:gravity="left"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:textSize="18sp"
+            android:text="4 Платежи создаются автоматически по настпуплению времени урока"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>

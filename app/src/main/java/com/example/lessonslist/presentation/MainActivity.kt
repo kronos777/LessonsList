@@ -395,7 +395,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
              .build()
         //val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
        // WorkManager.getInstance(this).enqueue(request)
-      /**  WorkManager.getInstance(this).enqueue(request)
+      /*  WorkManager.getInstance(this).enqueue(request)
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
             .observe(this) {
                 it.state.name
@@ -435,7 +435,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         val navigationView : NavigationView = binding.navView
         val headerView : View = navigationView.getHeaderView(0)
-        val navSheduledCount : TextView = headerView.findViewById(R.id.nav_scheduled_count_lessons)
+        val navScheduledCount : TextView = headerView.findViewById(R.id.nav_scheduled_count_lessons)
         val navConductedCount : TextView = headerView.findViewById(R.id.nav_conducted_count_lessons)
         val navStudentCount : TextView = headerView.findViewById(R.id.nav_value_count_student)
         val navPaidLessons : TextView = headerView.findViewById(R.id.nav_yes_paymenet_count_pay)
@@ -470,7 +470,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         //Log.d("datelessons", dataTime[4].toString())
         //countLessonsZ.setText("asgadfgdafgfadg")
         viewModelLessons.lessonsList.observe(this) {
-            var provedLessons = 0
+         //   var provedLessons = 0
             var zaplanLessons = 0
             var zaplanMoney = 0
 
@@ -485,8 +485,9 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 zaplanMoney += it[index].price * countStudent
 
                 if(initialDate > lessonsDate) {
-                    provedLessons++
+                   // provedLessons++
                     Log.d("datelessons", lessonsDate.toString())
+                    Log.d("datelessons", initialDate.toString())
                 } else {
                     zaplanLessons++
                     Log.d("datelessons1", lessonsDate.toString())
@@ -496,8 +497,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
             navZaplanMoneyCount.text = "Ожидаемый доход $zaplanMoney"
 
-            navSheduledCount.text = "Запланировано: $zaplanLessons"
-            navConductedCount.text = "Проведено: $provedLessons"
+            navScheduledCount.text = "Запланировано: $zaplanLessons"
+           // navConductedCount.text = "Проведено: $provedLessons"
 
         }
         viewModelStudent.studentList.observe(this) {
@@ -511,8 +512,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             var noPaidLessons = 0
             var deptMoney = 0
             var actualMoney = 0
-            for (index in it.indices) {
+            val idLessonsMap: HashSet<Int> = HashSet<Int>()
+            //var provedLessons = 0
 
+            for (index in it.indices) {
+                idLessonsMap.add(it[index].lessonsId)
                 if(it[index].enabled) {
                     actualMoney += it[index].price
                     //actualMoney += it[index].allprice
@@ -529,11 +533,15 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
             }
 
+            //Log.d("idLessonsMap", )
+
+            val provedCountLess = idLessonsMap.size.toString()
+
             navDeptMoneyCount.text = "Долги: $deptMoney"
             navActualMoneyCount.text = "Фактический доход $actualMoney"
             navPaidLessons.text = "Оплаченных: $paidLessons"
             navNoPaidLessons.text = "Неоплаченные: $noPaidLessons"
-
+            navConductedCount.text = "Проведено: $provedCountLess"
         }
 
         viewModelGroup.groupList.observe(this) {

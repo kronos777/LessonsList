@@ -1,19 +1,25 @@
 <layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".presentation.info.AboutFragment"
         android:padding="16dp"
         >
+
         <ImageView
-            android:id="@+id/about_picture"
+            android:id="@+id/instructions_picture"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
+            android:src="@drawable/iconlogo"
             android:layout_marginBottom="10dp"
             app:layout_constraintBottom_toTopOf="@id/til_title"
             app:layout_constraintStart_toStartOf="parent"
@@ -22,17 +28,19 @@
             />
         <TextView
             android:id="@+id/til_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/about_picture"
-            android:text="Название урока"
+            app:layout_constraintTop_toBottomOf="@id/instructions_picture"
+            android:text="О приложении:"
+            android:gravity="center"
             app:layout_constraintVertical_chainStyle="packed"
-            android:textSize="16sp"
+            android:textSize="24sp"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>
