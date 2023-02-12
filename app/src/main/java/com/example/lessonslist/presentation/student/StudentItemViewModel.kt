@@ -85,7 +85,7 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
         val image = inputImage
         val phone = inputPhone
         //val count = parseCount(inputCount)
-        val fieldsValid = validateInput(name, lastName, paymentBalance.toString(), inputPhone)
+        val fieldsValid = validateInput(name, paymentBalance.toString())
         if (fieldsValid) {
             _studentItem.value?.let {
                 viewModelScope.launch {
@@ -123,26 +123,27 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun validateInput(name: String, lastName: String, paymentBalance: String, inputPhone: String): Boolean {
+    fun validateInput(name: String, paymentBalance: String): Boolean {
         var result = true
         if (name.isBlank()) {
             _errorInputName.value = true
             result = false
         }
-        if (lastName.isBlank()) {
+
+      /*  if (lastName.isBlank()) {
             _errorInputLastName.value = true
             result = false
-        }
+        }*/
 
         if (paymentBalance.isBlank()) {
             _errorInputPaymentBalance.value = true
             result = false
         }
 
-        if (inputPhone.isBlank()) {
+        /*if (inputPhone.isBlank()) {
             _errorInputPhone.value = true
             result = false
-        }
+        }*/
 
         return result
     }

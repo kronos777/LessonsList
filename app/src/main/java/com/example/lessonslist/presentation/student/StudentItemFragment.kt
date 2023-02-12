@@ -294,8 +294,8 @@ class StudentItemFragment : Fragment() {
 
     private fun launchAddMode() {
         binding.saveButton.setOnClickListener {
-            if (viewModel.validateInput(binding.etName.text.toString(), binding.etLastname.text.toString(),
-                    binding.etPaymentBalance.text.toString(), binding.etTelephone.text.toString())) {
+            if (viewModel.validateInput(binding.etName.text.toString(),
+                    binding.etPaymentBalance.text.toString())) {
                 viewModel.addStudentItem(
                     binding.etName.text?.toString(),
                     binding.etLastname.text?.toString(),
