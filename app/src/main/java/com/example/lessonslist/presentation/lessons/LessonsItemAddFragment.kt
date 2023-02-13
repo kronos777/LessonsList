@@ -10,7 +10,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ListView
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -27,12 +29,12 @@ import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
 import com.example.lessonslist.presentation.student.StudentItemListFragment
 import java.lang.Thread.sleep
+import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashSet
+import java.util.concurrent.TimeUnit
 
 class LessonsItemAddFragment : Fragment()  {
 
@@ -56,7 +58,10 @@ class LessonsItemAddFragment : Fragment()  {
     private lateinit var dataGroupList: GroupListViewModel
     private var dataGroupListString: Boolean = true
 
-
+    private lateinit var timePicker1RepeatDate: String
+    private lateinit var timePicker2RepeatDate: String
+    private lateinit var timePicker1RepeatStartHourMinuteDate: String
+    private lateinit var timePicker2RepeatEndHourMinuteDate: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,6 +112,9 @@ class LessonsItemAddFragment : Fragment()  {
         setGroupViewStudent()
         listenSwitchGroup()
         goLessonsListFragmentBackPressed()
+
+        repeatLessons()
+
     }
 
 
@@ -143,6 +151,130 @@ class LessonsItemAddFragment : Fragment()  {
 
         }
     }
+
+    private fun repeatLessons() {
+        val switchChoose = binding.etRepeat
+        switchChoose.setOnCheckedChangeListener { _, isChecked ->
+                if(isChecked) {
+                    Toast.makeText(activity, "checked", Toast.LENGTH_SHORT).show()
+                    binding.cardRepeatLessons.visibility = View.VISIBLE
+                    binding.etDatestartRepeat.setOnClickListener {
+                        chooseDateStartRepeat()
+                    }
+                    binding.etDateendRepeat.setOnClickListener {
+                        chooseDateEndRepeat()
+                    }
+                } else {
+                    binding.cardRepeatLessons.visibility = View.GONE
+                    Toast.makeText(activity, "unchecked", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+
+    private fun chooseDateStartRepeat() {
+        val cal = Calendar.getInstance()
+        val year1 = cal.get(Calendar.YEAR)
+        val month1 = cal.get(Calendar.MONTH)
+        val day1 = cal.get(Calendar.DAY_OF_MONTH)
+        val mcurrentTime = Calendar.getInstance()
+        var year = mcurrentTime.get(Calendar.YEAR)
+        var month = mcurrentTime.get(Calendar.MONTH)
+        var day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
+
+
+        val startRepeat =
+            activity?.let {
+                DatePickerDialog(it, { _, yearcur, monthOfYear, dayOfMonth ->
+                    cal.set(yearcur, monthOfYear, dayOfMonth)
+                    year = cal[Calendar.YEAR]
+                    month = cal[Calendar.MONTH]
+                    day = cal[Calendar.DAY_OF_MONTH]
+                    binding.etDatestartRepeat.setText(String.format("%d/%d/%d", year, month + 1, day))
+                    timePicker1RepeatDate = year.toString() + "-" + (month + 1).toString() + "-" + day.toString()
+                }, year1, month1, day1)
+            }
+        startRepeat!!.show()
+        //binding.tilDatestartRepeat.error = "Период повторения не может быть мене текущей даты."
+    }
+
+
+
+    private fun chooseDateEndRepeat() {
+        val cal = Calendar.getInstance()
+        val year1 = cal.get(Calendar.YEAR)
+        val month1 = cal.get(Calendar.MONTH)
+        val day1 = cal.get(Calendar.DAY_OF_MONTH)
+        val mcurrentTime = Calendar.getInstance()
+        var year = mcurrentTime.get(Calendar.YEAR)
+        var month = mcurrentTime.get(Calendar.MONTH)
+        var day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
+
+
+        val endRepeat =
+            activity?.let {
+                DatePickerDialog(it, { _, yearcur, monthOfYear, dayOfMonth ->
+                    cal.set(yearcur, monthOfYear, dayOfMonth)
+                    year = cal[Calendar.YEAR]
+                    month = cal[Calendar.MONTH]
+                    day = cal[Calendar.DAY_OF_MONTH]
+                    binding.etDateendRepeat.setText(String.format("%d/%d/%d", year, month + 1, day))
+                    timePicker2RepeatDate = year.toString() + "-" + (month + 1).toString() + "-" + day.toString()
+                    checkRepeatDate()
+                }, year1, month1, day1)
+            }
+        endRepeat!!.show()
+    }
+
+    private fun checkRepeatDate() {
+        val formatter = SimpleDateFormat("yyyy-M-d")
+        //val formatter = DateTimeFormatter.ofPattern("yyyy-M-d")
+        //val startDate: LocalDateTime = LocalDateTime.parse(timePicker1RepeatDate, formatter)
+        val startDate = formatter.parse(timePicker1RepeatDate)
+        //val endDate: LocalDateTime = LocalDateTime.parse(timePicker2RepeatDate, formatter)
+        val endDate = formatter.parse(timePicker2RepeatDate)
+
+        if(startDate == endDate) {
+            Toast.makeText(activity, "Время начала и конца урока не могут совпадать.",
+                Toast.LENGTH_SHORT).show()
+        } else if (startDate > endDate) {
+            Toast.makeText(activity, "Время начала урока не может превышать время конца урока.", Toast.LENGTH_SHORT).show()
+        } else if(startDate < endDate) {
+           // Toast.makeText(activity, "startDate" + startDate, Toast.LENGTH_SHORT).show()
+            //Toast.makeText(activity, "endDate" + endDate, Toast.LENGTH_SHORT).show()
+           // val diff = Duration.between(startDate, endDate)
+            //val daysDiff = diff!!.days
+           // Toast.makeText(activity, "daysDiff" + daysDiff, Toast.LENGTH_SHORT).show()
+            val diffInMillies: Long = Math.abs(endDate.getTime() - startDate.getTime())
+            val diff: Long = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7
+            val dateLessons: ArrayList<String> = ArrayList()
+            val calendarLoc = GregorianCalendar.getInstance()
+            val tempTime1 = timePicker1RepeatDate.split("-")
+            val tempHourStartTime1 = timePicker1RepeatStartHourMinuteDate.split(":")
+            val tempHourStartTime2 = timePicker2RepeatEndHourMinuteDate.split(":")
+
+
+            calendarLoc.set(tempTime1.get(0).toInt(), tempTime1.get(1).toInt() - 1, tempTime1.get(2).toInt())
+
+            Log.d("dataTimeRepeat", binding.etDatestart.text.toString())
+            for (i in 0..diff-1) {
+                calendarLoc.add(Calendar.DAY_OF_MONTH, 7)
+                val strAdd = calendarLoc.get(Calendar.YEAR).toString() + "-" + calendarLoc.get(Calendar.MONTH).toString() + "-" + calendarLoc.get(Calendar.DAY_OF_MONTH).toString() + " " + tempHourStartTime1.get(0) + ":" + tempHourStartTime1.get(1)
+                val strAdd2 = calendarLoc.get(Calendar.YEAR).toString() + "-" + calendarLoc.get(Calendar.MONTH).toString() + "-" + calendarLoc.get(Calendar.DAY_OF_MONTH).toString() + " " + tempHourStartTime2.get(0) + ":" + tempHourStartTime2.get(1)
+                dateLessons.add(strAdd)
+                dateLessons.add(strAdd2)
+            }
+
+            Log.d("dataTimeRepeat", dateLessons.toString())
+            Toast.makeText(activity, "diff between" + dateLessons, Toast.LENGTH_SHORT).show()
+
+            //val cal: Calendar = GregorianCalendar(2023, Calendar.FEBRUARY, 1)
+           // Log.d("dataTimeRepeat", cal.getActualMaximum(Calendar.DAY_OF_MONTH).toString())
+        }
+
+
+    }
+
 
     private fun setListViewStudent() {
 
@@ -299,8 +431,9 @@ class LessonsItemAddFragment : Fragment()  {
             { _, hourOfDay, minute ->
                 val minH = if (hourOfDay < 10) "0" + hourOfDay else hourOfDay
                 val minM = if (minute < 10) "0" + minute else minute
-                binding.etDatestart.setText(String.format("%d/%d/%d %s : %s", year, month + 1, day, minH, minM))
+                binding.etDatestart.setText(String.format("%d/%d/%d %s:%s", year, month + 1, day, minH, minM))
                 timePicker1 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + minH.toString() + ":" + minM.toString()
+                timePicker1RepeatStartHourMinuteDate = minH.toString() + ":" + minM.toString()
                 if (timePicker1.isNotEmpty() && timePicker2.isNotEmpty()) {
                     checkAddDateTime(timePicker1, timePicker2)
                 }
@@ -311,8 +444,9 @@ class LessonsItemAddFragment : Fragment()  {
                 val minH = if (hourOfDay < 10) "0" + hourOfDay else hourOfDay
                 val minM = if (minute < 10) "0" + minute else minute
 //                Toast.makeText(getActivity(), setValue.toString(), Toast.LENGTH_SHORT).show()
-                binding.etDateend.setText(String.format("%d/%d/%d %s : %s", year, month + 1, day, minH, minM))
+                binding.etDateend.setText(String.format("%d/%d/%d %s:%s", year, month + 1, day, minH, minM))
                 timePicker2 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + minH.toString() + ":" + minM.toString()
+                timePicker2RepeatEndHourMinuteDate = minH.toString() + ":" + minM.toString()
                 if (timePicker1.isNotEmpty() && timePicker2.isNotEmpty()) {
                     checkAddDateTime(timePicker1, timePicker2)
                 }

@@ -562,8 +562,18 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
        val day = dataDate[2]
 
       // var dataTimeMinute = allData[1].split(":")
-       val hour = allData[1]
-       val minute = allData[3]
+       Log.d("allData", allData.toString())
+       var hour = ""
+       var minute = ""
+       if(allData.size > 2) {
+           hour = allData[1]
+           minute = allData[3]
+       } else {
+           val newDateTime = allData[1].split(":")
+           hour = newDateTime[0]
+           minute = newDateTime[1]
+       }
+
 
        valueReturn.add(year.toInt())
        valueReturn.add(month.toInt())

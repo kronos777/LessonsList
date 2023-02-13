@@ -23,6 +23,8 @@
     <string name="lessons_price">Стоимость урока:</string>
     <string name="lessons_date_start">Дата/Время начала урока:</string>
     <string name="lessons_date_end">Дата/Время конца урока:</string>
+    <string name="lessons_date_start_repeat">Период начала повторения урока:</string>
+    <string name="lessons_date_end_repeat">Период конца конца урока:</string>
     <string name="save_btn">Сохранить</string>
     <string name="go_list_btn">назад к списку</string>
     <string name="nav_header_dept">долги</string>
