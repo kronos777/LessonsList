@@ -62,6 +62,8 @@ class LessonsItemAddFragment : Fragment()  {
     private lateinit var timePicker2RepeatDate: String
     private lateinit var timePicker1RepeatStartHourMinuteDate: String
     private lateinit var timePicker2RepeatEndHourMinuteDate: String
+    private val dateLessons: ArrayList<String> = ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -247,7 +249,7 @@ class LessonsItemAddFragment : Fragment()  {
            // Toast.makeText(activity, "daysDiff" + daysDiff, Toast.LENGTH_SHORT).show()
             val diffInMillies: Long = Math.abs(endDate.getTime() - startDate.getTime())
             val diff: Long = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7
-            val dateLessons: ArrayList<String> = ArrayList()
+
             val calendarLoc = GregorianCalendar.getInstance()
             val tempTime1 = timePicker1RepeatDate.split("-")
             val tempHourStartTime1 = timePicker1RepeatStartHourMinuteDate.split(":")
@@ -256,18 +258,26 @@ class LessonsItemAddFragment : Fragment()  {
 
             calendarLoc.set(tempTime1.get(0).toInt(), tempTime1.get(1).toInt() - 1, tempTime1.get(2).toInt())
 
-            Log.d("dataTimeRepeat", binding.etDatestart.text.toString())
+           // Log.d("dataTimeRepeat", binding.etDatestart.text.toString())
             for (i in 0..diff-1) {
                 calendarLoc.add(Calendar.DAY_OF_MONTH, 7)
-                val strAdd = calendarLoc.get(Calendar.YEAR).toString() + "-" + calendarLoc.get(Calendar.MONTH).toString() + "-" + calendarLoc.get(Calendar.DAY_OF_MONTH).toString() + " " + tempHourStartTime1.get(0) + ":" + tempHourStartTime1.get(1)
-                val strAdd2 = calendarLoc.get(Calendar.YEAR).toString() + "-" + calendarLoc.get(Calendar.MONTH).toString() + "-" + calendarLoc.get(Calendar.DAY_OF_MONTH).toString() + " " + tempHourStartTime2.get(0) + ":" + tempHourStartTime2.get(1)
+                //Log.d("dataTime dateField", calendarLoc.get(Calendar.MONTH).toString())
+                //Log.d("dataTime dateField", (calendarLoc.get(Calendar.MONTH) + 1).toString())
+                val strAdd = calendarLoc.get(Calendar.YEAR).toString() + "/" + (calendarLoc.get(Calendar.MONTH) + 1).toString() + "/" + calendarLoc.get(Calendar.DAY_OF_MONTH).toString() + " " + tempHourStartTime1.get(0) + ":" + tempHourStartTime1.get(1)
+                val strAdd2 = calendarLoc.get(Calendar.YEAR).toString() + "/" + (calendarLoc.get(Calendar.MONTH) + 1).toString() + "/" + calendarLoc.get(Calendar.DAY_OF_MONTH).toString() + " " + tempHourStartTime2.get(0) + ":" + tempHourStartTime2.get(1)
                 dateLessons.add(strAdd)
                 dateLessons.add(strAdd2)
             }
 
-            Log.d("dataTimeRepeat", dateLessons.toString())
+          /*Log.d("dataTimeRepeat", dateLessons.toString())
             Toast.makeText(activity, "diff between" + dateLessons, Toast.LENGTH_SHORT).show()
 
+
+            for (index in dateLessons.indices step 2) {
+                Log.d("dataTime $index dateField", binding.etDatestart.text.toString())
+                Log.d("dataTime $index RepeatStart", dateLessons.get(index).toString())
+                Log.d("dataTime $index RepeatEnd", dateLessons.get(index + 1).toString())
+            }*/
             //val cal: Calendar = GregorianCalendar(2023, Calendar.FEBRUARY, 1)
            // Log.d("dataTimeRepeat", cal.getActualMaximum(Calendar.DAY_OF_MONTH).toString())
         }
@@ -521,15 +531,31 @@ class LessonsItemAddFragment : Fragment()  {
                 /*val checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
                 binding.etDatestart.text.toString(), binding.etDateend.text.toString())*/
             if(checkField && valueStudent.size > 0) {
-                viewModel.addLessonsItem(
-                    binding.etTitle.text.toString(),
-                    "",
-                    valueStudent.toString(),
-                    //binding.etStudent.text.toString(),
-                    binding.etPrice.text.toString(),
-                    binding.etDatestart.text.toString(),
-                    binding.etDateend.text.toString()
-                )
+               if(binding.etRepeat.isChecked && dateLessons.size >= 2) {
+                    for (index in dateLessons.indices step 2) {
+                      //  Log.d("dataTime $index RepeatStart", dateLessons.get(index).toString())
+                       // Log.d("dataTime $index RepeatEnd", dateLessons.get(index + 1).toString())
+                        viewModel.addLessonsItem(
+                            binding.etTitle.text.toString(),
+                            "",
+                            valueStudent.toString(),
+                            //binding.etStudent.text.toString(),
+                            binding.etPrice.text.toString(),
+                            dateLessons.get(index).toString(),
+                            dateLessons.get(index + 1).toString()
+                        )
+                    }
+                } else {
+                    viewModel.addLessonsItem(
+                        binding.etTitle.text.toString(),
+                        "",
+                        valueStudent.toString(),
+                        //binding.etStudent.text.toString(),
+                        binding.etPrice.text.toString(),
+                        binding.etDatestart.text.toString(),
+                        binding.etDateend.text.toString()
+                    )
+                }
             } else {
                 setHideError()
             }
