@@ -144,12 +144,12 @@ class LessonsItemAddFragment : Fragment()  {
                 binding.listViewGroup.visibility = View.VISIBLE
                 binding.listView.visibility = View.GONE
                 binding.textViewChangeStateCheckbox.text = "Список групп."
-                Toast.makeText(activity, "isChecked", Toast.LENGTH_SHORT).show()
+              //  Toast.makeText(activity, "isChecked", Toast.LENGTH_SHORT).show()
             } else {
                 binding.listViewGroup.visibility = View.GONE
                 binding.listView.visibility = View.VISIBLE
                 binding.textViewChangeStateCheckbox.text = "Список учеников."
-                Toast.makeText(activity, "unchecked", Toast.LENGTH_SHORT).show()
+              //  Toast.makeText(activity, "unchecked", Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -159,7 +159,7 @@ class LessonsItemAddFragment : Fragment()  {
         val switchChoose = binding.etRepeat
         switchChoose.setOnCheckedChangeListener { _, isChecked ->
                 if(isChecked) {
-                    Toast.makeText(activity, "checked", Toast.LENGTH_SHORT).show()
+                 //   Toast.makeText(activity, "checked", Toast.LENGTH_SHORT).show()
                     binding.cardRepeatLessons.visibility = View.VISIBLE
                   /*  binding.etDatestartRepeat.setOnClickListener {
                         chooseDateStartRepeat()
@@ -169,7 +169,7 @@ class LessonsItemAddFragment : Fragment()  {
                     }
                 } else {
                     binding.cardRepeatLessons.visibility = View.GONE
-                    Toast.makeText(activity, "unchecked", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(activity, "unchecked", Toast.LENGTH_SHORT).show()
                 }
             }
     }
