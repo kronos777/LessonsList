@@ -160,9 +160,9 @@ class LessonsItemAddFragment : Fragment()  {
                 if(isChecked) {
                     Toast.makeText(activity, "checked", Toast.LENGTH_SHORT).show()
                     binding.cardRepeatLessons.visibility = View.VISIBLE
-                    binding.etDatestartRepeat.setOnClickListener {
+                  /*  binding.etDatestartRepeat.setOnClickListener {
                         chooseDateStartRepeat()
-                    }
+                    }*/
                     binding.etDateendRepeat.setOnClickListener {
                         chooseDateEndRepeat()
                     }
@@ -174,7 +174,7 @@ class LessonsItemAddFragment : Fragment()  {
     }
 
 
-    private fun chooseDateStartRepeat() {
+   /* private fun chooseDateStartRepeat() {
         val cal = Calendar.getInstance()
         val year1 = cal.get(Calendar.YEAR)
         val month1 = cal.get(Calendar.MONTH)
@@ -198,7 +198,7 @@ class LessonsItemAddFragment : Fragment()  {
             }
         startRepeat!!.show()
         //binding.tilDatestartRepeat.error = "Период повторения не может быть мене текущей даты."
-    }
+    }*/
 
 
 
@@ -232,6 +232,11 @@ class LessonsItemAddFragment : Fragment()  {
         val formatter = SimpleDateFormat("yyyy-M-d")
         //val formatter = DateTimeFormatter.ofPattern("yyyy-M-d")
         //val startDate: LocalDateTime = LocalDateTime.parse(timePicker1RepeatDate, formatter)
+        val tempStartDate = binding.etDatestart.text.toString().split(" ")
+        val tempStartDate2 = tempStartDate[0].split("/")
+
+        timePicker1RepeatDate = tempStartDate2[0] + "-" + tempStartDate2[1] + "-" + tempStartDate2[2]
+
         val startDate = formatter.parse(timePicker1RepeatDate)
         //val endDate: LocalDateTime = LocalDateTime.parse(timePicker2RepeatDate, formatter)
         val endDate = formatter.parse(timePicker2RepeatDate)
@@ -259,6 +264,8 @@ class LessonsItemAddFragment : Fragment()  {
             calendarLoc.set(tempTime1.get(0).toInt(), tempTime1.get(1).toInt() - 1, tempTime1.get(2).toInt())
 
            // Log.d("dataTimeRepeat", binding.etDatestart.text.toString())
+            dateLessons.add(binding.etDatestart.text.toString())
+            dateLessons.add(binding.etDateend.text.toString())
             for (i in 0..diff-1) {
                 calendarLoc.add(Calendar.DAY_OF_MONTH, 7)
                 //Log.d("dataTime dateField", calendarLoc.get(Calendar.MONTH).toString())
@@ -271,13 +278,13 @@ class LessonsItemAddFragment : Fragment()  {
 
           /*Log.d("dataTimeRepeat", dateLessons.toString())
             Toast.makeText(activity, "diff between" + dateLessons, Toast.LENGTH_SHORT).show()
-
+*/
 
             for (index in dateLessons.indices step 2) {
                 Log.d("dataTime $index dateField", binding.etDatestart.text.toString())
                 Log.d("dataTime $index RepeatStart", dateLessons.get(index).toString())
                 Log.d("dataTime $index RepeatEnd", dateLessons.get(index + 1).toString())
-            }*/
+            }
             //val cal: Calendar = GregorianCalendar(2023, Calendar.FEBRUARY, 1)
            // Log.d("dataTimeRepeat", cal.getActualMaximum(Calendar.DAY_OF_MONTH).toString())
         }

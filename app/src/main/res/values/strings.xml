@@ -24,7 +24,7 @@
     <string name="lessons_date_start">Дата/Время начала урока:</string>
     <string name="lessons_date_end">Дата/Время конца урока:</string>
     <string name="lessons_date_start_repeat">Период начала повторения урока:</string>
-    <string name="lessons_date_end_repeat">Период конца конца урока:</string>
+    <string name="lessons_date_end_repeat">Период конца урока:</string>
     <string name="save_btn">Сохранить</string>
     <string name="go_list_btn">назад к списку</string>
     <string name="nav_header_dept">долги</string>
@@ -57,5 +57,5 @@
     <string name="drawerMenuItem2">О приложение</string>
     <string name="drawerMenuItem3">Выход</string>
     <string name="list_student_lessons">Список учеников.</string>
-
+    <string name="text_info_repeat">Урок будет повторяться по заданную дату в выбранный день недели.</string>
 </resources>

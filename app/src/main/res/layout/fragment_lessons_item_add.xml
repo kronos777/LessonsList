@@ -175,7 +175,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputLayout
+                <!--com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_datestart_repeat"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
@@ -194,8 +194,19 @@
                         android:hint="@string/lessons_date_start_repeat"
                         android:inputType="text"
                         android:text="@{viewModel.lessonsItem.dateStart}" />
-                </com.google.android.material.textfield.TextInputLayout>
-
+                </com.google.android.material.textfield.TextInputLayout-->
+                <TextView
+                    android:id="@+id/textInfoRepeat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_info_repeat"
+                    android:textSize="16dp"
+                    android:textColor="@color/custom_calendar_date_weekend_background"
+                    android:textStyle="normal"
+                    app:layout_constraintTop_toBottomOf="@id/card_repeat_lessons"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/listView"
+                    />
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_dateend_repeat"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
