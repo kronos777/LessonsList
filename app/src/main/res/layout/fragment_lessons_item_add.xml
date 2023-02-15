@@ -167,7 +167,7 @@
             app:layout_constraintTop_toBottomOf="@+id/til_repeat"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="0dp"
-            android:visibility="visible"
+            android:visibility="gone"
             >
 
             <androidx.appcompat.widget.LinearLayoutCompat

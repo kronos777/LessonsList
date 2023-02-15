@@ -462,7 +462,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelGroup = ViewModelProvider(this)[GroupListViewModel::class.java]
         viewModelLesson = ViewModelProvider(this)[LessonsItemViewModel::class.java]
-      //  val countLessonsP = findViewById<TextView>(R.id.nav_conducted_count_lessons)
+        //val countLessonsP = findViewById<TextView>(R.id.nav_conducted_count_lessons)
         //val countLessonsZ = findViewById<TextView>(R.id.nav_scheduled_count_lessons)
         //Toast.makeText(this, initialDate.toString(), Toast.LENGTH_SHORT).show()
         //Log.d("datelessons", initialDate.toString())

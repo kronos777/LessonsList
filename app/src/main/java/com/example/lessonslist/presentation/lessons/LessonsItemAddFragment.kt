@@ -27,6 +27,7 @@ import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
+import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.example.lessonslist.presentation.student.StudentItemListFragment
 import java.lang.Thread.sleep
 import java.text.SimpleDateFormat
@@ -335,7 +336,7 @@ class LessonsItemAddFragment : Fragment()  {
                 listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                     val dataStudent: DataStudentGroupModel = dataStudentGroupModel!![position]
                     dataStudent.checked = !dataStudent.checked
-                    Log.d("checkstate", dataStudent.checked.toString())
+                 //   Log.d("checkstate", dataStudent.checked.toString())
                     adapter.notifyDataSetChanged()
                 }
 
@@ -704,11 +705,19 @@ class LessonsItemAddFragment : Fragment()  {
     }
 
     private fun launchFragment(fragment: Fragment) {
-        requireActivity().supportFragmentManager.popBackStack()
+       /* requireActivity().supportFragmentManager.popBackStack()
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_item_container, fragment)
             .addToBackStack(null)
-            .commit()
+            .commit()*/
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+            .setExitAnim(R.anim.slide_in_right)
+            .setPopEnterAnim(R.anim.slide_out_left)
+            .setPopExitAnim(R.anim.slide_out_right).build()
+        navController.navigate(R.id.studentItemListFragment, null, animationOptions)
     }
 
 
