@@ -27,7 +27,8 @@ import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
-import com.example.lessonslist.presentation.student.StudentItemFragment
+import com.example.lessonslist.presentation.lessons.sale.DataSalePaymentModel
+import com.example.lessonslist.presentation.lessons.sale.ListSaleAdapter
 import com.example.lessonslist.presentation.student.StudentItemListFragment
 import java.lang.Thread.sleep
 import java.text.SimpleDateFormat
@@ -49,9 +50,12 @@ class LessonsItemAddFragment : Fragment()  {
 
     private lateinit var adapter: ListStudentAdapter
     private lateinit var listView: ListView
+    private lateinit var listViewSale: ListView
     private var dataStudentGroupModel: ArrayList<DataStudentGroupModel>? = null
+    private var dataStudentSaleModel: ArrayList<DataSalePaymentModel>? = null
     private lateinit var dataStudentlList: MainViewModel
 
+    private lateinit var adapterSale: ListSaleAdapter
 
     private lateinit var adapterGroup: ListGroupAdapter
     private lateinit var listViewGroup: ListView
@@ -59,6 +63,7 @@ class LessonsItemAddFragment : Fragment()  {
     private lateinit var dataGroupList: GroupListViewModel
     private var dataGroupListString: Boolean = true
 
+    private lateinit var salePaymentValueDate: HashSet<Int?>
     private lateinit var timePicker1RepeatDate: String
     private lateinit var timePicker2RepeatDate: String
     private lateinit var timePicker1RepeatStartHourMinuteDate: String
@@ -100,7 +105,7 @@ class LessonsItemAddFragment : Fragment()  {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         //addTextChangeListeners()
-       // launchRightMode()
+        //launchRightMode()
         launchAddMode()
         observeViewModel()
         lessonsTextChangeListeners()
@@ -108,6 +113,7 @@ class LessonsItemAddFragment : Fragment()  {
 
         binding.tilStudent.visibility = View.GONE
         binding.listViewGroup.visibility = View.GONE
+        binding.listSalePayment.visibility = View.GONE
 
         chooseDateLessons()
 
@@ -117,6 +123,7 @@ class LessonsItemAddFragment : Fragment()  {
         goLessonsListFragmentBackPressed()
 
         repeatLessons()
+        listenSwitchSalePayment()
 
     }
 
@@ -150,6 +157,33 @@ class LessonsItemAddFragment : Fragment()  {
                 binding.listView.visibility = View.VISIBLE
                 binding.textViewChangeStateCheckbox.text = "Список учеников."
               //  Toast.makeText(activity, "unchecked", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+    }
+
+    private fun listenSwitchSalePayment() {
+        val switchChoose = binding.paymentSale
+        switchChoose.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) {
+                binding.listViewGroup.visibility = View.GONE
+                binding.listView.visibility = View.GONE
+                binding.listSalePayment.visibility = View.VISIBLE
+                binding.textViewChangeStateCheckbox.text = "Индивидуальная оплата."
+                salePaymentValueDate = checkValidStudent()
+                if (salePaymentValueDate.isNotEmpty()) {
+                    Toast.makeText(activity, "isChecked" + salePaymentValueDate.toString(), Toast.LENGTH_SHORT).show()
+                    setListViewSalePayment(salePaymentValueDate)
+                } else {
+                    Toast.makeText(activity, "не выбрано не одного студента кому можно назначить скидку" + salePaymentValueDate.toString(), Toast.LENGTH_SHORT).show()
+                }
+
+            } else {
+                binding.listViewGroup.visibility = View.GONE
+                binding.listView.visibility = View.VISIBLE
+                binding.listSalePayment.visibility = View.GONE
+                binding.textViewChangeStateCheckbox.text = "Список учеников."
+                //  Toast.makeText(activity, "unchecked", Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -293,6 +327,59 @@ class LessonsItemAddFragment : Fragment()  {
 
     }
 
+    private fun setListViewSalePayment(salePaymentValueDate: HashSet<Int?>) {
+
+        listViewSale = binding.listSalePayment
+        dataStudentSaleModel = ArrayList()
+        dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
+        var studentName: Array<String> = emptyArray()
+
+        dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
+            if(it.isNotEmpty()) {
+                for(student in it){
+                    if(salePaymentValueDate.contains(student.id)) {
+                        val name = student.name + " " + student.lastname
+                        val id = student.id
+                       // val price = student.paymentBalance
+                        studentName += name
+                        /* if(viewModel.lessonsItem.value != null) {
+                             viewModel.lessonsItem.observe(viewLifecycleOwner) { item ->
+                                 var dataString = item.student
+                                 dataString = dataString.replace("]", "")
+                                 dataString = dataString.replace("[", "")
+                                 val lstValues: List<Int> = dataString.split(",").map { it.trim().toInt() }
+                                 if(lstValues.contains(id)) {
+                                     dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
+                                     // ListStudentAdapter.arrayList.add(id)
+                                 } else {
+                                     dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+                                 }
+                             }
+                         } else {
+                             dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+                         }*/
+
+                        dataStudentSaleModel!!.add(DataSalePaymentModel(name, 0, id, false))
+                    }
+                }
+
+
+                adapterSale = ListSaleAdapter(dataStudentSaleModel!!, requireContext().applicationContext)
+                //  openDialog(dataStudentGroupModel)
+                listViewSale.adapter = adapterSale
+
+                listViewSale.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                    val dataStudent: DataSalePaymentModel = dataStudentSaleModel!![position]
+                    dataStudent.checked = !dataStudent.checked
+                    //Log.d("checkstate", dataStudent.toString())
+                    adapterSale.notifyDataSetChanged()
+                }
+
+            }
+
+        }
+
+    }
 
     private fun setListViewStudent() {
 

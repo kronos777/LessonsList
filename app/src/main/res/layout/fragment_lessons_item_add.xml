@@ -155,6 +155,12 @@
                 android:layout_height="wrap_content"
                 android:checked="false"
                 android:text="Повторять урок"/>
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/payment_sale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Скидка на оплату"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.card.MaterialCardView
@@ -274,10 +280,22 @@
             android:layout_height="350dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            app:layout_constraintBottom_toTopOf="@id/save_button"
+            app:layout_constraintBottom_toTopOf="@id/listSalePayment"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/listView" />
+        <ListView
+            android:id="@+id/listSalePayment"
+
+            android:layout_width="match_parent"
+            android:choiceMode="multipleChoice"
+            android:layout_height="350dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintBottom_toTopOf="@id/save_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/listViewGroup" />
         <Button
             android:id="@+id/save_button"
             android:layout_width="0dp"

@@ -15,10 +15,12 @@ import com.example.lessonslist.data.parent.ParentItemDbModel
 import com.example.lessonslist.data.parent.ParentListDao
 import com.example.lessonslist.data.payment.PaymentItemDbModel
 import com.example.lessonslist.data.payment.PaymentListDao
+import com.example.lessonslist.data.sale.SaleItemDbModel
+import com.example.lessonslist.data.sale.SaleListDao
 import com.example.lessonslist.data.student.StudentItemDbModel
 import com.example.lessonslist.data.student.StudentListDao
 
-@Database(entities = [StudentItemDbModel::class, PaymentItemDbModel::class, GroupItemDbModel::class, LessonsItemDbModel::class, ParentItemDbModel::class, NotesItemDbModel::class], version = 14, exportSchema = false)
+@Database(entities = [StudentItemDbModel::class, PaymentItemDbModel::class, GroupItemDbModel::class, LessonsItemDbModel::class, ParentItemDbModel::class, NotesItemDbModel::class, SaleItemDbModel::class], version = 15, exportSchema = false)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun StudentListDao(): StudentListDao
@@ -27,6 +29,7 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun LessonsListDao(): LessonsListDao
     abstract fun ParentListDao(): ParentListDao
     abstract fun NotesListDao(): NotesListDao
+    abstract fun SaleListDao(): SaleListDao
 
 
     companion object {
