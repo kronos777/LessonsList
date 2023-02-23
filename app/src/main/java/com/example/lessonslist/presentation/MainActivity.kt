@@ -386,6 +386,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private fun initWorkManager() {
         /*work manager */
         //PeriodicWorkRequest myWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class, 30, TimeUnit.MINUTES, 25, TimeUnit.MINUTES).build();
+        // val request = OneTimeWorkRequestBuilder<PaymentWork>().build()
          val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
            /*.setConstraints(
                  Constraints.Builder()
@@ -401,7 +402,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 it.state.name
 
             }*/
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+      /* */ WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "paymentWork",
             ExistingPeriodicWorkPolicy.REPLACE,
             request
@@ -461,7 +462,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelGroup = ViewModelProvider(this)[GroupListViewModel::class.java]
         viewModelLesson = ViewModelProvider(this)[LessonsItemViewModel::class.java]
-      //  val countLessonsP = findViewById<TextView>(R.id.nav_conducted_count_lessons)
+        //val countLessonsP = findViewById<TextView>(R.id.nav_conducted_count_lessons)
         //val countLessonsZ = findViewById<TextView>(R.id.nav_scheduled_count_lessons)
         //Toast.makeText(this, initialDate.toString(), Toast.LENGTH_SHORT).show()
         //Log.d("datelessons", initialDate.toString())
@@ -562,8 +563,18 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
        val day = dataDate[2]
 
       // var dataTimeMinute = allData[1].split(":")
-       val hour = allData[1]
-       val minute = allData[3]
+       Log.d("allData", allData.toString())
+       var hour = ""
+       var minute = ""
+       if(allData.size > 2) {
+           hour = allData[1]
+           minute = allData[3]
+       } else {
+           val newDateTime = allData[1].split(":")
+           hour = newDateTime[0]
+           minute = newDateTime[1]
+       }
+
 
        valueReturn.add(year.toInt())
        valueReturn.add(month.toInt())

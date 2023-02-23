@@ -95,14 +95,13 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_datestart"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/til_price"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintWidth_percent="0.45">
+            app:layout_constraintVertical_chainStyle="packed">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_datestart"
@@ -118,15 +117,14 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_dateend"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="4dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/til_datestart"
-            app:layout_constraintTop_toBottomOf="@+id/til_price"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintWidth_percent="0.45">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_datestart"
+            app:layout_constraintVertical_chainStyle="packed">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_dateend"
@@ -138,6 +136,102 @@
                 android:inputType="textCapWords"
                 android:text="@{viewModel.lessonsItem.dateEnd}" />
         </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_repeat"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_dateend"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintWidth_percent="0.45">
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/et_repeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Повторять урок"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_repeat_lessons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_repeat"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="0dp"
+            android:visibility="gone"
+            >
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!--com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_datestart_repeat"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintWidth_percent="0.45">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_datestart_repeat"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:hint="@string/lessons_date_start_repeat"
+                        android:inputType="text"
+                        android:text="@{viewModel.lessonsItem.dateStart}" />
+                </com.google.android.material.textfield.TextInputLayout-->
+                <TextView
+                    android:id="@+id/textInfoRepeat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_info_repeat"
+                    android:textSize="16dp"
+                    android:textColor="@color/custom_calendar_date_weekend_background"
+                    android:textStyle="normal"
+                    app:layout_constraintTop_toBottomOf="@id/card_repeat_lessons"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/listView"
+                    />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_dateend_repeat"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintWidth_percent="0.45">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_dateend_repeat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:hint="@string/lessons_date_end_repeat"
+                        android:inputType="textCapWords"
+                        android:text="@{viewModel.lessonsItem.dateEnd}" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/textViewChangeStateCheckbox"
@@ -147,7 +241,7 @@
             android:textSize="24dp"
             android:textColor="@color/custom_calendar_date_weekend_background"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/til_dateend"
+            app:layout_constraintTop_toBottomOf="@id/card_repeat_lessons"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/listView"
             />
@@ -156,9 +250,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="false"
-            app:layout_constraintTop_toBottomOf="@id/til_dateend"
+            app:layout_constraintTop_toBottomOf="@id/card_repeat_lessons"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/listView"
+            app:layout_constraintStart_toEndOf="@+id/textViewChangeStateCheckbox"
             android:text="Группы"/>
 
         <ListView
@@ -184,6 +279,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/listView" />
+
         <Button
             android:id="@+id/save_button"
             android:layout_width="0dp"

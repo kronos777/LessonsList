@@ -89,7 +89,7 @@ class PaymentWork(
                         val formatted = current.format(formatter)
                         log("время текущее" + formatted)
                         val lessonsItem = dbLessonGet.getLessonsItem(idLessons)
-                        val formattedLess = (lessonsItem.dateEnd.format(formatter)).split(" : ")
+                        val formattedLess = (lessonsItem.dateEnd.format(formatter)).split(":")
                         val newFormatLess = (formattedLess[0] + ":" + formattedLess[1]).format(formatter)
                        // val formatterLess = DateTimeFormatter.ofPattern("yyyy/M/dd HH:mm")
                        // val fLess = formattedLess.format(formattedLess)
