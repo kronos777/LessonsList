@@ -60,11 +60,11 @@ class ListSaleAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
         }
         val item: DataSalePaymentModel = getItem(position)
         viewHolder.txtName.hint = item.name
-       // viewHolder.valuePrice.text = item.price
         viewHolder.checkBox.isChecked = item.checked
+        //viewHolder.txtName.text = item.price
+
 
         if (viewHolder.checkBox.isChecked) {
-
             arrayList.add(item.id!!)
         }
 

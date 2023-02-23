@@ -22,6 +22,8 @@ import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
+import com.example.lessonslist.presentation.lessons.sale.DataSalePaymentModel
+import com.example.lessonslist.presentation.lessons.sale.ListSaleAdapter
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.time.Duration
@@ -43,7 +45,10 @@ class LessonsItemEditFragment : Fragment() {
     private var screenMode: String = MODE_UNKNOWN
     private var lessonsItemId: Int = LessonsItem.UNDEFINED_ID
 
-
+    private lateinit var listViewSale: ListView
+    private var dataStudentSaleModel: ArrayList<DataSalePaymentModel>? = null
+    private lateinit var adapterSale: ListSaleAdapter
+    private lateinit var salePaymentValueDate: HashSet<Int?>
 
     private lateinit var adapter: ListStudentAdapter
     private lateinit var listView: ListView
@@ -92,8 +97,8 @@ class LessonsItemEditFragment : Fragment() {
         observeViewModel()
 
 
-        binding.tilStudent.setVisibility (View.GONE)
-
+        binding.tilStudent.visibility = View.GONE
+        binding.listSalePayment.visibility = View.GONE
 
         val bottomNavigationView =
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
@@ -219,7 +224,127 @@ class LessonsItemEditFragment : Fragment() {
         binding.etDateend.setOnClickListener{
             mTimePickerEnd.show()
         }
+
+        listenSwitchSalePayment()
+
     }
+
+
+
+    private fun listenSwitchSalePayment() {
+        val switchChoose = binding.paymentSale
+        switchChoose.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) {
+                binding.listView.visibility = View.GONE
+                binding.listSalePayment.visibility = View.VISIBLE
+                binding.textViewChangeStateCheckbox.text = "Скидки"
+                salePaymentValueDate = checkValidStudent()
+               // Toast.makeText(activity, "стоимость урока" + viewModel.lessonsItem.value!!.price.toString(), Toast.LENGTH_SHORT).show()
+               // Toast.makeText(activity, "студенты урока" + salePaymentValueDate.toString(), Toast.LENGTH_SHORT).show()
+                setListViewSalePayment(salePaymentValueDate, viewModel.lessonsItem.value!!.price)
+                //Toast.makeText(activity, "isChecked" + dataStudentGroupModel.toString(), Toast.LENGTH_SHORT).show()
+                /* for(item in 0..dataStudentGroupModel!!.size-1) {
+                    if(dataStudentGroupModel!!.get(item).checked) {
+                        Log.d("studentName",  dataStudentGroupModel!!.get(item).name.toString())
+                    }
+
+                }
+               salePaymentValueDate = checkValidStudent()
+                if (salePaymentValueDate.isNotEmpty()) {
+                    Toast.makeText(activity, "isChecked" + dataStudentGroupModel.toString(), Toast.LENGTH_SHORT).show()
+                    setListViewSalePayment(salePaymentValueDate)
+                } else {
+                    Toast.makeText(activity, "не выбрано не одного студента кому можно назначить скидку" + salePaymentValueDate.toString(), Toast.LENGTH_SHORT).show()
+                }*/
+
+            } else {
+                binding.listView.visibility = View.VISIBLE
+                binding.listSalePayment.visibility = View.GONE
+                binding.textViewChangeStateCheckbox.text = "Список учеников."
+                //  Toast.makeText(activity, "unchecked", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+    }
+
+
+
+    private fun setListViewSalePayment(salePaymentValueDate: HashSet<Int?>, price: Int) {
+
+        listViewSale = binding.listSalePayment
+        dataStudentSaleModel = ArrayList()
+        dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
+        var studentName: Array<String> = emptyArray()
+
+        dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
+            if(it.isNotEmpty()) {
+                for(student in it){
+                    if(salePaymentValueDate.contains(student.id)) {
+                        val name = student.name + " " + student.lastname
+                        val id = student.id
+                        // val price = student.paymentBalance
+                        studentName += name
+                        /* if(viewModel.lessonsItem.value != null) {
+                             viewModel.lessonsItem.observe(viewLifecycleOwner) { item ->
+                                 var dataString = item.student
+                                 dataString = dataString.replace("]", "")
+                                 dataString = dataString.replace("[", "")
+                                 val lstValues: List<Int> = dataString.split(",").map { it.trim().toInt() }
+                                 if(lstValues.contains(id)) {
+                                     dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
+                                     // ListStudentAdapter.arrayList.add(id)
+                                 } else {
+                                     dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+                                 }
+                             }
+                         } else {
+                             dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+                         }*/
+
+                        dataStudentSaleModel!!.add(DataSalePaymentModel(name, price, id, false))
+                    }
+                }
+
+
+                adapterSale = ListSaleAdapter(dataStudentSaleModel!!, requireContext().applicationContext)
+                //openDialog(dataStudentGroupModel)
+                listViewSale.adapter = adapterSale
+
+                listViewSale.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                    val dataStudent: DataSalePaymentModel = dataStudentSaleModel!![position]
+                    dataStudent.checked = !dataStudent.checked
+                    //Log.d("checkstate", dataStudent.toString())
+                    adapterSale.notifyDataSetChanged()
+                }
+
+            }
+
+        }
+
+    }
+
+
+
+
+    private fun checkValidStudent(): HashSet<Int?> {
+        val studentIds: String = adapter.arrayList.toString()
+        val allStudent: String
+        allStudent = studentIds
+
+        val lstValues: ArrayList<Int> = ArrayList()
+
+        allStudent.forEach {
+            if (it.isDigit()) {
+                val str = it.toString()
+                lstValues.add(str.toInt())
+            }
+        }
+
+
+        return HashSet(lstValues)
+
+    }
+
 
 
 
