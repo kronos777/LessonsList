@@ -3,6 +3,7 @@ package com.example.lessonslist.presentation.lessons
 import android.app.AlertDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import android.widget.*
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
@@ -19,11 +21,11 @@ import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemEditBinding
 import com.example.lessonslist.domain.group.GroupItem
 import com.example.lessonslist.domain.lessons.LessonsItem
+import com.example.lessonslist.domain.sale.SaleItem
 import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
-import com.example.lessonslist.presentation.lessons.sale.DataSalePaymentModel
-import com.example.lessonslist.presentation.lessons.sale.ListSaleAdapter
+import com.example.lessonslist.presentation.lessons.sale.*
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.time.Duration
@@ -35,6 +37,8 @@ import java.util.*
 class LessonsItemEditFragment : Fragment() {
 
     private lateinit var viewModel: LessonsItemViewModel
+    private lateinit var viewModelSale: SaleItemViewModel
+    private lateinit var viewModelSalesList: SalesItemListViewModel
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
     private var _binding: FragmentLessonsItemEditBinding? = null
@@ -48,6 +52,7 @@ class LessonsItemEditFragment : Fragment() {
     private lateinit var listViewSale: ListView
     private var dataStudentSaleModel: ArrayList<DataSalePaymentModel>? = null
     private lateinit var adapterSale: ListSaleAdapter
+    private lateinit var adapterSaleReady: ListSaleReadyAdapter
     private lateinit var salePaymentValueDate: HashSet<Int?>
 
     private lateinit var adapter: ListStudentAdapter
@@ -95,7 +100,7 @@ class LessonsItemEditFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         launchRightMode()
         observeViewModel()
-
+        hideSaleUIElement()
 
         binding.tilStudent.visibility = View.GONE
         binding.listSalePayment.visibility = View.GONE
@@ -242,6 +247,7 @@ class LessonsItemEditFragment : Fragment() {
                // Toast.makeText(activity, "стоимость урока" + viewModel.lessonsItem.value!!.price.toString(), Toast.LENGTH_SHORT).show()
                // Toast.makeText(activity, "студенты урока" + salePaymentValueDate.toString(), Toast.LENGTH_SHORT).show()
                 setListViewSalePayment(salePaymentValueDate, viewModel.lessonsItem.value!!.price)
+                getValueAdapterSale()
                 //Toast.makeText(activity, "isChecked" + dataStudentGroupModel.toString(), Toast.LENGTH_SHORT).show()
                 /* for(item in 0..dataStudentGroupModel!!.size-1) {
                     if(dataStudentGroupModel!!.get(item).checked) {
@@ -258,6 +264,7 @@ class LessonsItemEditFragment : Fragment() {
                 }*/
 
             } else {
+                hideSaleUIElement()
                 binding.listView.visibility = View.VISIBLE
                 binding.listSalePayment.visibility = View.GONE
                 binding.textViewChangeStateCheckbox.text = "Список учеников."
@@ -272,59 +279,131 @@ class LessonsItemEditFragment : Fragment() {
     private fun setListViewSalePayment(salePaymentValueDate: HashSet<Int?>, price: Int) {
 
         listViewSale = binding.listSalePayment
-        dataStudentSaleModel = ArrayList()
+        dataStudentSaleModel = ArrayList<DataSalePaymentModel>()
         dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
+        viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
         var studentName: Array<String> = emptyArray()
+        var hideChoose: Boolean = true
 
-        dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
-            if(it.isNotEmpty()) {
-                for(student in it){
-                    if(salePaymentValueDate.contains(student.id)) {
-                        val name = student.name + " " + student.lastname
-                        val id = student.id
-                        // val price = student.paymentBalance
-                        studentName += name
-                        /* if(viewModel.lessonsItem.value != null) {
-                             viewModel.lessonsItem.observe(viewLifecycleOwner) { item ->
-                                 var dataString = item.student
-                                 dataString = dataString.replace("]", "")
-                                 dataString = dataString.replace("[", "")
-                                 val lstValues: List<Int> = dataString.split(",").map { it.trim().toInt() }
-                                 if(lstValues.contains(id)) {
-                                     dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
-                                     // ListStudentAdapter.arrayList.add(id)
-                                 } else {
-                                     dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
+        viewModelSalesList.salesList.observe(viewLifecycleOwner) { sales ->
+             for (saleItem in sales.indices) {
+                 if(sales[saleItem].idLessons == lessonsItemId) {
+                   //  hideChoose = false
+                    hideSaleUIElement()
+                     dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
+                         if(it.isNotEmpty()) {
+                             for(student in it){
+                                 if(sales[saleItem].idStudent == student.id) {
+                                     val name = student.name + " " + student.lastname
+                                     studentName += name
+                                     dataStudentSaleModel!!.add(DataSalePaymentModel(name, sales[saleItem].price, sales[saleItem].id, true))
                                  }
                              }
-                         } else {
-                             dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
-                         }*/
 
-                        dataStudentSaleModel!!.add(DataSalePaymentModel(name, price, id, false))
+
+                             adapterSaleReady = ListSaleReadyAdapter(dataStudentSaleModel!!, requireContext().applicationContext)
+                             //openDialog(dataStudentGroupModel)
+                             listViewSale.adapter =  adapterSaleReady
+
+                             listViewSale.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                                 val dataStudent: DataSalePaymentModel = dataStudentSaleModel!![position]
+                                 dataStudent.checked = !dataStudent.checked
+                                 Toast.makeText(activity, dataStudent.id.toString() + dataStudent.name.toString() + dataStudent.id.toString(), Toast.LENGTH_SHORT).show()
+                                 deleteSaleInList(dataStudent.name.toString(), dataStudent.id!!.toInt())
+                             }
+
+                         }
+
+                     }
+                 } else {
+                     if(saleItem == sales.size-1) {
+                         showSaleUIElement()
+                         dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
+                             if(it.isNotEmpty()) {
+                                 for(student in it){
+                                     if(salePaymentValueDate.contains(student.id)) {
+                                         val name = student.name + " " + student.lastname
+                                         val id = student.id
+                                         // val price = student.paymentBalance
+                                         studentName += name
+
+                                         dataStudentSaleModel!!.add(DataSalePaymentModel(name, price, id, false))
+                                     }
+                                 }
+
+
+                                 adapterSale = ListSaleAdapter(dataStudentSaleModel!!, requireContext().applicationContext)
+                                 //openDialog(dataStudentGroupModel)
+                                 listViewSale.adapter = adapterSale
+
+                                 listViewSale.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                                     val dataStudent: DataSalePaymentModel = dataStudentSaleModel!![position]
+                                     dataStudent.checked = !dataStudent.checked
+                                     Log.d("checkstate1", dataStudent.toString())
+                                     adapterSale.notifyDataSetChanged()
+                                 }
+
+                             }
+
+                         }
+                     }
+
+                 }
+             }
+        }
+    }
+
+
+    private fun deleteSaleInList(nameStudent: String, idSale: Int) {
+        val alert = AlertDialog.Builder(requireContext())
+        alert.setTitle("Удалить скидку.")
+        alert.setMessage("Удалить скидку для ученика " + nameStudent)
+
+       alert.setPositiveButton("Удалить скидку", DialogInterface.OnClickListener {
+                dialog, id ->
+            viewModelSale.deleteSaleItem(idSale)
+        })
+        alert.setNeutralButton("Отмена", DialogInterface.OnClickListener {
+                dialog, id ->
+            dialog.dismiss()
+        })
+
+        alert.setCancelable(false)
+        alert.show()
+    }
+
+
+    private fun hideSaleUIElement() {
+        binding.tilSale.visibility = View.GONE
+        binding.testButton.visibility = View.GONE
+    }
+    private fun showSaleUIElement() {
+        binding.tilSale.visibility = View.VISIBLE
+        binding.testButton.visibility = View.VISIBLE
+    }
+
+    private fun getValueAdapterSale() {
+        viewModelSale = ViewModelProvider(this)[SaleItemViewModel::class.java]
+
+        binding.testButton.setOnClickListener {
+            val countSaleForCheck = binding.etSale.text.toString()
+            val studentIds: String = adapterSale.arrayList.toString()
+            Toast.makeText(activity, studentIds, Toast.LENGTH_SHORT).show()
+            if(!countSaleForCheck.isNullOrEmpty()){
+                Toast.makeText(activity, countSaleForCheck, Toast.LENGTH_SHORT).show()
+                if(adapterSale.arrayList.size > 0) {
+                    for(studentId in adapterSale.arrayList) {
+                        Log.d("studentIds1", studentId.toString())
+                        viewModelSale.addSaleItem(studentId, lessonsItemId, countSaleForCheck.toInt())
                     }
                 }
-
-
-                adapterSale = ListSaleAdapter(dataStudentSaleModel!!, requireContext().applicationContext)
-                //openDialog(dataStudentGroupModel)
-                listViewSale.adapter = adapterSale
-
-                listViewSale.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                    val dataStudent: DataSalePaymentModel = dataStudentSaleModel!![position]
-                    dataStudent.checked = !dataStudent.checked
-                    //Log.d("checkstate", dataStudent.toString())
-                    adapterSale.notifyDataSetChanged()
-                }
-
+            } else {
+                Toast.makeText(activity, "нет значения суммы скидки", Toast.LENGTH_SHORT).show()
             }
 
         }
 
     }
-
-
-
 
     private fun checkValidStudent(): HashSet<Int?> {
         val studentIds: String = adapter.arrayList.toString()

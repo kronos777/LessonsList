@@ -58,4 +58,5 @@
     <string name="drawerMenuItem3">Выход</string>
     <string name="list_student_lessons">Список учеников.</string>
     <string name="text_info_repeat">Урок будет повторяться по заданную дату в выбранный день недели.</string>
+    <string name="lessons_price_sale">сумма скидки</string>
 </resources>

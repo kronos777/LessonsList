@@ -40,7 +40,7 @@ class SaleItemViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch {
             val saleItem = SaleItem(idStudent, idLessons, price)
             addSaleItemUseCase.addSaleItem(saleItem)
-            finishWork()
+           // finishWork()
         }
     }
 
@@ -56,9 +56,10 @@ class SaleItemViewModel(application: Application) : AndroidViewModel(application
     }
 
 
-    private fun deleteSaleItem(saleItem: SaleItem) {
+    fun deleteSaleItem(saleId: Int) {
         viewModelScope.launch {
-            deleteSaleItemUseCase.deleteSaleItem(saleItem)
+            val item = getSaleItemUseCase.getSaleItem(saleId)
+            deleteSaleItemUseCase.deleteSaleItem(item)
         }
     }
 

@@ -7,10 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.CheckBox
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.widget.addTextChangedListener
 import com.example.lessonslist.R
 import com.google.android.material.textfield.TextInputEditText
@@ -19,13 +16,13 @@ import com.google.android.material.textfield.TextInputLayout
 class ListSaleAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
     ArrayAdapter<Any?>(mContext, R.layout.row_sale_payment_item, dataSet) {
     private class ViewHolder {
-        lateinit var txtName: TextInputLayout
-        lateinit var valuePrice: TextInputEditText
+        lateinit var txtName: TextView
+        lateinit var valuePrice: TextView
         lateinit var checkBox: CheckBox
     }
 
     var arrayList: ArrayList<Int> = ArrayList()
-
+    //val idValueMutableMap: MutableMap<Int, Int> = mutableMapOf()
 
     override fun getCount(): Int {
         return dataSet.size
@@ -46,11 +43,11 @@ class ListSaleAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
             convertView =
                 LayoutInflater.from(parent.context).inflate(R.layout.row_sale_payment_item, parent, false)
             viewHolder.txtName =
-                convertView.findViewById(R.id.til_name)
+                convertView.findViewById(R.id.nameStudent)
             viewHolder.checkBox =
                 convertView.findViewById(R.id.checkBox)
             viewHolder.valuePrice =
-                convertView.findViewById(R.id.et_price)
+                convertView.findViewById(R.id.newPrice)
 
             result = convertView
             convertView.tag = viewHolder
@@ -59,17 +56,18 @@ class ListSaleAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
             result = convertView
         }
         val item: DataSalePaymentModel = getItem(position)
-        viewHolder.txtName.hint = item.name
+        viewHolder.txtName.text = item.name
         viewHolder.checkBox.isChecked = item.checked
-        //viewHolder.txtName.text = item.price
+       // viewHolder.valuePrice.text = item.price.toString()
 
 
         if (viewHolder.checkBox.isChecked) {
             arrayList.add(item.id!!)
+            //idValueMutableMap.put(item.id!!.toInt(), item.price!!.toInt())
         }
 
 
-            viewHolder.valuePrice.addTextChangedListener(object : TextWatcher {
+           /* viewHolder.valuePrice.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
                 }
@@ -82,7 +80,7 @@ class ListSaleAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
                     Log.d("chechBox", item.id.toString())
                     Log.d("chechBox", viewHolder.valuePrice.text.toString())
                 }
-            })
+            })*/
 
 
             viewHolder.checkBox.setOnClickListener {
@@ -102,7 +100,6 @@ class ListSaleAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
             }
 
 
-        //  Log.d("Modelchecked", item.checked.toString())
         return result
     }
 
@@ -115,36 +112,7 @@ class ListSaleAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
     }
 
    fun addCountArrayList(id: Int) {
-        //  val countArrayListSize: Int = arrayList.size
-/* if (arrayList.size > 0) {
-    arrayList.removeIf {
-        it.equals(id)
-
-    }
-*/
-    /* for (ids in arrayList) {
-     if(ids == id) {
-            Log.d("ExistsInArray", "Exists")
-            arrayList.remove(id)
-
-        }
-        if(ids == id) {
-            Log.d("countExistsInArray", "Exi")
-            arrayList.remove(id)
-            val idsRemove: Int = id
-        } else {
-
-            Log.d("countExistsInArray", "No Exists")
-            arrayList.add(id)
-        }
-       // Log.d("countExistsInArray", ids.toString())
-    }*/
-    //  arrayList.add(id)
-        //} else {
-    arrayList.add(id)
-    //}
-        Log.d("allListSale", arrayList.toString())
-    //GroupItemFragment.setStudentData(arrayList.toString())
+        arrayList.add(id)
     }
 
 }
