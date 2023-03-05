@@ -386,22 +386,26 @@ class LessonsItemEditFragment : Fragment() {
         viewModelSale = ViewModelProvider(this)[SaleItemViewModel::class.java]
 
         binding.testButton.setOnClickListener {
-            val countSaleForCheck = binding.etSale.text.toString()
-            val studentIds: String = adapterSale.arrayList.toString()
-            Toast.makeText(activity, studentIds, Toast.LENGTH_SHORT).show()
-            if(!countSaleForCheck.isNullOrEmpty()){
-                Toast.makeText(activity, countSaleForCheck, Toast.LENGTH_SHORT).show()
-                if(adapterSale.arrayList.size > 0) {
-                    for(studentId in adapterSale.arrayList) {
-                        Log.d("studentIds1", studentId.toString())
-                        viewModelSale.addSaleItem(studentId, lessonsItemId, countSaleForCheck.toInt())
+            if(binding.etSale.text.toString().toInt() < viewModel.lessonsItem.value!!.price){
+                val countSaleForCheck = viewModel.lessonsItem.value!!.price - binding.etSale.text.toString().toInt()
+                val studentIds: String = adapterSale.arrayList.toString()
+                Toast.makeText(activity, studentIds, Toast.LENGTH_SHORT).show()
+                if(countSaleForCheck > 0 &&  countSaleForCheck < viewModel.lessonsItem.value!!.price){
+                    Toast.makeText(activity, countSaleForCheck, Toast.LENGTH_SHORT).show()
+                    if(adapterSale.arrayList.size > 0) {
+                        for(studentId in adapterSale.arrayList) {
+                            Log.d("countSaleForCheck", countSaleForCheck.toString())
+                          //  viewModelSale.addSaleItem(studentId, lessonsItemId, countSaleForCheck.toInt())
+                        }
                     }
+                } else {
+                    Toast.makeText(activity, "нет значения суммы скидки", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(activity, "нет значения суммы скидки", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "сумма скидки не может превышать стоимость урока", Toast.LENGTH_SHORT).show()
             }
-
         }
+
 
     }
 

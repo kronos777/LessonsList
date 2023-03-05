@@ -15,6 +15,8 @@ import androidx.work.WorkerParameters
 import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.presentation.MainActivity
+import com.example.lessonslist.presentation.lessons.sale.SaleItemViewModel
+import com.example.lessonslist.presentation.lessons.sale.SalesItemListViewModel
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -187,7 +189,11 @@ class PaymentWork(
 
     }
 
+    private fun getSale() {
+        val viewModelSale = SaleItemViewModel(applicationContext as Application)
+        val viewModelSaleList = SalesItemListViewModel(applicationContext as Application)
 
+    }
 
 
     private fun calculatePaymentPriceAdd(paymentBalance: Int, priceLessons: Int): Int {
