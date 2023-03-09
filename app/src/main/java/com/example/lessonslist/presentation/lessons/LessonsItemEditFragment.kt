@@ -32,6 +32,7 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class LessonsItemEditFragment : Fragment() {
@@ -245,7 +246,7 @@ class LessonsItemEditFragment : Fragment() {
                 binding.textViewChangeStateCheckbox.text = "Скидки"
                 salePaymentValueDate = checkValidStudent()
                // Toast.makeText(activity, "стоимость урока" + viewModel.lessonsItem.value!!.price.toString(), Toast.LENGTH_SHORT).show()
-               // Toast.makeText(activity, "студенты урока" + salePaymentValueDate.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "студенты урока" + salePaymentValueDate.toString(), Toast.LENGTH_SHORT).show()
                 setListViewSalePayment(salePaymentValueDate, viewModel.lessonsItem.value!!.price)
                 getValueAdapterSale()
                 //Toast.makeText(activity, "isChecked" + dataStudentGroupModel.toString(), Toast.LENGTH_SHORT).show()
@@ -285,21 +286,23 @@ class LessonsItemEditFragment : Fragment() {
         var studentName: Array<String> = emptyArray()
         var hideChoose: Boolean = true
 
-        viewModelSalesList.salesList.observe(viewLifecycleOwner) { sales ->
-             for (saleItem in sales.indices) {
-                 if(sales[saleItem].idLessons == lessonsItemId) {
+
+      viewModelSalesList.salesList.observe(viewLifecycleOwner) { sales ->
+           for (saleItem in sales.indices) {
+                if(sales[saleItem].idLessons == lessonsItemId) {
                    //  hideChoose = false
                     hideSaleUIElement()
                      dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
                          if(it.isNotEmpty()) {
                              for(student in it){
                                  if(sales[saleItem].idStudent == student.id) {
+
                                      val name = student.name + " " + student.lastname
                                      studentName += name
                                      dataStudentSaleModel!!.add(DataSalePaymentModel(name, sales[saleItem].price, sales[saleItem].id, true))
                                  }
                              }
-
+                           //  Toast.makeText(activity, "есть скидки на урок", Toast.LENGTH_SHORT).show()
 
                              adapterSaleReady = ListSaleReadyAdapter(dataStudentSaleModel!!, requireContext().applicationContext)
                              //openDialog(dataStudentGroupModel)
@@ -315,41 +318,45 @@ class LessonsItemEditFragment : Fragment() {
                          }
 
                      }
-                 } else {
-                     if(saleItem == sales.size-1) {
-                         showSaleUIElement()
-                         dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
-                             if(it.isNotEmpty()) {
-                                 for(student in it){
-                                     if(salePaymentValueDate.contains(student.id)) {
-                                         val name = student.name + " " + student.lastname
-                                         val id = student.id
-                                         // val price = student.paymentBalance
-                                         studentName += name
-
-                                         dataStudentSaleModel!!.add(DataSalePaymentModel(name, price, id, false))
-                                     }
-                                 }
-
-
-                                 adapterSale = ListSaleAdapter(dataStudentSaleModel!!, requireContext().applicationContext)
-                                 //openDialog(dataStudentGroupModel)
-                                 listViewSale.adapter = adapterSale
-
-                                 listViewSale.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                                     val dataStudent: DataSalePaymentModel = dataStudentSaleModel!![position]
-                                     dataStudent.checked = !dataStudent.checked
-                                     Log.d("checkstate1", dataStudent.toString())
-                                     adapterSale.notifyDataSetChanged()
-                                 }
-
-                             }
-
-                         }
-                     }
-
                  }
              }
+          //end for
+          if(dataStudentSaleModel!!.size == 0) {
+              Toast.makeText(activity, "в данном случае равно 0", Toast.LENGTH_SHORT).show()
+              showSaleUIElement()
+              dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
+                  if(it.isNotEmpty()) {
+                      for(student in it){
+                          if(salePaymentValueDate.contains(student.id)) {
+                              val name = student.name + " " + student.lastname
+                              val id = student.id
+                              // val price = student.paymentBalance
+                              studentName += name
+
+                              dataStudentSaleModel!!.add(DataSalePaymentModel(name, price, id, false))
+                          }
+                      }
+
+
+                      adapterSale = ListSaleAdapter(dataStudentSaleModel!!, requireContext().applicationContext)
+                      //openDialog(dataStudentGroupModel)
+                      listViewSale.adapter = adapterSale
+
+                      listViewSale.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                          val dataStudent: DataSalePaymentModel = dataStudentSaleModel!![position]
+                          dataStudent.checked = !dataStudent.checked
+                          Log.d("checkstate1", dataStudent.toString())
+                          adapterSale.notifyDataSetChanged()
+                      }
+
+                  }
+
+              }
+          }
+
+
+
+
         }
     }
 
@@ -362,6 +369,7 @@ class LessonsItemEditFragment : Fragment() {
        alert.setPositiveButton("Удалить скидку", DialogInterface.OnClickListener {
                 dialog, id ->
             viewModelSale.deleteSaleItem(idSale)
+         //  checkValidSaleData(dataStudentSaleModel!!)
         })
         alert.setNeutralButton("Отмена", DialogInterface.OnClickListener {
                 dialog, id ->
@@ -391,12 +399,16 @@ class LessonsItemEditFragment : Fragment() {
                 val studentIds: String = adapterSale.arrayList.toString()
                 Toast.makeText(activity, studentIds, Toast.LENGTH_SHORT).show()
                 if(countSaleForCheck > 0 &&  countSaleForCheck < viewModel.lessonsItem.value!!.price){
-                    Toast.makeText(activity, countSaleForCheck, Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(activity, countSaleForCheck, Toast.LENGTH_SHORT).show()
                     if(adapterSale.arrayList.size > 0) {
                         for(studentId in adapterSale.arrayList) {
-                            Log.d("countSaleForCheck", countSaleForCheck.toString())
-                          //  viewModelSale.addSaleItem(studentId, lessonsItemId, countSaleForCheck.toInt())
+                          //  Log.d("countSaleForCheck", countSaleForCheck.toString())
+                           viewModelSale.addSaleItem(studentId, lessonsItemId, countSaleForCheck.toInt())
+
                         }
+                        dataStudentSaleModel?.clear()
+                        checkValidSaleData(dataStudentSaleModel!!)
+                        //Toast.makeText(activity, checkValidSaleData(dataStudentSaleModel!!).toString(), Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     Toast.makeText(activity, "нет значения суммы скидки", Toast.LENGTH_SHORT).show()
@@ -408,6 +420,12 @@ class LessonsItemEditFragment : Fragment() {
 
 
     }
+
+
+    private fun checkValidSaleData(arrayList: ArrayList<DataSalePaymentModel>): HashSet<DataSalePaymentModel> {
+        return HashSet(arrayList)
+    }
+
 
     private fun checkValidStudent(): HashSet<Int?> {
         val studentIds: String = adapter.arrayList.toString()
@@ -476,6 +494,7 @@ class LessonsItemEditFragment : Fragment() {
             .setPopEnterAnim(R.anim.slide_out_left)
             .setPopExitAnim(R.anim.slide_out_right).build()
         navController.navigate(R.id.lessonsItemListFragment, btnArgsLessons, animationOptions)
+
     }
 
 
@@ -585,15 +604,6 @@ class LessonsItemEditFragment : Fragment() {
     interface OnEditingFinishedListener {
         fun onEditingFinished()
     }
-
-    private fun launchFragment(fragment: Fragment) {
-        requireActivity().supportFragmentManager.popBackStack()
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(com.example.lessonslist.R.id.fragment_item_container, fragment)
-            .addToBackStack(null)
-            .commit()
-    }
-
 
     private fun parseParams() {
         val args = requireArguments()

@@ -21,4 +21,8 @@ interface SaleListDao {
     @Query("SELECT * FROM sale_item WHERE id=:saleId LIMIT 1")
     suspend fun getSaleItem(saleId: Int): SaleItemDbModel
 
+    @Query("SELECT * FROM sale_item WHERE idLessons LIKE :idLess")
+    fun getSalesIdLessons(idLess: Int) : List<SaleItemDbModel>
+
+
 }

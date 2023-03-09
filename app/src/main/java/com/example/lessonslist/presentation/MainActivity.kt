@@ -386,28 +386,33 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private fun initWorkManager() {
         /*work manager */
         //PeriodicWorkRequest myWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class, 30, TimeUnit.MINUTES, 25, TimeUnit.MINUTES).build();
-        // val request = OneTimeWorkRequestBuilder<PaymentWork>().build()
-         val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
-           /*.setConstraints(
+        val request = OneTimeWorkRequestBuilder<PaymentWork>().build()
+        /*val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
+           .setConstraints(
                  Constraints.Builder()
                  .setRequiresCharging(true)
                  .build()
-             )*/
-             .build()
+             )
+             .build()*/
         //val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
-       // WorkManager.getInstance(this).enqueue(request)
+        WorkManager.getInstance(this).enqueue(request)
       /*  WorkManager.getInstance(this).enqueue(request)
         WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
             .observe(this) {
                 it.state.name
 
             }*/
-      /* */ WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+
+
+/* this work copy
+        val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
+            .build()
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "paymentWork",
             ExistingPeriodicWorkPolicy.REPLACE,
             request
         )
-
+*/
         /*work manager */
     }
 
