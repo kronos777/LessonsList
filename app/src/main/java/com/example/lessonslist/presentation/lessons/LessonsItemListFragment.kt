@@ -26,6 +26,8 @@ import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -83,7 +85,14 @@ class LessonsItemListFragment: Fragment() {
                         }
                     }
                     if(listArrayPayment.size > 0) {
-                        lessonsListAdapter.submitList(listArrayPayment)
+                        val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
+
+                        val sortLessons = listArrayPayment.sortedByDescending {
+                            LocalDate.parse(it.dateStart, formatter)
+                        }
+
+
+                        lessonsListAdapter.submitList(sortLessons)
                     } else {
                         Toast.makeText(getActivity(),"На эту дату уроков не запланировано!",Toast.LENGTH_SHORT).show()
                     }
@@ -122,7 +131,12 @@ class LessonsItemListFragment: Fragment() {
     private fun setCustomDataLessons() {
         viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
         viewModel.lessonsList.observe(viewLifecycleOwner) {
-            lessonsListAdapter.submitList(it)
+            val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
+            //val sortLessons = it.sortedByDescending {
+            val sortLessons = it.sortedBy {
+                LocalDate.parse(it.dateStart, formatter)
+            }
+            lessonsListAdapter.submitList(sortLessons)
         }
     }
 

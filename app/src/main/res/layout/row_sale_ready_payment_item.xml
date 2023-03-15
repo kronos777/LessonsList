@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
+    android:minHeight="30dp"
     android:padding="2dp">
 
 <TextView
@@ -14,6 +15,7 @@
     <TextView
         android:layout_width="50dp"
         android:layout_height="match_parent"
+        android:textFontWeight="900"
         android:layout_toRightOf="@id/nameStudent"
         android:id="@+id/newPrice"/>
 

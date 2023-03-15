@@ -27,12 +27,14 @@ import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
 import com.example.lessonslist.presentation.lessons.sale.*
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
+import com.example.lessonslist.presentation.student.StudentItemViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
 
 class LessonsItemEditFragment : Fragment() {
@@ -40,6 +42,7 @@ class LessonsItemEditFragment : Fragment() {
     private lateinit var viewModel: LessonsItemViewModel
     private lateinit var viewModelSale: SaleItemViewModel
     private lateinit var viewModelSalesList: SalesItemListViewModel
+    private lateinit var viewModelStudent: StudentItemViewModel
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
     private var _binding: FragmentLessonsItemEditBinding? = null
@@ -283,6 +286,7 @@ class LessonsItemEditFragment : Fragment() {
         dataStudentSaleModel = ArrayList<DataSalePaymentModel>()
         dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
         viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
+        viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
         var studentName: Array<String> = emptyArray()
         var hideChoose: Boolean = true
 
@@ -290,9 +294,9 @@ class LessonsItemEditFragment : Fragment() {
       viewModelSalesList.salesList.observe(viewLifecycleOwner) { sales ->
            for (saleItem in sales.indices) {
                 if(sales[saleItem].idLessons == lessonsItemId) {
-                   //  hideChoose = false
+                    hideChoose = false
                     hideSaleUIElement()
-                     dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
+                    dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
                          if(it.isNotEmpty()) {
                              for(student in it){
                                  if(sales[saleItem].idStudent == student.id) {
@@ -318,10 +322,19 @@ class LessonsItemEditFragment : Fragment() {
                          }
 
                      }
+
+
+                    /*Log.d("StudentDataName", sales[saleItem].idLessons.toString())
+                    viewModelStudent.getStudentItem(sales[saleItem].idStudent)
+                    viewModelStudent.studentItem.observe(viewLifecycleOwner) {
+                        Log.d("StudentDataName", it.name)
+                    }*/
+
                  }
              }
+
           //end for
-          if(dataStudentSaleModel!!.size == 0) {
+         if(dataStudentSaleModel!!.size == 0 && hideChoose) {
               Toast.makeText(activity, "в данном случае равно 0", Toast.LENGTH_SHORT).show()
               showSaleUIElement()
               dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
@@ -396,18 +409,19 @@ class LessonsItemEditFragment : Fragment() {
         binding.testButton.setOnClickListener {
             if(binding.etSale.text.toString().toInt() < viewModel.lessonsItem.value!!.price){
                 val countSaleForCheck = viewModel.lessonsItem.value!!.price - binding.etSale.text.toString().toInt()
-                val studentIds: String = adapterSale.arrayList.toString()
-                Toast.makeText(activity, studentIds, Toast.LENGTH_SHORT).show()
+                val studentIds = adapterSale.arrayList
+                val hashSetStudent: HashSet<Int> = studentIds.toHashSet()
+               // Toast.makeText(activity, hashSetStudent.toString(), Toast.LENGTH_SHORT).show()
                 if(countSaleForCheck > 0 &&  countSaleForCheck < viewModel.lessonsItem.value!!.price){
 //                    Toast.makeText(activity, countSaleForCheck, Toast.LENGTH_SHORT).show()
                     if(adapterSale.arrayList.size > 0) {
-                        for(studentId in adapterSale.arrayList) {
-                          //  Log.d("countSaleForCheck", countSaleForCheck.toString())
+                        for(studentId in hashSetStudent) {
+                            //Log.d("countSaleForCheck", countSaleForCheck.toString())
                            viewModelSale.addSaleItem(studentId, lessonsItemId, countSaleForCheck.toInt())
 
                         }
                         dataStudentSaleModel?.clear()
-                        checkValidSaleData(dataStudentSaleModel!!)
+                        //checkValidSaleData(dataStudentSaleModel!!)
                         //Toast.makeText(activity, checkValidSaleData(dataStudentSaleModel!!).toString(), Toast.LENGTH_SHORT).show()
                     }
                 } else {
@@ -459,6 +473,7 @@ class LessonsItemEditFragment : Fragment() {
         binding.etDatestart.setBackgroundResource(R.color.white)
         binding.etDateend.setBackgroundResource(R.color.white)
         binding.textViewChangeStateCheckbox.text = "Список платежей:"
+        binding.paymentSale.visibility = View.GONE
         binding.etDatestart.setOnClickListener{
              false
         }

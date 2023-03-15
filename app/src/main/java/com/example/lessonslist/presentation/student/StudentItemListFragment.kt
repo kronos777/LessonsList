@@ -61,7 +61,8 @@ class StudentItemListFragment: Fragment() {
         setupRecyclerView()
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.studentList.observe(viewLifecycleOwner) {
-            studentListAdapter.submitList(it)
+            val studentSort = it.sortedBy { it.name }
+            studentListAdapter.submitList(studentSort)
         }
         val bottomNavigationView =
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
