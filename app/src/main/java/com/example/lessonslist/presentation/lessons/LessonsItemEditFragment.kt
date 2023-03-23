@@ -13,7 +13,6 @@ import android.widget.*
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
@@ -21,7 +20,6 @@ import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemEditBinding
 import com.example.lessonslist.domain.group.GroupItem
 import com.example.lessonslist.domain.lessons.LessonsItem
-import com.example.lessonslist.domain.sale.SaleItem
 import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
@@ -33,8 +31,6 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashSet
 
 
 class LessonsItemEditFragment : Fragment() {
@@ -408,7 +404,8 @@ class LessonsItemEditFragment : Fragment() {
 
         binding.testButton.setOnClickListener {
             if(binding.etSale.text.toString().toInt() < viewModel.lessonsItem.value!!.price){
-                val countSaleForCheck = viewModel.lessonsItem.value!!.price - binding.etSale.text.toString().toInt()
+                //val countSaleForCheck = viewModel.lessonsItem.value!!.price - binding.etSale.text.toString().toInt()
+                val countSaleForCheck =  calculatePercentages(binding.etSale.text.toString(), viewModel.lessonsItem.value!!.price)
                 val studentIds = adapterSale.arrayList
                 val hashSetStudent: HashSet<Int> = studentIds.toHashSet()
                // Toast.makeText(activity, hashSetStudent.toString(), Toast.LENGTH_SHORT).show()
@@ -434,6 +431,26 @@ class LessonsItemEditFragment : Fragment() {
 
 
     }
+
+
+    private fun calculatePercentages(valueSale: String, lessonsPrice: Int): Int {
+        val price = valueSale.split("%")
+      //  println("price size: " + price.size)
+       // println("price value: " + price.toString())
+        if(price[0] != "" && (lessonsPrice > 0 && (price[0].toInt() in 1 until lessonsPrice) && price.size > 1 && price.size < 3)) {
+            return lessonsPrice / 100 * price[0].toInt()
+        } else if(price[0] != "" && price[1].toInt() > 0){
+            return lessonsPrice - price[1].toInt()
+        } else if (price.size == 1) {
+            return lessonsPrice - valueSale.toInt()
+        } else if(price.size >= 3) {
+            return lessonsPrice
+        } else {
+            return lessonsPrice
+        }
+
+    }
+
 
 
     private fun checkValidSaleData(arrayList: ArrayList<DataSalePaymentModel>): HashSet<DataSalePaymentModel> {
