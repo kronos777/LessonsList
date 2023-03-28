@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="4dp"
+        android:scrollbars="horizontal"
         tools:context=".presentation.student.StudentItemFragment"
         >
 
@@ -394,7 +395,7 @@
             android:layout_marginTop="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/card_delete_data"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="0dp"
             >
@@ -423,6 +424,56 @@
                     android:lineHeight="24dp"
                     android:text="Сохранить/Выйти"
                     android:textColor="@color/black"
+                    android:textFontWeight="500"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_baseline_chevron_right_24" />
+
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_delete_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="0dp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <ImageView
+                    android:id="@+id/imageViewDeleteSettingsCard"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/ic_baseline_delete_forever_24" />
+
+                <TextView
+                    android:id="@+id/banks_settings_delete_h1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="left"
+                    android:layout_toRightOf="@id/imageViewDeleteSettingsCard"
+                    android:layout_weight="1"
+                    android:lineHeight="24dp"
+                    android:text="Удалить"
+                    android:textColor="@color/event_1_color"
                     android:textFontWeight="500"
                     android:textSize="16sp" />
 

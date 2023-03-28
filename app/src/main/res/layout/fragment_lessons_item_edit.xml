@@ -220,7 +220,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/lessons_price_sale"
-                android:inputType="number"
                 />
         </com.google.android.material.textfield.TextInputLayout>
         <Button

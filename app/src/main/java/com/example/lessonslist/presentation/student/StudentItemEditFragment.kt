@@ -25,6 +25,7 @@ import com.example.lessonslist.databinding.FragmentStudentItemEditBinding
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.helpers.BottomFragment
 import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
+import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
@@ -32,14 +33,10 @@ import com.example.lessonslist.presentation.student.notes.DataNotesStudentModel
 import com.example.lessonslist.presentation.student.parentContact.DataParentContactStudentModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.delay
 import java.io.*
 import java.lang.Thread.sleep
-import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
-import java.text.SimpleDateFormat
-import java.util.*
 import java.util.concurrent.Executors
 import kotlin.collections.ArrayList
 
@@ -47,10 +44,12 @@ import kotlin.collections.ArrayList
 class StudentItemEditFragment : Fragment() {
 
     private lateinit var viewModel: StudentItemViewModel
-    private lateinit var viewModelPayment: PaymentListViewModel
     private lateinit var viewModelPaymentItem: PaymentItemViewModel
     private lateinit var viewModelNotesItem: NotesItemViewModel
     private lateinit var viewModelParentContact: ParentContactViewModel
+    private lateinit var viewModelLessonsEdit: LessonsItemViewModel
+    private lateinit var viewModelPayment: PaymentListViewModel
+
 
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
@@ -147,6 +146,8 @@ class StudentItemEditFragment : Fragment() {
                         .rotate(90f)
                         .into(mImageView)*/
                 }
+            } else {
+                Toast.makeText(getActivity(),"hui vmesto karetinki" + stItem.image,Toast.LENGTH_SHORT).show();
             }
 
             val textTelephone = stItem.telephone.toString()
@@ -206,6 +207,12 @@ class StudentItemEditFragment : Fragment() {
        binding.cardParentContact.setOnClickListener {
            getActivity()?.let { BottomFragment.newInstanceParentsContacts(studentItemId).show(it.supportFragmentManager, "tag") }
        }
+
+        binding.cardDeleteData.setOnClickListener {
+            deletePaymentToStudent(studentItemId)
+            viewModel.deleteStudentItem(studentItemId)
+        }
+
 
     }
 
@@ -653,6 +660,69 @@ class StudentItemEditFragment : Fragment() {
 
         }
     }
+
+    private fun deletePaymentToStudent(studentId: Int) {
+        viewModelPayment = ViewModelProvider(this).get(PaymentListViewModel::class.java)
+        viewModelPayment.paymentList.observe(viewLifecycleOwner) {
+            for (payment in it) {
+                if(payment.studentId == studentId) {
+                    Log.d("payment.lessonsId", payment.lessonsId.toString())
+                    editLessonsItem(payment.lessonsId, studentId)
+                    viewModelPayment.deletePaymentItem(payment)
+                    // Toast.makeText(activity, payment.lessonsId.toString(), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun editLessonsItem(idLessons: Int, studentId: Int) {
+        viewModelLessonsEdit = ViewModelProvider(this).get(LessonsItemViewModel::class.java)
+        viewModelLessonsEdit.getLessonsItem(idLessons)
+        // val lessonsItem = viewModelLessonsEdit.lessonsItem
+        viewModelLessonsEdit.lessonsItem.observe(viewLifecycleOwner) {
+            //Log.d("valStudent", it.student)
+            val newValueStudent = dropElementList(getStudentIds(it.student), studentId)
+            //Log.d("delStudent", newValueStudent)
+            viewModelLessonsEdit.editLessonsItem(
+                it.title,
+                it.description,
+                newValueStudent,
+                it.price.toString(),
+                it.dateStart,
+                it.dateEnd
+            )
+        }
+
+        //Log.d("delStudent", newValueStudent)
+        //val newValueStudent = dropElementList(getStudentIds(lessonsItem.value?.student.toString()), studentId)
+
+        /* viewModelLessonsEdit.editLessonsItem(
+             lessonsItem.value?.title.toString(),
+             lessonsItem.value?.description.toString(),
+             newValueStudent,
+             lessonsItem.value?.price.toString(),
+             lessonsItem.value?.dateStart.toString(),
+             lessonsItem.value?.dateEnd.toString()
+         )*/
+    }
+
+    private fun dropElementList(arrayList: List<Int>, el: Int): String {
+        val elementList = mutableListOf<Int>()
+        for(item in arrayList) {
+            if(item != el){
+                elementList.add(item)
+            }
+
+        }
+        return elementList.toString()
+    }
+
+    private fun getStudentIds(dataString: String): List<Int> {
+        var dataStr = dataString.replace("]", "")
+        dataStr = dataStr.replace("[", "")
+        return dataStr.split(",").map { it.trim().toInt() }
+    }
+
 
     interface OnEditingFinishedListener {
 

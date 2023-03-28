@@ -18,6 +18,7 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
 
     private val getStudentItemUseCase = GetStudentItemUseCase(repository)
     private val addStudentItemUseCase = AddStudentItemUseCase(repository)
+    private val deleteStudentItemUseCase = DeleteStudentItemUseCase(repository)
     private val editStudentItemUseCase = EditStudentItemUseCase(repository)
     private val editStudentItemPhoneNumberUseCase = EditStudentItemPhoneNumberUseCase(repository)
     private val editStudentItemPaymentBalanceUseCase = EditStudentItemPaymentBalanceUseCase(repository)
@@ -168,4 +169,16 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
     private fun finishWork() {
         _shouldCloseScreen.value = Unit
     }
+
+    fun deleteStudentItem(studentItemId: Int) {
+        viewModelScope.launch {
+            val item = getStudentItemUseCase.getStudentItem(studentItemId)
+            _studentItem.value = item
+            deleteStudentItemUseCase.deleteStudentItem(item)
+            finishWork()
+        }
+    }
+
+
+
 }

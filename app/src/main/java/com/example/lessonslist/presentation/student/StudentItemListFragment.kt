@@ -39,8 +39,7 @@ class StudentItemListFragment: Fragment() {
     private lateinit var viewModel: MainViewModel
     private lateinit var studentListAdapter: StudentListAdapter
 
-    private lateinit var viewModelLessonsEdit: LessonsItemViewModel
-    private lateinit var viewModelPayment: PaymentListViewModel
+
 
 
     override fun onCreateView(
@@ -136,7 +135,7 @@ class StudentItemListFragment: Fragment() {
             )
 
         }
-        setupLongClickListener()
+        //setupLongClickListener()
         setupClickListener()
         //setupSwipeListener(binding.rvStudentList)
     }
@@ -211,8 +210,8 @@ class StudentItemListFragment: Fragment() {
         alert.setPositiveButton("удалить", DialogInterface.OnClickListener {
                 dialog, id ->
             //deleteLessonsPay
-            deletePaymentToStudent(studentId)
-            viewModel.deleteStudentItem(student)
+          //  deletePaymentToStudent(studentId)
+          //  viewModel.deleteStudentItem(student)
         })
 
         alert.setNegativeButton("не удалять", DialogInterface.OnClickListener {
@@ -226,65 +225,7 @@ class StudentItemListFragment: Fragment() {
     }
 
 
-    private fun editLessonsItem(idLessons: Int, studentId: Int) {
-        viewModelLessonsEdit = ViewModelProvider(this).get(LessonsItemViewModel::class.java)
-        viewModelLessonsEdit.getLessonsItem(idLessons)
-       // val lessonsItem = viewModelLessonsEdit.lessonsItem
-        viewModelLessonsEdit.lessonsItem.observe(viewLifecycleOwner) {
-            //Log.d("valStudent", it.student)
-            val newValueStudent = dropElementList(getStudentIds(it.student), studentId)
-            //Log.d("delStudent", newValueStudent)
-            viewModelLessonsEdit.editLessonsItem(
-                it.title,
-                it.description,
-                newValueStudent,
-                it.price.toString(),
-                it.dateStart,
-                it.dateEnd
-            )
-        }
 
-        //Log.d("delStudent", newValueStudent)
-        //val newValueStudent = dropElementList(getStudentIds(lessonsItem.value?.student.toString()), studentId)
 
-       /* viewModelLessonsEdit.editLessonsItem(
-            lessonsItem.value?.title.toString(),
-            lessonsItem.value?.description.toString(),
-            newValueStudent,
-            lessonsItem.value?.price.toString(),
-            lessonsItem.value?.dateStart.toString(),
-            lessonsItem.value?.dateEnd.toString()
-        )*/
-    }
 
-    private fun dropElementList(arrayList: List<Int>, el: Int): String {
-        val elementList = mutableListOf<Int>()
-        for(item in arrayList) {
-            if(item != el){
-                elementList.add(item)
-            }
-
-        }
-        return elementList.toString()
-    }
-
-    private fun getStudentIds(dataString: String): List<Int> {
-        var dataStr = dataString.replace("]", "")
-        dataStr = dataStr.replace("[", "")
-        return dataStr.split(",").map { it.trim().toInt() }
-    }
-
-    private fun deletePaymentToStudent(studentId: Int) {
-        viewModelPayment = ViewModelProvider(this).get(PaymentListViewModel::class.java)
-        viewModelPayment.paymentList.observe(viewLifecycleOwner) {
-            for (payment in it) {
-                if(payment.studentId == studentId) {
-                    Log.d("payment.lessonsId", payment.lessonsId.toString())
-                    editLessonsItem(payment.lessonsId, studentId)
-                    viewModelPayment.deletePaymentItem(payment)
-                   // Toast.makeText(activity, payment.lessonsId.toString(), Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
 }

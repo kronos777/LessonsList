@@ -2,6 +2,8 @@ package com.example.lessonslist.presentation
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.lessonslist.data.student.StudentListRepositoryImpl
 import com.example.lessonslist.domain.student.DeleteStudentItemUseCase
@@ -18,9 +20,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val studentList = getStudentListUseCase.getStudentList()
 
-    fun deleteStudentItem(studentItem: StudentItem) {
-        viewModelScope.launch {
-            deleteStudentItemUseCase.deleteStudentItem(studentItem)
-        }
-    }
+
+
 }
