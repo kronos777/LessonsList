@@ -42,7 +42,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView"
             android:textSize="22sp"
             android:gravity="center"
-            android:text="@{viewModel.studentItem.name + viewModel.studentItem.lastname}"
+            android:text="@{viewModel.studentItem.name + ' ' + viewModel.studentItem.lastname}"
             />
 
 

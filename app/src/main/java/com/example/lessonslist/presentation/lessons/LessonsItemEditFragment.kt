@@ -414,6 +414,7 @@ class LessonsItemEditFragment : Fragment() {
                     if(adapterSale.arrayList.size > 0) {
                         for(studentId in hashSetStudent) {
                                 viewModelSale.addSaleItem(studentId, lessonsItemId, countSaleForCheck.toInt())
+                           // Log.d("DataForSaleADd", (studentId.toString() + " " + lessonsItemId.toString() + " " + countSaleForCheck.toInt()).toString())
                         }
                         dataStudentSaleModel?.clear()
 

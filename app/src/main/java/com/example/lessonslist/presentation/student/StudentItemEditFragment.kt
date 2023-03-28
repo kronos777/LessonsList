@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.provider.MediaStore
 import android.text.InputType.TYPE_CLASS_NUMBER
 import android.util.Log
 import android.view.*
@@ -20,12 +21,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageView
+import com.canhub.cropper.options
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentStudentItemEditBinding
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.helpers.BottomFragment
 import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
+import com.example.lessonslist.presentation.lessons.sale.SaleItemViewModel
+import com.example.lessonslist.presentation.lessons.sale.SalesItemListViewModel
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
@@ -50,6 +56,8 @@ class StudentItemEditFragment : Fragment() {
     private lateinit var viewModelLessonsEdit: LessonsItemViewModel
     private lateinit var viewModelPayment: PaymentListViewModel
 
+    private lateinit var viewModelSale: SaleItemViewModel
+    private lateinit var viewModelSalesList: SalesItemListViewModel
 
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
@@ -77,6 +85,22 @@ class StudentItemEditFragment : Fragment() {
 
     private var pathImageSrc: String = ""
 
+    private val REQUEST_TAKE_PHOTO = 1
+
+    private val cropImage = registerForActivityResult(CropImageContract()) { result ->
+        if (result.isSuccessful) {
+            // Use the returned uri.
+            val uriContent = result.uriContent
+            val uriFilePath = result.getUriFilePath(requireContext()) // optional usage
+            //   Toast.makeText(activity, "img path" + uriContent.toString(), Toast.LENGTH_SHORT).show()
+            val bitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, uriContent)
+            pathImageSrc = mSaveMediaToStorage(bitmap).toString()
+            binding.imageView.setImageBitmap(bitmap)
+        } else {
+            // An error occurred.
+            val exception = result.error
+        }
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -132,11 +156,11 @@ class StudentItemEditFragment : Fragment() {
             if(stItem.image.isNotBlank()) {
                 myHandler.post {
                     val file = File(stItem.image)
-                    //    Log.d("imageTag", it.image)
+                    Log.d("imageTag", stItem.image)
                     Picasso.get()
                         .load(file)
                         .resize(200, 200)
-                        .rotate(90f)
+                       // .rotate(90f)
                         .into(mImageView)
                     pathImageSrc = file.toString()
                     /*Picasso.get()
@@ -209,11 +233,28 @@ class StudentItemEditFragment : Fragment() {
        }
 
         binding.cardDeleteData.setOnClickListener {
+            deleteAllSaleItem()
             deletePaymentToStudent(studentItemId)
             viewModel.deleteStudentItem(studentItemId)
         }
 
 
+    }
+
+
+    private fun deleteAllSaleItem() {
+        viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
+        viewModelSale = ViewModelProvider(this)[SaleItemViewModel::class.java]
+        viewModelSalesList.salesList.observe(viewLifecycleOwner) { sales ->
+            for (saleItem in sales.indices) {
+                if(studentItemId == sales[saleItem].idStudent) {
+                    viewModelSale.deleteSaleItem(sales[saleItem].id)
+                    //  Log.d("studentDataForDelete", sales[saleItem].toString())
+                }
+            }
+
+
+        }
     }
 
     private fun getDialogPaymentStudent() {
@@ -497,7 +538,14 @@ class StudentItemEditFragment : Fragment() {
             }
         }
     }*/
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null)
+        return Uri.parse(path)
+    }
+
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             1 -> {
@@ -508,28 +556,64 @@ class StudentItemEditFragment : Fragment() {
                         var mImage: Bitmap?
                         //Toast.makeText(getActivity(), "File path" + chosenImageUri, Toast.LENGTH_LONG).show()
                         mImage = mLoadLocal(chosenImageUri.toString())
+
                     //    binding.imagepath.setText(chosenImageUri.toString())
                         myHandler.post {
-                            //mImageView.setImageBitmap(mImage)
-                            Picasso.get()
-                                .load(chosenImageUri.toString())
-                                .resize(400, 300)
-                                // .transform(CropCircleTransformation())
-                               .rotate(90f)
-                                .into(mImageView)
+                                                  //mImageView.setImageBitmap(mImage)
+                                                  Picasso.get()
+                                                      .load(chosenImageUri.toString())
+                                                      .resize(400, 300)
+                                                      // .transform(CropCircleTransformation())
+                                                     .rotate(90f)
+                                                      .into(mImageView)
 
 
-                            if(mImage!=null){
-                                pathImageSrc = mSaveMediaToStorage(mImage).toString()
+                        if(mImage!=null){
 
-                            }
+                                 pathImageSrc = mSaveMediaToStorage(mImage).toString()
+
+                              }
                         }
 
                     }
                 }
             }
         }
+    }*/
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            // Фотка сделана, извлекаем миниатюру картинки
+            if(data?.extras?.get("data") != null) {
+                // val thumbnailBitmap = data?.extras?.get("data") as Bitmap
+                Toast.makeText(activity, data?.extras?.get("data").toString(), Toast.LENGTH_SHORT).show()
+                val imageUri: Uri? = getActivity()?.let { getImageUri(it.applicationContext,
+                    data?.extras?.get("data") as Bitmap
+                ) }
+
+                if (imageUri != null) {
+                    startCrop(imageUri)
+                }
+                // binding.imageView.setImageBitmap(thumbnailBitmap)
+            } else {
+                var bitmap: Bitmap? = null
+                val imageUri: Uri? = data?.getData()
+                if (imageUri != null) {
+                    startCrop(imageUri)
+                }
+                // bitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, imageUri)
+
+                //  binding.imageView.setImageBitmap(bitmap)
+            }
+
+        }
+
+
     }
+
+
     // Function to convert string to URL
     private fun mStringToURL(string: String): URL? {
         try {
@@ -540,7 +624,31 @@ class StudentItemEditFragment : Fragment() {
         return null
     }
 
+    private fun startCrop(uriFilePath: Uri) {
+        // Start picker to get image for cropping and then use the image in cropping activity.
+        cropImage.launch(
+            options(uri = uriFilePath) {
+                setGuidelines(CropImageView.Guidelines.ON)
+                setOutputCompressFormat(Bitmap.CompressFormat.PNG)
+            }
+        )
 
+        // Start picker to get image for cropping from only gallery and then use the image in cropping activity.
+        /*  cropImage.launch(
+               options {
+                   setImagePickerContractOptions(
+                       PickImageContractOptions(includeGallery = true, includeCamera = false)
+                   )
+               }
+           )
+           // Start cropping activity for pre-acquired image saved on the device and customize settings.
+           cropImage.launch(
+               options(uri = uriFilePath) {
+                   setGuidelines(CropImageView.Guidelines.ON)
+                   setOutputCompressFormat(Bitmap.CompressFormat.PNG)
+               }
+           )*/
+    }
 
     private fun mLoadLocal(string: String): Bitmap? {
     //private fun mLoadLocal(string: String): Bitmap? {

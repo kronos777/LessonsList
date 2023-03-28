@@ -69,7 +69,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage-ktx:20.1.0'
     implementation 'com.google.firebase:firebase-database-ktx:20.1.0'
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.10"
-
+    implementation 'com.github.CanHub:Android-Image-Cropper:4.3.0'
     kapt "androidx.room:room-compiler:2.4.3"
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
