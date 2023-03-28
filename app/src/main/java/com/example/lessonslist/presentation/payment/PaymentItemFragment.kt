@@ -195,12 +195,28 @@ class PaymentItemFragment: Fragment() {
     }
 
     private fun goListNavigation() {
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-        val args = Bundle().apply {
-            putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.CUSTOM_LIST)
+        val argss = requireArguments()
+        val mode = argss.getString(PaymentItemFragment.DATE_ID_BACKSTACK)
+        if (mode != null) {
+           // Toast.makeText(getActivity(),"Фрагмент перезагружен. $mode",Toast.LENGTH_SHORT).show()
+            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+            val navController = navHostFragment.navController
+            val args = Bundle().apply {
+                putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.DATE_ID_LIST)
+                putString(PaymentItemListFragment.DATE_ID, mode)
+            }
+            navController.navigate(R.id.paymentItemListFragment, args)
+        } else {
+           // Toast.makeText(getActivity(),"Custom list.",Toast.LENGTH_SHORT).show()
+            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+            val navController = navHostFragment.navController
+            val args = Bundle().apply {
+                putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.CUSTOM_LIST)
+            }
+            navController.navigate(R.id.paymentItemListFragment, args)
         }
-        navController.navigate(R.id.paymentItemListFragment, args)
+
+
     }
 
     private fun launchEditMode() {
@@ -279,6 +295,7 @@ class PaymentItemFragment: Fragment() {
         const val MODE_EDIT = "mode_edit"
         const val MODE_ADD = "mode_add"
         const val MODE_UNKNOWN = ""
+        const val DATE_ID_BACKSTACK = ""
 
         fun newInstanceAddItem(): PaymentItemFragment {
             return PaymentItemFragment().apply {

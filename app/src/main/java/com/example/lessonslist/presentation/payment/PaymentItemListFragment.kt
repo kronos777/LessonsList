@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -189,11 +190,17 @@ class PaymentItemListFragment: Fragment() {
 
 
     private fun navigateBtnEditStudent(id: Int) {
+        val args = requireArguments()
+        val mode = args.getString(SCREEN_MODE)
+        val dateIdBackstack = args.getString(DATE_ID)
 
         val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
 
         val btnArgsLessons = Bundle().apply {
+            if(mode == "date_id_list") {
+                putString(PaymentItemFragment.DATE_ID_BACKSTACK, dateIdBackstack)
+            }
             putString(PaymentItemFragment.SCREEN_MODE, PaymentItemFragment.MODE_EDIT)
             putInt(PaymentItemFragment.PAYMENT_ITEM_ID, id)
         }
@@ -253,6 +260,7 @@ class PaymentItemListFragment: Fragment() {
     companion object {
 
         const val SCREEN_MODE = "screen_mode"
+        const val BACK_STACK = "back_stack"
         const val CUSTOM_LIST = "custom_list"
         const val STUDENT_ID_LIST = "student_id_list"
         const val STUDENT_NO_PAY_LIST = "student_no_pay_list"
@@ -264,6 +272,7 @@ class PaymentItemListFragment: Fragment() {
         const val DATE_ID = "date_id"
         const val STUDENT_ID = "student_id"
         const val LESSONS_ID = "lessons_id"
+        const val DATE_FOR_BACKSTACK = "date_for_backstack"
 
         fun newInstanceNoneParams(): PaymentItemListFragment {
             return PaymentItemListFragment().apply {

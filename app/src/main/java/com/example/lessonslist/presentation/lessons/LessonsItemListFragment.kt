@@ -23,6 +23,7 @@ import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemListBinding
 import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.domain.student.StudentItem
+import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
@@ -184,19 +185,36 @@ class LessonsItemListFragment: Fragment() {
     }
 
     private fun navigateBtnEditLessons(id: Int) {
-
         val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
 
-        val btnArgsLessons = Bundle().apply {
-            putString(LessonsItemEditFragment.SCREEN_MODE, LessonsItemEditFragment.MODE_EDIT)
-            putInt(LessonsItemEditFragment.LESSONS_ITEM_ID, id)
+        val argss = requireArguments()
+        val mode = argss.getString(LessonsItemListFragment.DATE_ID)
+        if (mode != null) {
+           // Toast.makeText(activity, "ne raven null", Toast.LENGTH_SHORT).show()
+            val btnArgsLessons = Bundle().apply {
+                putString(LessonsItemEditFragment.SCREEN_MODE, LessonsItemEditFragment.MODE_EDIT)
+                putString(LessonsItemEditFragment.DATE_ID_BACKSTACK, mode)
+                putInt(LessonsItemEditFragment.LESSONS_ITEM_ID, id)
+            }
+            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+                .setExitAnim(R.anim.slide_in_right)
+                .setPopEnterAnim(R.anim.slide_out_left)
+                .setPopExitAnim(R.anim.slide_out_right).build()
+            navController.navigate(R.id.lessonsItemEditFragment, btnArgsLessons, animationOptions)
+        } else {
+            val btnArgsLessons = Bundle().apply {
+                putString(LessonsItemEditFragment.SCREEN_MODE, LessonsItemEditFragment.MODE_EDIT)
+                putInt(LessonsItemEditFragment.LESSONS_ITEM_ID, id)
+            }
+            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+                .setExitAnim(R.anim.slide_in_right)
+                .setPopEnterAnim(R.anim.slide_out_left)
+                .setPopExitAnim(R.anim.slide_out_right).build()
+            navController.navigate(R.id.lessonsItemEditFragment, btnArgsLessons, animationOptions)
         }
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
-        navController.navigate(R.id.lessonsItemEditFragment, btnArgsLessons, animationOptions)
+
+
     }
 
     private fun navigateBtnAddLessons(dateId: String) {

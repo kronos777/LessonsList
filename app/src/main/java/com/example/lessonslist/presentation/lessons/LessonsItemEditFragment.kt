@@ -24,6 +24,7 @@ import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
 import com.example.lessonslist.presentation.lessons.sale.*
+import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.student.StudentItemViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -654,19 +655,40 @@ class LessonsItemEditFragment : Fragment() {
     }
 
     private fun goLessonsListFragmentBackPressed() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-            val navController = navHostFragment.navController
-            val arguments = Bundle().apply {
-                putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.CUSTOM_LIST)
+        val argss = requireArguments()
+        val mode = argss.getString(LessonsItemEditFragment.DATE_ID_BACKSTACK)
+
+        if (mode != null) {
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+                val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+                val navController = navHostFragment.navController
+                val arguments = Bundle().apply {
+                    putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.DATE_ID_LIST)
+                    putString(LessonsItemListFragment.DATE_ID, mode)
+                }
+                navController.popBackStack(R.id.lessonsItemListFragment, true)
+                val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+                    .setExitAnim(R.anim.slide_in_right)
+                    .setPopEnterAnim(R.anim.slide_out_left)
+                    .setPopExitAnim(R.anim.slide_out_right).build()
+                navController.navigate(R.id.lessonsItemListFragment, arguments, animationOptions)
             }
-            navController.popBackStack(R.id.lessonsItemListFragment, true)
-            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-                .setExitAnim(R.anim.slide_in_right)
-                .setPopEnterAnim(R.anim.slide_out_left)
-                .setPopExitAnim(R.anim.slide_out_right).build()
-            navController.navigate(R.id.lessonsItemListFragment, arguments, animationOptions)
+        } else {
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+                val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+                val navController = navHostFragment.navController
+                val arguments = Bundle().apply {
+                    putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.CUSTOM_LIST)
+                }
+                navController.popBackStack(R.id.lessonsItemListFragment, true)
+                val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+                    .setExitAnim(R.anim.slide_in_right)
+                    .setPopEnterAnim(R.anim.slide_out_left)
+                    .setPopExitAnim(R.anim.slide_out_right).build()
+                navController.navigate(R.id.lessonsItemListFragment, arguments, animationOptions)
+            }
         }
+
     }
 
 
@@ -676,7 +698,7 @@ class LessonsItemEditFragment : Fragment() {
         const val LESSONS_ITEM_ID = "extra_lessons_item_id"
         const val MODE_EDIT = "mode_edit"
         const val MODE_UNKNOWN = ""
-
+        const val DATE_ID_BACKSTACK = ""
 
         fun newInstanceEditItem(lessonsItemId: Int): LessonsItemEditFragment {
             return LessonsItemEditFragment().apply {
