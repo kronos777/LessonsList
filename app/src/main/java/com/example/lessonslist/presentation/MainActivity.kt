@@ -9,13 +9,16 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.work.*
@@ -59,7 +62,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private lateinit var viewModelStudent: MainViewModel
     private lateinit var viewModelLesson: LessonsItemViewModel
     // create Firebase authentication object
-
+    private lateinit var navControllerTest: NavController
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,6 +82,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         getDeptPayment()
         initNavHeader()
         initBottomNavigationJetpack()
+        //binding.fab.hide()
        /* val navController: NavController =
             findNavController(this, R.id.fragment_item_container)
         val bottomNavigationView =
@@ -86,9 +90,39 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         setupWithNavController(bottomNavigationView, navController)
 
 */
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        navControllerTest = navHostFragment.navController
+        navControllerTest.addOnDestinationChangedListener { _, destination, _ ->
+           // Toast.makeText(this, "current " + destination.id, Toast.LENGTH_SHORT).show()
+            onDestinationChanged(destination.id)
+        }
+
+
     }
 
+    private fun onDestinationChanged(currentDestination: Int) {
+        val paymentBtnAppBarTop = findViewById<View>(R.id.payment)
+        val backupBtnAppBarTop = findViewById<View>(R.id.backup)
+        try {
+            when(currentDestination) {
+                R.id.calendarItemFragment -> {
+                    enableHomeBackIcon(false)
+                    paymentBtnAppBarTop.visibility = View.VISIBLE
+                    backupBtnAppBarTop.visibility = View.VISIBLE
+                    // Toast.makeText(this, "Student item list ", Toast.LENGTH_SHORT).show()
+                } else -> {
+                    enableHomeBackIcon(true)
+                    toggle.setHomeAsUpIndicator(R.drawable.ic_baseline_navigate_before_24)
+                    paymentBtnAppBarTop.visibility = View.GONE
+                    backupBtnAppBarTop.visibility = View.GONE
+                 //   Toast.makeText(this, "other destination", Toast.LENGTH_SHORT).show()
+                }
+            }
 
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     private fun initBottomNavigationJetpack() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
