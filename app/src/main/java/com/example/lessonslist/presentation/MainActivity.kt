@@ -98,6 +98,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         }
 
 
+
     }
 
     private fun onDestinationChanged(currentDestination: Int) {
@@ -115,7 +116,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                     toggle.setHomeAsUpIndicator(R.drawable.ic_baseline_navigate_before_24)
                     paymentBtnAppBarTop.visibility = View.GONE
                     backupBtnAppBarTop.visibility = View.GONE
-                 //   Toast.makeText(this, "other destination", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, "other destination", Toast.LENGTH_SHORT).show()
                 }
             }
 

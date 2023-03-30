@@ -77,6 +77,7 @@ class LessonsItemListFragment: Fragment() {
                 viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
 
                 viewModel.lessonsList.observe(viewLifecycleOwner) {
+                    listArrayPayment.clear()
                     for (lessons in it) {
                         val pay = lessons.dateEnd.split(" ")
                         val datePay = Date(pay[0])
@@ -85,6 +86,7 @@ class LessonsItemListFragment: Fragment() {
                             listArrayPayment.add(lessons)
                         }
                     }
+                    Toast.makeText(getActivity(),"Уроков в массиве!" + listArrayPayment.size,Toast.LENGTH_SHORT).show()
                     if(listArrayPayment.size > 0) {
                         val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
 

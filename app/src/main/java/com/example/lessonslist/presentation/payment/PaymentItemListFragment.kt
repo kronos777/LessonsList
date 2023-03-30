@@ -110,6 +110,7 @@ class PaymentItemListFragment: Fragment() {
         } else if (mode == "date_id_list") {
             dateId = args.getString(DATE_ID)!!
             Log.d("dateId", dateId)
+           // Toast.makeText(activity, "other $dateId", Toast.LENGTH_SHORT).show()
             val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
             viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
             viewModel.paymentList.observe(viewLifecycleOwner) {
