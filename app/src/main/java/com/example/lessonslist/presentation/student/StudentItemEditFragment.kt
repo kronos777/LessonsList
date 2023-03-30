@@ -2,6 +2,7 @@ package com.example.lessonslist.presentation.student
 
 import android.app.Activity.RESULT_OK
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -171,10 +172,11 @@ class StudentItemEditFragment : Fragment() {
                         .into(mImageView)*/
                 }
             } else {
-                Toast.makeText(getActivity(),"hui vmesto karetinki" + stItem.image,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"no image student" + stItem.image,Toast.LENGTH_SHORT).show();
             }
 
             val textTelephone = stItem.telephone.toString()
+          //  Toast.makeText(getActivity(),"phone number"+stItem.telephone.toString(),Toast.LENGTH_SHORT).show();
                // binding.textViewTelephone.text.toString()
             binding.textViewTelephone.setOnClickListener {
                 //Toast.makeText(getActivity(),"phone number"+stItem.telephone.toString(),Toast.LENGTH_SHORT).show();
@@ -286,6 +288,12 @@ class StudentItemEditFragment : Fragment() {
         alert.show()
     }
 
+    private fun callStudent(number: String?) {
+        // val dialIntent = Intent(Intent.ACTION_SEND)
+        val dialIntent = Intent(Intent.ACTION_VIEW)
+        dialIntent.data = Uri.parse("tel:" + number)
+        startActivity(dialIntent)
+    }
 
     private fun navigateBtnAddStudent(params: String) {
 
@@ -328,10 +336,12 @@ class StudentItemEditFragment : Fragment() {
 
         alert.setView(layout)
 
-        alert.setPositiveButton("Добавить") { _, _ ->
+        alert.setPositiveButton("Изменить") { _, _ ->
             addPhoneNumber()
         }
-
+        alert.setNeutralButton("Позвонить") { dialog, id ->
+            callStudent(binding.textViewTelephone.text.toString())
+        }
         alert.setNegativeButton("отмена") { dialog, _ ->
             dialog.dismiss()
         }
@@ -499,11 +509,12 @@ class StudentItemEditFragment : Fragment() {
 
         alert.setPositiveButton("Добавить") { _, _ ->
             val number = amountET.text.toString()
-            Toast.makeText(activity, "Saved Sucessfully", Toast.LENGTH_LONG).show()
+            Toast.makeText(activity, "Saved Sucessfully" + number, Toast.LENGTH_LONG).show()
             viewModel.editPhoneNumber(studentItemId, number)
-            sleep(100)
+          //  sleep(100)
             viewModel.studentItem.observe(viewLifecycleOwner) {
                 binding.textViewTelephone.text = it.telephone
+                Toast.makeText(activity, "new phone" + it.telephone, Toast.LENGTH_LONG).show()
             }
         }
 

@@ -108,7 +108,7 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
    fun editPhoneNumber(studentId: Int, phoneNumber: String) {
         viewModelScope.launch {
             editStudentItemPhoneNumberUseCase.editStudentItemPhoneNumber(studentId, phoneNumber)
-            //finishWork()
+            finishWork()
         }
     }
 
