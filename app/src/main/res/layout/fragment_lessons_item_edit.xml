@@ -196,7 +196,7 @@
             android:id="@+id/listSalePayment"
             android:layout_width="match_parent"
             android:choiceMode="multipleChoice"
-            android:layout_height="wrap_content"
+            android:layout_height="350dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             app:layout_constraintBottom_toTopOf="@id/til_sale"

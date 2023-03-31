@@ -47,7 +47,9 @@ class PaymentItemFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        parseParams()
+        val args = requireArguments()
+        paymentItemId = args.getInt(PAYMENT_ITEM_ID, PaymentItem.UNDEFINED_ID)
+      //  parseParams()
     }
 
 
@@ -187,18 +189,22 @@ class PaymentItemFragment: Fragment() {
     }
 
     private fun launchRightMode() {
-        Log.d("screenMode", screenMode)
+      /*  Log.d("screenMode", screenMode)
         when (screenMode) {
             MODE_EDIT -> launchEditMode()
 
-        }
+        }*/
+        launchEditMode()
     }
 
     private fun goListNavigation() {
         val argss = requireArguments()
-        val mode = argss.getString(PaymentItemFragment.DATE_ID_BACKSTACK)
-        if (mode != null) {
-           // Toast.makeText(getActivity(),"Фрагмент перезагружен. $mode",Toast.LENGTH_SHORT).show()
+        val mode = argss.getString(DATE_ID_BACKSTACK)
+        val dateMode = mode?.split("/")
+        val studentMode = mode?.split("&")
+
+        if (dateMode!!.size == 3) {
+            //Toast.makeText(getActivity(),"current mode: $mode",Toast.LENGTH_SHORT).show()
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
             val args = Bundle().apply {
@@ -206,8 +212,31 @@ class PaymentItemFragment: Fragment() {
                 putString(PaymentItemListFragment.DATE_ID, mode)
             }
             navController.navigate(R.id.paymentItemListFragment, args)
+        } else if (studentMode!![0] == "student_id_list" && dateMode!!.size == 1) {
+            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+            val navController = navHostFragment.navController
+            val args = Bundle().apply {
+                putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.STUDENT_ID_LIST)
+                putInt(PaymentItemListFragment.STUDENT_ID, studentMode!![1].toInt())
+            }
+            navController.navigate(R.id.paymentItemListFragment, args)
+        } else if (studentMode!![0] == "student_no_pay_list" && dateMode!!.size == 1) {
+            Toast.makeText(getActivity(),"dateModestudentMode!![0]: " + studentMode!![0],Toast.LENGTH_SHORT).show()
+            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+            val navController = navHostFragment.navController
+            val args = Bundle().apply {
+                putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.STUDENT_NO_PAY_LIST)
+                putInt(PaymentItemListFragment.STUDENT_ID, studentMode!![1].toInt())
+            }
+            navController.navigate(R.id.paymentItemListFragment, args)
+        } else if (studentMode!![0] == "payment_enabled" && dateMode!!.size == 1) {
+            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+            val navController = navHostFragment.navController
+            val btnArgsLessons = Bundle().apply {
+                putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.PAYMENT_ENABLED)
+            }
+            navController.navigate(R.id.paymentItemListFragment, btnArgsLessons)
         } else {
-           // Toast.makeText(getActivity(),"Custom list.",Toast.LENGTH_SHORT).show()
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
             val args = Bundle().apply {
@@ -296,6 +325,9 @@ class PaymentItemFragment: Fragment() {
         const val MODE_ADD = "mode_add"
         const val MODE_UNKNOWN = ""
         const val DATE_ID_BACKSTACK = ""
+        const val STUDENT_ID = ""
+        const val STUDENT_ID_LIST = ""
+        const val STUDENT_NO_PAY_LIST = ""
 
         fun newInstanceAddItem(): PaymentItemFragment {
             return PaymentItemFragment().apply {

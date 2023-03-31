@@ -194,6 +194,7 @@ class PaymentItemListFragment: Fragment() {
         val args = requireArguments()
         val mode = args.getString(SCREEN_MODE)
         val dateIdBackstack = args.getString(DATE_ID)
+        val studentIdBackstack = args.getInt(STUDENT_ID)
 
         val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
@@ -201,8 +202,20 @@ class PaymentItemListFragment: Fragment() {
         val btnArgsLessons = Bundle().apply {
             if(mode == "date_id_list") {
                 putString(PaymentItemFragment.DATE_ID_BACKSTACK, dateIdBackstack)
+            } else if(mode == "student_id_list") {
+                //Toast.makeText(getActivity(),"current mode in list: $mode",Toast.LENGTH_SHORT).show()
+                //Toast.makeText(getActivity(),"current mode in list: $studentIdBackstack",Toast.LENGTH_SHORT).show()
+                // putInt(PaymentItemFragment.STUDENT_ID, studentIdBackstack)
+                putString(PaymentItemFragment.STUDENT_ID_LIST, "student_id_list" + "&" + studentIdBackstack.toString())
+            } else if(mode == "student_no_pay_list") {
+                //putInt(PaymentItemFragment.STUDENT_ID, studentIdBackstack)
+                putString(PaymentItemFragment.STUDENT_NO_PAY_LIST, mode + "&" + studentIdBackstack)
+            } else if(mode == "payment_enabled") {
+                putString(PaymentItemFragment.STUDENT_NO_PAY_LIST, mode)
+            } else if(mode == "custom_list")  {
+                putString(PaymentItemFragment.STUDENT_NO_PAY_LIST, mode)
             }
-            putString(PaymentItemFragment.SCREEN_MODE, PaymentItemFragment.MODE_EDIT)
+          //  putString(PaymentItemFragment.SCREEN_MODE, PaymentItemFragment.MODE_EDIT)
             putInt(PaymentItemFragment.PAYMENT_ITEM_ID, id)
         }
 
