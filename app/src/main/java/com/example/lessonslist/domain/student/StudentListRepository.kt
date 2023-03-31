@@ -2,7 +2,6 @@ package com.example.lessonslist.domain.student
 
 
 import androidx.lifecycle.LiveData
-import com.example.lessonslist.domain.student.StudentItem
 
 interface StudentListRepository {
 

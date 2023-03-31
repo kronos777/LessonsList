@@ -2,10 +2,8 @@ package com.example.lessonslist.presentation.student
 
 import android.app.Activity.RESULT_OK
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -14,10 +12,11 @@ import android.os.Looper
 import android.provider.MediaStore
 import android.text.InputType.TYPE_CLASS_NUMBER
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
@@ -40,12 +39,13 @@ import com.example.lessonslist.presentation.student.notes.DataNotesStudentModel
 import com.example.lessonslist.presentation.student.parentContact.DataParentContactStudentModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
-import java.io.*
-import java.lang.Thread.sleep
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 import java.net.MalformedURLException
 import java.net.URL
 import java.util.concurrent.Executors
-import kotlin.collections.ArrayList
 
 
 class StudentItemEditFragment : Fragment() {

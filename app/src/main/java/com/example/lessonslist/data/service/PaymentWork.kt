@@ -16,7 +16,6 @@ import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.domain.sale.SaleItem
 import com.example.lessonslist.presentation.MainActivity
-import com.example.lessonslist.presentation.lessons.sale.DataSalePaymentModel
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

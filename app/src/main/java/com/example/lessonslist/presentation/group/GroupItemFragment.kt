@@ -106,8 +106,6 @@ class GroupItemFragment : Fragment() {
             for(student in it){
                 val name = student.name + " " + student.lastname
                 val id = student.id
-                //Log.d("listname", name)
-                //Log.d("viewModelgroupItem", viewModel.groupItem.value.toString())
                 if(viewModel.groupItem.value != null) {
                     viewModel.groupItem.observe(viewLifecycleOwner) {
                         var dataString = it.student
@@ -116,29 +114,14 @@ class GroupItemFragment : Fragment() {
                         val lstValues: List<Int> = dataString.split(",").map { it.trim().toInt() }
                         if(lstValues.contains(id)) {
                             dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
-                            // ListStudentAdapter.arrayList.add(id)
                         } else {
                             dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
                         }
-                        /*lstValues.forEach { it ->
-                            if(it.toInt() == id) {
-                                dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
-                            } else if (it.toInt() != id) {
-                                dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
-                            }
-                            //   Log.i("Values", "value=$it")
-                            //Do Something
-                        }*/
-
-                        // Log.d("dataString", dataString)
                     }
                 } else {
                     dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
                 }
 
-
-
-                //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
             }
 
             adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
@@ -201,12 +184,10 @@ class GroupItemFragment : Fragment() {
 
 
     private fun launchRightMode() {
-    Log.d("screenMode", screenMode)
-    when (screenMode) {
-      MODE_EDIT -> launchEditMode()
-      MODE_ADD -> launchAddMode()
-     // else -> launchEditMode()
-    }
+        when (screenMode) {
+          MODE_EDIT -> launchEditMode()
+          MODE_ADD -> launchAddMode()
+        }
     }
 
 
@@ -239,7 +220,6 @@ class GroupItemFragment : Fragment() {
             binding.textViewChangeStateCheckbox.setTextColor(ContextCompat.getColor(requireContext().applicationContext,R.color.custom_calendar_weekend_days_bar_text_color))
             checkField = viewModel.validateInput(binding.etTitle.text.toString())
             setHideError()
-            //with(binding) { textViewChangeStateCheckbox.setTextColor(ContextCompat.getColor(requireContext().applicationContext,R.color.custom_calendar_weekend_days_bar_text_color)) }
              return@setOnClickListener
         } else {
             binding.textViewChangeStateCheckbox.setTextColor(ContextCompat.getColor(requireContext().applicationContext,R.color.custom_calendar_date_weekend_background))

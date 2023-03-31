@@ -1,7 +1,5 @@
 package com.example.lessonslist.domain.lessons
 
-import java.util.*
-
 data class LessonsItem (
     val title: String,
     val description: String,

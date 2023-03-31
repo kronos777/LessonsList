@@ -1,14 +1,13 @@
 package com.example.lessonslist.presentation.lessons
 
 import android.app.Application
-import androidx.lifecycle.*
-import com.example.lessonslist.data.AppDatabase
-import com.example.lessonslist.data.lessons.LessonsListDao
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.lessonslist.data.lessons.LessonsListRepositoryImpl
-import com.example.lessonslist.domain.group.*
 import com.example.lessonslist.domain.lessons.*
 import kotlinx.coroutines.launch
-import java.util.stream.Collectors
 
 
 class LessonsListViewModel(application: Application) : AndroidViewModel(application) {

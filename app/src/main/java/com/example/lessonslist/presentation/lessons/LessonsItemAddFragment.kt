@@ -27,9 +27,6 @@ import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
-import com.example.lessonslist.presentation.lessons.sale.DataSalePaymentModel
-import com.example.lessonslist.presentation.lessons.sale.ListSaleAdapter
-import com.example.lessonslist.presentation.student.StudentItemListFragment
 import java.lang.Thread.sleep
 import java.text.SimpleDateFormat
 import java.time.Duration
@@ -256,14 +253,8 @@ class LessonsItemAddFragment : Fragment()  {
         } else if (startDate > endDate) {
             Toast.makeText(activity, "Время начала урока не может превышать время конца урока.", Toast.LENGTH_SHORT).show()
         } else if(startDate < endDate) {
-           // Toast.makeText(activity, "startDate" + startDate, Toast.LENGTH_SHORT).show()
-            //Toast.makeText(activity, "endDate" + endDate, Toast.LENGTH_SHORT).show()
-           // val diff = Duration.between(startDate, endDate)
-            //val daysDiff = diff!!.days
-           // Toast.makeText(activity, "daysDiff" + daysDiff, Toast.LENGTH_SHORT).show()
             val diffInMillies: Long = Math.abs(endDate.getTime() - startDate.getTime())
             val diff: Long = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7
-
             val calendarLoc = GregorianCalendar.getInstance()
             val tempTime1 = timePicker1RepeatDate.split("-")
             val tempHourStartTime1 = timePicker1RepeatStartHourMinuteDate.split(":")
@@ -272,30 +263,17 @@ class LessonsItemAddFragment : Fragment()  {
 
             calendarLoc.set(tempTime1.get(0).toInt(), tempTime1.get(1).toInt() - 1, tempTime1.get(2).toInt())
 
-           // Log.d("dataTimeRepeat", binding.etDatestart.text.toString())
+
             dateLessons.add(binding.etDatestart.text.toString())
             dateLessons.add(binding.etDateend.text.toString())
             for (i in 0..diff-1) {
                 calendarLoc.add(Calendar.DAY_OF_MONTH, 7)
-                //Log.d("dataTime dateField", calendarLoc.get(Calendar.MONTH).toString())
-                //Log.d("dataTime dateField", (calendarLoc.get(Calendar.MONTH) + 1).toString())
                 val strAdd = calendarLoc.get(Calendar.YEAR).toString() + "/" + (calendarLoc.get(Calendar.MONTH) + 1).toString() + "/" + calendarLoc.get(Calendar.DAY_OF_MONTH).toString() + " " + tempHourStartTime1.get(0) + ":" + tempHourStartTime1.get(1)
                 val strAdd2 = calendarLoc.get(Calendar.YEAR).toString() + "/" + (calendarLoc.get(Calendar.MONTH) + 1).toString() + "/" + calendarLoc.get(Calendar.DAY_OF_MONTH).toString() + " " + tempHourStartTime2.get(0) + ":" + tempHourStartTime2.get(1)
                 dateLessons.add(strAdd)
                 dateLessons.add(strAdd2)
             }
 
-          /*Log.d("dataTimeRepeat", dateLessons.toString())
-            Toast.makeText(activity, "diff between" + dateLessons, Toast.LENGTH_SHORT).show()
-*/
-
-            for (index in dateLessons.indices step 2) {
-                Log.d("dataTime $index dateField", binding.etDatestart.text.toString())
-                Log.d("dataTime $index RepeatStart", dateLessons.get(index).toString())
-                Log.d("dataTime $index RepeatEnd", dateLessons.get(index + 1).toString())
-            }
-            //val cal: Calendar = GregorianCalendar(2023, Calendar.FEBRUARY, 1)
-           // Log.d("dataTimeRepeat", cal.getActualMaximum(Calendar.DAY_OF_MONTH).toString())
         }
 
 
@@ -323,7 +301,6 @@ class LessonsItemAddFragment : Fragment()  {
                             val lstValues: List<Int> = dataString.split(",").map { it.trim().toInt() }
                             if(lstValues.contains(id)) {
                                 dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
-                                // ListStudentAdapter.arrayList.add(id)
                             } else {
                                 dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
                             }
@@ -338,19 +315,16 @@ class LessonsItemAddFragment : Fragment()  {
 
 
                 adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
-                //  openDialog(dataStudentGroupModel)
                 listView.adapter = adapter
 
                 listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                     val dataStudent: DataStudentGroupModel = dataStudentGroupModel!![position]
                     dataStudent.checked = !dataStudent.checked
-                 //   Log.d("checkstate", dataStudent.checked.toString())
                     adapter.notifyDataSetChanged()
                 }
 
             } else {
-                //log("в учениках пока нет значений")
-                //studentName += "в учениках пока нет значений"
+
                 Toast.makeText(activity, "В приложении нет учеников, добавьте учеников.", Toast.LENGTH_LONG).show()
                 sleep(1_500)
                 launchFragment()
@@ -544,13 +518,11 @@ class LessonsItemAddFragment : Fragment()  {
                 checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
                     binding.etDatestart.text.toString(), binding.etDateend.text.toString())
             }
-                /*val checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
-                binding.etDatestart.text.toString(), binding.etDateend.text.toString())*/
+
             if(checkField && valueStudent.size > 0) {
                if(binding.etRepeat.isChecked && dateLessons.size >= 2) {
                     for (index in dateLessons.indices step 2) {
-                      //  Log.d("dataTime $index RepeatStart", dateLessons.get(index).toString())
-                       // Log.d("dataTime $index RepeatEnd", dateLessons.get(index + 1).toString())
+
                         viewModel.addLessonsItem(
                             binding.etTitle.text.toString(),
                             "",

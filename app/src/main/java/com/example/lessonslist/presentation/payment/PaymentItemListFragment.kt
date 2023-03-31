@@ -1,34 +1,23 @@
 package com.example.lessonslist.presentation.payment
 
 
-import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.addCallback
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentPaymentItemListBinding
 import com.example.lessonslist.domain.payment.PaymentItem
-import com.example.lessonslist.domain.student.StudentItem
-import com.example.lessonslist.presentation.student.StudentItemEditFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class PaymentItemListFragment: Fragment() {
@@ -68,7 +57,6 @@ class PaymentItemListFragment: Fragment() {
         val mode = args.getString(SCREEN_MODE)
         if(mode == "student_id_list") {
             studentId = args.getInt(STUDENT_ID)
-            //Log.d("studentId", studentId.toString())
             val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
             viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
             viewModel.paymentList.observe(viewLifecycleOwner) {
@@ -81,7 +69,6 @@ class PaymentItemListFragment: Fragment() {
             }
         } else if(mode == "student_no_pay_list") {
             studentId = args.getInt(STUDENT_ID)
-            //Log.d("studentId", studentId.toString())
             val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
             viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
             viewModel.paymentList.observe(viewLifecycleOwner) {
@@ -94,7 +81,6 @@ class PaymentItemListFragment: Fragment() {
             }
         } else if (mode == "lesson_id_list") {
             lessonsId = args.getInt(LESSONS_ID)
-            Log.d("lessonsId", lessonsId.toString())
             val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
             viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
             viewModel.paymentList.observe(viewLifecycleOwner) {
@@ -116,7 +102,6 @@ class PaymentItemListFragment: Fragment() {
                     val pay = payment.datePayment.split(" ")
                     val datePay = Date(pay[0])
                     val dateFormated = SimpleDateFormat("d/M/yyyy").format(datePay)
-                    Log.d("dateId", dateFormated.toString())
                     if(dateFormated == dateId){
                         listArrayPayment.add(payment)
                     }
@@ -128,7 +113,7 @@ class PaymentItemListFragment: Fragment() {
             viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
             viewModel.paymentList.observe(viewLifecycleOwner) {
                 for (payment in it) {
-                    var enabledPay = payment.enabled
+                    val enabledPay = payment.enabled
                     if(!enabledPay) {
                         listArrayPayment.add(payment)
                     }
@@ -221,15 +206,12 @@ class PaymentItemListFragment: Fragment() {
         const val CUSTOM_LIST = "custom_list"
         const val STUDENT_ID_LIST = "student_id_list"
         const val STUDENT_NO_PAY_LIST = "student_no_pay_list"
-        const val LESSONS_ID_LIST = "lesson_id_list"
         const val DATE_ID_LIST = "date_id_list"
         const val PAYMENT_ENABLED = "payment_enabled"
-
 
         const val DATE_ID = "date_id"
         const val STUDENT_ID = "student_id"
         const val LESSONS_ID = "lessons_id"
-        const val DATE_FOR_BACKSTACK = "date_for_backstack"
 
 
 

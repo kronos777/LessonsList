@@ -20,17 +20,6 @@ class InstructionFragment: Fragment() {
     private val binding: FragmentInstructionBinding
         get() = _binding ?: throw RuntimeException("FragmentInstructionBinding == null")
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,

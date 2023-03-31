@@ -2,7 +2,6 @@ package com.example.lessonslist.data.lessons
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
 
 
 @Entity(tableName = "lessons_items")

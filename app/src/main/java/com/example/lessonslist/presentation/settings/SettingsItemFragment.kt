@@ -1,7 +1,6 @@
 package com.example.lessonslist.presentation.settings
 
 
-import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -12,9 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.databinding.FragmentSettingsItemBinding
-import com.example.lessonslist.presentation.MainActivity
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 
 
 class SettingsItemFragment : Fragment() {

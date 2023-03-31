@@ -6,14 +6,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.lessonslist.data.notes.NotesListRepositoryImpl
 import com.example.lessonslist.data.parent.ParentListRepositoryImpl
-import com.example.lessonslist.data.student.StudentListRepositoryImpl
-import com.example.lessonslist.domain.notes.*
 import com.example.lessonslist.domain.parent.*
-import com.example.lessonslist.domain.student.*
-
-
 import kotlinx.coroutines.launch
 
 class ParentContactViewModel(application: Application) : AndroidViewModel(application) {

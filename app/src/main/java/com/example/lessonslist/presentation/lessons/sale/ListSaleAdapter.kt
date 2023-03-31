@@ -1,17 +1,14 @@
 package com.example.lessonslist.presentation.lessons.sale
 
 import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import androidx.core.widget.addTextChangedListener
+import android.widget.ArrayAdapter
+import android.widget.CheckBox
+import android.widget.TextView
 import com.example.lessonslist.R
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 
 class ListSaleAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
     ArrayAdapter<Any?>(mContext, R.layout.row_sale_payment_item, dataSet) {

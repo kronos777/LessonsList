@@ -8,12 +8,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ListAdapter
 import com.example.lessonslist.R
-import com.example.lessonslist.databinding.ItemGroupEnabledBinding
 import com.example.lessonslist.databinding.ItemPaymentDisabledBinding
 import com.example.lessonslist.databinding.ItemPaymentEnabledBinding
-import com.example.lessonslist.domain.group.GroupItem
 import com.example.lessonslist.domain.payment.PaymentItem
-import com.example.lessonslist.presentation.student.StudentListAdapter
 
 
 class PaymentListAdapter : ListAdapter<PaymentItem, PaymentItemViewHolder>(PaymentItemDiffCallback()) {

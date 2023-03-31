@@ -1,7 +1,5 @@
 package com.example.lessonslist.presentation.helpers
 
-import android.util.Log
-
 open class ValidPassword() // основной конструктор
 {
     fun String.isMixedCase() = any(Char::isLowerCase) && any(Char::isUpperCase)

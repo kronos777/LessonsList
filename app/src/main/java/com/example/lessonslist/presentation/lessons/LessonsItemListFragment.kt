@@ -22,15 +22,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemListBinding
 import com.example.lessonslist.domain.lessons.LessonsItem
-import com.example.lessonslist.domain.student.StudentItem
-import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class LessonsItemListFragment: Fragment() {
@@ -308,48 +305,10 @@ class LessonsItemListFragment: Fragment() {
 
         const val SCREEN_MODE = "screen_mode"
         const val CUSTOM_LIST = "custom_list"
-       // private const val STUDENT_ID_LIST = "student_id_list"
-       // private const val LESSONS_ID_LIST = "lesson_id_list"
         const val DATE_ID_LIST = "date_id_list"
-
-
         const val DATE_ID = "date_id"
-       // private const val STUDENT_ID = "student_id"
-        //private const val LESSONS_ID = "lessons_id"
 
-        fun newInstanceNoneParams(): LessonsItemListFragment {
-            return LessonsItemListFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, CUSTOM_LIST)
-                }
-            }
-        }
 
-        /*fun newInstanceStudentId(studentId: Int): LessonsItemListFragment {
-            return LessonsItemListFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(STUDENT_ID, studentId)
-                    putString(SCREEN_MODE, STUDENT_ID_LIST)
-                }
-            }
-        }
-        fun newInstanceLessonsId(lessonsId: Int): LessonsItemListFragment {
-            return LessonsItemListFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(LESSONS_ID, lessonsId)
-                    putString(SCREEN_MODE, LESSONS_ID_LIST)
-                }
-            }
-        }*/
-
-        fun newInstanceDateId(dateId: String): LessonsItemListFragment {
-            return LessonsItemListFragment().apply {
-                arguments = Bundle().apply {
-                    putString(DATE_ID, dateId)
-                    putString(SCREEN_MODE, DATE_ID_LIST)
-                }
-            }
-        }
 
     }
 

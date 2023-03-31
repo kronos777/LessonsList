@@ -1,7 +1,6 @@
 package com.example.lessonslist.presentation
 
 import android.app.Application
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -18,10 +16,11 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
-import androidx.work.*
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.data.service.PaymentWork
@@ -43,10 +42,9 @@ import com.google.android.material.navigation.NavigationView
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 
 
-class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, LessonsItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, SettingsItemFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener, LessonsItemAddFragment.OnEditingFinishedListener, LessonsItemEditFragment.OnEditingFinishedListener {
+class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, SettingsItemFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener, LessonsItemAddFragment.OnEditingFinishedListener, LessonsItemEditFragment.OnEditingFinishedListener {
 
     private lateinit var binding: ActivityMainBinding
     lateinit var toggle: ActionBarDrawerToggle
@@ -236,10 +234,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_CUSTOM_DIALOG)
             .maxFileCount(5)
             .apply {
-                onCompleteListener { success, message, exitCode ->
-                    //Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
-                    //    Toast.makeText(this, "vse ok!", Toast.LENGTH_SHORT).show();
-                     //  if (success) restartApp(Intent(this@MainActivity, MainActivity::class.java))
+                onCompleteListener { _, _, _ ->
+
                 }
             }
             .backup()
@@ -282,7 +278,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     private fun parseParamsExtra() {
         if (intent.getStringExtra("extra") != null) {
-           // Toast.makeText(this, "extra params" + intent.getStringExtra("extra"), Toast.LENGTH_SHORT).show()
             val lessonIdForFragment = intent.getStringExtra("extra")
             if (lessonIdForFragment != null) {
                 launchLessonsItemEditFragmentId(lessonIdForFragment)
@@ -440,13 +435,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         viewModelLesson = ViewModelProvider(this)[LessonsItemViewModel::class.java]
 
         viewModelLessons.lessonsList.observe(this) {
-         //   var provedLessons = 0
             var zaplanLessons = 0
             var zaplanMoney = 0
 
             for (index in it.indices) {
                 val dateTimeLessons = parseStringDate(it[index].dateEnd)
-             //   Log.d("datelessons", it[index].dateEnd)
 
                 calendar.set(dateTimeLessons[0], dateTimeLessons[1]  - 1, dateTimeLessons[2], dateTimeLessons[3], dateTimeLessons[4])
                 val lessonsDate = calendar.time
@@ -454,13 +447,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 //val countStudent1 = countStudent.size
                 zaplanMoney += it[index].price * countStudent
 
-                if(initialDate > lessonsDate) {
-                   // provedLessons++
-                    Log.d("datelessons", lessonsDate.toString())
-                    Log.d("datelessons", initialDate.toString())
-                } else {
+                if(initialDate < lessonsDate) {
                     zaplanLessons++
-                    Log.d("datelessons1", lessonsDate.toString())
                 }
 
             }
@@ -489,7 +477,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 } else {
                     if(it[index].price != it[index].allprice) {
                         actualMoney += (it[index].allprice + it[index].price)
-                        Log.d("deptMoney", actualMoney.toString())
+
                     }
                     deptMoney += it[index].price
                     noPaidLessons++
@@ -522,8 +510,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
        val month = dataDate[1]
        val day = dataDate[2]
 
-      // var dataTimeMinute = allData[1].split(":")
-       Log.d("allData", allData.toString())
        var hour = ""
        var minute = ""
        if(allData.size > 2) {

@@ -1,7 +1,6 @@
 package com.example.lessonslist.presentation.lessons
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.lessonslist.domain.group.GroupItem
 import com.example.lessonslist.domain.lessons.LessonsItem
 
 class LessonsItemDiffCallback: DiffUtil.ItemCallback<LessonsItem>() {

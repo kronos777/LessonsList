@@ -4,8 +4,6 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.example.lessonslist.data.AppDatabase
-import com.example.lessonslist.domain.group.GroupItem
-import com.example.lessonslist.domain.group.GroupListRepository
 import com.example.lessonslist.domain.parent.ParentContact
 import com.example.lessonslist.domain.parent.ParentListRepository
 

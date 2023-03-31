@@ -2,16 +2,13 @@ package com.example.lessonslist.presentation.group
 
 
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ListAdapter
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.ItemGroupEnabledBinding
 import com.example.lessonslist.domain.group.GroupItem
-import com.example.lessonslist.domain.student.StudentItem
 
 
 class GroupListAdapter : ListAdapter<GroupItem, GroupItemViewHolder>(GroupItemDiffCallback()) {

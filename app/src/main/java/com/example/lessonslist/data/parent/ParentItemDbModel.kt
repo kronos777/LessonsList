@@ -2,7 +2,6 @@ package com.example.lessonslist.data.parent
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.lessonslist.domain.group.GroupItem
 
 @Entity(tableName = "parent_contact")
 data class ParentItemDbModel (

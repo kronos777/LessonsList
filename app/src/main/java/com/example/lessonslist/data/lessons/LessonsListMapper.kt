@@ -1,7 +1,6 @@
 package com.example.lessonslist.data.lessons
 
 import com.example.lessonslist.domain.lessons.LessonsItem
-import java.util.*
 
 class LessonsListMapper {
 

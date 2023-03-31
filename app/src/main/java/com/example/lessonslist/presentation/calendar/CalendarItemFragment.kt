@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentCalndarBinding
 import com.example.lessonslist.presentation.lessons.LessonsItemAddFragment
@@ -94,11 +93,6 @@ class CalendarItemFragment() : Fragment() {
         }
     }
 
-    fun goToStList() {
-      //  val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-      //  val navController = navHostFragment.navController
-        findNavController().navigate(R.id.studentItemListFragment)
-    }
 
     private fun showToolbarAndBottomNavigation() {
         (activity as AppCompatActivity).findViewById<BottomNavigationView>(R.id.nav_view_bottom).visibility = View.VISIBLE
@@ -112,7 +106,7 @@ class CalendarItemFragment() : Fragment() {
         val calendar = Calendar.getInstance()
 
         // The first day of week
-        val firstDayOfWeek = java.util.Calendar.MONDAY
+        val firstDayOfWeek = Calendar.MONDAY
 
         // Set up calendar with all available parameters
 
@@ -124,8 +118,8 @@ class CalendarItemFragment() : Fragment() {
         viewModelPaymentList = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModel.lessonsList.observe(viewLifecycleOwner) {
 
-            var arrayListLessons: ArrayList<CalendarDate> = ArrayList()
-            var arrayListPayments: ArrayList<CalendarDate> = ArrayList()
+            val arrayListLessons: ArrayList<CalendarDate> = ArrayList()
+            val arrayListPayments: ArrayList<CalendarDate> = ArrayList()
 
 
 
@@ -335,13 +329,10 @@ class CalendarItemFragment() : Fragment() {
 
 
             calendarView.onDateClickListener = { date ->
-                 //showDialogWithEventsForSpecificDate(date)
                 val calendarDateList = mutableListOf<EventItemsList>()
                 for (index in calendarShowMessgeList.indices) {
 
                     if(calendarShowMessgeList[index].date == date) {
-                    //   Log.d("current date:", calendarShowMessgeList[index].date.toString() + calendarShowMessgeList[index].eventName.toString())
-                   //    Toast.makeText(getActivity(),"данные на дату!" + calendarShowMessgeList[index].date.toString() + calendarShowMessgeList[index].eventName.toString(), Toast.LENGTH_SHORT).show();
                         calendarDateList += calendarShowMessgeList[index]
                     }
                 }
@@ -354,9 +345,6 @@ class CalendarItemFragment() : Fragment() {
 
         }
 
-
-
-        // Set date long click callback
         calendarView.onDateLongClickListener = { date ->
             launchLessonsAddFragment(date.toString())
         }

@@ -3,14 +3,11 @@ package com.example.lessonslist.presentation.payment
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lessonslist.data.group.GroupListRepositoryImpl
 import com.example.lessonslist.data.payment.PaymentListRepositoryImpl
-import com.example.lessonslist.domain.group.*
 import com.example.lessonslist.domain.payment.DeletePaymentItemUseCase
 import com.example.lessonslist.domain.payment.EditPaymentItemUseCase
 import com.example.lessonslist.domain.payment.GetPaymentListItemUseCase
 import com.example.lessonslist.domain.payment.PaymentItem
-import com.example.lessonslist.domain.student.StudentItem
 import kotlinx.coroutines.launch
 
 class PaymentListViewModel(application: Application) : AndroidViewModel(application) {

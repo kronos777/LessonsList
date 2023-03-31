@@ -6,8 +6,6 @@ import androidx.lifecycle.Transformations
 import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.domain.notes.NotesItem
 import com.example.lessonslist.domain.notes.NotesListRepository
-import com.example.lessonslist.domain.parent.ParentContact
-import com.example.lessonslist.domain.parent.ParentListRepository
 
 class NotesListRepositoryImpl(
     application: Application,

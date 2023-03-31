@@ -2,8 +2,10 @@ package com.example.lessonslist.data.student
 
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
-import com.example.lessonslist.domain.student.StudentItem
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 
 @Dao
 interface StudentListDao {

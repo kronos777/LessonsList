@@ -15,7 +15,6 @@ import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentPaymentItemBinding
 import com.example.lessonslist.domain.payment.PaymentItem
 import com.example.lessonslist.domain.student.StudentItem
-import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.student.StudentItemViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -100,8 +99,7 @@ class PaymentItemFragment: Fragment() {
             val paymentCount = it.price
             viewModelStudent.getStudentItem(it.studentId)
             viewModelStudent.studentItem.observe(viewLifecycleOwner) {
-                Log.d("enabledpay", "it.paymentBalance " + it.paymentBalance)
-                Log.d("enabledpay", "paymentCount " + ( - paymentCount))
+
                 if(it.paymentBalance > ( - paymentCount)) {
                     binding.paymentOff.setOnClickListener {
                         deptOff()
