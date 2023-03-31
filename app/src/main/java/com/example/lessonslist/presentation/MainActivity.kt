@@ -93,7 +93,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         navControllerTest = navHostFragment.navController
         navControllerTest.addOnDestinationChangedListener { _, destination, _ ->
-           // Toast.makeText(this, "current " + destination.id, Toast.LENGTH_SHORT).show()
             onDestinationChanged(destination.id)
         }
 
@@ -110,13 +109,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                     enableHomeBackIcon(false)
                     paymentBtnAppBarTop.visibility = View.VISIBLE
                     backupBtnAppBarTop.visibility = View.VISIBLE
-                    // Toast.makeText(this, "Student item list ", Toast.LENGTH_SHORT).show()
                 } else -> {
                     enableHomeBackIcon(true)
                     toggle.setHomeAsUpIndicator(R.drawable.ic_baseline_navigate_before_24)
                     paymentBtnAppBarTop.visibility = View.GONE
                     backupBtnAppBarTop.visibility = View.GONE
-                    //Toast.makeText(this, "other destination", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -147,34 +144,23 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.bottomItem1 -> {
-                    // Respond to navigation item 1 click
-                    //launchMainFragment(CalendarItemFragment(), "calendar")
                     navController.navigate(R.id.calendarItemFragment, null, animationOptions)
                     true
                 }
                 R.id.bottomItem2 -> {
-                    // Respond to navigation item 2 click
-                    //  Log.d("menuitem", "ite2")
-                    //Toast.makeText(this, "item2", Toast.LENGTH_SHORT).show()
-                    //goPaymentFragment()
                     navController.navigate(R.id.paymentItemListFragment, btnArgsPayment, animationOptions)
                     true
                 }
                 R.id.bottomItem3 -> {
-                    // Respond to navigation item 2 click
                     navController.navigate(R.id.groupItemListFragment, null, animationOptions)
                     true
                 }
                 R.id.bottomItem4 -> {
-                    // Respond to navigation item 2 click
-                    //goLessonsListFragment()
                     navController.navigate(R.id.lessonsItemListFragment, btnArgsLessons, animationOptions)
                     true
                 }
                 R.id.bottomItem5 -> {
-                    // Respond to navigation item 2 click
                     navController.navigate(R.id.studentItemListFragment, null, animationOptions)
-                    //  goStudentListFragment()
                     true
                 }
                 else -> false
@@ -194,16 +180,13 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         paymentBtnAppBarTop.setOnClickListener {
             if(alertCount > 0) {
-               // launchFragment(PaymentItemListFragment.newInstanceEnabledPayment())
                 launchPaymentListEnabledFragment()
             } else {
-                //goPaymentFragment()
                 launchPaymentListNoParamsFragment()
             }
         }
 
         materialToolbar.setOnMenuItemClickListener {
-            // Toast.makeText(this, "Favorites Clsadsaicked"+it.itemId, Toast.LENGTH_SHORT).show()
             when (it.itemId) {
                 R.id.backup -> {
                     getDialogBackup()
@@ -242,28 +225,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     override fun onBackPressed() {
        super.onBackPressed()
-        /*val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-        */
-        //Toast.makeText(this, "содержимое бекстека." + navController.toString(), Toast.LENGTH_SHORT).show()
-      //  navController.popBackStack()
-      //  navController.popBackStack(R.id.calendarItemFragment, true)
-      //  navController.navigate(R.id.calendarItemFragment)
-        //    supportFragmentManager.popBackStack("calendar", 0)
-       //val myFragment: Fragment = supportFragmentManager.findFragmentByTag("MainCalendarFragment") as Fragment
-      /* val myFragment: Fragment = supportFragmentManager.findFragmentById(R.id.calendarItemFragment) as Fragment
-        if (doubleBackToExitPressedOnce) {
-            // super.onBackPressed()
-            //return
-            if (myFragment.isVisible) {
-                this.finishAffinity()
-              //  Toast.makeText(this, "Текущий форагмент календарь, можно выходить.", Toast.LENGTH_SHORT).show()
-            }
-        }
-        this.doubleBackToExitPressedOnce = true
-       // Toast.makeText(this, "Нажмите еще раз назад для выхода.", Toast.LENGTH_SHORT).show()
-        Handler(Looper.getMainLooper()).postDelayed({ doubleBackToExitPressedOnce = false }, 1000)*/
-        /*supportFragmentManager.popBackStack("listStudent", 0)*/
     }
 
     private fun backup() {
@@ -273,7 +234,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             .backupIsEncrypted(true)
             .customEncryptPassword("YOUR_SECRET_PASSWORD")
             .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_CUSTOM_DIALOG)
-            //.backupLocation(RoomBackup.BACKUP_FILE_LOCATION_INTERNAL)
             .maxFileCount(5)
             .apply {
                 onCompleteListener { success, message, exitCode ->
@@ -294,7 +254,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_CUSTOM_DIALOG)
             .apply {
                 onCompleteListener { success, message, exitCode ->
-                    Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
                     if (success) restartApp(Intent(this@MainActivity, MainActivity::class.java))
                 }
             }
@@ -309,7 +268,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 backup()
             }
             .setNegativeButton("Восстановить из резервной копии.") { _, _ ->
-                //    log(date.toString())
                 restore()
             }
             .setNeutralButton("Закрыть") { dialog, _ ->
@@ -327,7 +285,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
            // Toast.makeText(this, "extra params" + intent.getStringExtra("extra"), Toast.LENGTH_SHORT).show()
             val lessonIdForFragment = intent.getStringExtra("extra")
             if (lessonIdForFragment != null) {
-                //launchFragment(LessonsItemEditFragment.newInstanceEditItem(lessonIdForFragment.toInt()))
                 launchLessonsItemEditFragmentId(lessonIdForFragment)
             }
         }
@@ -358,14 +315,12 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             }
             if(listArrayPayment.size > 0) {
                 alertCount = 0
-                //Toast.makeText(this, "Search Clicked", Toast.LENGTH_SHORT).show()
-                //alertCount = (alertCount + 1) % 11; // cycle through 0 - 10
                 alertCount = listArrayPayment.size
                 updateAlertIcon()
             } else {
                 clearAlertIcon()
             }
-            //Toast.makeText(this, listArrayPayment.toString(), Toast.LENGTH_SHORT).show()
+
         }
     }
 
@@ -393,19 +348,9 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
-                //    R.id.muItem1 -> goGroupFragment()
-                //      R.id.muItem2 -> launchFragment(SettingsItemFragment())
-             //   R.id.muItem2 -> getDialogBackup()
-                //R.id.muItem3 -> launchFragment(InstructionFragment())
                 R.id.muItem3 ->  navController.navigate(R.id.instructionFragment, null, animationOptions)
-                //R.id.muItem4 -> launchFragment(AboutFragment())
                 R.id.muItem4 -> navController.navigate(R.id.aboutFragment, null, animationOptions)
-                //R.id.muItem5 -> exitApplication()
                 R.id.muItem5 -> exitApplication()
-               /* R.id.muItem6 -> goLessonsListFragment()
-                R.id.muItem7 -> goStudentListFragment()
-                R.id.muItem8 -> goTestAddLessons()*/
-
             }
             true
         }
@@ -420,26 +365,24 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     private fun initWorkManager() {
         /*work manager */
-        //PeriodicWorkRequest myWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class, 30, TimeUnit.MINUTES, 25, TimeUnit.MINUTES).build();
-        val request = OneTimeWorkRequestBuilder<PaymentWork>().build()
-        /*val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
-           .setConstraints(
-                 Constraints.Builder()
-                 .setRequiresCharging(true)
-                 .build()
-             )
-             .build()*/
-        //val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
-        WorkManager.getInstance(this).enqueue(request)
-      /*  WorkManager.getInstance(this).enqueue(request)
-        WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
-            .observe(this) {
-                it.state.name
+            //PeriodicWorkRequest myWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class, 30, TimeUnit.MINUTES, 25, TimeUnit.MINUTES).build();
+           // val request = OneTimeWorkRequestBuilder<PaymentWork>().build()
+            /*val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
+               .setConstraints(
+                     Constraints.Builder()
+                     .setRequiresCharging(true)
+                     .build()
+                 )
+                 .build()*/
+            //val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
+          //  WorkManager.getInstance(this).enqueue(request)
+          /*  WorkManager.getInstance(this).enqueue(request)
+            WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
+                .observe(this) {
+                    it.state.name
 
-            }*/
-
-
-/* this work copy
+                }*/
+    /* this work copy*/
         val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
             .build()
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
@@ -447,7 +390,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             ExistingPeriodicWorkPolicy.REPLACE,
             request
         )
-*/
+
         /*work manager */
     }
 
@@ -461,15 +404,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
     override fun onEditingFinished() {
-    // Toast.makeText(this@MainActivity, "Отработал финиш", Toast.LENGTH_SHORT).show()
         supportFragmentManager.popBackStack()
     }
-
-    /*
-    private fun isOnePaneMode(): Boolean {
-     return binding.shopItemContainer == null
-    }
-    */
 
 
     private fun initNavHeader() {
@@ -502,14 +438,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelGroup = ViewModelProvider(this)[GroupListViewModel::class.java]
         viewModelLesson = ViewModelProvider(this)[LessonsItemViewModel::class.java]
-        //val countLessonsP = findViewById<TextView>(R.id.nav_conducted_count_lessons)
-        //val countLessonsZ = findViewById<TextView>(R.id.nav_scheduled_count_lessons)
-        //Toast.makeText(this, initialDate.toString(), Toast.LENGTH_SHORT).show()
-        //Log.d("datelessons", initialDate.toString())
-        //Log.d("currentMonth", currentMonth.toString())
-        //val dataTime = parseStringDate("2022/9/15 20 : 50")
-        //Log.d("datelessons", dataTime[4].toString())
-        //countLessonsZ.setText("asgadfgdafgfadg")
+
         viewModelLessons.lessonsList.observe(this) {
          //   var provedLessons = 0
             var zaplanLessons = 0
@@ -537,13 +466,10 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             }
 
             navZaplanMoneyCount.text = "Ожидаемый доход $zaplanMoney"
-
             navScheduledCount.text = "Запланировано: $zaplanLessons"
-           // navConductedCount.text = "Проведено: $provedLessons"
 
         }
         viewModelStudent.studentList.observe(this) {
-            //Toast.makeText(this, it.size.toString(), Toast.LENGTH_SHORT).show()
             navStudentCount.text = it.size.toString()
         }
 
@@ -554,18 +480,15 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             var deptMoney = 0
             var actualMoney = 0
             val idLessonsMap: HashSet<Int> = HashSet<Int>()
-            //var provedLessons = 0
 
             for (index in it.indices) {
                 idLessonsMap.add(it[index].lessonsId)
                 if(it[index].enabled) {
                     actualMoney += it[index].price
-                    //actualMoney += it[index].allprice
                     paidLessons++
                 } else {
                     if(it[index].price != it[index].allprice) {
                         actualMoney += (it[index].allprice + it[index].price)
-                        // actualMoney += it[index].allprice
                         Log.d("deptMoney", actualMoney.toString())
                     }
                     deptMoney += it[index].price
@@ -573,8 +496,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 }
 
             }
-
-            //Log.d("idLessonsMap", )
 
             val provedCountLess = idLessonsMap.size.toString()
 
@@ -589,7 +510,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             navGroupCount.text = it.size.toString()
         }
 
-    //countLessons.setText(initialDate.toString())
     }
 
 
@@ -625,65 +545,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
        return valueReturn
 
    }
-/*
-    private fun setupRecyclerView() {
-     with(binding.rvShopList) {
-         shopListAdapter = StudentListAdapter()
-         adapter = shopListAdapter
-         recycledViewPool.setMaxRecycledViews(
-             StudentListAdapter.VIEW_TYPE_ENABLED,
-             StudentListAdapter.MAX_POOL_SIZE
-         )
-         recycledViewPool.setMaxRecycledViews(
-             StudentListAdapter.VIEW_TYPE_DISABLED,
-             StudentListAdapter.MAX_POOL_SIZE
-         )
-     }
-     setupLongClickListener()
-     setupClickListener()
-     setupSwipeListener(binding.rvShopList)
-    }
-
-    private fun setupSwipeListener(rvShopList: RecyclerView) {
-     val callback = object : ItemTouchHelper.SimpleCallback(
-         0,
-         ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-     ) {
-
-         override fun onMove(
-             recyclerView: RecyclerView,
-             viewHolder: RecyclerView.ViewHolder,
-             target: RecyclerView.ViewHolder
-         ): Boolean {
-             return false
-         }
-
-         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-             val item = shopListAdapter.currentList[viewHolder.adapterPosition]
-             viewModel.deleteStudentItem(item)
-         }
-     }
-     val itemTouchHelper = ItemTouchHelper(callback)
-     itemTouchHelper.attachToRecyclerView(rvShopList)
-    }
-
-
-    private fun setupClickListener() {
-     shopListAdapter.onStudentItemClickListener = {
-         if (isOnePaneMode()) {
-             val intent = StudentItemActivity.newIntentEditItem(this, it.id)
-             startActivity(intent)
-         } else {
-             launchFragment(StudentItemFragment.newInstanceEditItem(it.id))
-         }
-     }
-    }
-
-    private fun setupLongClickListener() {
-     shopListAdapter.onStudentItemLongClickListener = {
-         viewModel.changeEnableState(it)
-     }
-    }*/
 
     private fun enableHomeBackIcon(enabled: Boolean) {
         // Enable/Disable opening the drawer from the start side
@@ -712,19 +573,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
     private fun updateAlertIcon() {
-        // if alert count extends into two digits, just show the red circle
-      //  Toast.makeText(this, alertCount.toString(), Toast.LENGTH_SHORT).show()
         countTextView?.text = alertCount.toString()
-        /*if (alertCount in 1..100) {
-            countTextView?.text = java.lang.String.valueOf(alertCount)
-        } else {
-            countTextView?.text = ""
-        }*/
         redCircle?.visibility = if (alertCount > 0) View.VISIBLE else View.GONE
     }
 
     private fun clearAlertIcon() {
-        // if alert count extends into two digits, just show the red circle
         alertCount = 0
         redCircle?.visibility = View.GONE
     }

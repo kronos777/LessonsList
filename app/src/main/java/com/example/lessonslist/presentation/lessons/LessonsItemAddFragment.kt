@@ -353,7 +353,7 @@ class LessonsItemAddFragment : Fragment()  {
                 //studentName += "в учениках пока нет значений"
                 Toast.makeText(activity, "В приложении нет учеников, добавьте учеников.", Toast.LENGTH_LONG).show()
                 sleep(1_500)
-                launchFragment(StudentItemListFragment())
+                launchFragment()
             }
 
 
@@ -712,12 +712,8 @@ class LessonsItemAddFragment : Fragment()  {
         fun onEditingFinished()
     }
 
-    private fun launchFragment(fragment: Fragment) {
-       /* requireActivity().supportFragmentManager.popBackStack()
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_item_container, fragment)
-            .addToBackStack(null)
-            .commit()*/
+    private fun launchFragment() {
+
         val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
 

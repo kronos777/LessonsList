@@ -75,7 +75,6 @@ class BottomFragment : BottomSheetDialogFragment() {
         parseParams()
 
         if(screenMode == "mode_payment") {
-            Toast.makeText(getActivity(), "payment mode", Toast.LENGTH_SHORT).show()
             binding.simpleTextTitle.text = "Платежи студента"
             binding.tilName.visibility = View.GONE
             binding.tilNotes.visibility = View.GONE
@@ -84,7 +83,6 @@ class BottomFragment : BottomSheetDialogFragment() {
         }
 
         if(screenMode == "mode_notes") {
-            Toast.makeText(getActivity(), "notes mode", Toast.LENGTH_SHORT).show()
             binding.simpleTextTitle.text = "Заметки о студенте"
             binding.etNotes.setHint("Внести заметку о студенте")
             binding.tilName.visibility = View.GONE
@@ -100,7 +98,6 @@ class BottomFragment : BottomSheetDialogFragment() {
 
 
         if(screenMode == "contact_parent") {
-            Toast.makeText(getActivity(), "contact_parent mode", Toast.LENGTH_SHORT).show()
             binding.simpleTextTitle.text = "Контакты родителей"
             binding.etName.setHint("Введите имя")
             binding.etNotes.setHint("Введите номер")
@@ -118,7 +115,6 @@ class BottomFragment : BottomSheetDialogFragment() {
 
         /*group studentd*/
         if(screenMode == "group_student") {
-            Toast.makeText(getActivity(), "group_student", Toast.LENGTH_SHORT).show()
             binding.simpleTextTitle.text = "Группы студента"
             binding.tilName.visibility = View.GONE
             binding.tilNotes.visibility = View.GONE
@@ -153,7 +149,6 @@ class BottomFragment : BottomSheetDialogFragment() {
                 val studentIds = getStudentIds(group.student)
                 if(studentIds.isNotEmpty()) {
                    if(studentIds.contains(studentItemId)) {
-                       //Toast.makeText(activity, "id студентов:" + id.toString(), Toast.LENGTH_LONG).show()
                        dataStudentGroupModel!!.add(DataStudentGroupModel(group.id, group.title))
 
                    }
@@ -162,12 +157,6 @@ class BottomFragment : BottomSheetDialogFragment() {
             }
             val adapterGroup = ListStudentGroupAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
             listView.adapter = adapterGroup
-            /*if(dataNotesStudentModel!!.isNotEmpty()) {
-                val adapterGroup = ListStudentGroupAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
-                listView.adapter = adapterGroup
-            } else {
-                Toast.makeText(activity, "Студент не содержится в группах", Toast.LENGTH_LONG).show()
-            }*/
         }
     }
 
@@ -229,7 +218,6 @@ class BottomFragment : BottomSheetDialogFragment() {
             val answerNotes = viewModelNotesItem.addNotesItem(textNotes, currentDate, studentItemId)
             if(answerNotes == true) {
                 binding.etNotes.text?.clear()
-                Toast.makeText(activity, "Saved Sucessfully", Toast.LENGTH_LONG).show()
                 showNotesStudent()
             }
         } else {

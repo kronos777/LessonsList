@@ -93,7 +93,6 @@ class StudentItemEditFragment : Fragment() {
             // Use the returned uri.
             val uriContent = result.uriContent
             val uriFilePath = result.getUriFilePath(requireContext()) // optional usage
-            //   Toast.makeText(activity, "img path" + uriContent.toString(), Toast.LENGTH_SHORT).show()
             val bitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, uriContent)
             pathImageSrc = mSaveMediaToStorage(bitmap).toString()
             binding.imageView.setImageBitmap(bitmap)
@@ -134,25 +133,15 @@ class StudentItemEditFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         launchRightMode()
-      //  observeViewModel()
         val bottomNavigationView =
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
-        //viewModel.studentItem.
 
         viewModel.studentItem.observe(viewLifecycleOwner) { stItem ->
             val payBalance = stItem.paymentBalance
             if (stItem.paymentBalance <= 0) {
-                //Toast.makeText(getActivity(), "it.paymentBalance count^" + it.paymentBalance, Toast.LENGTH_LONG).show()
                 totalDebt()
             }
-         /*   binding.cardPaymentOff.setOnClickListener {
-                if(payBalance <= 0) {
-                    Toast.makeText(getActivity(), "Пополните баланс и сможете списать долг.", Toast.LENGTH_LONG).show()
-                } else {
-                    payOffDebtsAll(studentItemId, payBalance)
-                }
-            }*/
 
             if(stItem.image.isNotBlank()) {
                 myHandler.post {
@@ -164,22 +153,12 @@ class StudentItemEditFragment : Fragment() {
                        // .rotate(90f)
                         .into(mImageView)
                     pathImageSrc = file.toString()
-                    /*Picasso.get()
-                        .load(it.image)
-                        .resize(400, 300)
-                        // .transform(CropCircleTransformation())
-                        .rotate(90f)
-                        .into(mImageView)*/
                 }
-            } else {
-                Toast.makeText(getActivity(),"no image student" + stItem.image,Toast.LENGTH_SHORT).show();
             }
 
             val textTelephone = stItem.telephone.toString()
-          //  Toast.makeText(getActivity(),"phone number"+stItem.telephone.toString(),Toast.LENGTH_SHORT).show();
-               // binding.textViewTelephone.text.toString()
+
             binding.textViewTelephone.setOnClickListener {
-                //Toast.makeText(getActivity(),"phone number"+stItem.telephone.toString(),Toast.LENGTH_SHORT).show();
                 if(textTelephone.count() > 0) {
                        askEditNumber()
                    } else {
@@ -190,22 +169,6 @@ class StudentItemEditFragment : Fragment() {
             }
 
         }
-/*           binding.paymentStudent.setOnClickListener {
-                launchFragment(PaymentItemListFragment.newInstanceStudentId(studentItemId))
-            }
- */
-
-
-
-
-
-/* */
-
-      /*  listViewParentContact.setOnClickListener {
-            Toast.makeText(getActivity(), "item click^" + it.toString(), Toast.LENGTH_LONG).show()
-        }*/
-
-
 
         mImageView = binding.imageView
 
@@ -350,29 +313,7 @@ class StudentItemEditFragment : Fragment() {
         alert.show()
     }
 
-   /*
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.student_menu_fragment, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-
-        when(id) {
-            R.id.action_add_money -> actionAddMoney()
-            R.id.action_change_image -> actionChangeImage()
-            R.id.action_payment_student -> launchFragment(PaymentItemListFragment.newInstanceStudentId(studentItemId))
-            R.id.action_get_lessons -> Toast.makeText(getActivity(), "action_get_lessons.", Toast.LENGTH_LONG).show()
-            R.id.action_get_group -> Toast.makeText(getActivity(), "action_get_group.", Toast.LENGTH_LONG).show()
-            R.id.action_add_contact_parent -> addParentContactStudent()
-            R.id.action_add_notes_student -> addNotesStudent()
-        }
-
-        return super.onOptionsItemSelected(item)
-
-    }
-*/
 
     private fun actionAddMoney() {
         var newBalance: Int
@@ -386,15 +327,15 @@ class StudentItemEditFragment : Fragment() {
                 Log.d("editext value is:", editTextInput)
 
                 if(isNumeric(editTextInput)){
-                    Toast.makeText(getActivity(),"Строка число можно сохранять.",Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getActivity(),"Строка число можно сохранять.",Toast.LENGTH_SHORT).show();
                     newBalance = editTextInput.toInt()
                     viewModel.studentItem.observe(viewLifecycleOwner) {
                         //Log.d("new balance", it.paymentBalance.toString())
                         viewModel.editPaymentBalance(it.id, (it.paymentBalance + newBalance))
                         if(it.paymentBalance < 0) {
-                            Toast.makeText(getActivity(),"payment balance"+(it.paymentBalance).toString(),Toast.LENGTH_SHORT).show();
+                        //    Toast.makeText(getActivity(),"payment balance"+(it.paymentBalance).toString(),Toast.LENGTH_SHORT).show();
                         }
-                        Toast.makeText(getActivity(),"new balance!"+(it.paymentBalance + newBalance).toString(),Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(getActivity(),"new balance!"+(it.paymentBalance + newBalance).toString(),Toast.LENGTH_SHORT).show();
                         binding.textViewPaymentBalance.setText((it.paymentBalance + newBalance).toString())
                         /*     if(it.paymentBalance > sumOffDebts()) {
                                  alertDialogSetMove(it.paymentBalance + newBalance)
@@ -509,13 +450,13 @@ class StudentItemEditFragment : Fragment() {
 
         alert.setPositiveButton("Добавить") { _, _ ->
             val number = amountET.text.toString()
-            Toast.makeText(activity, "Saved Sucessfully" + number, Toast.LENGTH_LONG).show()
+           // Toast.makeText(activity, "Saved Sucessfully" + number, Toast.LENGTH_LONG).show()
             viewModel.editPhoneNumber(studentItemId, number)
           //  sleep(100)
-            viewModel.studentItem.observe(viewLifecycleOwner) {
+           /* viewModel.studentItem.observe(viewLifecycleOwner) {
                 binding.textViewTelephone.text = it.telephone
-                Toast.makeText(activity, "new phone" + it.telephone, Toast.LENGTH_LONG).show()
-            }
+             //   Toast.makeText(activity, "new phone" + it.telephone, Toast.LENGTH_LONG).show()
+            }*/
         }
 
         alert.setNegativeButton("отмена") { dialog, _ ->
@@ -599,7 +540,7 @@ class StudentItemEditFragment : Fragment() {
             // Фотка сделана, извлекаем миниатюру картинки
             if(data?.extras?.get("data") != null) {
                 // val thumbnailBitmap = data?.extras?.get("data") as Bitmap
-                Toast.makeText(activity, data?.extras?.get("data").toString(), Toast.LENGTH_SHORT).show()
+               // Toast.makeText(activity, data?.extras?.get("data").toString(), Toast.LENGTH_SHORT).show()
                 val imageUri: Uri? = getActivity()?.let { getImageUri(it.applicationContext,
                     data?.extras?.get("data") as Bitmap
                 ) }
@@ -661,39 +602,12 @@ class StudentItemEditFragment : Fragment() {
            )*/
     }
 
-    private fun mLoadLocal(string: String): Bitmap? {
-    //private fun mLoadLocal(string: String): Bitmap? {
-        try {
-            val inputStream: InputStream? = activity?.applicationContext?.getContentResolver()?.openInputStream(string.toUri())
-            Toast.makeText(getActivity(), "OK BitmapFactory object", Toast.LENGTH_LONG).show()
-            return BitmapFactory.decodeStream(inputStream)
-            //return BitmapFactory.decodeFile(string)
-        } catch (e: IOException) {
-            e.printStackTrace()
-            Toast.makeText(getActivity(), "Error BitmapFactory", Toast.LENGTH_LONG).show()
-        }
-        return null
-    }
 
 
     private fun mSaveMediaToStorage(bitmap: Bitmap?): File {
         val filename = "${System.currentTimeMillis()}.jpg"
         var fos: OutputStream? = null
-       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            this.contentResolver?.also { resolver ->
-                val contentValues = ContentValues().apply {
-                    put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
-                    put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
-                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-                }
-                val imageUri: Uri? = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-                fos = imageUri?.let { resolver.openOutputStream(it) }
-            }
-        } else {
-            val imagesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-            val image = File(imagesDir, filename)
-            fos = FileOutputStream(image)
-        }*/
+
         val imagesDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + "lessonslist")
         imagesDir.apply {
             if (!this.exists()) this.mkdir()
@@ -705,7 +619,6 @@ class StudentItemEditFragment : Fragment() {
         fos.use {
 
             bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, it)
-            Toast.makeText(getActivity() , "Saved to Gallery", Toast.LENGTH_SHORT).show()
 
         }
         return image
@@ -788,7 +701,6 @@ class StudentItemEditFragment : Fragment() {
                     Log.d("payment.lessonsId", payment.lessonsId.toString())
                     editLessonsItem(payment.lessonsId, studentId)
                     viewModelPayment.deletePaymentItem(payment)
-                    // Toast.makeText(activity, payment.lessonsId.toString(), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -811,18 +723,6 @@ class StudentItemEditFragment : Fragment() {
                 it.dateEnd
             )
         }
-
-        //Log.d("delStudent", newValueStudent)
-        //val newValueStudent = dropElementList(getStudentIds(lessonsItem.value?.student.toString()), studentId)
-
-        /* viewModelLessonsEdit.editLessonsItem(
-             lessonsItem.value?.title.toString(),
-             lessonsItem.value?.description.toString(),
-             newValueStudent,
-             lessonsItem.value?.price.toString(),
-             lessonsItem.value?.dateStart.toString(),
-             lessonsItem.value?.dateEnd.toString()
-         )*/
     }
 
     private fun dropElementList(arrayList: List<Int>, el: Int): String {

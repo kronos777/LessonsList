@@ -143,29 +143,6 @@ class LessonsItemFragment : Fragment() {
               //  openDialog(dataStudentGroupModel)
                 listView.adapter = adapter
 
-            /*test list alert dialog
-                val mCountry = arrayOf("India", "Brazil", "Argentina", "Portugal",
-                    "France", "England", "Italy")
-                val mAlertDialogBuilder = AlertDialog.Builder(requireContext().applicationContext)
-
-                // Row layout is inflated and added to ListView
-                val mRowList = layoutInflater.inflate(R.layout.row, null)
-                val mListView = mRowList.findViewById<ListView>(R.id.list_view_1)
-
-                // Adapter is created and applied to ListView
-                val mAdapter = ArrayAdapter(requireContext().applicationContext, android.R.layout.simple_list_item_1, mCountry)
-                mListView.adapter = mAdapter
-                mAdapter.notifyDataSetChanged()
-
-                // Row item is set as view in the Builder and the
-                // ListView is displayed in the Alert Dialog
-                mAlertDialogBuilder.setView(mRowList)
-                val dialog = mAlertDialogBuilder.create()
-                dialog.show()
-*/
-            /*test list alert dialog*/
-
-
             } else {
                // log("в учениках пока нет значений")
                 //studentName += "в учениках пока нет значений"
@@ -280,7 +257,7 @@ class LessonsItemFragment : Fragment() {
                        DatePickerDialog(it, DatePickerDialog.OnDateSetListener { view, yearcur, monthOfYear, dayOfMonth ->
                          //  val monthOfYear = monthOfYear - 1
                            // Display Selected date in textbox
-                           Toast.makeText(activity, "need date lessons" + "You Selected: $dayOfMonth/$monthOfYear/$yearcur", Toast.LENGTH_SHORT).show()
+                         //  Toast.makeText(activity, "need date lessons" + "You Selected: $dayOfMonth/$monthOfYear/$yearcur", Toast.LENGTH_SHORT).show()
 
                            cal.set(yearcur, monthOfYear, dayOfMonth)
 
@@ -390,7 +367,7 @@ class LessonsItemFragment : Fragment() {
                 selectedStrings.add(items[selectedList[j]])
             }
 
-            Toast.makeText(getContext(), "Items selected are: " + Arrays.toString(selectedStrings.toTypedArray()), Toast.LENGTH_SHORT).show()
+           // Toast.makeText(getContext(), "Items selected are: " + Arrays.toString(selectedStrings.toTypedArray()), Toast.LENGTH_SHORT).show()
 
 
         }
@@ -423,7 +400,7 @@ class LessonsItemFragment : Fragment() {
                     Toast.makeText(activity, "урок не может быть менее 30 минут", Toast.LENGTH_SHORT).show()
                     return false
                 } else {
-                    Toast.makeText(activity, "разница минут" + minutes.toString(), Toast.LENGTH_SHORT).show()
+                  //  Toast.makeText(activity, "разница минут" + minutes.toString(), Toast.LENGTH_SHORT).show()
                     return true
                 }
 
@@ -434,25 +411,6 @@ class LessonsItemFragment : Fragment() {
         }
 
         return true
-    }
-
-    private fun getStudentsOfString(student: String) : List<Int> {
-        //val ss = student.joinToString()
-        val ss = student
-        ss.replace("]", "")
-        ss.replace("[", "")
-        val lstValues: List<Int> = ss.split(",").map { it -> it.trim().toInt() }
-        return lstValues.distinct()
-    }
-
-    fun convertDate(dateString: String): String {
-//        return SimpleDateFormat("yyyy-MM-dd HH:mm").parse(dateString)
-        val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
-        return dateString.format(formatter)
-    }
-
-    private fun addTextChangeListeners() {
-        TODO("Not yet implemented")
     }
 
 
@@ -521,12 +479,12 @@ class LessonsItemFragment : Fragment() {
             if(stdlistName.size > 0) {
 
 
-                for (index in dataStudentGroupModel!!.indices) {
+              /*  for (index in dataStudentGroupModel!!.indices) {
                     if(stdlistName.contains(dataStudentGroupModel!!.get(index).name)) {
                         Toast.makeText(getActivity(), dataStudentGroupModel!!.get(index).name, Toast.LENGTH_SHORT).show()
                         Toast.makeText(getActivity(), dataStudentGroupModel!!.get(index).id.toString(), Toast.LENGTH_SHORT).show()
                     }
-                }
+                }*/
 
 
                 return@setOnClickListener
@@ -537,12 +495,6 @@ class LessonsItemFragment : Fragment() {
                 return@setOnClickListener
             }
 
-
-            /*   Log.d("allStudent", noD.toString())
-             var allStudent: ArrayList<String> = ArrayList()
-              allStudent.add(studentIds)
-              allStudent.add(groupStudentIds)*/
-          //  var resultStudent = getStudentsOfString(studentIds)
 
             viewModel.addLessonsItem(
                 binding.etTitle.text.toString(),
@@ -609,23 +561,7 @@ class LessonsItemFragment : Fragment() {
         private const val MODE_UNKNOWN = ""
         private const val DATE_ADD = "date_add"
 
-        fun newInstanceAddItem(date: String): LessonsItemFragment {
-            return LessonsItemFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_ADD)
-                    putString(DATE_ADD, date)
-                }
-            }
-        }
 
-        fun newInstanceEditItem(lessonsItemId: Int): LessonsItemFragment {
-            return LessonsItemFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_EDIT)
-                    putInt(LESSONS_ITEM_ID, lessonsItemId)
-                }
-            }
-        }
     }
 }
 

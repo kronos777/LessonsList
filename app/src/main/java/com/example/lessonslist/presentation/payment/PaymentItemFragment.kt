@@ -29,10 +29,6 @@ class PaymentItemFragment: Fragment() {
 
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
-//    private var _bindingItem: RowGroupStudentItemBinding? = null
-    // private lateinit var bindingItem: RowGroupStudentItemBinding
-    //      get() = _bindingItem ?: throw RuntimeException("RowGroupItemBinding == null")
-
 
     private var _binding: FragmentPaymentItemBinding? = null
     private val binding: FragmentPaymentItemBinding
@@ -126,7 +122,6 @@ class PaymentItemFragment: Fragment() {
 
 
     private fun deptOff() {
-        //val paymentItem = viewModel.getPaymentItem(paymentItemId)
         viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
         viewModelLessons = ViewModelProvider(this)[LessonsItemViewModel::class.java]
         viewModel.paymentItem.observe(viewLifecycleOwner) {
@@ -162,38 +157,10 @@ class PaymentItemFragment: Fragment() {
 
         }
     }
-/*
-    public void reLoadFragment(Fragment fragment)
-    {
-        Log.i(LogGeneratorHelper.INFO_TAG, "reloading fragment");
-        Fragment currentFragment = fragment;
-        if (currentFragment instanceof "FRAGMENT CLASS NAME") {
-            FragmentTransaction fragTransaction =   (getActivity()).getFragmentManager().beginTransaction();
-            fragTransaction.detach(currentFragment);
-            fragTransaction.attach(currentFragment);
-            fragTransaction.commit();
-            Log.i(LogGeneratorHelper.INFO_TAG, "reloading fragment finish");
-        }
-        else Log.i(LogGeneratorHelper.INFO_TAG, "fragment reloading failed");
-    }*/
 
-    private fun reLoafFragment(fragment: Fragment){
-        val currentFragment: Fragment = fragment
-        if(currentFragment is PaymentItemFragment) {
-            val fragTransaction = requireActivity().supportFragmentManager.beginTransaction()
-            fragTransaction.detach(currentFragment)
-            fragTransaction.attach(currentFragment)
-            fragTransaction.commit()
-        }
-        Toast.makeText(getActivity(),"Фрагмент перезагружен.",Toast.LENGTH_SHORT).show()
-    }
+
 
     private fun launchRightMode() {
-      /*  Log.d("screenMode", screenMode)
-        when (screenMode) {
-            MODE_EDIT -> launchEditMode()
-
-        }*/
         launchEditMode()
     }
 
@@ -204,7 +171,6 @@ class PaymentItemFragment: Fragment() {
         val studentMode = mode?.split("&")
 
         if (dateMode!!.size == 3) {
-            //Toast.makeText(getActivity(),"current mode: $mode",Toast.LENGTH_SHORT).show()
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
             val args = Bundle().apply {
@@ -221,7 +187,6 @@ class PaymentItemFragment: Fragment() {
             }
             navController.navigate(R.id.paymentItemListFragment, args)
         } else if (studentMode!![0] == "student_no_pay_list" && dateMode!!.size == 1) {
-            Toast.makeText(getActivity(),"dateModestudentMode!![0]: " + studentMode!![0],Toast.LENGTH_SHORT).show()
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
             val args = Bundle().apply {
@@ -255,41 +220,6 @@ class PaymentItemFragment: Fragment() {
         }
     }
 
-
-/*
-    private fun launchEditMode() {
-        viewModel.getPaymentItem(paymentItemId)
-        binding.saveButton.setOnClickListener{
-            viewModel.editPaymentItem(
-                binding.etTitle.text.toString(),
-                binding.etDescription.text.toString(),
-                binding.etLessonId.text.toString(),
-                binding.etStudentId.text.toString(),
-                binding.etDateId.text.toString(),
-                binding.etStudent.text.toString(),
-                binding.etPrice.text.toString(),
-                true
-            )
-
-        }
-    }
-
-    private fun launchAddMode() {
-        binding.saveButton.setOnClickListener{
-            viewModel.addPaymentItem(
-                binding.etTitle.text.toString(),
-                binding.etDescription.text.toString(),
-                binding.etLessonId.text.toString(),
-                binding.etStudentId.text.toString(),
-                binding.etDateId.text.toString(),
-                binding.etStudent.text.toString(),
-                binding.etPrice.text.toString(),
-                true
-            )
-        }
-    }
-    */
-
     private fun observeViewModel() {
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
             onEditingFinishedListener.onEditingFinished()
@@ -300,23 +230,7 @@ class PaymentItemFragment: Fragment() {
 
         fun onEditingFinished()
     }
-    private fun parseParams() {
-        val args = requireArguments()
-        if (!args.containsKey(SCREEN_MODE)) {
-            throw RuntimeException("Param screen mode is absent")
-        }
-        val mode = args.getString(SCREEN_MODE)
-        if (mode != MODE_EDIT && mode != MODE_ADD) {
-            throw RuntimeException("Unknown screen mode $mode")
-        }
-        screenMode = mode
-        if (screenMode == MODE_EDIT) {
-            if (!args.containsKey(PAYMENT_ITEM_ID)) {
-                throw RuntimeException("Param shop item id is absent")
-            }
-            paymentItemId = args.getInt(PAYMENT_ITEM_ID, PaymentItem.UNDEFINED_ID)
-        }
-    }
+
     companion object {
 
         const val SCREEN_MODE = "extra_mode"
@@ -325,27 +239,8 @@ class PaymentItemFragment: Fragment() {
         const val MODE_ADD = "mode_add"
         const val MODE_UNKNOWN = ""
         const val DATE_ID_BACKSTACK = ""
-        const val STUDENT_ID = ""
         const val STUDENT_ID_LIST = ""
         const val STUDENT_NO_PAY_LIST = ""
-
-        fun newInstanceAddItem(): PaymentItemFragment {
-            return PaymentItemFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_ADD)
-                }
-            }
-        }
-
-        fun newInstanceEditItem(paymentItemId: Int): PaymentItemFragment {
-            return PaymentItemFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_EDIT)
-                    putInt(PAYMENT_ITEM_ID, paymentItemId)
-                }
-            }
-        }
-
 
     }
 

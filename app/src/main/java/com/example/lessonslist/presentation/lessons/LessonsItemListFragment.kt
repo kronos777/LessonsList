@@ -86,7 +86,7 @@ class LessonsItemListFragment: Fragment() {
                             listArrayPayment.add(lessons)
                         }
                     }
-                    Toast.makeText(getActivity(),"Уроков в массиве!" + listArrayPayment.size,Toast.LENGTH_SHORT).show()
+                  //  Toast.makeText(getActivity(),"Уроков в массиве!" + listArrayPayment.size,Toast.LENGTH_SHORT).show()
                     if(listArrayPayment.size > 0) {
                         val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
 

@@ -109,8 +109,6 @@ class PaymentItemListFragment: Fragment() {
 
         } else if (mode == "date_id_list") {
             dateId = args.getString(DATE_ID)!!
-            Log.d("dateId", dateId)
-           // Toast.makeText(activity, "other $dateId", Toast.LENGTH_SHORT).show()
             val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
             viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
             viewModel.paymentList.observe(viewLifecycleOwner) {
@@ -118,8 +116,6 @@ class PaymentItemListFragment: Fragment() {
                     val pay = payment.datePayment.split(" ")
                     val datePay = Date(pay[0])
                     val dateFormated = SimpleDateFormat("d/M/yyyy").format(datePay)
-                  ///  val dateString = Date(dateId)
-                    //Log.d("dateId", datePay.toString())
                     Log.d("dateId", dateFormated.toString())
                     if(dateFormated == dateId){
                         listArrayPayment.add(payment)
@@ -181,10 +177,6 @@ class PaymentItemListFragment: Fragment() {
 
     private fun setupClickListener() {
         paymentListAdapter.onPaymentItemClickListener = {
-            /*fragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment_item_container, PaymentItemFragment.newInstanceEditItem(it.id))
-                ?.addToBackStack(null)
-                ?.commit()*/
             navigateBtnEditStudent(it.id)
        }
     }
@@ -203,19 +195,14 @@ class PaymentItemListFragment: Fragment() {
             if(mode == "date_id_list") {
                 putString(PaymentItemFragment.DATE_ID_BACKSTACK, dateIdBackstack)
             } else if(mode == "student_id_list") {
-                //Toast.makeText(getActivity(),"current mode in list: $mode",Toast.LENGTH_SHORT).show()
-                //Toast.makeText(getActivity(),"current mode in list: $studentIdBackstack",Toast.LENGTH_SHORT).show()
-                // putInt(PaymentItemFragment.STUDENT_ID, studentIdBackstack)
                 putString(PaymentItemFragment.STUDENT_ID_LIST, "student_id_list" + "&" + studentIdBackstack.toString())
             } else if(mode == "student_no_pay_list") {
-                //putInt(PaymentItemFragment.STUDENT_ID, studentIdBackstack)
                 putString(PaymentItemFragment.STUDENT_NO_PAY_LIST, mode + "&" + studentIdBackstack)
             } else if(mode == "payment_enabled") {
                 putString(PaymentItemFragment.STUDENT_NO_PAY_LIST, mode)
             } else if(mode == "custom_list")  {
                 putString(PaymentItemFragment.STUDENT_NO_PAY_LIST, mode)
             }
-          //  putString(PaymentItemFragment.SCREEN_MODE, PaymentItemFragment.MODE_EDIT)
             putInt(PaymentItemFragment.PAYMENT_ITEM_ID, id)
         }
 
@@ -228,53 +215,9 @@ class PaymentItemListFragment: Fragment() {
     }
 
 
-    private fun dialogWindow() {
-
-        val alert = AlertDialog.Builder(requireContext())
-        alert.setTitle("Платежи не удаляются таким образом.")
-
-        val layout = LinearLayout(requireContext())
-        layout.orientation = LinearLayout.HORIZONTAL
-
-        val paymentsLabel = TextView(requireContext())
-        paymentsLabel.setSingleLine()
-        paymentsLabel.text = """Будьте внимательны платежи удаляются либо вместе с уроком, либо вместе со студентов.""".trimMargin()
-        paymentsLabel.height = 250
-        paymentsLabel.top = 15
-        layout.addView(paymentsLabel)
-
-
-        layout.setPadding(50, 40, 50, 10)
-
-        alert.setView(layout)
-
-        alert.setPositiveButton("ок", DialogInterface.OnClickListener {
-                dialog, id ->
-            //deleteLessonsPay
-            dialog.dismiss()
-        })
-
-
-
-        alert.setCancelable(false)
-        alert.show()
-
-    }
-
-
-    private fun setupLongClickListener() {
-        paymentListAdapter.onPaymentItemClickListener = {
-            viewModel.changeEnableState(it)
-        }
-    }
-
-
-
-
     companion object {
 
         const val SCREEN_MODE = "screen_mode"
-        const val BACK_STACK = "back_stack"
         const val CUSTOM_LIST = "custom_list"
         const val STUDENT_ID_LIST = "student_id_list"
         const val STUDENT_NO_PAY_LIST = "student_no_pay_list"
@@ -288,57 +231,7 @@ class PaymentItemListFragment: Fragment() {
         const val LESSONS_ID = "lessons_id"
         const val DATE_FOR_BACKSTACK = "date_for_backstack"
 
-        fun newInstanceNoneParams(): PaymentItemListFragment {
-            return PaymentItemListFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, CUSTOM_LIST)
-                }
-            }
-        }
 
-        fun newInstanceStudentId(studentId: Int): PaymentItemListFragment {
-            return PaymentItemListFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(STUDENT_ID, studentId)
-                    putString(SCREEN_MODE, STUDENT_ID_LIST)
-                }
-            }
-        }
-
-        fun newInstanceStudentIdNoPay(studentId: Int): PaymentItemListFragment {
-            return PaymentItemListFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(STUDENT_ID, studentId)
-                    putString(SCREEN_MODE, STUDENT_NO_PAY_LIST)
-                }
-            }
-        }
-
-        fun newInstanceLessonsId(lessonsId: Int): PaymentItemListFragment {
-            return PaymentItemListFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(LESSONS_ID, lessonsId)
-                    putString(SCREEN_MODE, LESSONS_ID_LIST)
-                }
-            }
-        }
-
-        fun newInstanceDateId(dateId: String): PaymentItemListFragment {
-            return PaymentItemListFragment().apply {
-                arguments = Bundle().apply {
-                    putString(DATE_ID, dateId)
-                    putString(SCREEN_MODE, DATE_ID_LIST)
-                }
-            }
-        }
-
-        fun newInstanceEnabledPayment(): PaymentItemListFragment {
-            return PaymentItemListFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, PAYMENT_ENABLED)
-                }
-            }
-        }
 
     }
 

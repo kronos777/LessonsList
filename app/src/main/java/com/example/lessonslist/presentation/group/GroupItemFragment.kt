@@ -145,30 +145,9 @@ class GroupItemFragment : Fragment() {
 
             listView.adapter = adapter
 
-            /*listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                Toast.makeText(activity, "Work :-)", Toast.LENGTH_SHORT).show()
-                val dataStudentGroupModel: DataStudentGroupModel =
-                    dataStudentGroupModel!![position] as DataStudentGroupModel
 
-                dataStudentGroupModel.checked = !dataStudentGroupModel.checked
-               // Log.d("checkedItemPosition", listView[position].toString())
-                adapter.notifyDataSetChanged()
-
-            }*/
         }
 
-        //listView
-
-
-        //listView.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->  } { _, _, position, _ ->
-        //listView.onItemClickListener = AdapterView.OnItemClickListener { adapter, view, position, _ ->
-
-       /* var checkBox: CheckBox = CheckBox(context)
-        checkBox.setOnCheckedChangeListener { _, isChecked ->
-            Toast.makeText(activity,isChecked.toString(),Toast.LENGTH_SHORT).show()
-        }*/
-       //    touchListener(listView)
-       // onCheckboxClicked(listView.findViewWithTag("CheckBox"))
         addTextChangeListeners()
         goGroupListFragmentBackPressed()
     }
@@ -194,22 +173,11 @@ class GroupItemFragment : Fragment() {
             binding.tilTitle.error = ""
         }
         if(viewModel.errorInputStudent.value == true) {
-            //binding.tilTitle.error = "Введите название группы"
             Toast.makeText(activity, "Группа не может быть создана без учеников.", Toast.LENGTH_LONG).show()
-        } else {
-            //binding.tilTitle.error = ""
         }
     }
 
-    /*private fun touchListener(view: View) {
-        view.setOnTouchListener { v, event ->
-            if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-                Toast.makeText(activity, "you just touch the screen :-)", Toast.LENGTH_SHORT).show()
-            }
-            true
-        }
-    }
-    */
+
 
 
     private fun addTextChangeListeners() {
@@ -347,23 +315,6 @@ class GroupItemFragment : Fragment() {
         const val MODE_EDIT = "mode_edit"
         const val MODE_ADD = "mode_add"
         const val MODE_UNKNOWN = ""
-
-        fun newInstanceAddItem(): GroupItemFragment {
-          return GroupItemFragment().apply {
-              arguments = Bundle().apply {
-                  putString(SCREEN_MODE, MODE_ADD)
-              }
-          }
-        }
-
-        fun newInstanceEditItem(groupItemId: Int): GroupItemFragment {
-          return GroupItemFragment().apply {
-              arguments = Bundle().apply {
-                  putString(SCREEN_MODE, MODE_EDIT)
-                  putInt(GROUP_ITEM_ID, groupItemId)
-              }
-          }
-        }
 
 
     }
