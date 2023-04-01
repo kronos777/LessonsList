@@ -15,12 +15,14 @@
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:nestedScrollingEnabled="true"
         android:fillViewport="true">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
+        android:scrollbars="horizontal"
         tools:context=".presentation.lessons.LessonsItemAddFragment"
         >
 
@@ -259,23 +261,22 @@
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="250dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             android:choiceMode="multipleChoice"
             app:layout_constraintTop_toBottomOf="@id/textViewChangeStateCheckbox"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/listViewGroup" >
+             >
         </ListView>
         <ListView
             android:id="@+id/listViewGroup"
             android:layout_width="match_parent"
             android:choiceMode="multipleChoice"
-            android:layout_height="350dp"
+            android:layout_height="250dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            app:layout_constraintBottom_toTopOf="@id/save_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/listView" />

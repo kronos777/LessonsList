@@ -247,24 +247,8 @@ class LessonsItemEditFragment : Fragment() {
                 binding.listSalePayment.visibility = View.VISIBLE
                 binding.textViewChangeStateCheckbox.text = "Скидки"
                 salePaymentValueDate = checkValidStudent()
-               // Toast.makeText(activity, "стоимость урока" + viewModel.lessonsItem.value!!.price.toString(), Toast.LENGTH_SHORT).show()
-                Toast.makeText(activity, "студенты урока" + salePaymentValueDate.toString(), Toast.LENGTH_SHORT).show()
                 setListViewSalePayment(salePaymentValueDate, viewModel.lessonsItem.value!!.price)
                 getValueAdapterSale()
-                //Toast.makeText(activity, "isChecked" + dataStudentGroupModel.toString(), Toast.LENGTH_SHORT).show()
-                /* for(item in 0..dataStudentGroupModel!!.size-1) {
-                    if(dataStudentGroupModel!!.get(item).checked) {
-                        Log.d("studentName",  dataStudentGroupModel!!.get(item).name.toString())
-                    }
-
-                }
-               salePaymentValueDate = checkValidStudent()
-                if (salePaymentValueDate.isNotEmpty()) {
-                    Toast.makeText(activity, "isChecked" + dataStudentGroupModel.toString(), Toast.LENGTH_SHORT).show()
-                    setListViewSalePayment(salePaymentValueDate)
-                } else {
-                    Toast.makeText(activity, "не выбрано не одного студента кому можно назначить скидку" + salePaymentValueDate.toString(), Toast.LENGTH_SHORT).show()
-                }*/
 
             } else {
                 hideSaleUIElement()
@@ -291,6 +275,7 @@ class LessonsItemEditFragment : Fragment() {
 
 
       viewModelSalesList.salesList.observe(viewLifecycleOwner) { sales ->
+          dataStudentSaleModel!!.clear()
            for (saleItem in sales.indices) {
                 if(sales[saleItem].idLessons == lessonsItemId) {
                     hideChoose = false
@@ -314,7 +299,7 @@ class LessonsItemEditFragment : Fragment() {
                              listViewSale.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                                  val dataStudent: DataSalePaymentModel = dataStudentSaleModel!![position]
                                  dataStudent.checked = !dataStudent.checked
-                                 Toast.makeText(activity, dataStudent.id.toString() + dataStudent.name.toString() + dataStudent.id.toString(), Toast.LENGTH_SHORT).show()
+                                 //Toast.makeText(activity, dataStudent.id.toString() + dataStudent.name.toString() + dataStudent.id.toString(), Toast.LENGTH_SHORT).show()
                                  deleteSaleInList(dataStudent.name.toString(), dataStudent.id!!.toInt())
                              }
 
@@ -323,18 +308,12 @@ class LessonsItemEditFragment : Fragment() {
                      }
 
 
-                    /*Log.d("StudentDataName", sales[saleItem].idLessons.toString())
-                    viewModelStudent.getStudentItem(sales[saleItem].idStudent)
-                    viewModelStudent.studentItem.observe(viewLifecycleOwner) {
-                        Log.d("StudentDataName", it.name)
-                    }*/
-
                  }
              }
 
           //end for
          if(dataStudentSaleModel!!.size == 0 && hideChoose) {
-              Toast.makeText(activity, "в данном случае равно 0", Toast.LENGTH_SHORT).show()
+            //  Toast.makeText(activity, "в данном случае равно 0", Toast.LENGTH_SHORT).show()
               showSaleUIElement()
               dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
                   if(it.isNotEmpty()) {
@@ -357,7 +336,6 @@ class LessonsItemEditFragment : Fragment() {
                       listViewSale.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                           val dataStudent: DataSalePaymentModel = dataStudentSaleModel!![position]
                           dataStudent.checked = !dataStudent.checked
-                          Log.d("checkstate1", dataStudent.toString())
                           adapterSale.notifyDataSetChanged()
                       }
 
