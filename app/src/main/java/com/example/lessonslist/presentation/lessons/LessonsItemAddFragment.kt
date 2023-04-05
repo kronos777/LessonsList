@@ -1,5 +1,6 @@
 package com.example.lessonslist.presentation.lessons
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
@@ -313,6 +314,9 @@ class LessonsItemAddFragment : Fragment()  {
 
                 }
 
+                binding.textViewChangeStateCheckbox.setOnClickListener {
+                    testDialogStudent(dataStudentGroupModel)
+                }
 
                 adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
                 listView.adapter = adapter
@@ -323,6 +327,7 @@ class LessonsItemAddFragment : Fragment()  {
                     adapter.notifyDataSetChanged()
                 }
 
+
             } else {
 
                 Toast.makeText(activity, "В приложении нет учеников, добавьте учеников.", Toast.LENGTH_LONG).show()
@@ -332,6 +337,60 @@ class LessonsItemAddFragment : Fragment()  {
 
 
         }
+
+    }
+
+    private fun testDialogStudent(dataList: ArrayList<DataStudentGroupModel>?) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Выберите студентов урока")
+
+        val rowList = layoutInflater.inflate(R.layout.list_data, null)
+        val listView = rowList.findViewById<ListView>(R.id.listViewData)
+        val adapterAlert = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
+        listView.adapter = adapterAlert
+        builder.setView(rowList)
+
+        /*Log.d("dataList", dataList.toString())
+        // add a radio button list
+        val animals = arrayOf("horse", "cow", "camel", "sheep", "goat", "horse1", "cow2", "camel3", "sheep4", "goat5", "horse2", "cow3", "camel4", "sheep5", "goat6")
+        val checkedItem = booleanArrayOf(true, false, false, true, false, true, false, false, true, false, true, false, false, true, false)
+        builder.setMultiChoiceItems(animals, checkedItem) { dialog, which, isChecked ->
+            // user checked an item
+        }
+        */
+        // add OK and Cancel buttons
+        builder.setPositiveButton("Выбрать") { _, _ ->
+            // user clicked OK
+            Log.d("dialogValue", checkValidStudentAlertDialog(adapterAlert.arrayList).toString())
+        }
+        builder.setNegativeButton("Отмена", null)
+
+        // create and show the alert dialog
+        val dialog = builder.create()
+        dialog.show()
+    }
+    private fun checkValidStudentAlertDialog(dataList: ArrayList<Int>): HashSet<Int?> {
+        val studentIds: String = dataList.toString()
+        val groupStudentIds: String
+        val allStudent: String
+        if (dataGroupListString) {
+            groupStudentIds = adapterGroup.arrayList.toString()
+            allStudent = studentIds + groupStudentIds
+        } else {
+            allStudent = studentIds
+        }
+
+        val lstValues: ArrayList<Int> = ArrayList()
+
+        allStudent.forEach {
+            if (it.isDigit()) {
+                val str = it.toString()
+                lstValues.add(str.toInt())
+            }
+        }
+
+
+        return HashSet(lstValues)
 
     }
 
@@ -549,6 +608,8 @@ class LessonsItemAddFragment : Fragment()  {
             }
         }
     }
+
+
 
     private fun checkValidStudent(): HashSet<Int?> {
         val studentIds: String = adapter.arrayList.toString()
