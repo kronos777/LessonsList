@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.Toast
 import androidx.activity.addCallback
@@ -109,15 +108,15 @@ class LessonsItemAddFragment : Fragment()  {
         lessonsTextChangeListeners()
 
 
-        binding.tilStudent.visibility = View.GONE
-        binding.listViewGroup.visibility = View.GONE
+       // binding.tilStudent.visibility = View.GONE
+      //  binding.listViewGroup.visibility = View.GONE
 
 
         chooseDateLessons()
 
         setListViewStudent()
         setGroupViewStudent()
-        listenSwitchGroup()
+     //   listenSwitchGroup()
         goLessonsListFragmentBackPressed()
 
         repeatLessons()
@@ -142,7 +141,7 @@ class LessonsItemAddFragment : Fragment()  {
         }
     }
 
-    private fun listenSwitchGroup() {
+   /* private fun listenSwitchGroup() {
         val switchChoose = binding.switch1
         switchChoose.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked) {
@@ -158,7 +157,7 @@ class LessonsItemAddFragment : Fragment()  {
             }
 
         }
-    }
+    }*/
 
 
     private fun repeatLessons() {
@@ -283,7 +282,7 @@ class LessonsItemAddFragment : Fragment()  {
 
     private fun setListViewStudent() {
 
-        listView = binding.listView
+      //  listView = binding.listView
         dataStudentGroupModel = ArrayList()
         dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
         var studentName: Array<String> = emptyArray()
@@ -314,18 +313,18 @@ class LessonsItemAddFragment : Fragment()  {
 
                 }
 
-                binding.textViewChangeStateCheckbox.setOnClickListener {
-                    testDialogStudent(dataStudentGroupModel)
+                binding.cardStudents.setOnClickListener {
+                    setStudentLessons(dataStudentGroupModel)
                 }
 
-                adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
-                listView.adapter = adapter
+              //  adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
+                /*  listView.adapter = adapter
 
-                listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                    val dataStudent: DataStudentGroupModel = dataStudentGroupModel!![position]
-                    dataStudent.checked = !dataStudent.checked
-                    adapter.notifyDataSetChanged()
-                }
+                  listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                      val dataStudent: DataStudentGroupModel = dataStudentGroupModel!![position]
+                      dataStudent.checked = !dataStudent.checked
+                      adapter.notifyDataSetChanged()
+                  }*/
 
 
             } else {
@@ -340,14 +339,14 @@ class LessonsItemAddFragment : Fragment()  {
 
     }
 
-    private fun testDialogStudent(dataList: ArrayList<DataStudentGroupModel>?) {
+    private fun setStudentLessons(dataList: ArrayList<DataStudentGroupModel>?) {
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Выберите студентов урока")
 
         val rowList = layoutInflater.inflate(R.layout.list_data, null)
         val listView = rowList.findViewById<ListView>(R.id.listViewData)
-        val adapterAlert = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
-        listView.adapter = adapterAlert
+        adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
+        listView.adapter = adapter
         builder.setView(rowList)
 
         /*Log.d("dataList", dataList.toString())
@@ -361,7 +360,7 @@ class LessonsItemAddFragment : Fragment()  {
         // add OK and Cancel buttons
         builder.setPositiveButton("Выбрать") { _, _ ->
             // user clicked OK
-            Log.d("dialogValue", checkValidStudentAlertDialog(adapterAlert.arrayList).toString())
+            //Log.d("dialogValue", checkValidStudentAlertDialog(adapter.arrayList).toString())
         }
         builder.setNegativeButton("Отмена", null)
 
@@ -369,6 +368,29 @@ class LessonsItemAddFragment : Fragment()  {
         val dialog = builder.create()
         dialog.show()
     }
+
+    private fun setGroupLessons(dataList: ArrayList<DataGroupLessonsModel>?) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Выберите группы студентов")
+
+        val rowList = layoutInflater.inflate(R.layout.list_data, null)
+        val listView = rowList.findViewById<ListView>(R.id.listViewData)
+        //adapterGroup = ListGroupAdapter(dataGroupLessonsModel!!, requireContext().applicationContext)
+        listView.adapter =  adapterGroup
+        builder.setView(rowList)
+
+        builder.setPositiveButton("Выбрать") { _, _ ->
+            // user clicked OK
+           // Log.d("dialogValue", checkValidStudentAlertDialog(adapterGroup.arrayList).toString())
+            Log.d("dialogValue", adapterGroup.arrayList.toString())
+        }
+        builder.setNegativeButton("Отмена", null)
+
+        // create and show the alert dialog
+        val dialog = builder.create()
+        dialog.show()
+    }
+
     private fun checkValidStudentAlertDialog(dataList: ArrayList<Int>): HashSet<Int?> {
         val studentIds: String = dataList.toString()
         val groupStudentIds: String
@@ -395,7 +417,7 @@ class LessonsItemAddFragment : Fragment()  {
     }
 
     private fun setGroupViewStudent() {
-        listViewGroup = binding.listViewGroup
+       // listViewGroup = binding.listViewGroup
         var groupName: Array<String> = emptyArray()
         dataGroupList = ViewModelProvider(this)[GroupListViewModel::class.java]
         dataGroupLessonsModel = ArrayList()
@@ -412,13 +434,15 @@ class LessonsItemAddFragment : Fragment()  {
                         listViewGroup.isInvisible
                     }
                     adapterGroup = ListGroupAdapter(dataGroupLessonsModel!!, requireContext().applicationContext)
-                    listViewGroup.adapter = adapterGroup
-
+                   // listViewGroup.adapter = adapterGroup
+                    binding.cardGroupStudent.setOnClickListener {
+                        setGroupLessons(dataGroupLessonsModel)
+                    }
                 }
             } else {
                 dataGroupListString = false
                 groupName += "в группе пока значений нет."
-                binding.switch1.visibility = View.GONE
+               // binding.switch1.visibility = View.GONE
 
             }
 
