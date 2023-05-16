@@ -67,6 +67,8 @@ class LessonsItemEditFragment : Fragment() {
 
     private var dataPaymentStudentModel: ArrayList<DataPaymentStudentLessonsModel>? = null
 
+    private var uiLessonsElement: Boolean = true
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -155,6 +157,8 @@ class LessonsItemEditFragment : Fragment() {
                                     var dataString = it.student
                                     dataString = dataString.replace("]", "")
                                     dataString = dataString.replace("[", "")
+                                    Log.d("problemValue", dataString.toString())
+
                                     val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
                                     if(lstValues.contains(id)) {
                                         dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
@@ -188,7 +192,66 @@ class LessonsItemEditFragment : Fragment() {
 
 
 
+        uiDatePickerElement()
 
+
+       // listenSwitchSalePayment()
+        binding.cardStudents.setOnClickListener {
+            if (uiLessonsElement) {
+                hideUiLessonsElement()
+                uiLessonsElement = false
+            } else {
+                showUiLessonsElement()
+                uiLessonsElement = true
+            }
+            hideSaleUIElement()
+            binding.listView.visibility = View.VISIBLE
+            binding.listSalePayment.visibility = View.GONE
+        }
+
+        binding.cardSaleStudent.setOnClickListener {
+            if (uiLessonsElement) {
+                hideUiLessonsElement()
+                uiLessonsElement = false
+            } else {
+                showUiLessonsElement()
+                uiLessonsElement = true
+            }
+            binding.listView.visibility = View.GONE
+            binding.listSalePayment.visibility = View.VISIBLE
+            salePaymentValueDate = checkValidStudent()
+            if(salePaymentValueDate.size == 0) {
+                //Toast.makeText(activity, "no value in student adapter", Toast.LENGTH_SHORT).show()
+                for (index in dataStudentGroupModel!!.indices) {
+                    salePaymentValueDate.add(dataStudentGroupModel!![index].id!!.toInt())
+                }
+                setListViewSalePayment(salePaymentValueDate, viewModel.lessonsItem.value!!.price)
+                getValueAdapterSale()
+            } else {
+                setListViewSalePayment(salePaymentValueDate, viewModel.lessonsItem.value!!.price)
+                getValueAdapterSale()
+                //Toast.makeText(activity, "value ready student adapter", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+
+    }
+
+    private fun hideUiLessonsElement() {
+        binding.tilTitle.visibility = View.GONE
+        binding.tilPrice.visibility = View.GONE
+        binding.tilDatestart.visibility = View.GONE
+        binding.tilDateend.visibility = View.GONE
+    }
+
+    private fun showUiLessonsElement() {
+        binding.tilTitle.visibility = View.VISIBLE
+        binding.tilPrice.visibility = View.VISIBLE
+        binding.tilDatestart.visibility = View.VISIBLE
+        binding.tilDateend.visibility = View.VISIBLE
+    }
+
+    private fun uiDatePickerElement() {
 
         val mTimePicker: TimePickerDialog
         val mTimePickerEnd: TimePickerDialog
@@ -225,20 +288,17 @@ class LessonsItemEditFragment : Fragment() {
             }
         }, hour, minute, true)
 
-         binding.etDatestart.setOnClickListener{
-             mTimePicker.show()
-         }
+        binding.etDatestart.setOnClickListener{
+            mTimePicker.show()
+        }
 
         binding.etDateend.setOnClickListener{
             mTimePickerEnd.show()
         }
-
-        listenSwitchSalePayment()
-
     }
 
 
-
+/*
     private fun listenSwitchSalePayment() {
         val switchChoose = binding.paymentSale
         switchChoose.setOnCheckedChangeListener { _, isChecked ->
@@ -259,7 +319,7 @@ class LessonsItemEditFragment : Fragment() {
             }
 
         }
-    }
+    }*/
 
 
 
@@ -373,17 +433,17 @@ class LessonsItemEditFragment : Fragment() {
 
     private fun hideSaleUIElement() {
         binding.tilSale.visibility = View.GONE
-        binding.testButton.visibility = View.GONE
+        binding.saveSaleButton.visibility = View.GONE
     }
     private fun showSaleUIElement() {
         binding.tilSale.visibility = View.VISIBLE
-        binding.testButton.visibility = View.VISIBLE
+        binding.saveSaleButton.visibility = View.VISIBLE
     }
 
     private fun getValueAdapterSale() {
         viewModelSale = ViewModelProvider(this)[SaleItemViewModel::class.java]
 
-        binding.testButton.setOnClickListener {
+        binding.saveSaleButton.setOnClickListener {
             //if(binding.etSale.text.toString().toInt() < viewModel.lessonsItem.value!!.price){
                 //val countSaleForCheck = viewModel.lessonsItem.value!!.price - binding.etSale.text.toString().toInt()
                 val countSaleForCheck =  calculatePercentages(binding.etSale.text.toString(), viewModel.lessonsItem.value!!.price)
@@ -412,14 +472,15 @@ class LessonsItemEditFragment : Fragment() {
 
     private fun calculatePercentages(valueSale: String, lessonsPrice: Int): Float {
         val price = valueSale.split("%")
-        println("lessonsPrice: " + lessonsPrice.toString())
+        //println("lessonsPrice: " + lessonsPrice.toString())
         if(price[0] != "" && price.size > 1 && price.size < 3 && price[1] == "") {
             return (lessonsPrice).toFloat() / (100).toFloat() * price[0].toFloat()
         } /*else if(price[0] != "" && price.size > 1 && price[1].toInt() > 0){
             return lessonsPrice - price[1].toInt()
         } */else if (price.size == 1) {
-            println("old price value: " + (lessonsPrice - valueSale.toInt()).toString())
-            return (lessonsPrice - valueSale.toInt()).toFloat()
+           // println("old price value: " + (lessonsPrice - valueSale.toInt()).toString())
+            //return (lessonsPrice - valueSale.toInt()).toFloat()
+            return (valueSale.toInt()).toFloat()
         } else if(price.size >= 3) {
             return lessonsPrice.toFloat()
         } else {
@@ -466,8 +527,11 @@ class LessonsItemEditFragment : Fragment() {
         binding.etTitle.isFocusable = false
         binding.etDatestart.setBackgroundResource(R.color.white)
         binding.etDateend.setBackgroundResource(R.color.white)
-        binding.textViewChangeStateCheckbox.text = "Список платежей:"
-        binding.paymentSale.visibility = View.GONE
+        binding.cardStudents.setVisibility (View.GONE)
+        binding.cardSaleStudent.setVisibility (View.GONE)
+        binding.listView.visibility = View.VISIBLE
+      //  binding.textViewChangeStateCheckbox.text = "Список платежей:"
+        //binding.paymentSale.visibility = View.GONE
         binding.etDatestart.setOnClickListener{
              false
         }
@@ -592,14 +656,18 @@ class LessonsItemEditFragment : Fragment() {
         viewModel.getLessonsItem(lessonsItemId)
             binding.saveButton.setOnClickListener{
             var studentIds: String = adapter.arrayList.toString()
-            viewModel.editLessonsItem(
-                binding.etTitle.text.toString(),
-                "",
-                studentIds,
-                binding.etPrice.text.toString(),
-                binding.etDatestart.text.toString(),
-                binding.etDateend.text.toString()
-            )
+            if(adapter.arrayList.size == 0) {
+                Toast.makeText(activity, "В уроке нет учеников", Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.editLessonsItem(
+                    binding.etTitle.text.toString(),
+                    "",
+                    studentIds,
+                    binding.etPrice.text.toString(),
+                    binding.etDatestart.text.toString(),
+                    binding.etDateend.text.toString()
+                )
+            }
         }
     }
 
@@ -670,6 +738,7 @@ class LessonsItemEditFragment : Fragment() {
         }
 
     }
+
 
 
     companion object {

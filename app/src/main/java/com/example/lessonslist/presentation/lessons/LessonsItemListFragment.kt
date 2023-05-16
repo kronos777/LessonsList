@@ -170,9 +170,9 @@ class LessonsItemListFragment: Fragment() {
 
     private fun setupLongClickListener() {
         lessonsListAdapter.onLessonsItemLongClickListener = {
-            val item = lessonsListAdapter.currentList[it.id -1]
+            //val item = lessonsListAdapter.currentList[it.id]
             // viewModel.deleteStudentItem(item)
-            dialogWindow(item.id, item, item.title)
+            dialogWindow(it.id, it, it.title)
         }
     }
 
