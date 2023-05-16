@@ -155,7 +155,7 @@
                 android:text="@{viewModel.lessonsItem.dateEnd}" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
+        <!--TextView
             android:id="@+id/textViewChangeStateCheckbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -168,8 +168,8 @@
             app:layout_constraintTop_toBottomOf="@id/til_dateend"
             app:layout_constraintEnd_toStartOf="@id/payment_sale"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/listView"
             />
+
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/payment_sale"
             android:layout_width="wrap_content"
@@ -178,10 +178,113 @@
             app:layout_constraintTop_toBottomOf="@id/til_dateend"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/textViewChangeStateCheckbox"
-            app:layout_constraintBottom_toTopOf="@+id/listView"
-            android:text="Скидка на оплату"/>
+            android:text="Скидка на оплату"/-->
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_students"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/til_dateend"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="0dp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
+
+                <ImageView
+                    android:id="@+id/imageViewStudentStCard"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/ic_baseline_people_24" />
+
+                <TextView
+                    android:id="@+id/student_st_card_h1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="left"
+                    android:layout_toRightOf="@id/imageViewStudentStCard"
+                    android:layout_weight="1"
+                    android:lineHeight="24dp"
+                    android:text="Студенты"
+                    android:textColor="@color/black"
+                    android:textFontWeight="500"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_baseline_chevron_right_24" />
+
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_sale_student"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_students"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="0dp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
+
+                <ImageView
+                    android:id="@+id/imageViewGroupStCard"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/ic_baseline_money_off_24" />
+
+                <TextView
+                    android:id="@+id/group_st_card_h1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="left"
+                    android:layout_toRightOf="@id/imageViewGroupStCard"
+                    android:layout_weight="1"
+                    android:lineHeight="24dp"
+                    android:text="Скидки"
+                    android:textColor="@color/black"
+                    android:textFontWeight="500"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_baseline_chevron_right_24" />
+
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
         <ListView
             android:id="@+id/listView"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="350dp"
             android:layout_marginStart="8dp"
@@ -190,13 +293,14 @@
             android:layout_marginBottom="4dp"
             android:choiceMode="multipleChoice"
             android:nestedScrollingEnabled="true"
-            app:layout_constraintTop_toBottomOf="@id/textViewChangeStateCheckbox"
+            app:layout_constraintTop_toBottomOf="@id/card_sale_student"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/listSalePayment" >
         </ListView>
         <ListView
             android:id="@+id/listSalePayment"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:choiceMode="multipleChoice"
             android:nestedScrollingEnabled="true"
@@ -226,7 +330,7 @@
                 />
         </com.google.android.material.textfield.TextInputLayout>
         <Button
-            android:id="@+id/test_button"
+            android:id="@+id/save_sale_button"
             android:layout_width="0dp"
             android:layout_marginRight="8dp"
             android:layout_marginLeft="8dp"
@@ -242,7 +346,7 @@
             android:layout_marginLeft="8dp"
             android:layout_height="wrap_content"
             android:text="@string/change_btn"
-            app:layout_constraintTop_toBottomOf="@id/test_button"
+            app:layout_constraintTop_toBottomOf="@id/save_sale_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
