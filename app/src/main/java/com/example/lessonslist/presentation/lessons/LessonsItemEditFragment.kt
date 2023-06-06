@@ -67,8 +67,6 @@ class LessonsItemEditFragment : Fragment() {
 
     private var dataPaymentStudentModel: ArrayList<DataPaymentStudentLessonsModel>? = null
 
-    private var uiLessonsElement: Boolean = true
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,7 +125,7 @@ class LessonsItemEditFragment : Fragment() {
 
         viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelPayment.paymentList.observe(viewLifecycleOwner) {
-            if(it.size > 0) {
+            if(it.isNotEmpty()) {
                 for (payment in it) {
                     if(payment.lessonsId == lessonsItemId) {
                         if (payment.enabled == true) {
@@ -146,7 +144,7 @@ class LessonsItemEditFragment : Fragment() {
                 listView.adapter = adapter
                 setFocusableEditText()
             } else {
-                binding.textViewPriceInfo.setVisibility (View.GONE)
+                binding.textViewPriceInfo.visibility = View.GONE
                 dataStudentlList.studentList.observe(viewLifecycleOwner) {
                     if(it.size > 0) {
                         for(student in it){
@@ -160,7 +158,7 @@ class LessonsItemEditFragment : Fragment() {
                                     dataString = dataString.replace("[", "")
 
 
-                                    val lstValues: List<Int> = dataString.split(",").map { it -> it.trim().toInt() }
+                                    val lstValues: List<Int> = dataString.split(",").map { str -> str.trim().toInt() }
                                     if(lstValues.contains(id)) {
                                         dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
                                     } else {
@@ -309,9 +307,9 @@ class LessonsItemEditFragment : Fragment() {
         val minute = mcurrentTime.get(Calendar.MINUTE)
 
 
-        var year: Int = mcurrentTime.get(Calendar.YEAR)
-        var month: Int = mcurrentTime.get(Calendar.MONTH)
-        var day: Int = mcurrentTime.get(Calendar.DAY_OF_MONTH)
+        val year: Int = mcurrentTime.get(Calendar.YEAR)
+        val month: Int = mcurrentTime.get(Calendar.MONTH)
+        val day: Int = mcurrentTime.get(Calendar.DAY_OF_MONTH)
 
         var timePicker1 = ""
         var timePicker2 = ""
