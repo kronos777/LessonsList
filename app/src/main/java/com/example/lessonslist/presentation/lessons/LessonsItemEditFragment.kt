@@ -397,11 +397,17 @@ class LessonsItemEditFragment : Fragment() {
                                      dataStudentSaleModel!!.add(DataSalePaymentModel(name, sales[saleItem].price, sales[saleItem].id, true))
                                  }
                              }
-                           //  Toast.makeText(activity, "есть скидки на урок", Toast.LENGTH_SHORT).show()
+                             //Toast.makeText(activity, "есть скидки на урок", Toast.LENGTH_SHORT).show()
 
                              adapterSaleReady = ListSaleReadyAdapter(dataStudentSaleModel!!, requireContext().applicationContext)
                              //openDialog(dataStudentGroupModel)
                              listViewSale.adapter =  adapterSaleReady
+                             listView.setOnItemClickListener { adapterView, view, i, l ->
+                                 false
+                                 Toast.makeText(activity, "Удалите скидки для редактирования.", Toast.LENGTH_SHORT).show()
+                             }
+
+
 
                              listViewSale.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                                  val dataStudent: DataSalePaymentModel = dataStudentSaleModel!![position]
@@ -737,7 +743,21 @@ class LessonsItemEditFragment : Fragment() {
         viewModel.getLessonsItem(lessonsItemId)
             binding.saveButton.setOnClickListener{
             var studentIds: String = adapter.arrayList.toString()
+            var arrayListLocal: ArrayList<Int> = ArrayList()
             if(adapter.arrayList.size == 0) {
+
+                for (index in dataStudentGroupModel!!.indices) {
+                        if (dataStudentGroupModel!![index].checked) {
+                           // Log.d("studentLessons", " index: " + dataStudentGroupModel!![index].id.toString() + " check: " + dataStudentGroupModel!![index].checked.toString())
+                            arrayListLocal.add(dataStudentGroupModel!![index].id!!)
+                        }
+
+                }
+                studentIds = arrayListLocal.toString()
+            }
+                //Toast.makeText(activity, "Ученики урока" + dataStudentGroupModel, Toast.LENGTH_SHORT).show()
+
+            if(adapter.arrayList.size == 0 && arrayListLocal.size == 0) {
                 Toast.makeText(activity, "В уроке нет учеников", Toast.LENGTH_SHORT).show()
             } else {
                 viewModel.editLessonsItem(
