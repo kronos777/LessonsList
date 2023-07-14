@@ -54,6 +54,7 @@
     <string name="link_login_fragment">войти</string>
     <string name="link_register_fragment">зарегистрироваться</string>
     <string name="drawerMenuItem1">Инструкция</string>
+    <string name="drawerMenuItem4">Уведомления</string>
     <string name="drawerMenuItem2">О приложение</string>
     <string name="drawerMenuItem3">Выход</string>
     <string name="list_student_lessons">Список учеников.</string>

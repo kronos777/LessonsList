@@ -13,7 +13,7 @@ import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.databinding.FragmentSettingsItemBinding
 
 
-class SettingsItemFragment : Fragment() {
+class SettingsNotificationsFragment : Fragment() {
 
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
@@ -73,11 +73,7 @@ class SettingsItemFragment : Fragment() {
 
 
 
-        binding.backupButton.setOnClickListener {
-           //val activity = (activity as AppCompatActivity).requireActivity()
-            //val fragmentActivity = (activity as SettingsItemFragment)
 
-        }
 
 }
 

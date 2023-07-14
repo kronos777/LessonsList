@@ -3,7 +3,6 @@ package com.example.lessonslist.presentation
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
@@ -33,7 +32,7 @@ import com.example.lessonslist.presentation.lessons.*
 import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
-import com.example.lessonslist.presentation.settings.SettingsItemFragment
+import com.example.lessonslist.presentation.settings.SettingsNotificationsFragment
 import com.example.lessonslist.presentation.student.StudentItemEditFragment
 import com.example.lessonslist.presentation.student.StudentItemFragment
 import com.google.android.material.appbar.MaterialToolbar
@@ -44,7 +43,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, SettingsItemFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener, LessonsItemAddFragment.OnEditingFinishedListener, LessonsItemEditFragment.OnEditingFinishedListener {
+class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, SettingsNotificationsFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener, LessonsItemAddFragment.OnEditingFinishedListener, LessonsItemEditFragment.OnEditingFinishedListener {
 
     private lateinit var binding: ActivityMainBinding
     lateinit var toggle: ActionBarDrawerToggle
@@ -343,6 +342,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
+               // R.id.muItem2 ->  navController.navigate(R.id.settingsNotificationsFragment, null, animationOptions)
                 R.id.muItem3 ->  navController.navigate(R.id.instructionFragment, null, animationOptions)
                 R.id.muItem4 -> navController.navigate(R.id.aboutFragment, null, animationOptions)
                 R.id.muItem5 -> exitApplication()

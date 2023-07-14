@@ -109,5 +109,9 @@
         android:id="@+id/studentItemFragment"
         android:name="com.example.lessonslist.presentation.student.StudentItemFragment"
         android:label="StudentItemFragment" />
+    <fragment
+        android:id="@+id/settingsNotificationsFragment"
+        android:name="com.example.lessonslist.presentation.settings.SettingsNotificationsFragment"
+        android:label="SettingsNotificationsFragment" />
 
 </navigation>
