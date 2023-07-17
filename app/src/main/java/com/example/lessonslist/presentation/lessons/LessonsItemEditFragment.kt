@@ -26,12 +26,14 @@ import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
+import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
 import com.example.lessonslist.presentation.lessons.sale.*
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.student.StudentItemViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.time.Duration
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -66,7 +68,8 @@ class LessonsItemEditFragment : Fragment() {
     private lateinit var viewModelPayment: PaymentListViewModel
 
     private var dataPaymentStudentModel: ArrayList<DataPaymentStudentLessonsModel>? = null
-
+    private var notificationString: String = ""
+    private var notificationBoolean: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,7 +91,7 @@ class LessonsItemEditFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentLessonsItemEditBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -282,6 +285,8 @@ class LessonsItemEditFragment : Fragment() {
 
         }
 
+        notificationsLessons()
+
     }
 
     private fun hideUiLessonsElement() {
@@ -378,7 +383,7 @@ class LessonsItemEditFragment : Fragment() {
         viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
         viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
         var studentName: Array<String> = emptyArray()
-        var hideChoose: Boolean = true
+        var hideChoose = true
 
 
       viewModelSalesList.salesList.observe(viewLifecycleOwner) { sales ->
@@ -472,8 +477,7 @@ class LessonsItemEditFragment : Fragment() {
         alert.setMessage("При нажатии кнопки удалить, все скидки урока будут удалены. После удаления появится возможность добавить скидки к уроку.")
 
 
-        alert.setPositiveButton("Удалить", DialogInterface.OnClickListener {
-                dialog, id ->
+        alert.setPositiveButton("Удалить") { dialog, id ->
             for (index in dataStudentSaleModel!!.indices) {
                 val idSale = dataStudentSaleModel!![index].id
                 if (idSale != null) {
@@ -486,9 +490,9 @@ class LessonsItemEditFragment : Fragment() {
             hideSaleUIElement()
             binding.listView.visibility = View.GONE
             binding.listSalePayment.visibility = View.GONE
-        })
+        }
 
-        alert.setNeutralButton("Закрыть", DialogInterface.OnClickListener {
+        alert.setNeutralButton("Закрыть", {
                 dialog, id ->
             dialog.dismiss()
         })
@@ -742,6 +746,7 @@ class LessonsItemEditFragment : Fragment() {
     private fun launchEditMode() {
         viewModel.getLessonsItem(lessonsItemId)
             binding.saveButton.setOnClickListener{
+            validValueNotifications()
             var studentIds: String = adapter.arrayList.toString()
             var arrayListLocal: ArrayList<Int> = ArrayList()
             if(adapter.arrayList.size == 0) {
@@ -762,7 +767,7 @@ class LessonsItemEditFragment : Fragment() {
             } else {
                 viewModel.editLessonsItem(
                     binding.etTitle.text.toString(),
-                    "",
+                    notificationString,
                     studentIds,
                     binding.etPrice.text.toString(),
                     binding.etDatestart.text.toString(),
@@ -838,6 +843,97 @@ class LessonsItemEditFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun notificationsLessons() {
+        val switchChoose = binding.etNotifications
+        binding.etTimeNotifications.addTextChangedListener(PhoneTextFormatter(binding.etTimeNotifications, "##:##"))
+        //textChangedListener(PhoneTextFormatter(binding.etTimeNotifications, "##:##"))
+        switchChoose.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) {
+                //   Toast.makeText(activity, "checked", Toast.LENGTH_SHORT).show()
+                binding.cardNotifications.visibility = View.VISIBLE
+                binding.etTimeNotifications.setOnClickListener {
+                    setNotifications()
+                }
+                /*binding.etDateendRepeat.setOnClickListener {
+                    chooseDateEndRepeat()
+                }*/
+            } else {
+                Toast.makeText(activity, "Вы убрали уведомление.", Toast.LENGTH_SHORT).show()
+                binding.cardNotifications.visibility = View.GONE
+                notificationString = ""
+                binding.tilTimeNotifications.error = ""
+                binding.etTimeNotifications.setText("")
+                notificationBoolean = true
+                //Toast.makeText(activity, "unchecked", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    private fun setNotifications() {
+
+        val c = Calendar.getInstance()
+        val mHour = c[Calendar.HOUR_OF_DAY]
+        val mMinute = c[Calendar.MINUTE]
+
+        val timePickerDialog = TimePickerDialog(activity,
+
+            TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+
+                val minH = if (hourOfDay < 10) "0" + hourOfDay else hourOfDay
+                val minM = if (minute < 10) "0" + minute else minute
+
+                binding.etTimeNotifications.setText("$minH:$minM")
+                // binding.tilNotifications.setEndIconDrawable(R.drawable.ic_baseline_circle_24)
+            },
+            mHour,
+            mMinute,
+            true
+        )
+        timePickerDialog.show()
+    }
+
+    private fun validValueNotifications() {
+        val notify = binding.etTimeNotifications.text.toString()
+        if (!notify.isBlank() && !binding.etDatestart.text.toString().isBlank()) {
+            val dateStart = binding.etDatestart.text.toString().split(" ")
+            val timeDateStart = dateStart[1]
+
+            /*time*/
+            val hstart = timeDateStart.split(":")
+            val hhstart = hstart[0].toInt()
+            val mmstart = hstart[1].toInt()
+
+            val hnotify = notify.split(":")
+            val hhnotify = hnotify[0].toInt()
+            val mmnotify = hnotify[1].toInt()
+            /*time*/
+
+            if (!notify.isBlank() && !timeDateStart.isBlank()) {
+                //val formatter = SimpleDateFormat("HH:mm", Locale.ENGLISH)
+                //val formattedDatetimeDateNotifications = formatter.parse(timeDateStart)
+                //LocalTime time = LocalTime.of(23, 59);
+                val formattedDatetimeDateNotifications = LocalTime.of(hhnotify, mmnotify)
+                val formattedDatetimeDateStart = LocalTime.of(hhstart, mmstart)
+                //val formattedDatetimeDateStart = formatter.parse(timeDateStart)
+                if(formattedDatetimeDateNotifications >= formattedDatetimeDateStart.minusMinutes(20)) {
+                    Toast.makeText(activity, "Значение даты напоминания не может быть больше или равному дате начала урока за 20 минут.", Toast.LENGTH_SHORT).show()
+                    binding.tilTimeNotifications.error = "Значение даты напоминания не может быть больше или равному дате начала урока за 20 минут."
+                    notificationBoolean = false
+                } else {
+                    notificationString = formattedDatetimeDateNotifications.toString()
+                    binding.tilTimeNotifications.error = ""
+                    notificationBoolean = true
+
+                }
+                //Toast.makeText(activity, "this value start time" + formattedDatetimeDateStart.minusMinutes(20), Toast.LENGTH_SHORT).show()
+
+            } else if(notify.isBlank() && !timeDateStart.isBlank()) {
+                notificationString = ""
+                binding.tilTimeNotifications.error = ""
+                notificationBoolean = true
+            }
+        }
     }
 
 

@@ -20,7 +20,7 @@ import com.example.lessonslist.data.sale.SaleListDao
 import com.example.lessonslist.data.student.StudentItemDbModel
 import com.example.lessonslist.data.student.StudentListDao
 
-@Database(entities = [StudentItemDbModel::class, PaymentItemDbModel::class, GroupItemDbModel::class, LessonsItemDbModel::class, ParentItemDbModel::class, NotesItemDbModel::class, SaleItemDbModel::class], version = 17, exportSchema = false)
+@Database(entities = [StudentItemDbModel::class, PaymentItemDbModel::class, GroupItemDbModel::class, LessonsItemDbModel::class, ParentItemDbModel::class, NotesItemDbModel::class, SaleItemDbModel::class], version = 18, exportSchema = false)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun StudentListDao(): StudentListDao

@@ -6,7 +6,7 @@ class LessonsListMapper {
 
     fun mapEntityToDbModel(lessonsItem: LessonsItem) = LessonsItemDbModel (
         title = lessonsItem.title,
-        description = lessonsItem.description,
+        notifications = lessonsItem.notifications,
         student = lessonsItem.student,
         price = lessonsItem.price,
         dateStart  = lessonsItem.dateStart,
@@ -15,7 +15,7 @@ class LessonsListMapper {
     )
     fun mapDbModelToEntity(lessonsItemDbModel: LessonsItemDbModel) = LessonsItem(
         title = lessonsItemDbModel.title,
-        description = lessonsItemDbModel.description,
+        notifications = lessonsItemDbModel.notifications,
         student = lessonsItemDbModel.student,
         price = lessonsItemDbModel.price,
         dateStart = lessonsItemDbModel.dateStart,

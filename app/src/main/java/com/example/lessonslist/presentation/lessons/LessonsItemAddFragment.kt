@@ -3,6 +3,7 @@ package com.example.lessonslist.presentation.lessons
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -27,13 +28,16 @@ import com.example.lessonslist.presentation.MainViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
+import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
 import java.lang.Thread.sleep
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.TimeUnit
+
 
 class LessonsItemAddFragment : Fragment()  {
 
@@ -66,7 +70,8 @@ class LessonsItemAddFragment : Fragment()  {
     private lateinit var timePicker1RepeatStartHourMinuteDate: String
     private lateinit var timePicker2RepeatEndHourMinuteDate: String
     private val dateLessons: ArrayList<String> = ArrayList()
-
+    private var notificationString: String = ""
+    private var notificationBoolean: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,6 +108,7 @@ class LessonsItemAddFragment : Fragment()  {
         binding.lifecycleOwner = viewLifecycleOwner
         //addTextChangeListeners()
         //launchRightMode()
+
         launchAddMode()
         observeViewModel()
         lessonsTextChangeListeners()
@@ -120,7 +126,7 @@ class LessonsItemAddFragment : Fragment()  {
         goLessonsListFragmentBackPressed()
 
         repeatLessons()
-
+        notificationsLessons()
 
     }
 
@@ -179,7 +185,31 @@ class LessonsItemAddFragment : Fragment()  {
             }
     }
 
-
+    private fun notificationsLessons() {
+        val switchChoose = binding.etNotifications
+        binding.etTimeNotifications.addTextChangedListener(PhoneTextFormatter(binding.etTimeNotifications, "##:##"))
+        //textChangedListener(PhoneTextFormatter(binding.etTimeNotifications, "##:##"))
+        switchChoose.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) {
+                //   Toast.makeText(activity, "checked", Toast.LENGTH_SHORT).show()
+                binding.cardNotifications.visibility = View.VISIBLE
+                binding.etTimeNotifications.setOnClickListener {
+                    setNotifications()
+                }
+                /*binding.etDateendRepeat.setOnClickListener {
+                    chooseDateEndRepeat()
+                }*/
+            } else {
+                Toast.makeText(activity, "Вы убрали уведомление.", Toast.LENGTH_SHORT).show()
+                binding.cardNotifications.visibility = View.GONE
+                notificationString = ""
+                binding.tilTimeNotifications.error = ""
+                binding.etTimeNotifications.setText("")
+                notificationBoolean = true
+                //Toast.makeText(activity, "unchecked", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
    /* private fun chooseDateStartRepeat() {
         val cal = Calendar.getInstance()
         val year1 = cal.get(Calendar.YEAR)
@@ -205,8 +235,111 @@ class LessonsItemAddFragment : Fragment()  {
         startRepeat!!.show()
         //binding.tilDatestartRepeat.error = "Период повторения не может быть мене текущей даты."
     }*/
+/*    private fun checkDateTimeNotifications() {
+       val valueNotifications = binding.etTimeNotifications.text.toString()
+       Log.d("countChars", valueNotifications.count().toString())
+       if(valueNotifications.count() == 5) {
+           val hh = valueNotifications.split(":")
+           val h = hh[0]
+           val m = hh[1]
+           if((h.toInt() >= 24 || m.toInt() >= 60) || (h.toInt() >= 24 && m.toInt() >= 60)) {
+               binding.tilTimeNotifications.error = "Формат даты не может быть более 23:59"
+           } else {
+               binding.tilTimeNotifications.error = ""
+
+           }
+       } else if (valueNotifications.count() < 5) {
+           binding.tilTimeNotifications.error = "Введите время корректно"
+       } else if (valueNotifications.count() == 0) {
+           binding.tilTimeNotifications.error = ""
+       }
+
+    }
+*/
+    private fun validValueNotifications() {
+        val notify = binding.etTimeNotifications.text.toString()
+        if (!notify.isBlank() && !binding.etDatestart.text.toString().isBlank()) {
+            val dateStart = binding.etDatestart.text.toString().split(" ")
+            val timeDateStart = dateStart[1]
+
+            /*time*/
+            val hstart = timeDateStart.split(":")
+            val hhstart = hstart[0].toInt()
+            val mmstart = hstart[1].toInt()
+
+            val hnotify = notify.split(":")
+            val hhnotify = hnotify[0].toInt()
+            val mmnotify = hnotify[1].toInt()
+            /*time*/
+
+            if (!notify.isBlank() && !timeDateStart.isBlank()) {
+              //val formatter = SimpleDateFormat("HH:mm", Locale.ENGLISH)
+                //val formattedDatetimeDateNotifications = formatter.parse(timeDateStart)
+                //LocalTime time = LocalTime.of(23, 59);
+                val formattedDatetimeDateNotifications = LocalTime.of(hhnotify, mmnotify)
+                val formattedDatetimeDateStart = LocalTime.of(hhstart, mmstart)
+                //val formattedDatetimeDateStart = formatter.parse(timeDateStart)
+                if(formattedDatetimeDateNotifications >= formattedDatetimeDateStart.minusMinutes(20)) {
+                    Toast.makeText(activity, "Значение даты напоминания не может быть больше или равному дате начала урока за 20 минут.", Toast.LENGTH_SHORT).show()
+                    binding.tilTimeNotifications.error = "Значение даты напоминания не может быть больше или равному дате начала урока за 20 минут."
+                    notificationBoolean = false
+                } else {
+                    notificationString = formattedDatetimeDateNotifications.toString()
+                    binding.tilTimeNotifications.error = ""
+                    notificationBoolean = true
+
+                }
+                //Toast.makeText(activity, "this value start time" + formattedDatetimeDateStart.minusMinutes(20), Toast.LENGTH_SHORT).show()
+
+            } else if(notify.isBlank() && !timeDateStart.isBlank()) {
+                notificationString = ""
+                binding.tilTimeNotifications.error = ""
+                notificationBoolean = true
+            }
+        }
+    }
 
 
+    private fun setNotifications() {
+       /* binding.etTimeNotifications.setOnFocusChangeListener { view, hasFocus ->
+            if(!hasFocus) {
+                checkDateTimeNotifications()
+            }
+        }*/
+       /* binding.etTimeNotifications.addTextChangedListener(object : TextWatcher {
+              //  var length_before = 0
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                    //length_before = s.length
+                }
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    val valueNotifications = binding.etTimeNotifications.text.toString()
+                    Log.d("notificationsValue", "on "+valueNotifications)
+                }
+                override fun afterTextChanged(s: Editable) {
+
+
+                }
+            })*/
+        val c = Calendar.getInstance()
+        val mHour = c[Calendar.HOUR_OF_DAY]
+        val mMinute = c[Calendar.MINUTE]
+
+        val timePickerDialog = TimePickerDialog(activity,
+
+            OnTimeSetListener { view, hourOfDay, minute ->
+
+                val minH = if (hourOfDay < 10) "0" + hourOfDay else hourOfDay
+                val minM = if (minute < 10) "0" + minute else minute
+
+                binding.etTimeNotifications.setText("$minH:$minM")
+               // binding.tilNotifications.setEndIconDrawable(R.drawable.ic_baseline_circle_24)
+            },
+            mHour,
+            mMinute,
+            true
+        )
+        timePickerDialog.show()
+    }
 
     private fun chooseDateEndRepeat() {
         val cal = Calendar.getInstance()
@@ -591,6 +724,8 @@ class LessonsItemAddFragment : Fragment()  {
             // binding.etPrice?.setVisibility(View.GONE)
         binding.etStudent.visibility = View.GONE
         binding.saveButton.setOnClickListener{
+            validValueNotifications()
+           // Log.d("notificationsValue", notificationString)
             val valueStudent = checkValidStudent()
             val checkField: Boolean
             if (valueStudent.size <= 0) {
@@ -602,13 +737,13 @@ class LessonsItemAddFragment : Fragment()  {
                     binding.etDatestart.text.toString(), binding.etDateend.text.toString())
             }
 
-            if(checkField && valueStudent.size > 0) {
+            if(checkField && valueStudent.size > 0 && notificationBoolean) {
                if(binding.etRepeat.isChecked && dateLessons.size >= 2) {
                     for (index in dateLessons.indices step 2) {
 
                         viewModel.addLessonsItem(
                             binding.etTitle.text.toString(),
-                            "",
+                            notificationString,
                             valueStudent.toString(),
                             //binding.etStudent.text.toString(),
                             binding.etPrice.text.toString(),
@@ -619,7 +754,7 @@ class LessonsItemAddFragment : Fragment()  {
                 } else {
                     viewModel.addLessonsItem(
                         binding.etTitle.text.toString(),
-                        "",
+                        notificationString,
                         valueStudent.toString(),
                         //binding.etStudent.text.toString(),
                         binding.etPrice.text.toString(),
@@ -636,28 +771,32 @@ class LessonsItemAddFragment : Fragment()  {
 
 
     private fun checkValidStudent(): HashSet<Int?> {
-        val studentIds: String = adapter.arrayList.toString()
-        val groupStudentIds: String
-        val allStudent: String
-        if (dataGroupListString) {
-            groupStudentIds = adapterGroup.arrayList.toString()
-            allStudent = studentIds + groupStudentIds
-        } else {
-            allStudent = studentIds
-        }
-
-        val lstValues: ArrayList<Int> = ArrayList()
-
-        allStudent.forEach {
-            if (it.isDigit()) {
-                val str = it.toString()
-                lstValues.add(str.toInt())
+        if (::adapter.isInitialized) {
+            val studentIds: String = adapter.arrayList.toString()
+            val groupStudentIds: String
+            val allStudent: String
+            if (dataGroupListString) {
+                groupStudentIds = adapterGroup.arrayList.toString()
+                allStudent = studentIds + groupStudentIds
+            } else {
+                allStudent = studentIds
             }
+
+            val lstValues: ArrayList<Int> = ArrayList()
+
+            allStudent.forEach {
+                if (it.isDigit()) {
+                    val str = it.toString()
+                    lstValues.add(str.toInt())
+                }
+            }
+
+
+            return HashSet(lstValues)
+        } else {
+            val lstValues: ArrayList<Int> = ArrayList()
+            return HashSet(lstValues)
         }
-
-
-        return HashSet(lstValues)
-
     }
 
     private fun lessonsTextChangeListeners() {
@@ -765,7 +904,6 @@ class LessonsItemAddFragment : Fragment()  {
     }
 
     interface OnEditingFinishedListener {
-
         fun onEditingFinished()
     }
 

@@ -1,6 +1,7 @@
 package com.example.lessonslist.presentation.lessons
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.lessonslist.data.lessons.LessonsListRepositoryImpl
 import com.example.lessonslist.domain.lessons.*
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class LessonsItemViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -56,16 +58,17 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun addLessonsItem(inputTitle: String, inputDescription: String, inputStudent: String, inputPrice: String, inputDateStart: String, inputDateEnd: String) {
+    fun addLessonsItem(inputTitle: String, inputNotifications: String, inputStudent: String, inputPrice: String, inputDateStart: String, inputDateEnd: String) {
         val title = inputTitle
-        val description = inputDescription
+        val notifications = inputNotifications
         val student = inputStudent
         val price = inputPrice
         val dateStart = inputDateStart
         val dateEnd = inputDateEnd
 
             viewModelScope.launch {
-                val lessonsItem = LessonsItem(title, description, student, price.toInt(), dateStart, dateEnd)
+                val lessonsItem = LessonsItem(title, notifications, student, price.toInt(), dateStart, dateEnd)
+                //Log.d("viewModelLessonItem", lessonsItem.toString())
                 addLessonsItemUseCase.addLessonsItem(lessonsItem)
                 finishWork()
             }
@@ -73,9 +76,9 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
 
     }
 
-    fun editLessonsItem(inputTitle: String, inputDescription: String, inputStudent: String, inputPrice: String, inputDateStart: String, inputDateEnd: String) {
+    fun editLessonsItem(inputTitle: String, inputNotifications: String, inputStudent: String, inputPrice: String, inputDateStart: String, inputDateEnd: String) {
     val title = inputTitle
-    val description = inputDescription
+    val notifications = inputNotifications
     val student = inputStudent
     val price = inputPrice
     val dateStart = inputDateStart
@@ -83,11 +86,25 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
         // add validation fun
             _lessonsItem.value?.let {
                 viewModelScope.launch {
-                    val lessonsItem = it.copy(title = title, description = description, student = student, price = price.toInt(), dateStart = dateStart, dateEnd = dateEnd)
+                    val lessonsItem = it.copy(title = title, notifications = notifications, student = student, price = price.toInt(), dateStart = dateStart, dateEnd = dateEnd)
                     editLessonsItemUseCase.editLessonsItem(lessonsItem)
                     finishWork()
                 }
             }
+
+    }
+
+    fun editLessonsItemNotfication(idLessons: Int, inputNotifications: String) {
+        val notifications = inputNotifications
+        getLessonsItem(idLessons)
+        _lessonsItem.value?.let {
+            viewModelScope.launch {
+                val lessonsItem = it.copy(notifications = notifications)
+                editLessonsItemUseCase.editLessonsItem(lessonsItem)
+                //finishWork()
+                Log.d("editLessonsItemNotfication", idLessons.toString())
+            }
+        }
 
     }
 
