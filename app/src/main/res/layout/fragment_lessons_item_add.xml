@@ -70,10 +70,6 @@
                 android:text="@{viewModel.lessonsItem.student}" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
-
-
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_price"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -234,7 +230,73 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_notifications"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_repeat_lessons"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintWidth_percent="0.45">
 
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/et_notifications"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Уведомить до начала"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_notifications"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_notifications"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="0dp"
+            android:visibility="gone"
+            >
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textInfoNotifications"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_info_notifications"
+                    android:textSize="16dp"
+                    android:textColor="@color/custom_calendar_date_weekend_background"
+                    android:textStyle="normal"
+                    />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_time_notifications"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="4dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_time_notifications"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/lessons_value_notifications"
+                        android:clickable="true"
+                        android:focusable="false" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </com.google.android.material.card.MaterialCardView>
         <TextView
             android:id="@+id/textViewChangeStateCheckbox"
             android:layout_width="wrap_content"
@@ -243,7 +305,7 @@
             android:textSize="24dp"
             android:textColor="@color/custom_calendar_date_weekend_background"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/card_repeat_lessons"
+            app:layout_constraintTop_toBottomOf="@id/card_notifications"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/card_students"
             />

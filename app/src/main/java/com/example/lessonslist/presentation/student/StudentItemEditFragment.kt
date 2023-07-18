@@ -716,7 +716,7 @@ class StudentItemEditFragment : Fragment() {
             //Log.d("delStudent", newValueStudent)
             viewModelLessonsEdit.editLessonsItem(
                 it.title,
-                it.description,
+                it.notifications,
                 newValueStudent,
                 it.price.toString(),
                 it.dateStart,

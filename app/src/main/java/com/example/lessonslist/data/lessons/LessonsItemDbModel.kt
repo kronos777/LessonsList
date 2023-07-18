@@ -9,7 +9,7 @@ data class LessonsItemDbModel(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val title: String,
-    val description: String,
+    val notifications: String,
     val student: String,
     val price: Int,
     val dateStart: String,

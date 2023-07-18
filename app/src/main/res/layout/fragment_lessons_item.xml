@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/lessons_description"
                 android:inputType="textCapWords"
-                android:text="@{viewModel.lessonsItem.description}"
+                android:text="@{viewModel.lessonsItem.notifications}"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 

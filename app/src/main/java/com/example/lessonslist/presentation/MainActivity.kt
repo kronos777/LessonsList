@@ -18,6 +18,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.lessonslist.R
@@ -369,8 +370,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                      .build()
                  )
                  .build()*/
-            //val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
-          //  WorkManager.getInstance(this).enqueue(request)
+           // val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
+            //WorkManager.getInstance(this).enqueue(request)
           /*  WorkManager.getInstance(this).enqueue(request)
             WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
                 .observe(this) {
