@@ -131,7 +131,7 @@ class LessonsItemEditFragment : Fragment() {
             if(it.isNotEmpty()) {
                 for (payment in it) {
                     if(payment.lessonsId == lessonsItemId) {
-                        if (payment.enabled == true) {
+                        if (payment.enabled) {
                             dataPaymentStudentModel!!.add(DataPaymentStudentLessonsModel(payment.student ," Оплачен: ", payment.price.toString()))
                         } else {
                             dataPaymentStudentModel!!.add(DataPaymentStudentLessonsModel(payment.student, " Долг: ", "-" + payment.price.toString()))
@@ -149,7 +149,7 @@ class LessonsItemEditFragment : Fragment() {
             } else {
                 binding.textViewPriceInfo.visibility = View.GONE
                 dataStudentlList.studentList.observe(viewLifecycleOwner) {
-                    if(it.size > 0) {
+                    if(it.isNotEmpty()) {
                         for(student in it){
                             val name = student.name + " " + student.lastname
                             val id = student.id
@@ -946,14 +946,6 @@ class LessonsItemEditFragment : Fragment() {
         const val MODE_UNKNOWN = ""
         const val DATE_ID_BACKSTACK = ""
 
-        fun newInstanceEditItem(lessonsItemId: Int): LessonsItemEditFragment {
-            return LessonsItemEditFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_EDIT)
-                    putInt(LESSONS_ITEM_ID, lessonsItemId)
-                }
-            }
-        }
     }
 }
 
