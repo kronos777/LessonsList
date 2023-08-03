@@ -370,8 +370,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                      .build()
                  )
                  .build()*/
-           // val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
-            //WorkManager.getInstance(this).enqueue(request)
+          //val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
+          // WorkManager.getInstance(this).enqueue(request)
           /*  WorkManager.getInstance(this).enqueue(request)
             WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.id)
                 .observe(this) {
@@ -386,7 +386,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             ExistingPeriodicWorkPolicy.REPLACE,
             request
         )
-
         /*work manager */
     }
 
