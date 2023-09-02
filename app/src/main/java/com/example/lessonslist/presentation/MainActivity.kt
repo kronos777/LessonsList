@@ -27,6 +27,7 @@ import com.example.lessonslist.data.service.PaymentWork
 import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.domain.payment.PaymentItem
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
+import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.lessons.*
@@ -44,7 +45,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, SettingsNotificationsFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener, LessonsItemAddFragment.OnEditingFinishedListener, LessonsItemEditFragment.OnEditingFinishedListener {
+class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedListener, GroupItemFragment.OnEditingFinishedListener, PaymentItemFragment.OnEditingFinishedListener, CalendarItemFragment.OnEditingFinishedListener, SettingsNotificationsFragment.OnEditingFinishedListener, StudentItemEditFragment.OnEditingFinishedListener, LessonsItemAddFragment.OnEditingFinishedListener, LessonsItemEditFragment.OnEditingFinishedListener,
+    CalendarPaymentItemFragment.OnEditingFinishedListener {
 
     private lateinit var binding: ActivityMainBinding
     lateinit var toggle: ActionBarDrawerToggle

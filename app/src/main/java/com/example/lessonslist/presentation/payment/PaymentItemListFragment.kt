@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -28,6 +29,8 @@ class PaymentItemListFragment: Fragment() {
 
     private lateinit var viewModel: PaymentListViewModel
     private lateinit var paymentListAdapter: PaymentListAdapter
+    private lateinit var args: Bundle
+    private var paymentEnabled = false
     private var studentId: Int = 0
     private var lessonsId: Int = 0
     private var dateId: String = ""
@@ -51,10 +54,31 @@ class PaymentItemListFragment: Fragment() {
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem2).isChecked = true
 
-
-
-        val args = requireArguments()
+        args = requireArguments()
         val mode = args.getString(SCREEN_MODE)
+        showPayment(mode!!)
+        switchViewPayments()
+        goCalendarFragmentBackPressed()
+    }
+
+    private fun switchViewPayments() {
+        binding.buttonSwithPayment.setOnClickListener {
+            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+            val navController = navHostFragment.navController
+            navController.navigate(R.id.calendarPaymentItemFragment, null)
+            /*if(!paymentEnabled) {
+                binding.buttonSwithPayment.setImageResource(R.drawable.baseline_attach_money_24)
+                showPayment("payment_enabled")
+                paymentEnabled = true
+            } else {
+                binding.buttonSwithPayment.setImageResource(R.drawable.baseline_money_off_24)
+                showPayment("payment_yes")
+                paymentEnabled = false
+            }*/
+
+        }
+    }
+    private fun showPayment(mode: String) {
         if(mode == "student_id_list") {
             studentId = args.getInt(STUDENT_ID)
             val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
@@ -65,7 +89,7 @@ class PaymentItemListFragment: Fragment() {
                         listArrayPayment.add(payment)
                     }
                 }
-                paymentListAdapter.submitList(listArrayPayment)
+                paymentListAdapter.submitList(listArrayPayment.reversed())
             }
         } else if(mode == "student_no_pay_list") {
             studentId = args.getInt(STUDENT_ID)
@@ -77,7 +101,7 @@ class PaymentItemListFragment: Fragment() {
                         listArrayPayment.add(payment)
                     }
                 }
-                paymentListAdapter.submitList(listArrayPayment)
+                paymentListAdapter.submitList(listArrayPayment.reversed())
             }
         } else if (mode == "lesson_id_list") {
             lessonsId = args.getInt(LESSONS_ID)
@@ -89,24 +113,43 @@ class PaymentItemListFragment: Fragment() {
                         listArrayPayment.add(payment)
                     }
                 }
-                paymentListAdapter.submitList(listArrayPayment)
+                paymentListAdapter.submitList(listArrayPayment.reversed())
             }
 
 
         } else if (mode == "date_id_list") {
-            dateId = args.getString(DATE_ID)!!
             val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
-            viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
-            viewModel.paymentList.observe(viewLifecycleOwner) {
-                for (payment in it) {
-                    val pay = payment.datePayment.split(" ")
-                    val datePay = Date(pay[0])
-                    val dateFormated = SimpleDateFormat("d/M/yyyy").format(datePay)
-                    if(dateFormated == dateId){
-                        listArrayPayment.add(payment)
+            dateId = args.getString(DATE_ID)!!
+
+            if(dateId.contains("&debts")) {
+                val deptsExists = dateId.split("&debts")
+
+                viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
+                viewModel.paymentList.observe(viewLifecycleOwner) {
+                    for (payment in it) {
+                        val enabledPay = payment.enabled
+                        val pay = payment.datePayment.split(" ")
+                        val datePay = Date(pay[0])
+                        val dateFormated = SimpleDateFormat("d/M/yyyy").format(datePay)
+                        if(dateFormated == deptsExists[0] && !enabledPay){
+                            listArrayPayment.add(payment)
+                        }
                     }
+                    paymentListAdapter.submitList(listArrayPayment.reversed())
                 }
-                paymentListAdapter.submitList(listArrayPayment)
+            } else {
+                viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
+                viewModel.paymentList.observe(viewLifecycleOwner) {
+                    for (payment in it) {
+                        val pay = payment.datePayment.split(" ")
+                        val datePay = Date(pay[0])
+                        val dateFormated = SimpleDateFormat("d/M/yyyy").format(datePay)
+                        if(dateFormated == dateId){
+                            listArrayPayment.add(payment)
+                        }
+                    }
+                    paymentListAdapter.submitList(listArrayPayment.reversed())
+                }
             }
         } else if (mode == "payment_enabled") {
             val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
@@ -118,16 +161,33 @@ class PaymentItemListFragment: Fragment() {
                         listArrayPayment.add(payment)
                     }
                 }
-                paymentListAdapter.submitList(listArrayPayment)
+                paymentListAdapter.submitList(listArrayPayment.reversed())
             }
-        } else {
+        } else if (mode == "payment_yes") {
+            val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
             viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
             viewModel.paymentList.observe(viewLifecycleOwner) {
-                paymentListAdapter.submitList(it)
+                for (payment in it) {
+                    val enabledPay = payment.enabled
+                    if(enabledPay) {
+                        listArrayPayment.add(payment)
+                    }
+                }
+                paymentListAdapter.submitList(listArrayPayment.reversed())
+            }
+        } else {
+            // Toast.makeText(activity, "we are here", Toast.LENGTH_SHORT).show()
+            viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
+            viewModel.paymentList.observe(viewLifecycleOwner) {
+                /*it.forEach lit@{
+                    if(!it.enabled) {
+                        binding.buttonSwithPayment.visibility = View.VISIBLE
+                        return@lit
+                    }
+                }*/
+                paymentListAdapter.submitList(it.reversed())
             }
         }
-
-        goCalendarFragmentBackPressed()
     }
 
     private fun goCalendarFragmentBackPressed() {
