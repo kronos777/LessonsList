@@ -10,7 +10,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentInstructionBinding
-
+import com.github.florent37.expansionpanel.ExpansionLayout
+import com.github.florent37.expansionpanel.viewgroup.ExpansionLayoutCollection
 
 
 class InstructionFragment: Fragment() {
@@ -35,6 +36,18 @@ class InstructionFragment: Fragment() {
 
         (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = "Инструкция"
 
+
+        val expansionLayout: ExpansionLayout = binding.expansionLayout
+        val expansionLayout2: ExpansionLayout = binding.expansionLayout2
+       // val expansionLayout3: ExpansionLayout = binding.expansionLayout3
+        val expansionLayoutCollection = ExpansionLayoutCollection()
+        expansionLayoutCollection.add(expansionLayout)
+        expansionLayoutCollection.add(expansionLayout2)
+        //expansionLayoutCollection.add(expansionLayout3)
+
+
+        binding.accordionDescription1.text = "1/1 После добавления учеников и групп создайте урок, в случае создания урока с главного экрана нажмите и удерживайте дату появится экран создания урока дата будет та что Вы выбрали, установите время  начала и конца урока выберите студентов, установите цену и нажмите сохранить."
+        binding.accordionDescription2.text = "1/1 После добавления учеников и групп создайте урок, в случае создания урока с главного экрана нажмите и удерживайте дату появится экран создания урока дата будет та что Вы выбрали, установите время  начала и конца урока выберите студентов, установите цену и нажмите сохранить."
 
     }
 

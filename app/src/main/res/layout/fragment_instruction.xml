@@ -40,6 +40,139 @@
             app:layout_constraintVertical_chainStyle="packed"
             android:textSize="24sp"
             />
+
+
+        <!--first accordion-->
+        <LinearLayout
+            android:id="@+id/accordion_first_linear"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="14dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_title"
+            >
+
+            <com.github.florent37.expansionpanel.ExpansionHeader
+                android:id="@+id/accordion_first"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                app:expansion_headerIndicator="@id/headerIndicator"
+                app:expansion_layout="@id/expansionLayout"
+                app:expansion_toggleOnClick="true">
+
+                <!-- HEADER -->
+
+                <TextView
+                    android:id="@+id/accordion_title"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:textFontWeight="500"
+                    android:textSize="24dp"
+                    android:lineHeight="24dp"
+                    android:textColor="@color/black"
+                    android:text="1 Начало работы"/>
+
+                <!-- HEADER INDICATOR -->
+                <ImageView
+                    android:adjustViewBounds="true"
+                    android:id="@+id/headerIndicator"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_width="wrap_content"
+                    app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp" />
+
+
+            </com.github.florent37.expansionpanel.ExpansionHeader>
+
+            <com.github.florent37.expansionpanel.ExpansionLayout
+                android:id="@+id/expansionLayout"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:padding="8dp"
+                >
+
+                <!-- CONTENT -->
+                <TextView
+                    android:id="@+id/accordion_description_1"
+                    android:textFontWeight="400"
+                    android:textSize="18dp"
+                    android:lineHeight="20dp"
+                    android:textColor="@color/black"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"/>
+
+            </com.github.florent37.expansionpanel.ExpansionLayout>
+        </LinearLayout>
+        <!--first accordion-->
+
+
+        <!--two accordion-->
+        <LinearLayout
+            android:id="@+id/accordion_two_linear"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="14dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/accordion_first_linear"
+            >
+
+            <com.github.florent37.expansionpanel.ExpansionHeader
+                android:id="@+id/accordion_two"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                app:expansion_headerIndicator="@id/headerIndicator2"
+                app:expansion_layout="@id/expansionLayout2"
+                app:expansion_toggleOnClick="true">
+
+                <!-- HEADER -->
+
+                <TextView
+                    android:id="@+id/accordion_title2"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:textFontWeight="500"
+                    android:textSize="24dp"
+                    android:lineHeight="24dp"
+                    android:textColor="@color/black"
+                    android:text="2 Добавление данных"/>
+
+                <!-- HEADER INDICATOR -->
+                <ImageView
+                    android:adjustViewBounds="true"
+                    android:id="@+id/headerIndicator2"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_width="wrap_content"
+                    app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp" />
+
+
+            </com.github.florent37.expansionpanel.ExpansionHeader>
+
+            <com.github.florent37.expansionpanel.ExpansionLayout
+                android:id="@+id/expansionLayout2"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:padding="8dp"
+                >
+
+                <!-- CONTENT -->
+                <TextView
+                    android:id="@+id/accordion_description_2"
+                    android:textFontWeight="400"
+                    android:textSize="18dp"
+                    android:lineHeight="20dp"
+                    android:textColor="@color/black"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"/>
+
+            </com.github.florent37.expansionpanel.ExpansionLayout>
+        </LinearLayout>
+        <!--two accordion-->
+
         <TextView
             android:id="@+id/til_description1"
             android:layout_width="match_parent"
@@ -48,7 +181,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_title"
+            app:layout_constraintTop_toBottomOf="@id/accordion_two_linear"
             android:gravity="left"
             app:layout_constraintVertical_chainStyle="packed"
             android:textSize="18sp"
