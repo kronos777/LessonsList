@@ -74,6 +74,10 @@ dependencies {
     //for accordion
     implementation 'com.github.florent37:expansionpanel:1.1.1'
 
+    //test rx
+    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
+
+
     kapt "androidx.room:room-compiler:2.4.3"
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

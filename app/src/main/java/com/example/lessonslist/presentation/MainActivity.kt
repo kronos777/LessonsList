@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -21,16 +22,22 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import androidx.work.impl.Schedulers
 import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.data.service.PaymentWork
 import com.example.lessonslist.databinding.ActivityMainBinding
+import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.domain.payment.PaymentItem
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupListViewModel
-import com.example.lessonslist.presentation.lessons.*
+import com.example.lessonslist.presentation.lessons.LessonsItemAddFragment
+import com.example.lessonslist.presentation.lessons.LessonsItemEditFragment
+import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
+import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
+import com.example.lessonslist.presentation.lessons.LessonsListViewModel
 import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
@@ -41,7 +48,11 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
-import java.util.*
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.FlowableOnSubscribe
+import java.util.Calendar
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
 
@@ -77,6 +88,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         initDrawerNavigation()
         //initBottomNavigation()
+        startWorkManager()
         initWorkManager()
         initMaterialToolBar()
         getDeptPayment()
@@ -97,8 +109,10 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         }
 
 
-
     }
+
+
+
 
     private fun onDestinationChanged(currentDestination: Int) {
         val paymentBtnAppBarTop = findViewById<View>(R.id.payment)
@@ -336,6 +350,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             enableHomeBackIcon(false)
         }
 
+        //toggle.syncState()
+
 
         val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
             .setExitAnim(R.anim.slide_in_right)
@@ -353,13 +369,18 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             true
         }
 
+
+
     }
 
     private fun exitApplication() {
         this.finishAffinity()
     }
 
-
+    private fun startWorkManager() {
+        val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
+        WorkManager.getInstance(this).enqueue(request)
+    }
 
     private fun initWorkManager() {
         /*work manager */

@@ -10,6 +10,7 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
+import android.text.InputType
 import android.text.InputType.TYPE_CLASS_NUMBER
 import android.util.Log
 import android.view.LayoutInflater
@@ -318,6 +319,8 @@ class StudentItemEditFragment : Fragment() {
     private fun actionAddMoney() {
         var newBalance: Int
         val inputEditTextField = EditText(requireActivity())
+        //inputEditTextField.setInputType(InputType.TYPE_CLASS_NUMBER)
+        inputEditTextField.inputType = 2
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle("Пополнить баланс студента.")
             //.setMessage("Message")
