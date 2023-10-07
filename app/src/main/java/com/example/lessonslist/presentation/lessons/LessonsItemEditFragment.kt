@@ -36,6 +36,8 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
 
 class LessonsItemEditFragment : Fragment() {
@@ -58,6 +60,7 @@ class LessonsItemEditFragment : Fragment() {
     private var dataStudentSaleModel: ArrayList<DataSalePaymentModel>? = null
     private lateinit var adapterSale: ListSaleAdapter
     private lateinit var adapterSaleReady: ListSaleReadyAdapter
+    private lateinit var adapterSaleReadyFlexible: ListFlexibleSaleAdapter
     private lateinit var salePaymentValueDate: HashSet<Int?>
 
     private lateinit var adapter: ListStudentAdapter
@@ -275,11 +278,15 @@ class LessonsItemEditFragment : Fragment() {
 
                 }
 
-                setListViewSalePayment(salePaymentValueDate, viewModel.lessonsItem.value!!.price)
-                getValueAdapterSale()
+                setListViewSaleFlexible(salePaymentValueDate)
+                //setListViewSalePayment(salePaymentValueDate, viewModel.lessonsItem.value!!.price)
+                //getValueAdapterSale()
+                setFlexibleAdapterSale()
             } else {
-                setListViewSalePayment(salePaymentValueDate, viewModel.lessonsItem.value!!.price)
-                getValueAdapterSale()
+                setListViewSaleFlexible(salePaymentValueDate)
+                //setListViewSalePayment(salePaymentValueDate, viewModel.lessonsItem.value!!.price)
+                //getValueAdapterSale()
+                setFlexibleAdapterSale()
 
             }
 
@@ -373,6 +380,121 @@ class LessonsItemEditFragment : Fragment() {
         }
     }*/
 
+    private fun setListViewSaleFlexible(salePaymentValueDate: HashSet<Int?>) {
+        listViewSale = binding.listSalePayment
+        dataStudentSaleModel = ArrayList<DataSalePaymentModel>()
+        dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
+        viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
+        viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
+        var studentName: Array<String> = emptyArray()
+        var hideChoose = true
+        val existsStudentId = ArrayList<Int>()
+        viewModelSalesList.salesList.observe(viewLifecycleOwner) { sales ->
+            //var lstValues: MutableList<Int> = transformStringToListInt(viewModel.lessonsItem.value!!.student)
+            var studentsLessonsAdapter: MutableList<Int> = transformListToMutableListInt(salePaymentValueDate)
+            dataStudentSaleModel!!.clear()
+            for (saleItem in sales.indices) {
+                if(sales[saleItem].idLessons == lessonsItemId) {
+                    hideChoose = false
+                    hideSaleUIElement()
+                    dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
+                        if(it.isNotEmpty()) {
+                            for(student in it){
+                                val studentId = student.id
+                                val name = student.name + " " + student.lastname
+                                if(sales[saleItem].idStudent == studentId) {
+                                    existsStudentId.add(sales[saleItem].idStudent)
+                                    studentName += name
+                                    studentsLessonsAdapter.remove(studentId)
+                                    dataStudentSaleModel!!.add(DataSalePaymentModel(name, sales[saleItem].price, sales[saleItem].id, true))
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        //end for
+            dataStudentlList.studentList.observe(viewLifecycleOwner) { students ->
+                if(students.isNotEmpty()) {
+                    for(student in students){
+                        val studentId = student.id
+                        val name = student.name + " " + student.lastname
+                        if(studentsLessonsAdapter.contains(studentId)) {
+                            dataStudentSaleModel!!.add(DataSalePaymentModel(name, 0, studentId, false))
+                        }
+                    }
+                }
+            }
+
+
+            //Toast.makeText(activity, "all students sale." + lstValues.toString(), Toast.LENGTH_SHORT).show()
+            //add adapter
+            adapterSaleReadyFlexible = ListFlexibleSaleAdapter(dataStudentSaleModel!!, requireContext().applicationContext)
+            listViewSale.adapter =  adapterSaleReadyFlexible
+          /*  listView.setOnItemClickListener { adapterView, view, i, l ->
+                false
+                Toast.makeText(activity, "Удалите скидки для редактирования.", Toast.LENGTH_SHORT).show()
+            }*/
+
+
+
+            listViewSale.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                val dataStudent: DataSalePaymentModel = dataStudentSaleModel!![position]
+                dataStudent.checked = !dataStudent.checked
+                //deleteSaleInListDialogWindow()
+            }
+            //add adapter
+
+
+            /*if(dataStudentSaleModel!!.size == 0 && hideChoose) {
+
+                dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
+                    if(it.isNotEmpty()) {
+                        for(student in it){
+                            if(salePaymentValueDate.contains(student.id)) {
+                                val name = student.name + " " + student.lastname
+                                val id = student.id
+                                // val price = student.paymentBalance
+                                studentName += name
+
+                                dataStudentSaleModel!!.add(DataSalePaymentModel(name, 0, id, false))
+                            }
+                        }
+
+
+                        adapterSaleReadyFlexible = ListFlexibleSaleAdapter(dataStudentSaleModel!!, requireContext().applicationContext)
+                        //openDialog(dataStudentGroupModel)
+                        listViewSale.adapter = adapterSaleReadyFlexible
+
+                        listViewSale.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                            val dataStudent: DataSalePaymentModel = dataStudentSaleModel!![position]
+                            dataStudent.checked = !dataStudent.checked
+                            adapterSale.notifyDataSetChanged()
+                        }
+
+                    }
+
+                }
+            }*/
+
+        }
+    }
+
+
+    private fun transformStringToListInt(dataString: String): MutableList<Int> {
+        var dtString = dataString.replace("]", "")
+        dtString = dtString.replace("[", "")
+        return dtString.split(",").map { str -> str.trim().toInt() } as MutableList<Int>
+    }
+
+    private fun transformListToMutableListInt(listInt: HashSet<Int?>): MutableList<Int> {
+        var dtString = mutableListOf<Int>()
+        listInt.forEach {
+            dtString.add(it!!)
+        }
+        return dtString
+    }
 
 
     private fun setListViewSalePayment(salePaymentValueDate: HashSet<Int?>, price: Int) {
@@ -470,6 +592,23 @@ class LessonsItemEditFragment : Fragment() {
     }
 
 
+    private fun deleteAllSaleInCurrentLessons() {
+        viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
+        viewModelSalesList.salesList.observe(viewLifecycleOwner) { sales ->
+            //var lstValues: MutableList<Int> = transformStringToListInt(viewModel.lessonsItem.value!!.student)
+            var studentsLessonsAdapter: MutableList<Int> = transformListToMutableListInt(salePaymentValueDate)
+            dataStudentSaleModel!!.clear()
+            for (saleItem in sales.indices) {
+                if(sales[saleItem].idLessons == lessonsItemId) {
+                    val saleId = sales[saleItem].id
+                    viewModelSalesList.deleteSaleItem(saleId)
+                }
+            }
+        }
+    }
+
+
+
     private fun deleteSaleInListDialogWindow() {
 
         val alert = androidx.appcompat.app.AlertDialog.Builder(requireContext())
@@ -558,6 +697,29 @@ class LessonsItemEditFragment : Fragment() {
         }
 
 
+    }
+
+
+    private fun setFlexibleAdapterSale() {
+        viewModelSale = ViewModelProvider(this)[SaleItemViewModel::class.java]
+        binding.saveSaleButton.setOnClickListener {
+            val mapDataSales = adapterSaleReadyFlexible.idValueMutableMap
+            if(mapDataSales.size == 0) {
+                Log.d("mapDataSales", mapDataSales.toString())
+                // if exists previously necessary delete
+                deleteAllSaleInCurrentLessons()
+            } else {
+                mapDataSales.forEach {
+                    val countSaleForCheck =  calculatePercentages(it.value.toString(), viewModel.lessonsItem.value!!.price)
+                    if(countSaleForCheck > 0 &&  countSaleForCheck < viewModel.lessonsItem.value!!.price) {
+                        viewModelSale.addSaleItem(it.key, lessonsItemId, countSaleForCheck.toInt())
+                    } else {
+                        Toast.makeText(activity, "сумма скидки не может превышать стоимость урока", Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+            }
+        }
     }
 
 
@@ -701,7 +863,7 @@ class LessonsItemEditFragment : Fragment() {
 
         if (valueCheck1.length > 0 && valueCheck2.length > 0) {
 
-            val formatter = DateTimeFormatter.ofPattern("yyyy-M-dd HH:m")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm")
             val dt: LocalDateTime = LocalDateTime.parse(valueCheck1, formatter)
             val dt2: LocalDateTime = LocalDateTime.parse(valueCheck2, formatter)
 

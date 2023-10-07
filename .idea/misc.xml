@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
@@ -123,6 +124,8 @@
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/row_group_student_item.xml" value="0.21603260869565216" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/row_lessons_group_item.xml" value="0.30416666666666664" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/row_payment_student_item.xml" value="0.18802083333333333" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/row_sale_flexible_item.xml" value="0.5541666666666667" />
+        <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/row_sale_payment_item.xml" value="0.5541666666666667" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/row_sale_ready_payment_item.xml" value="0.4533514492753623" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/row_student_group_item.xml" value="0.2669706180344478" />
         <entry key="..\:/portfolioAndroidProjects/LessonsList/app/src/main/res/layout/view_alertspayment.xml" value="0.2619047619047619" />

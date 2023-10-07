@@ -133,7 +133,7 @@ class LessonsItemListFragment: Fragment() {
         viewModel.lessonsList.observe(viewLifecycleOwner) {
             val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
             //val sortLessons = it.sortedByDescending {
-            val sortLessons = it.sortedBy {
+            val sortLessons = it.sortedByDescending {
                 LocalDate.parse(it.dateStart, formatter)
             }
             lessonsListAdapter.submitList(sortLessons)
