@@ -38,5 +38,11 @@ class SaleListRepositoryImpl(
         mapper.mapListDbModelToListEntity(it)
     }
 
+//getSalesSalesIdLessons
+    override fun getSalesSalesIdLessons(idLessons: Int): LiveData<List<SaleItem>> = Transformations.map(
+        salesListDao.getSalesSalesIdLessons(idLessons)
+    ) {
+        mapper.mapListDbModelToListEntity(it)
+    }
 
 }

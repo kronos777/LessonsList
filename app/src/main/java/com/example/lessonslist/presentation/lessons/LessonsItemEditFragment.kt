@@ -109,7 +109,6 @@ class LessonsItemEditFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         launchRightMode()
         observeViewModel()
-        hideSaleUIElement()
 
         binding.tilStudent.visibility = View.GONE
         binding.listSalePayment.visibility = View.GONE
@@ -118,17 +117,21 @@ class LessonsItemEditFragment : Fragment() {
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem4).isChecked = true
 
+        setDataLessonsPayment()
+        uiDatePickerElement()
+        switchCardStudents()
+        switchCardSaleStudent()
 
+        notificationsLessons()
+
+    }
+
+    private fun setDataLessonsPayment() {
         listView = binding.listView
-
         dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
         dataStudentGroupModel = ArrayList<DataStudentGroupModel>()
         var studentName: Array<String> = emptyArray()
-
-       // binding.layoutInfo.setVisibility (View.GONE)
-
         dataPaymentStudentModel = ArrayList<DataPaymentStudentLessonsModel>()
-
         viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelPayment.paymentList.observe(viewLifecycleOwner) {
             if(it.isNotEmpty()) {
@@ -174,126 +177,66 @@ class LessonsItemEditFragment : Fragment() {
                             } else {
                                 dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,false))
                             }
-
-
-
                         }
-
-
                         adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
-
                         listView.adapter = adapter
-
                     } else {
-
-                        studentName += "в учениках пока нет значений"
+                       studentName += "в учениках пока нет значений"
                     }
                 }
             }
-
             goLessonsListFragmentBackPressed()
-
         }
+    }
 
-
-
-        uiDatePickerElement()
-
-
-
-       // listenSwitchSalePayment()
+    private fun switchCardStudents() {
         binding.cardStudents.setOnClickListener {
-         /*   Log.d("listViewState", binding.listView.visibility.toString())
-            if (uiLessonsElement) {
-                uiLessonsElement = false
-                hideUiLessonsElement()
-            } else {
-                uiLessonsElement = true
-                showUiLessonsElement()
-            }
-            hideSaleUIElement()
-            binding.listView.visibility = View.VISIBLE
-            binding.listSalePayment.visibility = View.GONE*/
             if (binding.listView.visibility == View.VISIBLE){
-               // Log.d("listViewState", "vissible")
                 showUiLessonsElement()
                 binding.listView.visibility = View.GONE
                 binding.listSalePayment.visibility = View.GONE
-                hideSaleUIElement()
             } else if(binding.listSalePayment.visibility == View.VISIBLE) {
                 hideUiLessonsElement()
                 binding.listView.visibility = View.VISIBLE
                 binding.listSalePayment.visibility = View.GONE
-                hideSaleUIElement()
             } else {
                 hideUiLessonsElement()
                 binding.listView.visibility = View.VISIBLE
                 binding.listSalePayment.visibility = View.GONE
-                hideSaleUIElement()
-                //Log.d("listViewState", "GONE")
             }
         }
-
+    }
+    private fun switchCardSaleStudent() {
         binding.cardSaleStudent.setOnClickListener {
             if(binding.listSalePayment.visibility == View.VISIBLE) {
                 showUiLessonsElement()
                 binding.listView.visibility = View.GONE
                 binding.listSalePayment.visibility = View.GONE
-               // Log.d("listViewStateSale", "vissible")
-                hideSaleUIElement()
             } else if (binding.listView.visibility == View.VISIBLE){
                 hideUiLessonsElement()
                 binding.listView.visibility = View.GONE
                 binding.listSalePayment.visibility = View.VISIBLE
-                showSaleUIElement()
-                //Log.d("listViewStateSale", "gone")
-                //Log.d("listViewState", "GONE")
             } else {
-               // Log.d("listViewState", "ostalnie sluchai")
                 hideUiLessonsElement()
                 binding.listView.visibility = View.GONE
                 binding.listSalePayment.visibility = View.VISIBLE
-                showSaleUIElement()
             }
-           /* if (uiLessonsElement) {
-                uiLessonsElement = false
-                hideUiLessonsElement()
-            } else {
-                uiLessonsElement = true
-                showUiLessonsElement()
-            }
-            binding.listView.visibility = View.GONE
-            binding.listSalePayment.visibility = View.VISIBLE
-            */
-
-
             salePaymentValueDate = checkValidStudent()
-
             if(salePaymentValueDate.size == 0) {
-
                 for (index in dataStudentGroupModel!!.indices) {
                     if(dataStudentGroupModel!![index].checked) {
                         salePaymentValueDate.add(dataStudentGroupModel!![index].id!!.toInt())
                     }
 
                 }
-
                 setListViewSaleFlexible(salePaymentValueDate)
-                //setListViewSalePayment(salePaymentValueDate, viewModel.lessonsItem.value!!.price)
-                //getValueAdapterSale()
-                setFlexibleAdapterSale()
+                //saveEditAddDeleteSale()
             } else {
                 setListViewSaleFlexible(salePaymentValueDate)
-                //setListViewSalePayment(salePaymentValueDate, viewModel.lessonsItem.value!!.price)
-                //getValueAdapterSale()
-                setFlexibleAdapterSale()
-
+                // saveEditAddDeleteSale()
             }
 
         }
-
-        notificationsLessons()
-
     }
 
     private fun hideUiLessonsElement() {
@@ -396,7 +339,7 @@ class LessonsItemEditFragment : Fragment() {
             for (saleItem in sales.indices) {
                 if(sales[saleItem].idLessons == lessonsItemId) {
                     hideChoose = false
-                    hideSaleUIElement()
+                  //  hideSaleUIElement()
                     dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
                         if(it.isNotEmpty()) {
                             for(student in it){
@@ -406,7 +349,8 @@ class LessonsItemEditFragment : Fragment() {
                                     existsStudentId.add(sales[saleItem].idStudent)
                                     studentName += name
                                     studentsLessonsAdapter.remove(studentId)
-                                    dataStudentSaleModel!!.add(DataSalePaymentModel(name, sales[saleItem].price, sales[saleItem].id, true))
+                                    dataStudentSaleModel!!.add(DataSalePaymentModel(name, sales[saleItem].price, studentId, true))
+                                    //dataStudentSaleModel!!.add(DataSalePaymentModel(name, sales[saleItem].price, sales[saleItem].id, true))
                                 }
                             }
                         }
@@ -513,7 +457,6 @@ class LessonsItemEditFragment : Fragment() {
            for (saleItem in sales.indices) {
                 if(sales[saleItem].idLessons == lessonsItemId) {
                     hideChoose = false
-                    hideSaleUIElement()
                     dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
                          if(it.isNotEmpty()) {
                              for(student in it){
@@ -624,9 +567,7 @@ class LessonsItemEditFragment : Fragment() {
                 }
                 //deleteSaleInList(dataStudentSaleModel.name.toString(), dataStudent.id!!.toInt())
             }
-
             showUiLessonsElement()
-            hideSaleUIElement()
             binding.listView.visibility = View.GONE
             binding.listSalePayment.visibility = View.GONE
         }
@@ -660,7 +601,7 @@ class LessonsItemEditFragment : Fragment() {
         alert.show()
     }
 
-
+/*
     private fun hideSaleUIElement() {
         binding.tilSale.visibility = View.GONE
         binding.saveSaleButton.visibility = View.GONE
@@ -697,29 +638,60 @@ class LessonsItemEditFragment : Fragment() {
         }
 
 
+    }*/
+
+
+    private fun saveEditAddDeleteSale() {
+            val mapDataSales = adapterSaleReadyFlexible.idValueMutableMap
+            currentLessonHaveSaleOrNotHave(mapDataSales)
     }
 
-
-    private fun setFlexibleAdapterSale() {
+    private fun currentLessonHaveSaleOrNotHave(adapterValue: MutableMap<Int, Int>) {
         viewModelSale = ViewModelProvider(this)[SaleItemViewModel::class.java]
-        binding.saveSaleButton.setOnClickListener {
-            val mapDataSales = adapterSaleReadyFlexible.idValueMutableMap
-            if(mapDataSales.size == 0) {
-                Log.d("mapDataSales", mapDataSales.toString())
-                // if exists previously necessary delete
-                deleteAllSaleInCurrentLessons()
+        viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
+        viewModelSalesList.currentLessonHaveSale(lessonsItemId).observe(viewLifecycleOwner) { sales ->
+            if(sales.isNotEmpty()) {
+                //видим что скидки уже есть и возможно требуется их изменение или добавление новых и все это делается в этом блоке кода
+                /*
+                * проверяем что есть в существующих скидках и нужно ли там что то менять
+                * */
+                if(adapterValue.size > 0) {
+                    val salesMap: MutableMap<Int, Int> = mutableMapOf<Int, Int>()
+                    sales.forEach {
+                        salesMap.put(it.idStudent, it.price)
+                        if (adapterValue.containsKey(it.idStudent) && !adapterValue.containsValue(it.price)) {
+                            //тут необходимо сделать редактирование скидки
+                            Log.d("existsSaleInCurrentLessons21", adapterValue[it.idStudent].toString())
+                            viewModelSale.editSaleItem(it, adapterValue[it.idStudent]!!.toInt())
+                        } else if(!adapterValue.containsKey(it.idStudent)) {
+                            //тут необходимо удалить
+                            viewModelSale.deleteSaleItem(it.id)
+                            Log.d("existsSaleInCurrentLessons21", it.idStudent.toString() + "" + it.price.toString())
+                        }
+                    }
+                    adapterValue.forEach {
+                        if (!salesMap.containsKey(it.key)) {
+                            Log.d("existsSaleInCurrentLessons333", it.toString())
+                            viewModelSale.addSaleItem(it.key, lessonsItemId, it.value)
+                        }
+                    }
+                } else {
+                    //all exists sale delete
+                    deleteAllSaleInCurrentLessons()
+                }
             } else {
-                mapDataSales.forEach {
+                Log.d("existsSaleInCurrentLessons2", adapterValue.toString())
+                adapterValue.forEach {
                     val countSaleForCheck =  calculatePercentages(it.value.toString(), viewModel.lessonsItem.value!!.price)
                     if(countSaleForCheck > 0 &&  countSaleForCheck < viewModel.lessonsItem.value!!.price) {
                         viewModelSale.addSaleItem(it.key, lessonsItemId, countSaleForCheck.toInt())
                     } else {
                         Toast.makeText(activity, "сумма скидки не может превышать стоимость урока", Toast.LENGTH_SHORT).show()
                     }
-
                 }
             }
         }
+
     }
 
 
@@ -774,14 +746,14 @@ class LessonsItemEditFragment : Fragment() {
 
     fun setFocusableEditText() {
         //binding.saveButton.setVisibility (View.GONE)
-        binding.tilPrice.setVisibility (View.GONE)
+        binding.tilPrice.visibility = View.GONE
         binding.saveButton.text = "Список уроков."
         binding.etTitle.setBackgroundResource(R.color.white)
         binding.etTitle.isFocusable = false
         binding.etDatestart.setBackgroundResource(R.color.white)
         binding.etDateend.setBackgroundResource(R.color.white)
-        binding.cardStudents.setVisibility (View.GONE)
-        binding.cardSaleStudent.setVisibility (View.GONE)
+        binding.cardStudents.visibility = View.GONE
+        binding.cardSaleStudent.visibility = View.GONE
         binding.listView.visibility = View.VISIBLE
       //  binding.textViewChangeStateCheckbox.text = "Список платежей:"
         //binding.paymentSale.visibility = View.GONE
@@ -829,7 +801,7 @@ class LessonsItemEditFragment : Fragment() {
         //val items = arrayOf("Microsoft", "Apple", "Amazon", "Google")
         val items = listData
         val selectedList = ArrayList<Int>()
-        val builder = AlertDialog.Builder(getContext())
+        val builder = AlertDialog.Builder(context)
         val selectedStrings = ArrayList<String>()
         builder.setTitle("Выберите студентов")
         builder.setMultiChoiceItems(items, null
@@ -908,6 +880,7 @@ class LessonsItemEditFragment : Fragment() {
     private fun launchEditMode() {
         viewModel.getLessonsItem(lessonsItemId)
             binding.saveButton.setOnClickListener{
+            saveEditAddDeleteSale()
             validValueNotifications()
             var studentIds: String = adapter.arrayList.toString()
             var arrayListLocal: ArrayList<Int> = ArrayList()

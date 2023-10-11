@@ -44,12 +44,13 @@ class SaleItemViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    suspend fun editSaleItem(inputIdStudent: Int, inputIdLessons: Int, inputPrice: Int) {
-        val idStudent = inputIdStudent
-        val idLessons = inputIdLessons
+    fun editSaleItem(saleItem: SaleItem, inputPrice: Int) {
+        val idStudent = saleItem.idStudent
+        val idLessons = saleItem.idLessons
         val price = inputPrice
-        _saleItem.value?.let {
-            val saleItem = it.copy(idStudent = idStudent, idLessons = idLessons, price = price)
+        viewModelScope.launch {
+            val item = getSaleItemUseCase.getSaleItem(saleItem.id)
+            val saleItem = item.copy(price = price)
             editSaleItemUseCase.editSaleItem(saleItem)
             finishWork()
         }

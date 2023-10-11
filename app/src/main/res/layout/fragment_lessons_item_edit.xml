@@ -379,42 +379,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/listView" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_sale"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/listSalePayment"
-            app:layout_constraintVertical_chainStyle="packed">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_sale"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/lessons_price_sale"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-        <Button
-            android:id="@+id/save_sale_button"
-            android:layout_width="0dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_height="wrap_content"
-            android:text="@string/lessons_price_sale_buttom"
-            app:layout_constraintTop_toBottomOf="@id/til_sale"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
         <Button
             android:id="@+id/save_button"
             android:layout_width="0dp"
             android:layout_marginRight="8dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginTop="50dp"
             android:layout_height="wrap_content"
             android:text="@string/change_btn"
-            app:layout_constraintTop_toBottomOf="@id/save_sale_button"
+            app:layout_constraintTop_toBottomOf="@id/listSalePayment"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

@@ -12,4 +12,6 @@ interface SalesListRepository {
     suspend fun getSaleItem(saleItemId: Int): SaleItem
 
     fun getListSaleItems(): LiveData<List<SaleItem>>
+
+    fun getSalesSalesIdLessons(idLessons: Int): LiveData<List<SaleItem>>
 }

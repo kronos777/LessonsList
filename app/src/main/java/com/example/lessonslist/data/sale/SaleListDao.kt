@@ -24,5 +24,8 @@ interface SaleListDao {
     @Query("SELECT * FROM sale_item WHERE idLessons LIKE :idLess")
     fun getSalesIdLessons(idLess: Int) : List<SaleItemDbModel>
 
+    @Query("SELECT * FROM sale_item WHERE idLessons LIKE :idLess")
+    fun getSalesSalesIdLessons(idLess: Int) : LiveData<List<SaleItemDbModel>>
+
 
 }

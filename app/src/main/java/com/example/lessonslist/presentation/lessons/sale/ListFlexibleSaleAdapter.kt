@@ -1,6 +1,8 @@
 package com.example.lessonslist.presentation.lessons.sale
 
 import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -74,7 +76,7 @@ class ListFlexibleSaleAdapter(private val dataSet: ArrayList<*>, mContext: Conte
         }
 
 
-           /* viewHolder.valuePrice.addTextChangedListener(object : TextWatcher {
+            viewHolder.valuePrice.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
                 }
@@ -86,8 +88,11 @@ class ListFlexibleSaleAdapter(private val dataSet: ArrayList<*>, mContext: Conte
                 override fun afterTextChanged(p0: Editable?) {
                     Log.d("chechBox", item.id.toString())
                     Log.d("chechBox", viewHolder.valuePrice.text.toString())
+                    if (viewHolder.checkBox.isChecked) {
+                        addCountArrayList(item.id!!, viewHolder.valuePrice.text.toString().toInt())
+                    }
                 }
-            })*/
+            })
 
 
             viewHolder.checkBox.setOnClickListener {
