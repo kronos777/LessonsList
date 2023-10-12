@@ -3,7 +3,7 @@ package com.example.lessonslist.domain.lessons
 data class LessonsItem (
     val title: String,
     val notifications: String,
-    val student: String,
+    var student: String,
     val price: Int,
     val dateStart: String,
     val dateEnd: String,

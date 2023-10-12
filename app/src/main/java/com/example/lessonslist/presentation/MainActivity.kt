@@ -3,6 +3,8 @@ package com.example.lessonslist.presentation
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
@@ -11,6 +13,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.MenuProvider
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
@@ -108,7 +111,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             onDestinationChanged(destination.id)
         }
 
-
     }
 
 
@@ -123,6 +125,10 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                     enableHomeBackIcon(false)
                     paymentBtnAppBarTop.visibility = View.VISIBLE
                     backupBtnAppBarTop.visibility = View.VISIBLE
+                } R.id.lessonsItemListFragment -> {
+                    enableHomeBackIcon(false)
+                    paymentBtnAppBarTop.visibility = View.GONE
+                    backupBtnAppBarTop.visibility = View.GONE
                 } else -> {
                     enableHomeBackIcon(true)
                     toggle.setHomeAsUpIndicator(R.drawable.ic_baseline_navigate_before_24)
