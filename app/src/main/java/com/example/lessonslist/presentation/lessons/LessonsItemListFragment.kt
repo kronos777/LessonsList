@@ -2,11 +2,11 @@ package com.example.lessonslist.presentation.lessons
 
 
 
-import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -23,22 +23,22 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
-import com.example.lessonslist.R.color.black
 import com.example.lessonslist.databinding.FragmentLessonsItemListBinding
 import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class LessonsItemListFragment: Fragment(), MenuProvider {
@@ -52,9 +52,8 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
     private lateinit var viewModelPayment: PaymentListViewModel
 
 
-    private var showToolbar = false
-    private lateinit var toolbar: Toolbar
-    private lateinit var menuChoice: Menu
+    private var toolbar: MaterialToolbar? = null
+    private var menuChoice: Menu? = null
 
 
 
@@ -67,17 +66,12 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
          return binding.root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val menuHost: MenuHost = requireActivity()
 
-        (activity as AppCompatActivity).findViewById<Toolbar>(com.example.lessonslist.R.id.tool_bar).title  = "Список уроков"
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title  = "Список уроков"
 
         setupRecyclerView()
 
@@ -87,8 +81,8 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
         showDateOrCustomList(dateFilter)
 
         val bottomNavigationView =
-            requireActivity().findViewById<BottomNavigationView>(com.example.lessonslist.R.id.nav_view_bottom)
-        bottomNavigationView.menu.findItem(com.example.lessonslist.R.id.bottomItem4).isChecked = true
+            requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        bottomNavigationView.menu.findItem(R.id.bottomItem4).isChecked = true
 
         binding.buttonAddLessonsItem.setOnClickListener {
            /* fragmentManager?.beginTransaction()
@@ -131,27 +125,13 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
         }, viewLifecycleOwner)*/
 
 
-        toolbar = (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar)
-        toolbar.inflateMenu(R.menu.menu_recycler_choice)
-        toolbar.menu.findItem(R.id.backup).isVisible = false
-        toolbar.menu.findItem(R.id.payment).isVisible = false
-        //(activity as AppCompatActivity).findViewById<View>(R.id.payment).visibility = View.GONE
-       // (activity as AppCompatActivity).findViewById<View>(R.id.backup).visibility = View.GONE
-        menuChoice = toolbar.menu
-        showDeleteMenu(false)
-        toolbar.setOnMenuItemClickListener {
-            onMenuItemSelected(it)
-        }
-
-
-
     }
 
 
     /*new menu in bar */
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-      //  Toast.makeText(activity, "menu choice is active", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(activity, "menu choice is active", Toast.LENGTH_SHORT).show()
         menuChoice = menu
         menuInflater.inflate(R.menu.menu_recycler_choice, menu)
         showDeleteMenu(false)
@@ -168,39 +148,149 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
     }
 
     fun showDeleteMenu(show: Boolean) {
-        if(show) {
-            toolbar.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0e0f0f")))
-        } else {
-            toolbar.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0061A5")))
-        }
-        menuChoice.findItem(R.id.menu_delete).isVisible = show
-        menuChoice.findItem(R.id.menu_select_all).isVisible = show
+      toolbar = (activity as AppCompatActivity).findViewById(R.id.tool_bar)
+      val bottom_navigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+      if(show) {
+//          val actionBar: ActionBar = (activity as AppCompatActivity?)!!.supportActionBar!!
+   //       actionBar.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0e0f0f")))
+          bottom_navigation.itemBackgroundResource = R.color.active_select_items
+          toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.VISIBLE
+          toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.VISIBLE
+          //(activity as AppCompatActivity?)!!.window.navigationBarColor = Color.parseColor("#0e0f0f")
+          (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0e0f0f")
+         // (activity as AppCompatActivity?)!!.window.findViewById<BottomNavigationView>(R.id.nav_view_bottom) = Color.parseColor("#0e0f0f")
+          toolbar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0e0f0f")))
+          toolbar?.setOnMenuItemClickListener {
+              //onOptionsItemSelected(it)
+              onMenuItemSelected(it)
+          }
+          toolbar?.setNavigationIcon(R.drawable.baseline_close_24)
+          toolbar?.setNavigationOnClickListener {
+              showDeleteMenu(false)
+              lessonsListAdapter.pairList.clear()
+              setCustomDataLessonsCheckAll(false)
+          }
+      } else {
+          bottom_navigation.itemBackgroundResource = R.color.noactive_select_items
+          toolbar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0061A5")))
+          (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")
+          toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.GONE
+          toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.GONE
+          toolbar?.setNavigationIcon(R.drawable.ic_baseline_navigate_before_24)
+          toolbar?.setNavigationOnClickListener {
+              //Toast.makeText(activity,"нажал кнопку",Toast.LENGTH_SHORT).show()
+              goCalendarFragment()
+          }
+      }
+      menuChoice?.findItem(R.id.menu_delete)?.isVisible = show
+      menuChoice?.findItem(R.id.menu_select_all)?.isVisible = show
     }
 
-    /* @Deprecated("Deprecated in Java")
-     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-         menuChoice = menu
-         inflater.inflate(R.menu.menu_recycler_choice, menu)
-         Toast.makeText(activity, "menu choice is active", Toast.LENGTH_SHORT).show()
-         showDeleteMenu(false)
-         return super.onCreateOptionsMenu(menu, inflater)
-     }
+    private fun goCalendarFragment() {
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
 
-     @Deprecated("Deprecated in Java")
-     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-         when(item.itemId) {
-             R.id.menu_delete -> delete()
-             R.id.menu_select_all -> selectAll()
-         }
-         return super.onOptionsItemSelected(item)
-     }*/
+        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+            .setExitAnim(R.anim.slide_in_right)
+            .setPopEnterAnim(R.anim.slide_out_left)
+            .setPopExitAnim(R.anim.slide_out_right).build()
 
+        navController.navigate(R.id.calendarItemFragment, null, animationOptions)
+    }
+
+    /*
+        @Deprecated("Deprecated in Java")
+        override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+                 menuChoice = menu
+                 inflater.inflate(R.menu.menu_recycler_choice, menu)
+                 Toast.makeText(activity, "menu choice is active", Toast.LENGTH_SHORT).show()
+                 showDeleteMenu(false)
+                 return super.onCreateOptionsMenu(menu, inflater)
+        }
+
+        @Deprecated("Deprecated in Java")
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
+                 when(item.itemId) {
+                     R.id.menu_delete -> delete()
+                     R.id.menu_select_all -> selectAll()
+                 }
+            return super.onOptionsItemSelected(item)
+        }
+    */
     private fun delete() {
-        Toast.makeText(activity, "select delete", Toast.LENGTH_SHORT).show()
+        val alert = AlertDialog.Builder(requireContext())
+        var title: String
+        var txtDescription: String
+        var positiveButton: String
+        if(lessonsListAdapter.pairList.size == 1) {
+            title = "Удалить урок"
+            txtDescription = "Вы действительно хотите удалить выбранный урок ? Будьте внимательны с уроком удаляться и все его платежи."
+        } else {
+            title = "Удалить уроки"
+            txtDescription = "Вы действительно хотите удалить выбранные уроки ? Будьте внимательны с уроками удаляться и все их платежи."
+        }
+
+        alert.setTitle(title)
+
+
+        val layout = LinearLayout(requireContext())
+        layout.orientation = LinearLayout.HORIZONTAL
+
+        val paymentsLabel = TextView(requireContext())
+        paymentsLabel.setSingleLine()
+        paymentsLabel.text = txtDescription
+        paymentsLabel.isSingleLine = false
+        paymentsLabel.height = 150
+        paymentsLabel.top = 15
+        layout.addView(paymentsLabel)
+
+
+        layout.setPadding(50, 40, 50, 10)
+
+        alert.setView(layout)
+
+        alert.setPositiveButton("удалить", DialogInterface.OnClickListener {
+                dialog, id ->
+            //deleteLessonsPay
+            if(lessonsListAdapter.pairList.isNotEmpty()) {
+                //Log.d("pairListElementForDelete", "allData" + lessonsListAdapter.pairList.size.toString())
+                lessonsListAdapter.pairList.forEach {
+                    deletePaymentToLessons(it.key)
+                    viewModel.deleteLessonsItem(it.value)
+                }
+            }
+        })
+
+        alert.setNegativeButton("отмена", DialogInterface.OnClickListener {
+                dialog, id ->
+            dialog.dismiss()
+        })
+
+        alert.setCancelable(false)
+        alert.show()
     }
 
     private fun selectAll() {
-        Toast.makeText(activity, "select all item", Toast.LENGTH_SHORT).show()
+        val itemCount = lessonsListAdapter.itemCount
+       // Toast.makeText(activity, "lessonsListAdapter.pairList.size" + lessonsListAdapter.pairList.count() + " " + "lessonsListAdapter.pairList.size" + itemCount, Toast.LENGTH_SHORT).show()
+        //Log.d("pairListElement", "allData" + lessonsListAdapter.pairList.toString() + " count" + lessonsListAdapter.pairList.size)
+        if(lessonsListAdapter.pairList.isNotEmpty() && lessonsListAdapter.pairList.size < itemCount) {//notEmpty
+            if(lessonsListAdapter.pairList.size > 3) {
+                lessonsListAdapter.pairList.clear()
+                setCustomDataLessonsCheckAll(false)
+            } else {
+                setCustomDataLessonsCheckAll(true)
+            }
+
+        } else if (lessonsListAdapter.pairList.size == itemCount){
+            lessonsListAdapter.pairList.clear()
+            setCustomDataLessonsCheckAll(false)
+        } else if (lessonsListAdapter.pairList.isEmpty()) {
+            Toast.makeText(activity, "pairList is Empty" + itemCount, Toast.LENGTH_SHORT).show()
+            setCustomDataLessonsCheckAll(true)
+        }
+        //Log.d("pairListElement", "after allData" + lessonsListAdapter.pairList.toString() + " count" + lessonsListAdapter.pairList.size)
+        //Toast.makeText(activity, "after lessonsListAdapter.pairList.size" + lessonsListAdapter.pairList.count() + " " + "lessonsListAdapter.pairList.size" + itemCount, Toast.LENGTH_SHORT).show()
     }
     /*new menu in bar */
 
@@ -239,11 +329,12 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
                     }
                     lessonsListAdapter.submitList(sortLessons)
                 } else {
-                    Toast.makeText(getActivity(),"На эту дату уроков не запланировано!",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity,"На эту дату уроков не запланировано!",Toast.LENGTH_SHORT).show()
                 }
             }
         } else {
             setCustomDataLessons()
+            //setCustomDataLessonsCheckAll()
         }
     }
 
@@ -258,6 +349,34 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
             lessonsListAdapter.submitList(sortLessons)
         }
     }
+
+
+    private fun setCustomDataLessonsCheckAll(selectAll: Boolean) {
+        //Toast.makeText(activity,"setCustomDataLessonsCheckAll!",Toast.LENGTH_SHORT).show()
+        viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
+        viewModel.lessonsList.observe(viewLifecycleOwner) {
+            val listNew = ArrayList<LessonsItem>()
+            if(selectAll) {
+                it.forEach {
+                    val nn = it.copy(student = "500")
+                    listNew.add(nn)
+                }
+            } else {
+                it.forEach {
+                    val nn = it.copy(student = "0")
+                    listNew.add(nn)
+                }
+            }
+
+            val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
+            //val sortLessons = it.sortedByDescending {
+            val sortLessons = listNew.sortedByDescending {
+                LocalDate.parse(it.dateStart, formatter)
+            }
+            lessonsListAdapter.submitList(sortLessons)
+        }
+    }
+
 
     private fun goCalendarFragmentBackPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -274,7 +393,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
 
     private fun setupRecyclerView() {
         with(binding.rvLessonsList) {
-            lessonsListAdapter = LessonsListAdapter() { show -> showDeleteMenu(show) }
+            lessonsListAdapter = LessonsListAdapter { show -> showDeleteMenu(show) }
             adapter = lessonsListAdapter
             recycledViewPool.setMaxRecycledViews(
                 LessonsListAdapter.VIEW_TYPE_ENABLED,
@@ -282,18 +401,22 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
             )
 
         }
-        //setupLongClickListener()
+       // setupLongClickListener()
         setupClickListener()
        // setupSwipeListener(binding.rvLessonsList)
     }
 
-   /* private fun setupLongClickListener() {
-        lessonsListAdapter.onLessonsItemLongClickListener = {
-            //val item = lessonsListAdapter.currentList[it.id]
-            // viewModel.deleteStudentItem(item)
-            dialogWindow(it.id, it, it.title)
-        }
-    }*/
+    private fun setupLongClickListener() {
+
+    }
+
+    /* private fun setupLongClickListener() {
+         lessonsListAdapter.onLessonsItemLongClickListener = {
+             //val item = lessonsListAdapter.currentList[it.id]
+             // viewModel.deleteStudentItem(item)
+             dialogWindow(it.id, it, it.title)
+         }
+     }*/
 
 
     private fun setupClickListener() {
@@ -307,7 +430,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
         val navController = navHostFragment.navController
 
         val argss = requireArguments()
-        val mode = argss.getString(LessonsItemListFragment.DATE_ID)
+        val mode = argss.getString(DATE_ID)
         if (mode != null) {
            // Toast.makeText(activity, "ne raven null", Toast.LENGTH_SHORT).show()
             val btnArgsLessons = Bundle().apply {
@@ -422,17 +545,16 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Toast.makeText(getActivity(),"На эту дату уроков не запланировано!",Toast.LENGTH_SHORT).show()
+        /*showDeleteMenu(false)
+        toolbar = null
+        menuChoice = null
+        Toast.makeText(activity,"На эту дату уроков не запланировано!",Toast.LENGTH_SHORT).show()*/
     }
     companion object {
-
         const val SCREEN_MODE = "screen_mode"
         const val CUSTOM_LIST = "custom_list"
         const val DATE_ID_LIST = "date_id_list"
         const val DATE_ID = "date_id"
-
-
-
     }
 
 }

@@ -41,7 +41,7 @@
                 android:src="@drawable/ic_baseline_check_circle_24"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:visibility="@{lessonsItem.price > 5000 ? View.VISIBLE : View.GONE}"
+                android:visibility='@{lessonsItem.student == "500" ? View.VISIBLE : View.GONE}'
                 />
         </LinearLayout>
 

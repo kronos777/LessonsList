@@ -111,6 +111,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             onDestinationChanged(destination.id)
         }
 
+
     }
 
 
@@ -122,11 +123,14 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         try {
             when(currentDestination) {
                 R.id.calendarItemFragment -> {
+                    initMaterialToolBar()
+                    initDrawerNavigation()
                     enableHomeBackIcon(false)
                     paymentBtnAppBarTop.visibility = View.VISIBLE
                     backupBtnAppBarTop.visibility = View.VISIBLE
                 } R.id.lessonsItemListFragment -> {
-                    enableHomeBackIcon(false)
+                    enableHomeBackIcon(true)
+                    toggle.setHomeAsUpIndicator(R.drawable.ic_baseline_navigate_before_24)
                     paymentBtnAppBarTop.visibility = View.GONE
                     backupBtnAppBarTop.visibility = View.GONE
                 } else -> {
@@ -198,6 +202,9 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         val materialToolbar: MaterialToolbar = binding.toolBar
         val paymentBtnAppBarTop = findViewById<View>(R.id.payment)
 
+        findViewById<View>(R.id.menu_delete).visibility = View.GONE
+        findViewById<View>(R.id.menu_select_all).visibility = View.GONE
+
         paymentBtnAppBarTop.setOnClickListener {
             if(alertCount > 0) {
                 launchPaymentListEnabledFragment()
@@ -218,7 +225,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
     }
-
 
     private fun launchPaymentListEnabledFragment() {
          val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment

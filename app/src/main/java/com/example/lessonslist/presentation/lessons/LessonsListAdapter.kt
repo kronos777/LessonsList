@@ -18,13 +18,13 @@ class LessonsListAdapter(
 ) : ListAdapter<LessonsItem, LessonsItemViewHolder>(LessonsItemDiffCallback()) {
 
     var onLessonsItemClickListener: ((LessonsItem) -> Unit)? = null
-   // var onLessonsItemLongClickListener: ((LessonsItem) -> Unit)? = null
+    var onLessonsItemLongClickListener: ((LessonsItem) -> Unit)? = null
 
 
     private var isEnabled = false
     private var itemSelectedList = mutableListOf<Int>()
     //val pairList = ArrayList<Pair<Int, Int>>()
-    val pairList = mutableMapOf<Int, Int>()
+    val pairList = hashMapOf<Int, LessonsItem>()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LessonsItemViewHolder {
@@ -47,7 +47,7 @@ class LessonsListAdapter(
             onLessonsItemClickListener?.invoke(lessonsItem)
         }*/
 
-        binding.root.setOnClickListener {
+      /*  binding.root.setOnClickListener {
             Log.d("thisCurrentPosition", position.toString())
             if(lessonsItem.student != "500" && itemSelectedList.isEmpty()){
                 onLessonsItemClickListener?.invoke(lessonsItem)
@@ -62,11 +62,32 @@ class LessonsListAdapter(
                 selectItem(viewHolder, lessonsItem, position)
             }
 
+        }*/
+        if (lessonsItem.student == "500") {
+            pairList[lessonsItem.id] = lessonsItem
         }
 
+        binding.root.setOnClickListener {
+            //Log.d("thisCurrentPosition", position.toString())
+            //pairList.put(it.id, it.price)
+            if(lessonsItem.student != "500" && pairList.isEmpty()){
+                onLessonsItemClickListener?.invoke(lessonsItem)
+            } else if(pairList.containsKey(lessonsItem.id)) {
+                //itemSelectedList.removeAt(position)
+                pairList.remove(lessonsItem.id)
+                lessonsItem.student = "0"
+                viewHolder.binding.checkImage.visibility = View.GONE
+                if (pairList.isEmpty()) {
+                    showMenuDelete(false)
+                }
+            } else if(lessonsItem.student != "500" && pairList.isNotEmpty()) {
+                selectItem(viewHolder, lessonsItem)
+            }
+
+        }
         //binding.root.setOnLongClickListener {
         binding.root.setOnLongClickListener {
-            selectItem(viewHolder, lessonsItem, position)
+            selectItem(viewHolder, lessonsItem)
             true
             /*onLessonsItemLongClickListener?.invoke(lessonsItem)
             true*/
@@ -75,10 +96,11 @@ class LessonsListAdapter(
     }
 
 
-    private fun selectItem(viewHolder: LessonsItemViewHolder, lessonsItem: LessonsItem, position: Int) {
+    private fun selectItem(viewHolder: LessonsItemViewHolder, lessonsItem: LessonsItem) {
         isEnabled = true
         viewHolder.binding.checkImage.visibility = View.VISIBLE
-        itemSelectedList.add(position)
+       // itemSelectedList.add(position)
+        pairList.put(lessonsItem.id, lessonsItem)
         lessonsItem.student = "500"
         showMenuDelete(true)
     }
@@ -94,7 +116,7 @@ class LessonsListAdapter(
             currentList.filter{ it.student == "500" }.forEach {
                 /*val pair = Pair(it.id, it.idBussines)
                 pairList.add(pair)*/
-                pairList.put(it.id, it.price)
+                pairList[it.id] = it
             }
             itemSelectedList.clear()
             isEnabled = false
