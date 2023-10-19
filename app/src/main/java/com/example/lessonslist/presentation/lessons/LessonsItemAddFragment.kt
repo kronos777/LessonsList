@@ -645,8 +645,8 @@ class LessonsItemAddFragment : Fragment()  {
 
         mTimePicker = TimePickerDialog(context,
             { _, hourOfDay, minute ->
-                val minH = if (hourOfDay < 10) "0" + hourOfDay else hourOfDay
-                val minM = if (minute < 10) "0" + minute else minute
+                val minH = if (hourOfDay < 10) "0" + hourOfDay else if(hourOfDay == 0) "00" else hourOfDay
+                val minM = if (minute < 10) "0" + minute else if(minute == 0) "00" else minute
                 binding.etDatestart.setText(String.format("%d/%d/%d %s:%s", year, month + 1, day, minH, minM))
                 timePicker1 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + minH.toString() + ":" + minM.toString()
                 timePicker1RepeatStartHourMinuteDate = minH.toString() + ":" + minM.toString()
@@ -657,8 +657,8 @@ class LessonsItemAddFragment : Fragment()  {
 
         mTimePickerEnd = TimePickerDialog(context,
             { _, hourOfDay, minute ->
-                val minH = if (hourOfDay < 10) "0" + hourOfDay else hourOfDay
-                val minM = if (minute < 10) "0" + minute else minute
+                val minH = if (hourOfDay < 10) "0" + hourOfDay else if(hourOfDay == 0) "00" else hourOfDay
+                val minM = if (minute < 10) "0" + minute else if(minute == 0) "00" else minute
 //                Toast.makeText(getActivity(), setValue.toString(), Toast.LENGTH_SHORT).show()
                 binding.etDateend.setText(String.format("%d/%d/%d %s:%s", year, month + 1, day, minH, minM))
                 timePicker2 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + minH.toString() + ":" + minM.toString()

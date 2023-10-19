@@ -1,6 +1,7 @@
 package com.example.lessonslist.presentation.lessons
 
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -32,6 +33,7 @@ import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.student.StudentItemViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.time.Duration
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -73,6 +75,12 @@ class LessonsItemEditFragment : Fragment() {
     private var dataPaymentStudentModel: ArrayList<DataPaymentStudentLessonsModel>? = null
     private var notificationString: String = ""
     private var notificationBoolean: Boolean = true
+
+    val mcurrentTime = Calendar.getInstance()
+    var year: Int = mcurrentTime.get(Calendar.YEAR)
+    var month: Int = mcurrentTime.get(Calendar.MONTH)
+    var day: Int = mcurrentTime.get(Calendar.DAY_OF_MONTH)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,7 +131,36 @@ class LessonsItemEditFragment : Fragment() {
         switchCardSaleStudent()
 
         notificationsLessons()
+        changeDataLessons()
+        initDate()
 
+    }
+
+    private fun initDate() {
+        viewModel.lessonsItem.observe(viewLifecycleOwner) {
+           // Toast.makeText(activity, "curDate: " + it.dateStart, Toast.LENGTH_SHORT).show()
+            val firstField = it.dateStart
+            val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
+            val fTime = LocalDateTime.parse(firstField, formatter)
+            year = fTime.year
+            month = fTime.month.value - 1
+            day = fTime.dayOfMonth
+        }
+
+        /*val firstField = binding.etDatestart.text
+        val twoField = binding.etDateend.text
+        val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
+        val fTime = LocalDateTime.parse(firstField, formatter)
+        year = fTime.year
+        month = fTime.month.value
+        day = fTime.dayOfMonth*/
+    }
+
+
+    private fun changeDataLessons() {
+        binding.textSwithData.setOnClickListener {
+            setNewDayLessons()
+        }
     }
 
     private fun setDataLessonsPayment() {
@@ -257,38 +294,37 @@ class LessonsItemEditFragment : Fragment() {
 
         val mTimePicker: TimePickerDialog
         val mTimePickerEnd: TimePickerDialog
-        val mcurrentTime = Calendar.getInstance()
+
         val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
         val minute = mcurrentTime.get(Calendar.MINUTE)
 
 
-        val year: Int = mcurrentTime.get(Calendar.YEAR)
-        val month: Int = mcurrentTime.get(Calendar.MONTH)
-        val day: Int = mcurrentTime.get(Calendar.DAY_OF_MONTH)
 
         var timePicker1 = ""
         var timePicker2 = ""
 
 
-        mTimePicker = TimePickerDialog(context, object : TimePickerDialog.OnTimeSetListener {
-            override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-                binding.etDatestart.setText(String.format("%d/%d/%d %d : %d", year, month + 1, day, hourOfDay, minute))
-                timePicker1 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + hourOfDay.toString() + ":" + minute.toString()
+        mTimePicker = TimePickerDialog(context,
+            { view, hourOfDay, minute ->
+                val minH = if (hourOfDay < 10) "0" + hourOfDay else if(hourOfDay == 0) "00" else hourOfDay
+                val minM = if (minute < 10) "0" + minute else if(minute == 0) "00" else minute
+                binding.etDatestart.setText(String.format("%d/%d/%d %s:%s", year, month + 1, day, minH, minM))
+                timePicker1 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + minH.toString() + ":" + minM.toString()
                 if (timePicker1.length > 0 && timePicker2.length > 0) {
                     checkAddDateTime(timePicker1, timePicker2)
                 }
-            }
-        }, hour, minute, true)
+            }, hour, minute, true)
 
-        mTimePickerEnd = TimePickerDialog(context, object : TimePickerDialog.OnTimeSetListener {
-            override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-                binding.etDateend.setText(String.format("%d/%d/%d %d : %d", year, month + 1, day, hourOfDay, minute))
-                timePicker2 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + hourOfDay.toString() + ":" + minute.toString()
+        mTimePickerEnd = TimePickerDialog(context,
+            { view, hourOfDay, minute ->
+                val minH = if (hourOfDay < 10) "0" + hourOfDay else if(hourOfDay == 0) "00" else hourOfDay
+                val minM = if (minute < 10) "0" + minute else if(minute == 0) "00" else minute
+                binding.etDateend.setText(String.format("%d/%d/%d %s:%s", year, month + 1, day, minH, minM))
+                timePicker2 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + minH.toString() + ":" + minM.toString()
                 if (timePicker1.length > 0 && timePicker2.length > 0) {
                     checkAddDateTime(timePicker1, timePicker2)
                 }
-            }
-        }, hour, minute, true)
+            }, hour, minute, true)
 
         binding.etDatestart.setOnClickListener{
             mTimePicker.show()
@@ -296,11 +332,32 @@ class LessonsItemEditFragment : Fragment() {
 
         binding.etDateend.setOnClickListener{
             mTimePickerEnd.show()
+
         }
     }
 
+    private fun setNewDayLessons() {
 
-/*
+        val firstField = binding.etDatestart.text
+        val twoField = binding.etDateend.text
+        val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
+        val fTime = LocalDateTime.parse(firstField, formatter)
+        val tTime = LocalDateTime.parse(twoField, formatter)
+
+        val dpd =
+            activity?.let {
+                DatePickerDialog(requireContext(), { _, yearcur, monthOfYear, dayOfMonth ->
+                    mcurrentTime.set(yearcur, monthOfYear, dayOfMonth)
+                    year = mcurrentTime[Calendar.YEAR]
+                    month = mcurrentTime[Calendar.MONTH]
+                    day = mcurrentTime[Calendar.DAY_OF_MONTH]
+                    binding.etDatestart.setText(String.format("%d/%d/%d %s:%s", year, month + 1, day, fTime.hour, fTime.minute))
+                    binding.etDateend.setText(String.format("%d/%d/%d %s:%s", year, month + 1, day, tTime.hour, tTime.minute))
+                }, year, month, day)
+            }
+        dpd!!.show()
+    }
+    /*
     private fun listenSwitchSalePayment() {
         val switchChoose = binding.paymentSale
         switchChoose.setOnCheckedChangeListener { _, isChecked ->
@@ -424,7 +481,6 @@ class LessonsItemEditFragment : Fragment() {
 
         }
     }
-
 
     private fun transformStringToListInt(dataString: String): MutableList<Int> {
         var dtString = dataString.replace("]", "")
@@ -642,8 +698,10 @@ class LessonsItemEditFragment : Fragment() {
 
 
     private fun saveEditAddDeleteSale() {
+        /*if(this::adapterSaleReadyFlexible.isInitialized) {
             val mapDataSales = adapterSaleReadyFlexible.idValueMutableMap
             currentLessonHaveSaleOrNotHave(mapDataSales)
+        }*/
     }
 
     private fun currentLessonHaveSaleOrNotHave(adapterValue: MutableMap<Int, Int>) {
@@ -749,6 +807,7 @@ class LessonsItemEditFragment : Fragment() {
         binding.tilPrice.visibility = View.GONE
         binding.saveButton.text = "Список уроков."
         binding.etTitle.setBackgroundResource(R.color.white)
+        binding.textSwithData.visibility = View.GONE
         binding.etTitle.isFocusable = false
         binding.etDatestart.setBackgroundResource(R.color.white)
         binding.etDateend.setBackgroundResource(R.color.white)
