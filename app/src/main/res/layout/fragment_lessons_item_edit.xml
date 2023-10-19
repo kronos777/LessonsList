@@ -247,7 +247,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/textViewChangeStateCheckbox"
             android:text="Скидка на оплату"/-->
-
+        <TextView
+            android:id="@+id/textSwithData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="Изменить дату урока"
+            android:textAlignment="textStart"
+            android:textColor="@color/cardColor"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/card_notifications"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/card_students"
+            />
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_students"
             android:layout_width="match_parent"

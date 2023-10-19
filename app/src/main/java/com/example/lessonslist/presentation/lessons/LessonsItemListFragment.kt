@@ -178,7 +178,6 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
           toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.GONE
           toolbar?.setNavigationIcon(R.drawable.ic_baseline_navigate_before_24)
           toolbar?.setNavigationOnClickListener {
-              //Toast.makeText(activity,"нажал кнопку",Toast.LENGTH_SHORT).show()
               goCalendarFragment()
           }
       }
