@@ -24,7 +24,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemAddBinding
-import com.example.lessonslist.presentation.MainViewModel
+import com.example.lessonslist.presentation.student.StudentListViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
@@ -54,7 +54,7 @@ class LessonsItemAddFragment : Fragment()  {
 
     private var dataStudentGroupModel: ArrayList<DataStudentGroupModel>? = null
 
-    private lateinit var dataStudentlList: MainViewModel
+    private lateinit var dataStudentlList: StudentListViewModel
 
 
 
@@ -417,7 +417,7 @@ class LessonsItemAddFragment : Fragment()  {
 
       //  listView = binding.listView
         dataStudentGroupModel = ArrayList()
-        dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
+        dataStudentlList = ViewModelProvider(this)[StudentListViewModel::class.java]
         var studentName: Array<String> = emptyArray()
 
         dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->

@@ -3,8 +3,6 @@ package com.example.lessonslist.presentation
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
@@ -13,9 +11,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.MenuProvider
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -25,12 +21,10 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.impl.Schedulers
 import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.data.service.PaymentWork
 import com.example.lessonslist.databinding.ActivityMainBinding
-import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.domain.payment.PaymentItem
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
@@ -47,13 +41,11 @@ import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.settings.SettingsNotificationsFragment
 import com.example.lessonslist.presentation.student.StudentItemEditFragment
 import com.example.lessonslist.presentation.student.StudentItemFragment
+import com.example.lessonslist.presentation.student.StudentListViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
-import io.reactivex.rxjava3.core.BackpressureStrategy
-import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.core.FlowableOnSubscribe
 import java.util.Calendar
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
@@ -73,7 +65,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private lateinit var viewModelPayment: PaymentListViewModel
     private lateinit var viewModelLessons: LessonsListViewModel
     private lateinit var viewModelGroup: GroupListViewModel
-    private lateinit var viewModelStudent: MainViewModel
+    private lateinit var viewModelStudent: StudentListViewModel
     private lateinit var viewModelLesson: LessonsItemViewModel
     // create Firebase authentication object
     private lateinit var navControllerTest: NavController
@@ -125,6 +117,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 R.id.calendarItemFragment -> {
                     initMaterialToolBar()
                     initDrawerNavigation()
+                    //this.findViewById(R.id.tool_bar)?.setNavigationIcon(R.drawable.ic_baseline_navigate_before_24)
                     enableHomeBackIcon(false)
                     paymentBtnAppBarTop.visibility = View.VISIBLE
                     backupBtnAppBarTop.visibility = View.VISIBLE
@@ -464,7 +457,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         val initialDate = calendar.time
 
         viewModelLessons = ViewModelProvider(this)[LessonsListViewModel::class.java]
-        viewModelStudent = ViewModelProvider(this)[MainViewModel::class.java]
+        viewModelStudent = ViewModelProvider(this)[StudentListViewModel::class.java]
         viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelGroup = ViewModelProvider(this)[GroupListViewModel::class.java]
         viewModelLesson = ViewModelProvider(this)[LessonsItemViewModel::class.java]

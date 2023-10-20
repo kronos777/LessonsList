@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentGroupItemBinding
 import com.example.lessonslist.domain.group.GroupItem
-import com.example.lessonslist.presentation.MainViewModel
+import com.example.lessonslist.presentation.student.StudentListViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -45,7 +44,7 @@ class GroupItemFragment : Fragment() {
     private lateinit var adapter: ListStudentAdapter
     private lateinit var listView: ListView
     private var dataStudentGroupModel: ArrayList<DataStudentGroupModel>? = null
-    private lateinit var dataStudentlList: MainViewModel
+    private lateinit var dataStudentlList: StudentListViewModel
 
 
 
@@ -98,7 +97,7 @@ class GroupItemFragment : Fragment() {
 
         listView = binding.listView
 
-        dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
+        dataStudentlList = ViewModelProvider(this)[StudentListViewModel::class.java]
         dataStudentGroupModel = ArrayList<DataStudentGroupModel>()
 
         dataStudentlList.studentList.observe(viewLifecycleOwner) {

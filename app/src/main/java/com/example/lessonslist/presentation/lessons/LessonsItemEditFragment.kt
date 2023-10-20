@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
-import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -24,7 +23,7 @@ import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemEditBinding
 import com.example.lessonslist.domain.group.GroupItem
 import com.example.lessonslist.domain.lessons.LessonsItem
-import com.example.lessonslist.presentation.MainViewModel
+import com.example.lessonslist.presentation.student.StudentListViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
 import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
@@ -33,7 +32,6 @@ import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.student.StudentItemViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.time.Duration
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -68,7 +66,7 @@ class LessonsItemEditFragment : Fragment() {
     private lateinit var adapter: ListStudentAdapter
     private lateinit var listView: ListView
     private var dataStudentGroupModel: ArrayList<DataStudentGroupModel>? = null
-    private lateinit var dataStudentlList: MainViewModel
+    private lateinit var dataStudentlList: StudentListViewModel
 
     private lateinit var viewModelPayment: PaymentListViewModel
 
@@ -165,7 +163,7 @@ class LessonsItemEditFragment : Fragment() {
 
     private fun setDataLessonsPayment() {
         listView = binding.listView
-        dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
+        dataStudentlList = ViewModelProvider(this)[StudentListViewModel::class.java]
         dataStudentGroupModel = ArrayList<DataStudentGroupModel>()
         var studentName: Array<String> = emptyArray()
         dataPaymentStudentModel = ArrayList<DataPaymentStudentLessonsModel>()
@@ -383,7 +381,7 @@ class LessonsItemEditFragment : Fragment() {
     private fun setListViewSaleFlexible(salePaymentValueDate: HashSet<Int?>) {
         listViewSale = binding.listSalePayment
         dataStudentSaleModel = ArrayList<DataSalePaymentModel>()
-        dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
+        dataStudentlList = ViewModelProvider(this)[StudentListViewModel::class.java]
         viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
         viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
         var studentName: Array<String> = emptyArray()
@@ -501,7 +499,7 @@ class LessonsItemEditFragment : Fragment() {
 
         listViewSale = binding.listSalePayment
         dataStudentSaleModel = ArrayList<DataSalePaymentModel>()
-        dataStudentlList = ViewModelProvider(this)[MainViewModel::class.java]
+        dataStudentlList = ViewModelProvider(this)[StudentListViewModel::class.java]
         viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
         viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
         var studentName: Array<String> = emptyArray()
