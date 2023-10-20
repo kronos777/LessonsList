@@ -3,19 +3,27 @@ package com.example.lessonslist.presentation.group
 
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.ItemGroupEnabledBinding
 import com.example.lessonslist.domain.group.GroupItem
+import com.example.lessonslist.domain.lessons.LessonsItem
+import com.example.lessonslist.presentation.lessons.LessonsItemViewHolder
 
 
-class GroupListAdapter : ListAdapter<GroupItem, GroupItemViewHolder>(GroupItemDiffCallback()) {
+class GroupListAdapter(
+    private val showMenuDelete: (Boolean) -> Unit
+) : ListAdapter<GroupItem, GroupItemViewHolder>(GroupItemDiffCallback()) {
 
     var onGroupItemClickListener: ((GroupItem) -> Unit)? = null
     var onGroupItemLongClickListener: ((GroupItem) -> Unit)? = null
 
+
+    private var isEnabled = false
+    val pairList = hashMapOf<Int, GroupItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupItemViewHolder {
        // Log.d("viewType", viewType.toString())
@@ -33,15 +41,48 @@ class GroupListAdapter : ListAdapter<GroupItem, GroupItemViewHolder>(GroupItemDi
     override fun onBindViewHolder(viewHolder: GroupItemViewHolder, position: Int) {
         val groupItem = getItem(position)
         val binding = viewHolder.binding
-        binding.root.setOnClickListener {
+        /*binding.root.setOnClickListener {
             onGroupItemClickListener?.invoke(groupItem)
         }
+        */
+        if(groupItem.description == "500") {
+            pairList[groupItem.id] = groupItem
+        }
+
+        binding.root.setOnClickListener {
+            if(groupItem.description != "500" && pairList.isEmpty()){
+                onGroupItemClickListener?.invoke(groupItem)
+            } else if(pairList.containsKey(groupItem.id)) {
+                pairList.remove(groupItem.id)
+                groupItem.description = "0"
+                viewHolder.binding.checkImage.visibility = View.GONE
+                if (pairList.isEmpty()) {
+                    showMenuDelete(false)
+                }
+            } else if(groupItem.description != "500" && pairList.isNotEmpty()) {
+                selectItem(viewHolder, groupItem)
+            }
+
+        }
+
         binding.root.setOnLongClickListener {
-            onGroupItemLongClickListener?.invoke(groupItem)
+            selectItem(viewHolder, groupItem)
             true
         }
+
         binding.groupItem = groupItem
     }
+
+
+    private fun selectItem(viewHolder: GroupItemViewHolder, groupItem: GroupItem) {
+        isEnabled = true
+        viewHolder.binding.checkImage.visibility = View.VISIBLE
+        // itemSelectedList.add(position)
+        pairList.put(groupItem.id, groupItem)
+        groupItem.description = "500"
+        showMenuDelete(true)
+    }
+
 
     companion object {
 

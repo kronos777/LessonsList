@@ -285,8 +285,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
             lessonsListAdapter.pairList.clear()
             setCustomDataLessonsCheckAll(false)
         } else if (lessonsListAdapter.pairList.isEmpty()) {
-            Toast.makeText(activity, "pairList is Empty" + itemCount, Toast.LENGTH_SHORT).show()
-            setCustomDataLessonsCheckAll(true)
+             setCustomDataLessonsCheckAll(true)
         }
         //Log.d("pairListElement", "after allData" + lessonsListAdapter.pairList.toString() + " count" + lessonsListAdapter.pairList.size)
         //Toast.makeText(activity, "after lessonsListAdapter.pairList.size" + lessonsListAdapter.pairList.count() + " " + "lessonsListAdapter.pairList.size" + itemCount, Toast.LENGTH_SHORT).show()

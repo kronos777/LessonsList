@@ -22,8 +22,6 @@ class LessonsListAdapter(
 
 
     private var isEnabled = false
-    private var itemSelectedList = mutableListOf<Int>()
-    //val pairList = ArrayList<Pair<Int, Int>>()
     val pairList = hashMapOf<Int, LessonsItem>()
 
 
@@ -111,17 +109,6 @@ class LessonsListAdapter(
 
     }
 
-    fun deleteChoiceItem() {
-        if (itemSelectedList.isNotEmpty()) {
-            currentList.filter{ it.student == "500" }.forEach {
-                /*val pair = Pair(it.id, it.idBussines)
-                pairList.add(pair)*/
-                pairList[it.id] = it
-            }
-            itemSelectedList.clear()
-            isEnabled = false
-        }
-    }
 
     companion object {
 

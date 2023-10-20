@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
-
+        <import type="android.view.View"/>
         <variable
             name="groupItem"
             type="com.example.lessonslist.domain.group.GroupItem"
@@ -35,7 +35,15 @@
                 android:textStyle="bold"
                 tools:text="Группы" />
 
-
+            <ImageView
+                android:id="@+id/checkImage"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_baseline_check_circle_24"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:visibility='@{groupItem.description == "500" ? View.VISIBLE : View.GONE}'
+                />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

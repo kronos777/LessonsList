@@ -2,7 +2,7 @@ package com.example.lessonslist.domain.group
 
 data class GroupItem(
     val title: String,
-    val description: String,
+    var description: String,
     val student: String,
     val id: Int = UNDEFINED_ID
 ){
