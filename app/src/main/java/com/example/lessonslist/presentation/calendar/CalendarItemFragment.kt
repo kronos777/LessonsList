@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +25,7 @@ import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsListViewModel
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import ru.cleverpumpkin.calendar.CalendarDate
@@ -72,8 +74,6 @@ class CalendarItemFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        //(activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = "Календарь уроков"
         (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = "Календарь уроков"
 
         getDate()
@@ -85,6 +85,8 @@ class CalendarItemFragment() : Fragment() {
         showToolbarAndBottomNavigation()
       //  goCalendarFragmentBackPressed()
         goExitBackPressed()
+
+
     }
 
     private fun goExitBackPressed() {
@@ -99,6 +101,7 @@ class CalendarItemFragment() : Fragment() {
         (activity as AppCompatActivity).findViewById<NavigationView>(R.id.navView).visibility = View.VISIBLE
         (activity as AppCompatActivity).findViewById<View>(R.id.payment).visibility = View.VISIBLE
         (activity as AppCompatActivity).findViewById<View>(R.id.backup).visibility = View.VISIBLE
+        (activity as AppCompatActivity).findViewById<MaterialToolbar>(R.id.tool_bar).setNavigationIcon(R.drawable.ic_baseline_menu_24)
     }
 
     private fun getDate() {

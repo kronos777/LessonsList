@@ -5,7 +5,7 @@ data class StudentItem(
     val paymentBalance: Int,
     val name: String,
     val lastname: String,
-    val group: String,
+    var group: String,
     val image: String,
     val notes: String,
     val telephone: String,

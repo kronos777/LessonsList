@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
-
+        <import type="android.view.View"/>
         <variable
             name="studentItem"
             type="com.example.lessonslist.domain.student.StudentItem"
@@ -35,7 +35,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_marginLeft="5dp"
-                tools:text="Салфетки" />
+                />
 
             <TextView
                 android:id="@+id/tv_count"
@@ -47,7 +47,16 @@
                 android:textStyle="bold"
                 tools:text="1"
                 />
-
+            <ImageView
+                android:id="@+id/checkImage"
+                android:layout_marginLeft="8dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_baseline_check_circle_24"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:visibility='@{studentItem.group == "500" ? View.VISIBLE : View.GONE}'
+                />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

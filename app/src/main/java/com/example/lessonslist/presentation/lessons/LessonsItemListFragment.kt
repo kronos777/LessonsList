@@ -542,12 +542,9 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
 
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        /*showDeleteMenu(false)
-        toolbar = null
-        menuChoice = null
-        Toast.makeText(activity,"На эту дату уроков не запланировано!",Toast.LENGTH_SHORT).show()*/
+    override fun onStop() {
+        super.onStop()
+        showDeleteMenu(false)
     }
     companion object {
         const val SCREEN_MODE = "screen_mode"
