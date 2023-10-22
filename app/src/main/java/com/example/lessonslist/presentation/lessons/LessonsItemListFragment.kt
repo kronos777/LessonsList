@@ -36,6 +36,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
@@ -127,6 +128,14 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
 
     }
 
+    private fun compareDateTimeLessonsAndNow(lessonsTime: String): Boolean {
+        val current = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
+        var formatted = current.format(formatter)
+        val currentTime = LocalDateTime.parse(formatted, formatter)
+        val lessonsTime = LocalDateTime.parse(lessonsTime, formatter)
+        return currentTime > lessonsTime
+    }
 
     /*new menu in bar */
 
@@ -316,9 +325,19 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
                     val datePay = Date(pay[0])
                     val dateFormated = SimpleDateFormat("d/M/yyyy").format(datePay)
                     if(dateFormated == dateFilter){
-                        listArrayPayment.add(lessons)
+                        if(compareDateTimeLessonsAndNow(lessons.dateEnd)) {
+                            val nn = lessons.copy(notifications = "finished")
+                            listArrayPayment.add(nn)
+                        } else {
+                            listArrayPayment.add(lessons)
+                        }
+
                     }
                 }
+
+
+
+
                 //  Toast.makeText(getActivity(),"Уроков в массиве!" + listArrayPayment.size,Toast.LENGTH_SHORT).show()
                 if(listArrayPayment.size > 0) {
                     val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
@@ -339,9 +358,19 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
     private fun setCustomDataLessons() {
         viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
         viewModel.lessonsList.observe(viewLifecycleOwner) {
+            val listNew = ArrayList<LessonsItem>()
             val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
+            it.forEach {
+                if(compareDateTimeLessonsAndNow(it.dateEnd)) {
+                    val nn = it.copy(notifications = "finished")
+                    listNew.add(nn)
+                } else {
+                    listNew.add(it)
+                }
+
+            }
             //val sortLessons = it.sortedByDescending {
-            val sortLessons = it.sortedByDescending {
+            val sortLessons = listNew.sortedByDescending {
                 LocalDate.parse(it.dateStart, formatter)
             }
             lessonsListAdapter.submitList(sortLessons)
@@ -356,13 +385,23 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
             val listNew = ArrayList<LessonsItem>()
             if(selectAll) {
                 it.forEach {
-                    val nn = it.copy(student = "500")
-                    listNew.add(nn)
+                    if(compareDateTimeLessonsAndNow(it.dateEnd)) {
+                        val nn = it.copy(notifications = "finished", student = "500")
+                        listNew.add(nn)
+                    } else {
+                        val nn = it.copy(student = "500")
+                        listNew.add(nn)
+                    }
                 }
             } else {
                 it.forEach {
-                    val nn = it.copy(student = "0")
-                    listNew.add(nn)
+                    if(compareDateTimeLessonsAndNow(it.dateEnd)) {
+                        val nn = it.copy(notifications = "finished", student = "0")
+                        listNew.add(nn)
+                    } else {
+                        val nn = it.copy(student = "0")
+                        listNew.add(nn)
+                    }
                 }
             }
 

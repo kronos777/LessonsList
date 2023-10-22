@@ -9,6 +9,35 @@
         android:layout_height="match_parent"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
+        <!--com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:backgroundTint="@color/cardColor"
+            app:tabIndicatorColor="@color/custom_calendar_weekend_days_bar_text_color"
+            app:tabIndicatorFullWidth="false"
+            app:tabTextColor="@color/white"
+            >
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabItem1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_label_tab_1"
+                />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabItem2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_label_tab_2"
+                />
+
+        </com.google.android.material.tabs.TabLayout-->
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_lessons_list"
             android:layout_width="0dp"

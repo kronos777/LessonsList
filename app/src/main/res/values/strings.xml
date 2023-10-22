@@ -66,4 +66,6 @@
     <string name="button_swith_payment">переключить</string>
     <string name="txt_choice_all">выбрать все</string>
     <string name="txt_delete">удалить</string>
+    <string name="text_label_tab_1">сегодня</string>
+    <string name="text_label_tab_2">прошедшие</string>
 </resources>
