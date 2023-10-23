@@ -33,6 +33,11 @@ class GroupListRepositoryImpl(
         return mapper.mapDbModelToEntity(dbModel)
     }
 
+    override suspend fun checkExistsGroupItem(groupName: String): GroupItem {
+        val dbModel = groupListDao.checkExistsGroupItem(groupName)
+        return mapper.mapDbModelToEntity(dbModel)
+    }
+
     override fun getGroupList(): LiveData<List<GroupItem>> = Transformations.map(
         groupListDao.getGroupList()
     ) {

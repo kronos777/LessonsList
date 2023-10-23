@@ -22,4 +22,7 @@ interface GroupListDao {
 
     @Query("SELECT * FROM group_items WHERE id=:groupItemId LIMIT 1")
     suspend fun getGroupItem(groupItemId: Int): GroupItemDbModel
+
+    @Query("SELECT * FROM group_items WHERE title=:groupName LIMIT 1")
+    suspend fun checkExistsGroupItem(groupName: String): GroupItemDbModel
 }
