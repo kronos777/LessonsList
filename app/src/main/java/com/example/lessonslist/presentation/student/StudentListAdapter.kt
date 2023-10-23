@@ -64,7 +64,7 @@ class StudentListAdapter(
 
         binding.root.setOnClickListener {
             if(studentItem.group != "500" && pairList.isEmpty()){
-                onStudentItemLongClickListener?.invoke(studentItem)
+                onStudentItemClickListener?.invoke(studentItem)
             } else if(pairList.containsKey(studentItem.id)) {
                 pairList.remove(studentItem.id)
                 studentItem.group = "0"
