@@ -17,6 +17,7 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
     private val repository = StudentListRepositoryImpl(application)
 
     private val getStudentItemUseCase = GetStudentItemUseCase(repository)
+    private val checkStudentItemUseCase = CheckStudentItemUseCase(repository)
     private val addStudentItemUseCase = AddStudentItemUseCase(repository)
     private val deleteStudentItemUseCase = DeleteStudentItemUseCase(repository)
     private val editStudentItemUseCase = EditStudentItemUseCase(repository)
@@ -49,10 +50,20 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
 
+    private val _existsStudent = MutableLiveData<StudentItem>()
+    val existsStudent: LiveData<StudentItem>
+        get() = _existsStudent
+
     fun getStudentItem(studentItemId: Int) {
         viewModelScope.launch {
             val item = getStudentItemUseCase.getStudentItem(studentItemId)
             _studentItem.value = item
+        }
+    }
+
+    fun checkExistsStudent(name: String, lastName: String) {
+        viewModelScope.launch {
+            _existsStudent.value = checkStudentItemUseCase.checkExistsStudentItem(name, lastName)
         }
     }
 

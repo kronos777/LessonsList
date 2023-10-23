@@ -16,6 +16,6 @@ interface StudentListRepository {
     suspend fun editStudentItemPhoneNumber(studentItemId: Int, phoneNumber: String)
 
     suspend fun getStudentItem(studentItemId: Int): StudentItem
-
+    suspend fun checkExistsStudentItem(studentName: String, studentLastName: String): StudentItem
     fun getStudentList(): LiveData<List<StudentItem>>
 }

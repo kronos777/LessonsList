@@ -41,6 +41,11 @@ class StudentListRepositoryImpl(
         studentListDao.editStudentItemPhoneNumber(studentItemId, phoneNumber)
     }
 
+    override suspend fun checkExistsStudentItem(studentName: String, studentLastName: String): StudentItem {
+        return mapper.mapDbModelToEntity(studentListDao.checkExistsStudentItem(studentName, studentLastName))
+    }
+
+
     override fun getStudentList(): LiveData<List<StudentItem>> = Transformations.map(
         studentListDao.getStudentList()
     ) {

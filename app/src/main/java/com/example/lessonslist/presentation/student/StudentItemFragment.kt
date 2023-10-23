@@ -16,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
@@ -28,6 +29,7 @@ import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
 import java.io.*
+import java.lang.Thread.sleep
 import java.util.concurrent.Executors
 
 
@@ -293,21 +295,31 @@ class StudentItemFragment : Fragment() {
 
     private fun launchAddMode() {
         binding.saveButton.setOnClickListener {
-            if (viewModel.validateInput(binding.etName.text.toString(),
-                    binding.etPaymentBalance.text.toString())) {
-                viewModel.addStudentItem(
-                    binding.etName.text?.toString(),
-                    binding.etLastname.text?.toString(),
-                    binding.etPaymentBalance.text.toString(),
-                    "",
-                    "",
-                    inputImage = pathImageSrc ?: " ",
-                    binding.etTelephone.text.toString()
-                )
+            if (viewModel.validateInput(binding.etName.text.toString(),  binding.etPaymentBalance.text.toString())) {
+                checkExistsStudent(binding.etName.text?.toString()!!.trim(), binding.etLastname.text?.toString()!!.trim())
+                viewModel.existsStudent.observe(viewLifecycleOwner) {
+                    if (it == null) {
+                        viewModel.addStudentItem(
+                            binding.etName.text?.toString(),
+                            binding.etLastname.text?.toString(),
+                            binding.etPaymentBalance.text.toString(),
+                            "",
+                            "",
+                            inputImage = pathImageSrc ?: " ",
+                            binding.etTelephone.text.toString()
+                        )
+                    } else {
+                        Toast.makeText(activity, "Ученик с таким именем и фамилией уже существует.", Toast.LENGTH_SHORT).show()
+                    }
+                }
             } else {
                 setHideErrorInput()
             }
         }
+    }
+
+    private fun checkExistsStudent(name: String, lastName: String) {
+        return viewModel.checkExistsStudent(name, lastName)
     }
 
 
