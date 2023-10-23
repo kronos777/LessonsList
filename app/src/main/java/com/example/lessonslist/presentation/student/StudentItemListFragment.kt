@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -364,6 +365,7 @@ class StudentItemListFragment: Fragment(), MenuProvider {
                 ?.replace(R.id.fragment_item_container, StudentItemEditFragment.newInstanceEditItem(it.id))
                 ?.addToBackStack("listStudent")
                 ?.commit()*/
+            Toast.makeText(activity, "ggg" + it.id, Toast.LENGTH_SHORT).show()
             navigateBtnEditStudent(it.id)
        }
     }
