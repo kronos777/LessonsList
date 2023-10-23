@@ -227,11 +227,19 @@ class GroupItemFragment : Fragment() {
         }
 
         if(checkField && valueStudent.size > 0) {
-            viewModel.addGroupItem(
-                binding.etTitle.text.toString(),
-                binding.etDescription.text.toString(),
-                valueStudent.toString()
-            )
+            viewModel.checkExistsGroupItem(binding.etTitle.text.toString().trim())
+            viewModel.checkExistsGroupItem.observe(viewLifecycleOwner) {
+             if(it == null) {
+                 viewModel.addGroupItem(
+                     binding.etTitle.text.toString(),
+                     binding.etDescription.text.toString(),
+                     valueStudent.toString()
+                 )
+             }  else {
+                 Toast.makeText(activity, "Группа с таким названием уже существует.", Toast.LENGTH_SHORT).show()
+             }
+            }
+
         } else {
             setHideError()
         }

@@ -11,6 +11,7 @@ interface GroupListRepository {
     suspend fun editGroupItem(groupItem: GroupItem)
 
     suspend fun getGroupItem(groupItemId: Int): GroupItem
+    suspend fun checkExistsGroupItem(groupName: String): GroupItem
 
     fun getGroupList(): LiveData<List<GroupItem>>
 }
