@@ -89,11 +89,10 @@ class ListGroupAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
     }
 
    fun addCountArrayList(id: String?) {
-
        if (id != null) {
            arrayList.add(id)
        }
-    Log.d("allListGroup", arrayList.toString())
+      Log.d("allListGroup", arrayList.toString())
     }
 
 }

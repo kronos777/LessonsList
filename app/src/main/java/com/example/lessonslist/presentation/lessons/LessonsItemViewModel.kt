@@ -1,6 +1,7 @@
 package com.example.lessonslist.presentation.lessons
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -8,7 +9,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.lessonslist.data.lessons.LessonsListRepositoryImpl
 import com.example.lessonslist.domain.lessons.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.math.log
 
 class LessonsItemViewModel(application: Application) : AndroidViewModel(application) {
@@ -18,6 +23,10 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
     private val addLessonsItemUseCase = AddLessonsItemUseCase(repository)
     private val editLessonsItemUseCase = EditLessonsItemUseCase(repository)
     private val deleteLessonsItemUseCase = DeleteLessonsItemUseCase(repository)
+    private val getLessonsItemListUseCase = GetLessonsListItemUseCase(repository)
+
+    val lessonsList = getLessonsItemListUseCase.getLessonsList()
+
     private val _lessonsItem = MutableLiveData<LessonsItem>()
     val lessonsItem: LiveData<LessonsItem>
         get() = _lessonsItem
@@ -45,6 +54,11 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
     private val _errorInputDateEnd = MutableLiveData<Boolean>()
     val errorInputDateEnd: LiveData<Boolean>
         get() = _errorInputDateEnd
+
+
+    private val _errorInputRepeat = MutableLiveData<Boolean>()
+    val errorInputRepeat: LiveData<Boolean>
+        get() = _errorInputRepeat
 
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>
