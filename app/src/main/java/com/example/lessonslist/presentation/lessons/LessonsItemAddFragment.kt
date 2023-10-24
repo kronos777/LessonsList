@@ -42,6 +42,7 @@ import java.util.concurrent.TimeUnit
 class LessonsItemAddFragment : Fragment()  {
 
     private lateinit var viewModel: LessonsItemViewModel
+    private lateinit var viewModelList: LessonsListViewModel
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
     private var _binding: FragmentLessonsItemAddBinding? = null
@@ -724,50 +725,75 @@ class LessonsItemAddFragment : Fragment()  {
             // binding.etPrice?.setVisibility(View.GONE)
         binding.etStudent.visibility = View.GONE
         binding.saveButton.setOnClickListener{
-            validValueNotifications()
-           // Log.d("notificationsValue", notificationString)
-            val valueStudent = checkValidStudent()
-            val checkField: Boolean
-            if (valueStudent.size <= 0) {
-                Toast.makeText(activity, "Урок не может создан без учеников", Toast.LENGTH_SHORT).show()
-                checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
-                    binding.etDatestart.text.toString(), binding.etDateend.text.toString())
-            } else {
-                checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
-                    binding.etDatestart.text.toString(), binding.etDateend.text.toString())
-            }
+              checkExistsLessonsCurrentDateTime(binding.etDatestart.text.toString(), binding.etDateend.text.toString())
+            /*  validValueNotifications()
+             // Log.d("notificationsValue", notificationString)
+              val valueStudent = checkValidStudent()
+              val checkField: Boolean
+              if (valueStudent.size <= 0) {
+                  Toast.makeText(activity, "Урок не может создан без учеников", Toast.LENGTH_SHORT).show()
+                  checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
+                      binding.etDatestart.text.toString(), binding.etDateend.text.toString())
+              } else {
+                  checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
+                      binding.etDatestart.text.toString(), binding.etDateend.text.toString())
+              }
 
-            if(checkField && valueStudent.size > 0 && notificationBoolean) {
-               if(binding.etRepeat.isChecked && dateLessons.size >= 2) {
-                    for (index in dateLessons.indices step 2) {
-
-                        viewModel.addLessonsItem(
-                            binding.etTitle.text.toString(),
-                            notificationString,
-                            valueStudent.toString(),
-                            //binding.etStudent.text.toString(),
-                            binding.etPrice.text.toString(),
-                            dateLessons.get(index).toString(),
-                            dateLessons.get(index + 1).toString()
-                        )
-                    }
-                } else {
-                    viewModel.addLessonsItem(
-                        binding.etTitle.text.toString(),
-                        notificationString,
-                        valueStudent.toString(),
-                        //binding.etStudent.text.toString(),
-                        binding.etPrice.text.toString(),
-                        binding.etDatestart.text.toString(),
-                        binding.etDateend.text.toString()
-                    )
-                }
-            } else {
-                setHideError()
-            }
+              if(checkField && valueStudent.size > 0 && notificationBoolean) {
+                 if(binding.etRepeat.isChecked && dateLessons.size >= 2) {
+                      for (index in dateLessons.indices step 2) {
+                          viewModel.addLessonsItem(
+                              binding.etTitle.text.toString(),
+                              notificationString,
+                              valueStudent.toString(),
+                              //binding.etStudent.text.toString(),
+                              binding.etPrice.text.toString(),
+                              dateLessons.get(index).toString(),
+                              dateLessons.get(index + 1).toString()
+                          )
+                      }
+                  } else {
+                      viewModel.addLessonsItem(
+                          binding.etTitle.text.toString(),
+                          notificationString,
+                          valueStudent.toString(),
+                          //binding.etStudent.text.toString(),
+                          binding.etPrice.text.toString(),
+                          binding.etDatestart.text.toString(),
+                          binding.etDateend.text.toString()
+                      )
+                  }
+              } else {
+                  setHideError()
+              }*/
         }
     }
 
+    private fun checkExistsLessonsCurrentDateTime(toString: String, toString1: String) {
+        val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
+        val dateStart = LocalDateTime.parse(toString, formatter)
+        val dateEnd = LocalDateTime.parse(toString1, formatter)
+        val current = LocalDateTime.now()
+        val formatted = current.format(formatter)
+        val currentTime = LocalDateTime.parse(formatted, formatter)
+        if(currentTime > dateStart) {
+            Toast.makeText(activity, "Урок не может быть добавлен задним числом.", Toast.LENGTH_SHORT).show()
+        }
+        viewModelList = ViewModelProvider(this)[LessonsListViewModel::class.java]
+        viewModelList.lessonsList.observe(viewLifecycleOwner) {
+            it.forEach {
+                val dateStartLesson = LocalDateTime.parse(it.dateStart, formatter)
+                val dateEndLesson = LocalDateTime.parse(it.dateEnd, formatter)
+                if (dateStartLesson > currentTime) {
+                    if(dateStart in dateStartLesson..dateEndLesson ||  dateEnd in dateStartLesson..dateEndLesson) {
+                        //входит в диапазон
+                        Log.d("notificationsValue", dateStartLesson.toString() + " end: " + dateEndLesson.toString())
+                    }
+                }
+            }
+        }
+
+    }
 
 
     private fun checkValidStudent(): HashSet<Int?> {
