@@ -5,6 +5,8 @@ import android.app.Application
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.lessonslist.data.date.DateItemDbModel
+import com.example.lessonslist.data.date.DateListDao
 import com.example.lessonslist.data.group.GroupItemDbModel
 import com.example.lessonslist.data.group.GroupListDao
 import com.example.lessonslist.data.lessons.LessonsItemDbModel
@@ -20,11 +22,12 @@ import com.example.lessonslist.data.sale.SaleListDao
 import com.example.lessonslist.data.student.StudentItemDbModel
 import com.example.lessonslist.data.student.StudentListDao
 
-@Database(entities = [StudentItemDbModel::class, PaymentItemDbModel::class, GroupItemDbModel::class, LessonsItemDbModel::class, ParentItemDbModel::class, NotesItemDbModel::class, SaleItemDbModel::class], version = 18, exportSchema = false)
+@Database(entities = [StudentItemDbModel::class, PaymentItemDbModel::class, GroupItemDbModel::class, LessonsItemDbModel::class, ParentItemDbModel::class, NotesItemDbModel::class, SaleItemDbModel::class, DateItemDbModel::class], version = 19, exportSchema = false)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun StudentListDao(): StudentListDao
     abstract fun GroupListDao(): GroupListDao
+    abstract fun DateListDao(): DateListDao
     abstract fun PaymentListDao(): PaymentListDao
     abstract fun LessonsListDao(): LessonsListDao
     abstract fun ParentListDao(): ParentListDao
