@@ -21,28 +21,53 @@
         app:cardElevation="1dp"
         app:cardUseCompatPadding="true">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_card_disabled_new_item"
+            android:background="@drawable/border_card_disabled"
             android:orientation="horizontal"
-            android:padding="16dp"
-            >
+            android:padding="16dp">
 
+            <ImageView
+                android:id="@+id/finishedImage"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/ic_baseline_money_off_24_payment"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                />
 
             <TextView
                 android:id="@+id/tv_title"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@{paymentItem.title + ' ' + paymentItem.student + ' ' + paymentItem.price}"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="Платежи" />
-
-
-        </LinearLayout>
-
+                android:text="@{paymentItem.title}"
+                style="@style/CardStyle"
+                android:layout_marginLeft="40dp"
+                tools:text="Урок" />
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{"Платильщик" + " " + paymentItem.student}'
+                style="@style/CardDateTimeStyle"
+                android:textColor="@color/grey"
+                android:layout_marginLeft="40dp"
+                android:layout_below="@id/tv_title"
+                tools:text="Платильщик Вася Петров"
+                />
+            <TextView
+                android:id="@+id/tv_price"
+                style="@style/CardStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{String.valueOf(paymentItem.price)}"
+                android:layout_marginRight="40dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                tools:text="150"
+                />
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </layout>

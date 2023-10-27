@@ -39,14 +39,19 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
         get() = _shouldCloseScreen
 
 
-    private val _checkExistsgroupItem = MutableLiveData<GroupItem>()
-    val checkExistsGroupItem: LiveData<GroupItem>
+    private val _checkExistsgroupItem = MutableLiveData<GroupItem?>()
+    val checkExistsGroupItem: LiveData<GroupItem?>
         get() = _checkExistsgroupItem
 
     fun checkExistsGroupItem(groupName: String) {
         viewModelScope.launch {
             val item = checkExistsGroupItemUseCase.checkExistsGroupItem(groupName)
-            _checkExistsgroupItem.value = item
+            if(item != null) {
+                _checkExistsgroupItem.value = item
+            } else {
+                _checkExistsgroupItem.value = null
+            }
+
         }
     }
 

@@ -50,8 +50,8 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
 
-    private val _existsStudent = MutableLiveData<StudentItem>()
-    val existsStudent: LiveData<StudentItem>
+    private val _existsStudent = MutableLiveData<StudentItem?>()
+    val existsStudent: LiveData<StudentItem?>
         get() = _existsStudent
 
     fun getStudentItem(studentItemId: Int) {
@@ -63,7 +63,12 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
 
     fun checkExistsStudent(name: String, lastName: String) {
         viewModelScope.launch {
-            _existsStudent.value = checkStudentItemUseCase.checkExistsStudentItem(name, lastName)
+            val student = checkStudentItemUseCase.checkExistsStudentItem(name, lastName)
+            if(student != null) {
+                _existsStudent.value = student
+            } else {
+                _existsStudent.value = null
+            }
         }
     }
 

@@ -92,7 +92,6 @@ class StudentItemFragment : Fragment() {
         observeViewModel()
 
 
-
         mImageView = binding.imageView
 
         mImageView.setOnClickListener {

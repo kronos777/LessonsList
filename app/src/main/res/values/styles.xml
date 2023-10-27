@@ -20,4 +20,17 @@
         </item>
 
     </style>
+
+    <style name="CardStyle">
+        <item name="android:textSize">18sp</item>
+        <item name="textInputStyle">@id/normal</item>
+        <item name="lineHeight">20dp</item>
+        <item name="color">@color/black</item>
+    </style>
+    <style name="CardDateTimeStyle">
+        <item name="android:textSize">12sp</item>
+        <item name="textInputStyle">@id/normal</item>
+        <item name="lineHeight">18dp</item>
+        <item name="color">@color/grey</item>
+    </style>
 </resources>

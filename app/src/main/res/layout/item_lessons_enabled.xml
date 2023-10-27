@@ -17,32 +17,63 @@
         app:cardElevation="1dp"
         app:cardUseCompatPadding="true">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_card_new_item"
+            android:background="@drawable/border_card"
             android:orientation="horizontal"
             android:padding="16dp">
+            <ImageView
+                android:id="@+id/finishedImage2"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/baseline_content_paste_24"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:visibility='@{lessonsItem.notifications != "finished" ? View.VISIBLE : View.GONE}'
+                />
             <ImageView
                 android:id="@+id/finishedImage"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginRight="8dp"
                 android:src="@drawable/baseline_content_paste_off_24"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:visibility='@{lessonsItem.notifications == "finished" ? View.VISIBLE : View.GONE}'
                 />
+
             <TextView
                 android:id="@+id/tv_title"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@{lessonsItem.title + ' ' + lessonsItem.dateEnd + ' ' + lessonsItem.price}"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
+                android:text="@{lessonsItem.title}"
+                style="@style/CardStyle"
+                android:layout_marginLeft="40dp"
                 tools:text="Уроки" />
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{lessonsItem.dateEnd}"
+                style="@style/CardDateTimeStyle"
+                android:textColor="@color/grey"
+                android:layout_marginLeft="40dp"
+                android:layout_below="@id/tv_title"
+                tools:text="1990/5/5 20:55"
+                 />
+            <TextView
+                android:id="@+id/tv_price"
+                style="@style/CardStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{Integer.toString(lessonsItem.price)}"
+                android:layout_marginRight="40dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                tools:text="150"
+                 />
             <ImageView
                 android:id="@+id/checkImage"
                 android:layout_width="25dp"
@@ -52,7 +83,7 @@
                 android:layout_centerVertical="true"
                 android:visibility='@{lessonsItem.student == "500" ? View.VISIBLE : View.GONE}'
                 />
-        </LinearLayout>
+        </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 </layout>

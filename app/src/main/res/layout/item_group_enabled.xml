@@ -17,23 +17,31 @@
         app:cardElevation="1dp"
         app:cardUseCompatPadding="true">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_card_new_item"
+            android:background="@drawable/border_card"
             android:orientation="horizontal"
-            android:padding='16dp'>
+            android:padding="16dp">
+            <ImageView
+                android:id="@+id/finishedImage"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/baseline_groups_24"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:visibility="visible"
+                />
 
             <TextView
                 android:id="@+id/tv_title"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@{groupItem.title}"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="Группы" />
+                style="@style/CardStyle"
+                tools:text="Группы"
+                android:layout_marginLeft="40dp"/>
 
             <ImageView
                 android:id="@+id/checkImage"
@@ -44,7 +52,7 @@
                 android:layout_centerVertical="true"
                 android:visibility='@{groupItem.description == "500" ? View.VISIBLE : View.GONE}'
                 />
-        </LinearLayout>
+        </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 </layout>

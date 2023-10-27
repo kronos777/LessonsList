@@ -41,8 +41,14 @@ class StudentListRepositoryImpl(
         studentListDao.editStudentItemPhoneNumber(studentItemId, phoneNumber)
     }
 
-    override suspend fun checkExistsStudentItem(studentName: String, studentLastName: String): StudentItem {
-        return mapper.mapDbModelToEntity(studentListDao.checkExistsStudentItem(studentName, studentLastName))
+    override suspend fun checkExistsStudentItem(studentName: String, studentLastName: String): StudentItem? {
+        val student = studentListDao.checkExistsStudentItem(studentName, studentLastName)
+        if(student != null) {
+            return mapper.mapDbModelToEntity(student)
+        } else {
+            return null
+        }
+
     }
 
 
