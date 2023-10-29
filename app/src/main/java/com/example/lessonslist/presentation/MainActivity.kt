@@ -1,12 +1,15 @@
 package com.example.lessonslist.presentation
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -55,7 +58,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     CalendarPaymentItemFragment.OnEditingFinishedListener {
 
     private lateinit var binding: ActivityMainBinding
-    lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var backup: RoomBackup
     //private var doubleBackToExitPressedOnce = false
     private var alertCount = 0
@@ -115,18 +118,18 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         try {
             when(currentDestination) {
                 R.id.calendarItemFragment -> {
+                    enableHomeBackIcon(false)
                     initMaterialToolBar()
                     initDrawerNavigation()
                     //this.findViewById(R.id.tool_bar)?.setNavigationIcon(R.drawable.ic_baseline_navigate_before_24)
-                    enableHomeBackIcon(false)
                     paymentBtnAppBarTop.visibility = View.VISIBLE
                     backupBtnAppBarTop.visibility = View.VISIBLE
-                } R.id.lessonsItemListFragment -> {
+                }/* R.id.lessonsItemListFragment -> {
                     enableHomeBackIcon(true)
                     toggle.setHomeAsUpIndicator(R.drawable.ic_baseline_navigate_before_24)
                     paymentBtnAppBarTop.visibility = View.GONE
                     backupBtnAppBarTop.visibility = View.GONE
-                } else -> {
+                } */else -> {
                     enableHomeBackIcon(true)
                     toggle.setHomeAsUpIndicator(R.drawable.ic_baseline_navigate_before_24)
                     paymentBtnAppBarTop.visibility = View.GONE
@@ -158,29 +161,23 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             .setPopExitAnim(R.anim.slide_out_right).build()
 
 
-        bottomNavigationView.setOnNavigationItemSelectedListener {
+        bottomNavigationView.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.bottomItem1 -> {
                     navController.navigate(R.id.calendarItemFragment, null, animationOptions)
-                    true
                 }
                 R.id.bottomItem2 -> {
                     navController.navigate(R.id.paymentItemListFragment, btnArgsPayment, animationOptions)
-                    true
                 }
                 R.id.bottomItem3 -> {
                     navController.navigate(R.id.groupItemListFragment, null, animationOptions)
-                    true
                 }
                 R.id.bottomItem4 -> {
                     navController.navigate(R.id.lessonsItemListFragment, btnArgsLessons, animationOptions)
-                    true
                 }
                 R.id.bottomItem5 -> {
                     navController.navigate(R.id.studentItemListFragment, null, animationOptions)
-                    true
                 }
-                else -> false
             }
             true
         }
@@ -242,10 +239,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
 
-    override fun onBackPressed() {
-       super.onBackPressed()
-    }
-
     private fun backup() {
         backup
             .database(AppDatabase.getInstance(applicationContext as Application))
@@ -270,7 +263,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             .customEncryptPassword("YOUR_SECRET_PASSWORD")
             .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_CUSTOM_DIALOG)
             .apply {
-                onCompleteListener { success, message, exitCode ->
+                onCompleteListener { success, _, _ ->
                     if (success) restartApp(Intent(this@MainActivity, MainActivity::class.java))
                 }
             }
@@ -349,7 +342,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             setToolbarNavigationClickListener {
                 // Back to home fragment for any hit to the back button
                 navController.navigate(R.id.main_navigation)
-
+               // Log.d("clickBtn", "cl1")
             }
             // Intialize the icon at the app start
             enableHomeBackIcon(false)
@@ -431,6 +424,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun initNavHeader() {
 
         val navigationView : NavigationView = binding.navView
@@ -495,7 +489,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             var noPaidLessons = 0
             var deptMoney = 0
             var actualMoney = 0
-            val idLessonsMap: HashSet<Int> = HashSet<Int>()
+            val idLessonsMap: HashSet<Int> = HashSet()
 
             for (index in it.indices) {
                 idLessonsMap.add(it[index].lessonsId)
@@ -538,8 +532,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
        val month = dataDate[1]
        val day = dataDate[2]
 
-       var hour = ""
-       var minute = ""
+       val hour: String
+       val minute: String
        if(allData.size > 2) {
            hour = allData[1]
            minute = allData[3]

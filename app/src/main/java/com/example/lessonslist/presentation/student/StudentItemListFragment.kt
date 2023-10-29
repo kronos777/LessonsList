@@ -23,8 +23,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentStudentItemListBinding
 import com.example.lessonslist.domain.student.StudentItem
@@ -67,7 +65,7 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //(activity as AppCompatActivity).supportActionBar?.title = "Список учеников"
+
         (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = "Список учеников"
 
         setupRecyclerView()
@@ -80,10 +78,6 @@ class StudentItemListFragment: Fragment(), MenuProvider {
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
         binding.buttonAddStudentItem.setOnClickListener {
-            /*fragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment_item_container, StudentItemFragment.newInstanceAddItem())
-                ?.addToBackStack("listStudent")
-                ?.commit()*/
             navigateBtnAddStudent()
         }
 
@@ -269,22 +263,19 @@ class StudentItemListFragment: Fragment(), MenuProvider {
 
         alert.setView(layout)
 
-        alert.setPositiveButton("удалить", DialogInterface.OnClickListener {
-                dialog, id ->
-            if(studentListAdapter.pairList.isNotEmpty()) {
-                //Log.d("pairListElementForDelete", "allData" + studentListAdapter.pairList.size.toString())
+        alert.setPositiveButton("удалить") { _, _ ->
+            if (studentListAdapter.pairList.isNotEmpty()) {
                 studentListAdapter.pairList.forEach {
                     deletePaymentToStudent(it.key)
                     deleteAllSaleItem(it.key)
                     viewModel.deleteStudentItem(it.key)
                 }
             }
-        })
+        }
 
-        alert.setNegativeButton("не удалять", DialogInterface.OnClickListener {
-                dialog, id ->
+        alert.setNegativeButton("не удалять") { dialog, _ ->
             dialog.dismiss()
-        })
+        }
 
         alert.setCancelable(false)
         alert.show()
@@ -365,35 +356,10 @@ class StudentItemListFragment: Fragment(), MenuProvider {
                 ?.replace(R.id.fragment_item_container, StudentItemEditFragment.newInstanceEditItem(it.id))
                 ?.addToBackStack("listStudent")
                 ?.commit()*/
-            Toast.makeText(activity, "ggg" + it.id, Toast.LENGTH_SHORT).show()
+           // Toast.makeText(activity, "ggg" + it.id, Toast.LENGTH_SHORT).show()
             navigateBtnEditStudent(it.id)
        }
     }
-
-    private fun setupSwipeListener(rvStudentList: RecyclerView) {
-        val callback = object : ItemTouchHelper.SimpleCallback(
-            0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
-
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = studentListAdapter.currentList[viewHolder.adapterPosition]
-               // viewModel.deleteStudentItem(item)
-                dialogWindow(item.id, item, item.name + " " + item.lastname)
-            }
-        }
-        val itemTouchHelper = ItemTouchHelper(callback)
-        itemTouchHelper.attachToRecyclerView(rvStudentList)
-    }
-
 
 
     private fun dialogWindow(studentId: Int, student: StudentItem, title: String) {
@@ -434,11 +400,10 @@ class StudentItemListFragment: Fragment(), MenuProvider {
 
     }
 
-    override fun onStop() {
+    /*override fun onStop() {
         super.onStop()
         showDeleteMenu(false)
-    }
-
+    }*/
 
 
 }

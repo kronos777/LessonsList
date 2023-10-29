@@ -4,10 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.ListAdapter
 import com.example.lessonslist.R
-import com.example.lessonslist.databinding.ItemLessonsEnabledBinding
 import com.example.lessonslist.databinding.ItemStudentEnabledBinding
 import com.example.lessonslist.domain.student.StudentItem
 
@@ -16,7 +14,6 @@ class StudentListAdapter(
     private val showMenuDelete: (Boolean) -> Unit
 ) : ListAdapter<StudentItem, StudentItemViewHolder>(StudentItemDiffCallback()) {
 
-    var onStudentItemLongClickListener: ((StudentItem) -> Unit)? = null
     var onStudentItemClickListener: ((StudentItem) -> Unit)? = null
 
     private var isEnabled = false
@@ -88,7 +85,7 @@ class StudentListAdapter(
     private fun selectItem(viewHolder: StudentItemViewHolder, studentItem: StudentItem) {
         isEnabled = true
         viewHolder.binding.checkImage.visibility = View.VISIBLE
-        pairList.put(studentItem.id, studentItem)
+        pairList[studentItem.id] = studentItem
         studentItem.group = "500"
         showMenuDelete(true)
     }

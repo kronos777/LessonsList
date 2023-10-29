@@ -46,6 +46,7 @@
                 style="@style/CardStyle"
                 android:layout_marginLeft="40dp"
                 tools:text="Урок" />
+
             <TextView
                 android:id="@+id/tv_time"
                 android:layout_width="wrap_content"

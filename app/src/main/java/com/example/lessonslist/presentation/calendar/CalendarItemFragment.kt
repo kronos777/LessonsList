@@ -101,7 +101,7 @@ class CalendarItemFragment() : Fragment() {
         (activity as AppCompatActivity).findViewById<NavigationView>(R.id.navView).visibility = View.VISIBLE
         (activity as AppCompatActivity).findViewById<View>(R.id.payment).visibility = View.VISIBLE
         (activity as AppCompatActivity).findViewById<View>(R.id.backup).visibility = View.VISIBLE
-        (activity as AppCompatActivity).findViewById<MaterialToolbar>(R.id.tool_bar).setNavigationIcon(R.drawable.ic_baseline_menu_24)
+        //(activity as AppCompatActivity).findViewById<MaterialToolbar>(R.id.tool_bar).setNavigationIcon(R.drawable.ic_baseline_menu_24)
     }
 
     private fun getDate() {

@@ -10,13 +10,16 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
-import android.text.InputType
 import android.text.InputType.TYPE_CLASS_NUMBER
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -34,10 +37,7 @@ import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.lessons.sale.SaleItemViewModel
 import com.example.lessonslist.presentation.lessons.sale.SalesItemListViewModel
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
-import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
-import com.example.lessonslist.presentation.student.notes.DataNotesStudentModel
-import com.example.lessonslist.presentation.student.parentContact.DataParentContactStudentModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
 import java.io.ByteArrayOutputStream
@@ -52,9 +52,6 @@ import java.util.concurrent.Executors
 class StudentItemEditFragment : Fragment() {
 
     private lateinit var viewModel: StudentItemViewModel
-    private lateinit var viewModelPaymentItem: PaymentItemViewModel
-    private lateinit var viewModelNotesItem: NotesItemViewModel
-    private lateinit var viewModelParentContact: ParentContactViewModel
     private lateinit var viewModelLessonsEdit: LessonsItemViewModel
     private lateinit var viewModelPayment: PaymentListViewModel
 
@@ -68,17 +65,8 @@ class StudentItemEditFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentStudentItemEditBinding == null")
 
 
-    private lateinit var listView: ListView
-    private lateinit var listViewNotes: ListView
-    private lateinit var listViewParentContact: ListView
     private var screenMode: String = MODE_UNKNOWN
     private var studentItemId: Int = StudentItem.UNDEFINED_ID
-    private var dataPaymentStudentModel: ArrayList<DataPaymentStudentModel>? = null
-    private var dataNotesStudentModel: ArrayList<DataNotesStudentModel>? = null
-    private var dataParentContactStudentModel: ArrayList<DataParentContactStudentModel>? = null
-
-    private lateinit var chosenImageUri: Uri
-
 
     private lateinit var mImageView: ImageView
 
@@ -159,14 +147,14 @@ class StudentItemEditFragment : Fragment() {
 
             val textTelephone = stItem.telephone.toString()
 
-            binding.textViewTelephone.setOnClickListener {
-                if(textTelephone.count() > 0) {
-                       askEditNumber()
+            binding.cardTelephoneStudent.setOnClickListener {
+                /*if(textTelephone.count() > 0) {
+                       askEditNumber(stItem.telephone)
                    } else {
                        addPhoneNumber()
-                   }
-
-                binding.textViewTelephone.text = stItem.telephone
+                   }*/
+                askEditNumber(stItem.telephone)
+                //binding.textViewTelephone.text = stItem.telephone
             }
 
         }
@@ -246,7 +234,13 @@ class StudentItemEditFragment : Fragment() {
 
         alert.setNegativeButton("Долги") { _, _ ->
             navigateBtnAddStudent("all_false_payment")
+
         }
+
+        alert.setNeutralButton("отмена") { dialog, _ ->
+            dialog.dismiss()
+        }
+
 
         alert.setCancelable(false)
         alert.show()
@@ -288,10 +282,10 @@ class StudentItemEditFragment : Fragment() {
     }
 
 
-    private fun askEditNumber() {
+    private fun askEditNumber(telephone: String?) {
         val alert = AlertDialog.Builder(requireContext())
-        alert.setTitle("Телефон студента содержит значение, желаете его изменить ?")
-        //alert.setMessage("Enter phone details and amount to buy airtime.")
+
+
 
         val layout = LinearLayout(requireContext())
         layout.orientation = LinearLayout.VERTICAL
@@ -300,12 +294,22 @@ class StudentItemEditFragment : Fragment() {
 
         alert.setView(layout)
 
-        alert.setPositiveButton("Изменить") { _, _ ->
-            addPhoneNumber()
+        if(!telephone.isNullOrBlank()) {
+            alert.setTitle("Телефон студента $telephone ?")
+            alert.setPositiveButton("Изменить") { _, _ ->
+                addPhoneNumber()
+            }
+            alert.setNeutralButton("Позвонить") { dialog, id ->
+                callStudent(telephone)
+            }
+        } else {
+            alert.setTitle("Добавьте телефон студента.")
+            alert.setPositiveButton("Добавить") { _, _ ->
+                addPhoneNumber()
+            }
         }
-        alert.setNeutralButton("Позвонить") { dialog, id ->
-            callStudent(binding.textViewTelephone.text.toString())
-        }
+
+
         alert.setNegativeButton("отмена") { dialog, _ ->
             dialog.dismiss()
         }
@@ -330,10 +334,8 @@ class StudentItemEditFragment : Fragment() {
                 Log.d("editext value is:", editTextInput)
 
                 if(isNumeric(editTextInput)){
-                   // Toast.makeText(getActivity(),"Строка число можно сохранять.",Toast.LENGTH_SHORT).show();
                     newBalance = editTextInput.toInt()
                     viewModel.studentItem.observe(viewLifecycleOwner) {
-                        //Log.d("new balance", it.paymentBalance.toString())
                         viewModel.editPaymentBalance(it.id, (it.paymentBalance + newBalance))
                         if(it.paymentBalance < 0) {
                         //    Toast.makeText(getActivity(),"payment balance"+(it.paymentBalance).toString(),Toast.LENGTH_SHORT).show();
