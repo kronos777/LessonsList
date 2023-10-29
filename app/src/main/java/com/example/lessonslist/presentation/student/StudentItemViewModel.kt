@@ -75,38 +75,43 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
     fun addStudentItem(inputName: String?, inputLastName: String?, inputPaymentBalance: String, inputNotes: String, inputGroup: String, inputImage: String, inputPhone: String) {
         val name = parseName(inputName)
         val lastName = parseName(inputLastName)
-        val paymentBalance = inputPaymentBalance
-        val group = inputGroup
-        val notes = inputNotes
-        val image = inputImage
-        val phone = inputPhone
-        //val count = parseCount(inputCount)
 
-      //  val fieldsValid = validateInput(name, lastName, paymentBalance, inputPhone)
-       // if (fieldsValid) {
-            viewModelScope.launch {
-                val studentItem = StudentItem(paymentBalance.toInt(), name, lastName, group,  image, notes, phone,true)
-                //val studentItem = StudentItem(paymentBalance?.toFloat(), name, lastName, group, notes, true)
+        viewModelScope.launch {
+                val studentItem = StudentItem(
+                    inputPaymentBalance.toInt(),
+                    name,
+                    lastName,
+                    inputGroup,
+                    inputImage,
+                    inputNotes,
+                    inputPhone,
+                    true
+                )
+
                 addStudentItemUseCase.addStudentItem(studentItem)
                 finishWork()
             }
-       // }
     }
 
     fun editStudentItem(inputName: String?, inputLastName: String?, inputPaymentBalance: String, inputNotes: String, inputGroup: String, inputImage: String, inputPhone: String) {
         val name = parseName(inputName)
         val lastName = parseName(inputLastName)
         val paymentBalance = parsePaymentBalance(inputPaymentBalance)
-        val group = inputGroup
-        val notes = inputNotes
-        val image = inputImage
-        val phone = inputPhone
-        //val count = parseCount(inputCount)
+
         val fieldsValid = validateInput(name, paymentBalance.toString())
         if (fieldsValid) {
             _studentItem.value?.let {
                 viewModelScope.launch {
-                    val item = it.copy(name = name, lastname = lastName, paymentBalance = paymentBalance.toInt(), group = group, notes = notes, image = image, telephone = phone, enabled = true)
+                    val item = it.copy(
+                        name = name,
+                        lastname = lastName,
+                        paymentBalance = paymentBalance,
+                        group = inputGroup,
+                        notes = inputNotes,
+                        image = inputImage,
+                        telephone = inputPhone,
+                        enabled = true
+                    )
                     editStudentItemUseCase.editStudentItem(item)
                     finishWork()
                 }

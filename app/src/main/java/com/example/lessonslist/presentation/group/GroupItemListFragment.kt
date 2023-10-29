@@ -226,10 +226,10 @@ class GroupItemListFragment: Fragment(), MenuProvider {
         itemTouchHelper.attachToRecyclerView(rvGroupList)
     }
 
-    override fun onStop() {
+    /*override fun onStop() {
         super.onStop()
         showDeleteMenu(false)
-    }
+    }*/
 
     private fun showDeleteMenu(show: Boolean) {
         toolbar = (activity as AppCompatActivity).findViewById(R.id.tool_bar)
