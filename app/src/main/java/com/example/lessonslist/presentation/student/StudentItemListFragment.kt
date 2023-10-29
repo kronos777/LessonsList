@@ -51,7 +51,7 @@ class StudentItemListFragment: Fragment(), MenuProvider {
 
     private var toolbar: MaterialToolbar? = null
     private var menuChoice: Menu? = null
-
+    private var hideModifyAppBar = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -165,6 +165,7 @@ class StudentItemListFragment: Fragment(), MenuProvider {
                 studentListAdapter.pairList.clear()
                 setCustomDataStudentsCheckAll(false)
             }
+            hideModifyAppBar = true
         } else {
             bottom_navigation.itemBackgroundResource = R.color.noactive_select_items
             toolbar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0061A5")))
@@ -175,6 +176,7 @@ class StudentItemListFragment: Fragment(), MenuProvider {
             toolbar?.setNavigationOnClickListener {
                 goCalendarFragment()
             }
+            hideModifyAppBar = false
         }
         menuChoice?.findItem(R.id.menu_delete)?.isVisible = show
         menuChoice?.findItem(R.id.menu_select_all)?.isVisible = show
@@ -400,10 +402,21 @@ class StudentItemListFragment: Fragment(), MenuProvider {
 
     }
 
-    /*override fun onStop() {
+    override fun onStop() {
         super.onStop()
-        showDeleteMenu(false)
-    }*/
+        if(hideModifyAppBar) {
+            hideModifyAppBar()
+        }
+    }
+
+    private fun hideModifyAppBar() {
+        val bottom_navigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        bottom_navigation.itemBackgroundResource = R.color.noactive_select_items
+        toolbar?.background = ColorDrawable(Color.parseColor("#0061A5"))
+        (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")
+        toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.GONE
+        toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.GONE
+    }
 
 
 }

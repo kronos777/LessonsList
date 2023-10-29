@@ -134,11 +134,25 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                     toggle.setHomeAsUpIndicator(R.drawable.ic_baseline_navigate_before_24)
                     paymentBtnAppBarTop.visibility = View.GONE
                     backupBtnAppBarTop.visibility = View.GONE
+                    goCalendarFragment()
                 }
             }
 
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+
+    private fun goCalendarFragment() {
+        binding.toolBar?.setNavigationOnClickListener {
+            val navHostFragment = this?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+            val navController = navHostFragment.navController
+            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+                .setExitAnim(R.anim.slide_in_right)
+                .setPopEnterAnim(R.anim.slide_out_left)
+                .setPopExitAnim(R.anim.slide_out_right).build()
+            navController.navigate(R.id.calendarItemFragment, null, animationOptions)
         }
     }
 

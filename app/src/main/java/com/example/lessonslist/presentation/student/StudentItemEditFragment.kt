@@ -331,20 +331,12 @@ class StudentItemEditFragment : Fragment() {
             .setView(inputEditTextField)
             .setPositiveButton("OK") { _, _ ->
                 val editTextInput = inputEditTextField.text.toString()
-                Log.d("editext value is:", editTextInput)
 
                 if(isNumeric(editTextInput)){
                     newBalance = editTextInput.toInt()
                     viewModel.studentItem.observe(viewLifecycleOwner) {
                         viewModel.editPaymentBalance(it.id, (it.paymentBalance + newBalance))
-                        if(it.paymentBalance < 0) {
-                        //    Toast.makeText(getActivity(),"payment balance"+(it.paymentBalance).toString(),Toast.LENGTH_SHORT).show();
-                        }
-                       // Toast.makeText(getActivity(),"new balance!"+(it.paymentBalance + newBalance).toString(),Toast.LENGTH_SHORT).show();
                         binding.textViewPaymentBalance.setText((it.paymentBalance + newBalance).toString())
-                        /*     if(it.paymentBalance > sumOffDebts()) {
-                                 alertDialogSetMove(it.paymentBalance + newBalance)
-                             }*/
                     }
                 } else {
                     Toast.makeText(getActivity(),"Строка не является числом, сохранить невозможно.",Toast.LENGTH_SHORT).show();
@@ -352,7 +344,7 @@ class StudentItemEditFragment : Fragment() {
 
 
             }
-            .setNegativeButton("Отмена", null)
+            .setNegativeButton("отмена", null)
             .create()
         dialog.show()
         //Toast.makeText(getActivity(),"inputdata!"+inputEditTextField.text.toString(),Toast.LENGTH_SHORT).show();

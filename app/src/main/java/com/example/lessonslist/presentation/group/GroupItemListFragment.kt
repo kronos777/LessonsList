@@ -1,7 +1,6 @@
 package com.example.lessonslist.presentation.group
 
 
-import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -27,7 +26,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentGroupItemListBinding
 import com.example.lessonslist.domain.group.GroupItem
-import com.example.lessonslist.domain.lessons.LessonsItem
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -43,6 +41,7 @@ class GroupItemListFragment: Fragment(), MenuProvider {
 
     private var toolbar: MaterialToolbar? = null
     private var menuChoice: Menu? = null
+    private var hideModifyAppBar = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -226,14 +225,10 @@ class GroupItemListFragment: Fragment(), MenuProvider {
         itemTouchHelper.attachToRecyclerView(rvGroupList)
     }
 
-    /*override fun onStop() {
-        super.onStop()
-        showDeleteMenu(false)
-    }*/
 
     private fun showDeleteMenu(show: Boolean) {
         toolbar = (activity as AppCompatActivity).findViewById(R.id.tool_bar)
-        val bottom_navigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        val bottom_navigation = (activity as AppCompatActivity?)!!.window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         if(show) {
             bottom_navigation.itemBackgroundResource = R.color.active_select_items
             toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.VISIBLE
@@ -249,6 +244,7 @@ class GroupItemListFragment: Fragment(), MenuProvider {
                 groupListAdapter.pairList.clear()
                 setCustomDataGroupsCheckAll(false)
             }
+            hideModifyAppBar = true
         } else {
             bottom_navigation.itemBackgroundResource = R.color.noactive_select_items
             toolbar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0061A5")))
@@ -259,6 +255,7 @@ class GroupItemListFragment: Fragment(), MenuProvider {
             toolbar?.setNavigationOnClickListener {
                 goCalendarFragment()
             }
+            hideModifyAppBar = false
         }
         menuChoice?.findItem(R.id.menu_delete)?.isVisible = show
         menuChoice?.findItem(R.id.menu_select_all)?.isVisible = show
@@ -318,8 +315,8 @@ class GroupItemListFragment: Fragment(), MenuProvider {
 
     private fun delete() {
         val alert = AlertDialog.Builder(requireContext())
-        var title: String
-        var txtDescription: String
+        val title: String
+        val txtDescription: String
         if(groupListAdapter.pairList.size == 1) {
             title = "Удалить группу"
             txtDescription = "Вы действительно хотите удалить выбранную группу ?"
@@ -347,24 +344,38 @@ class GroupItemListFragment: Fragment(), MenuProvider {
 
         alert.setView(layout)
 
-        alert.setPositiveButton("удалить", DialogInterface.OnClickListener {
-                dialog, id ->
+        alert.setPositiveButton("удалить") { _, _ ->
             //deleteLessonsPay
-            if(groupListAdapter.pairList.isNotEmpty()) {
+            if (groupListAdapter.pairList.isNotEmpty()) {
                 groupListAdapter.pairList.forEach {
                     viewModel.deleteGroupItemId(it.key)
                 }
             }
-        })
+        }
 
-        alert.setNegativeButton("отмена", DialogInterface.OnClickListener {
-                dialog, id ->
+        alert.setNegativeButton("отмена") { dialog, _ ->
             dialog.dismiss()
-        })
+        }
 
         alert.setCancelable(false)
         alert.show()
     }
 
+
+    override fun onStop() {
+        super.onStop()
+        if(hideModifyAppBar) {
+            hideModifyAppBar()
+        }
+    }
+
+    private fun hideModifyAppBar() {
+        val bottom_navigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        bottom_navigation.itemBackgroundResource = R.color.noactive_select_items
+        toolbar?.background = ColorDrawable(Color.parseColor("#0061A5"))
+        (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")
+        toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.GONE
+        toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.GONE
+    }
 
 }

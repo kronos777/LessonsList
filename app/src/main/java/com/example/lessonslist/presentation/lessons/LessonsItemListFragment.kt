@@ -50,7 +50,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
 
     private var toolbar: MaterialToolbar? = null
     private var menuChoice: Menu? = null
-
+    private var hideModifyAppBar = false
 
 
     override fun onCreateView(
@@ -119,17 +119,12 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
       toolbar = (activity as AppCompatActivity).findViewById(R.id.tool_bar)
       val bottom_navigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
       if(show) {
-//          val actionBar: ActionBar = (activity as AppCompatActivity?)!!.supportActionBar!!
-   //       actionBar.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0e0f0f")))
           bottom_navigation.itemBackgroundResource = R.color.active_select_items
           toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.VISIBLE
           toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.VISIBLE
-          //(activity as AppCompatActivity?)!!.window.navigationBarColor = Color.parseColor("#0e0f0f")
           (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0e0f0f")
-         // (activity as AppCompatActivity?)!!.window.findViewById<BottomNavigationView>(R.id.nav_view_bottom) = Color.parseColor("#0e0f0f")
           toolbar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0e0f0f")))
           toolbar?.setOnMenuItemClickListener {
-              //onOptionsItemSelected(it)
               onMenuItemSelected(it)
           }
           toolbar?.setNavigationIcon(R.drawable.baseline_close_24)
@@ -138,6 +133,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
               lessonsListAdapter.pairList.clear()
               setCustomDataLessonsCheckAll(false)
           }
+          hideModifyAppBar = true
       } else {
           bottom_navigation.itemBackgroundResource = R.color.noactive_select_items
           toolbar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0061A5")))
@@ -148,6 +144,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
           toolbar?.setNavigationOnClickListener {
               goCalendarFragment()
           }
+          hideModifyAppBar = false
       }
       menuChoice?.findItem(R.id.menu_delete)?.isVisible = show
       menuChoice?.findItem(R.id.menu_select_all)?.isVisible = show
@@ -457,10 +454,22 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
 
 
 
-    /*override fun onStop() {
+    override fun onStop() {
         super.onStop()
-        showDeleteMenu(false)
-    }*/
+        if(hideModifyAppBar) {
+            hideModifyAppBar()
+        }
+    }
+
+    private fun hideModifyAppBar() {
+        val bottom_navigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        bottom_navigation.itemBackgroundResource = R.color.noactive_select_items
+        toolbar?.background = ColorDrawable(Color.parseColor("#0061A5"))
+        (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")
+        toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.GONE
+        toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.GONE
+    }
+
     companion object {
         const val SCREEN_MODE = "screen_mode"
         const val CUSTOM_LIST = "custom_list"
