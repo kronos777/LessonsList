@@ -1,7 +1,10 @@
 package com.example.lessonslist.presentation.actsplash
 
 import android.content.Intent
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -24,7 +27,8 @@ class ActSplash : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.act_splash)
-
+       // val imgSplash = findViewById<ImageView>(R.id.actSplash)
+        //imgSplash.colorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(0f)})
         showProgressBarOrNot()
     }
 

@@ -7,28 +7,37 @@
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    tools:context="com.example.lessonslist.presentation.actsplash.ActSplash">
+    tools:context="com.example.lessonslist.presentation.actsplash.ActSplash"
+    >
+    <!--  <ImageView
+          android:id="@+id/actSplash"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:src="@drawable/act_splash_background"
+          app:layout_constraintTop_toTopOf="parent"
+          app:layout_constraintLeft_toLeftOf="parent"
+          app:layout_constraintRight_toRightOf="paren         />
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/progress_circular"
-        android:indeterminate="true"
-        app:indicatorSize="70dp"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        app:indicatorColor="@color/cardColor"
-        android:layout_marginTop="150dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/nav_head_avatar"
-        />
+      <com.google.android.material.progressindicator.CircularProgressIndicator
+          android:id="@+id/progress_circular"
+          android:indeterminate="true"
+          app:indicatorSize="70dp"
+          android:layout_width="150dp"
+          android:layout_height="150dp"
+          app:indicatorColor="@color/cardColor"
+          android:layout_marginTop="150dp"
+          app:layout_constraintTop_toTopOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintBottom_toTopOf="@id/nav_head_avatar"
+          />-->
     <ImageView
         android:id="@+id/nav_head_avatar"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="200dp"
         android:src="@drawable/iconlogo"
-        app:layout_constraintTop_toBottomOf="@id/progress_circular"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/textForgotPassword"
