@@ -35,7 +35,6 @@ import java.time.format.DateTimeFormatter
 
 class PaymentWork(
     appContext: Context, params: WorkerParameters
-
 ) : CoroutineWorker(
     appContext,
     params
@@ -150,7 +149,6 @@ class PaymentWork(
                                         saleValue = saleTest[0].price
                                     }
                                     //пробуем проверить наличие скидки
-
 
                                     if(!curPayment) {
                                         if(newBalanceStudent > 0) {

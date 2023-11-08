@@ -246,14 +246,10 @@ class GroupItemFragment : Fragment() {
        }
     }
     private fun checkValidStudent(): HashSet<Int?> {
-        val studentIds: String = adapter.arrayList.toString()
         val lstValues: ArrayList<Int> = ArrayList()
 
-        studentIds.forEach {
-            if (it.isDigit()) {
-                val str = it.toString()
-                lstValues.add(str.toInt())
-            }
+        adapter.arrayList.forEach {
+            lstValues.add(it)
         }
 
 

@@ -2,14 +2,13 @@ package com.example.lessonslist.presentation.calendar
 
 
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -20,12 +19,12 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentCalndarBinding
+import com.example.lessonslist.presentation.helpers.StringHelpers
 import com.example.lessonslist.presentation.lessons.LessonsItemAddFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
 import com.example.lessonslist.presentation.lessons.LessonsListViewModel
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import ru.cleverpumpkin.calendar.CalendarDate
@@ -33,10 +32,11 @@ import ru.cleverpumpkin.calendar.CalendarView
 import ru.cleverpumpkin.calendar.extension.getColorInt
 import ru.cleverpumpkin.calendar.sample.events.EventItem
 import ru.cleverpumpkin.calendar.sample.events.EventItemsList
-import java.util.*
+import java.util.Calendar
+import java.util.TimeZone
 
 
-class CalendarItemFragment() : Fragment() {
+class CalendarItemFragment : Fragment() {
 
 
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
@@ -91,7 +91,7 @@ class CalendarItemFragment() : Fragment() {
 
     private fun goExitBackPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            getActivity()?.finishAffinity()
+            activity?.finishAffinity()
         }
     }
 
@@ -115,7 +115,7 @@ class CalendarItemFragment() : Fragment() {
 
 
         val calendarPicList = mutableListOf<EventItemsList>()
-        val calendarShowMessgeList = mutableListOf<EventItemsList>()
+        val calendarShowMessageList = mutableListOf<EventItemsList>()
 
         viewModel = ViewModelProvider(this)[LessonsListViewModel::class.java]
         viewModelPaymentList = ViewModelProvider(this)[PaymentListViewModel::class.java]
@@ -126,44 +126,42 @@ class CalendarItemFragment() : Fragment() {
 
 
 
-            if(calendarShowMessgeList.size > 0) {
+            if(calendarShowMessageList.size > 0) {
                // Toast.makeText(getActivity(),"Размер больше 0 ", Toast.LENGTH_SHORT).show()
-                calendarShowMessgeList.clear()
+                calendarShowMessageList.clear()
                 calendarPicList.clear()
             }
 
             for (item in it) {
 
-                val date = item.dateEnd.split(" ")
+                //val date = item.dateEnd.split(" ")
                 val nameLessons = item.title
-                val  dd = CalendarDate(Date(date[0]))
+                /*Log.d("calendarDate", testCreateDt(date[0]).toString())
+                Log.d("calendarDate 2", Date(date[0]).toString())
+                val  dd = CalendarDate(Date(date[0]))*/
+                //val tv = calendarCreate(item.dateEnd)
+                val  dd = CalendarDate(StringHelpers.calendarCreate(item.dateEnd))
                 arrayListLessons.add(dd)
              //   calendarList.add(dd)
                 calendarPicList += EventItemsList(dd, "lessons", nameLessons)
-                calendarShowMessgeList += EventItemsList(dd, "lessons", nameLessons)
+                calendarShowMessageList += EventItemsList(dd, "lessons", nameLessons)
                 dateTitleMutableMap[dd.toString()] = nameLessons
             }
 
 
-            viewModelPaymentList.paymentList.observe(viewLifecycleOwner) {
-                for(item in it) {
+            viewModelPaymentList.paymentList.observe(viewLifecycleOwner) { paymentList ->
+                for(item in paymentList) {
 
                     val date = item.datePayment.split(" ")
                     if(date[0].length >= 8) {
-
-                        val  dd = CalendarDate(Date(date[0]))
-
-
+                        val  dd = CalendarDate(StringHelpers.calendarCreate(item.datePayment))
                         arrayListPayments.add(dd)
-
                         if(!item.enabled) {
                             calendarPicList += EventItemsList(dd, "payment", item.student)
-                            calendarShowMessgeList += EventItemsList(dd, "dolg", item.student)
-
+                            calendarShowMessageList += EventItemsList(dd, "dolg", item.student)
                         } else {
-
                             calendarPicList += EventItemsList(dd, "paymentyes", item.student)
-                            calendarShowMessgeList += EventItemsList(dd, "paymentyes", item.student)
+                            calendarShowMessageList += EventItemsList(dd, "paymentyes", item.student)
                         }
                     } else {
                         continue
@@ -200,13 +198,13 @@ class CalendarItemFragment() : Fragment() {
 
 
 
-                val minDateForSetMindateTime: CalendarDate
+                val minDateForSetMinDateTime: CalendarDate
 
 
                 if(minDateNumberLessons > minDateNumberPayments) {
-                    minDateForSetMindateTime = minDateNumberPayments
+                    minDateForSetMinDateTime = minDateNumberPayments
                 } else {
-                    minDateForSetMindateTime = minDateNumberLessons
+                    minDateForSetMinDateTime = minDateNumberLessons
                 }
 
                 val calendarTimeZone: Calendar = Calendar.getInstance(TimeZone.getDefault())
@@ -220,17 +218,18 @@ class CalendarItemFragment() : Fragment() {
 
                 val minDate: CalendarDate
                 calendar.set(2000, Calendar.JANUARY, 1)
-                val checkDate: CalendarDate =  CalendarDate(calendar.time)
+                val checkDate =  CalendarDate(calendar.time)
 
 
 
-                if(minDateForSetMindateTime == CalendarDate(Date(2000, 1, 1).time)) {
+                if(minDateForSetMinDateTime == CalendarDate(StringHelpers.calendarCreate("2000/01/01 00:00").time)) {
+                    Log.d("calendarDate", minDateForSetMinDateTime.toString())
+                //if(minDateForSetMindateTime == CalendarDate(Date(2000, 1, 1).time)) {
+                    minDate = minDateForSetMinDateTime
+                } else if((minDateNumberLessons > minDateNumberPayments || minDateNumberLessons < minDateNumberPayments || minDateNumberLessons == minDateNumberPayments) && minDateForSetMinDateTime != checkDate) {
+                    minDate = minDateForSetMinDateTime
 
-                    minDate = minDateForSetMindateTime
-                } else if((minDateNumberLessons > minDateNumberPayments || minDateNumberLessons < minDateNumberPayments || minDateNumberLessons == minDateNumberPayments) && minDateForSetMindateTime != checkDate) {
-                    minDate = minDateForSetMindateTime
-
-                } else if(minDateForSetMindateTime == checkDate) {
+                } else if(minDateForSetMinDateTime == checkDate) {
                     minDate = initialDate
                 } else {
                     minDate = initialDate
@@ -244,73 +243,68 @@ class CalendarItemFragment() : Fragment() {
                 val maxDate = CalendarDate(calendar.time)
 
 
+                val calendarNewPaymentPicList = mutableListOf<EventItemsList>()
+                //сортировать платежи долги
 
-                if(calendarPicList != null) {
-                    val calendarNewPaymentPicList = mutableListOf<EventItemsList>()
-                    //сортировать платежи долги
-
-                    for (index in calendarPicList.indices) {
+                for (index in calendarPicList.indices) {
 
 
-                        if(calendarPicList[index].color == "paymentyes") {
-                            calendarNewPaymentPicList += EventItemsList(calendarPicList[index].date, calendarPicList[index].color, "успешный платеж")
+                    if(calendarPicList[index].color == "paymentyes") {
+                        calendarNewPaymentPicList += EventItemsList(calendarPicList[index].date, calendarPicList[index].color, "успешный платеж")
 
-                        } else if (calendarPicList[index].color == "payment") {
+                    } else if (calendarPicList[index].color == "payment") {
 
-                            calendarNewPaymentPicList += EventItemsList(calendarPicList[index].date, calendarPicList[index].color, "долг")
+                        calendarNewPaymentPicList += EventItemsList(calendarPicList[index].date, calendarPicList[index].color, "долг")
 
-                        } else {
-                            calendarNewPaymentPicList += EventItemsList(calendarPicList[index].date, calendarPicList[index].color, "урок")
-
-                        }
-                    }
-
-          val newCalendarNewPaymentPicList = mutableListOf<EventItemsList>()
-          val map: HashMap<String, String> = HashMap()
-
-          for(index in calendarNewPaymentPicList.indices) {
-                    if(newCalendarNewPaymentPicList.size > 0) {
-                        if(map.containsKey(calendarNewPaymentPicList[index].date.toString() + calendarNewPaymentPicList[index].eventName) &&
-                            !map.containsValue(calendarNewPaymentPicList[index].color)){
-                                map[calendarNewPaymentPicList[index].date.toString() + calendarNewPaymentPicList[index].eventName] =
-                                calendarNewPaymentPicList[index].color
-                            newCalendarNewPaymentPicList += calendarNewPaymentPicList[index]
-                        }
-                        if(!map.containsKey(calendarNewPaymentPicList[index].date.toString() + calendarNewPaymentPicList[index].eventName) &&
-                            map.containsValue(calendarNewPaymentPicList[index].color)){
-                            map[calendarNewPaymentPicList[index].date.toString() + calendarNewPaymentPicList[index].eventName] =
-                                calendarNewPaymentPicList[index].color
-                            newCalendarNewPaymentPicList += calendarNewPaymentPicList[index]
-                        }
-                        if(!map.containsKey(calendarNewPaymentPicList[index].date.toString() + calendarNewPaymentPicList[index].eventName) &&
-                            !map.containsValue(calendarNewPaymentPicList[index].color)){
-                            map[calendarNewPaymentPicList[index].date.toString() + calendarNewPaymentPicList[index].eventName] =
-                                calendarNewPaymentPicList[index].color
-                            newCalendarNewPaymentPicList += calendarNewPaymentPicList[index]
-                        }
                     } else {
-                        map[calendarNewPaymentPicList[index].date.toString() + calendarNewPaymentPicList[index].eventName] =
-                            calendarNewPaymentPicList[index].color
-                        newCalendarNewPaymentPicList += calendarNewPaymentPicList[index]
+                        calendarNewPaymentPicList += EventItemsList(calendarPicList[index].date, calendarPicList[index].color, "урок")
+
                     }
-
-
                 }
 
+                val newCalendarNewPaymentPicList = mutableListOf<EventItemsList>()
+                val map: HashMap<String, String> = HashMap()
+
+                for(index in calendarNewPaymentPicList.indices) {
+                          if(newCalendarNewPaymentPicList.size > 0) {
+                              if(map.containsKey(calendarNewPaymentPicList[index].date.toString() + calendarNewPaymentPicList[index].eventName) &&
+                                  !map.containsValue(calendarNewPaymentPicList[index].color)){
+                                      map[calendarNewPaymentPicList[index].date.toString() + calendarNewPaymentPicList[index].eventName] =
+                                      calendarNewPaymentPicList[index].color
+                                  newCalendarNewPaymentPicList += calendarNewPaymentPicList[index]
+                              }
+                              if(!map.containsKey(calendarNewPaymentPicList[index].date.toString() + calendarNewPaymentPicList[index].eventName) &&
+                                  map.containsValue(calendarNewPaymentPicList[index].color)){
+                                  map[calendarNewPaymentPicList[index].date.toString() + calendarNewPaymentPicList[index].eventName] =
+                                      calendarNewPaymentPicList[index].color
+                                  newCalendarNewPaymentPicList += calendarNewPaymentPicList[index]
+                              }
+                              if(!map.containsKey(calendarNewPaymentPicList[index].date.toString() + calendarNewPaymentPicList[index].eventName) &&
+                                  !map.containsValue(calendarNewPaymentPicList[index].color)){
+                                  map[calendarNewPaymentPicList[index].date.toString() + calendarNewPaymentPicList[index].eventName] =
+                                      calendarNewPaymentPicList[index].color
+                                  newCalendarNewPaymentPicList += calendarNewPaymentPicList[index]
+                              }
+                          } else {
+                              map[calendarNewPaymentPicList[index].date.toString() + calendarNewPaymentPicList[index].eventName] =
+                                  calendarNewPaymentPicList[index].color
+                              newCalendarNewPaymentPicList += calendarNewPaymentPicList[index]
+                          }
 
 
+                      }
 
-                 val indicators: List<CalendarView.DateIndicator> = setDatesIndicators(newCalendarNewPaymentPicList)
-                 //val indicators: List<CalendarView.DateIndicator> = setDatesIndicators(calendarPicList) work
-                 calendarView.datesIndicators = indicators
-                }
+
+                val indicators: List<CalendarView.DateIndicator> = setDatesIndicators(newCalendarNewPaymentPicList)
+                //val indicators: List<CalendarView.DateIndicator> = setDatesIndicators(calendarPicList) work
+                calendarView.datesIndicators = indicators
 
                 calendar.set(currentYear, currentMonth, currentDay)
                 val today = calendar.time
                 if (calendarList.size > 0) {
                     calendarList.clear()
                     calendarList.add(CalendarDate(today))
-                } else if (calendarList.size == 0) {
+                } else if (calendarList.isEmpty()) {
                     calendarList.add(CalendarDate(today))
                 }
 
@@ -333,10 +327,10 @@ class CalendarItemFragment() : Fragment() {
 
             calendarView.onDateClickListener = { date ->
                 val calendarDateList = mutableListOf<EventItemsList>()
-                for (index in calendarShowMessgeList.indices) {
+                for (index in calendarShowMessageList.indices) {
 
-                    if(calendarShowMessgeList[index].date == date) {
-                        calendarDateList += calendarShowMessgeList[index]
+                    if(calendarShowMessageList[index].date == date) {
+                        calendarDateList += calendarShowMessageList[index]
                     }
                 }
 
@@ -353,6 +347,9 @@ class CalendarItemFragment() : Fragment() {
         }
 
    }
+
+
+
 
 
     private fun launchLessonsAddFragment(date: String) {
@@ -417,14 +414,12 @@ class CalendarItemFragment() : Fragment() {
             alert.setTitle("$date")
             alert.setMessage("Запланированных занятий нет.")
 
-            alert.setPositiveButton("Добавить урок", DialogInterface.OnClickListener {
-                    dialog, id ->
+            alert.setPositiveButton("Добавить урок") { _, _ ->
                 launchLessonsAddFragment(date.toString())
-            })
-            alert.setNeutralButton("Закрыть", DialogInterface.OnClickListener {
-                    dialog, id ->
+            }
+            alert.setNeutralButton("Закрыть") { dialog, _ ->
                 dialog.dismiss()
-            })
+            }
 
             alert.setCancelable(false)
             alert.show()
@@ -444,12 +439,17 @@ class CalendarItemFragment() : Fragment() {
             for (index in dataDate.indices) {
                 if(dataDate[index].color == "lessons"){
                    val nameEvent = dataDate[index].eventName
-
-                    val index = TextView(requireContext())
-                    index.setSingleLine()
-                    index.text = nameEvent
-                    index.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
-                    layout.addView(index)
+                    /*val index = TextView(requireContext()).apply {
+                        setSingleLine()
+                        //this.text = nameEvent
+                        this.text = nameEvent
+                        this.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
+                    }*/
+                    layout.addView(TextView(requireContext()).apply {
+                        setSingleLine()
+                        this.text = nameEvent
+                        this.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
+                    })
                 }
 
             }
@@ -504,24 +504,21 @@ class CalendarItemFragment() : Fragment() {
             alert.setView(layout)
 
             if(countPayYes != 0 || countPayNo != 0) {
-                alert.setPositiveButton("Платежи", DialogInterface.OnClickListener {
-                        dialog, id ->
-                   // launchFragment(PaymentItemListFragment.newInstanceDateId(date.toString()))
+                alert.setPositiveButton("Платежи") { _, _ ->
+                    // launchFragment(PaymentItemListFragment.newInstanceDateId(date.toString()))
                     launchPaymentListFragment(date.toString())
-                })
+                }
             }
 
 
 
-            alert.setNegativeButton("Уроки", DialogInterface.OnClickListener {
-                    dialog, id ->
-                 //  launchFragment(LessonsItemListFragment.newInstanceDateId(date.toString()))
+            alert.setNegativeButton("Уроки") { _, _ ->
+                //  launchFragment(LessonsItemListFragment.newInstanceDateId(date.toString()))
                 launchLessonsListFragment(date.toString())
-            })
-            alert.setNeutralButton("Закрыть", DialogInterface.OnClickListener {
-                    dialog, id ->
+            }
+            alert.setNeutralButton("Закрыть") { dialog, _ ->
                 dialog.dismiss()
-            })
+            }
 
             alert.setCancelable(false)
             alert.show()
@@ -544,23 +541,20 @@ class CalendarItemFragment() : Fragment() {
 
                if (calendarPicList[event].color == "lessons") {
                      eventItems += EventItem(
-                         eventName = title,
                          date = date,
                          color = context.getColorInt(R.color.event_2_color)
-                    )
+                     )
                 } else if (calendarPicList[event].color == "payment") {
                     eventItems += EventItem(
-                         eventName = title,
-                         date = date,
-                         color = context.getColorInt(R.color.event_1_color)
+                        date = date,
+                        color = context.getColorInt(R.color.event_1_color)
                     )
                 } else if (calendarPicList[event].color == "paymentyes") {
 
                     eventItems += EventItem(
-                            eventName = title,
-                            date = date,
-                            color = context.getColorInt(R.color.event_3_color)
-                        )
+                        date = date,
+                        color = context.getColorInt(R.color.event_3_color)
+                    )
                 }
 
         }

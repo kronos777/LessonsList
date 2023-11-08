@@ -29,21 +29,21 @@ class ListStudentGroupAdapter(private val dataSet: ArrayList<*>, mContext: Conte
         convertView: View?,
         parent: ViewGroup
     ): View {
-        var convertView = convertView
+        var localConvertView = convertView
         val viewHolder: ViewHolder
         val result: View
-        if (convertView == null) {
+        if (localConvertView == null) {
             viewHolder = ViewHolder()
-            convertView =
+            localConvertView =
                 LayoutInflater.from(parent.context).inflate(R.layout.row_student_group_item, parent, false)
             viewHolder.txtName =
-                convertView.findViewById(R.id.txtName)
+                localConvertView.findViewById(R.id.txtName)
 
-            result = convertView
-            convertView.tag = viewHolder
+            result = localConvertView
+            localConvertView.tag = viewHolder
         } else {
-            viewHolder = convertView.tag as ViewHolder
-            result = convertView
+            viewHolder = localConvertView.tag as ViewHolder
+            result = localConvertView
         }
         val item: DataStudentGroupModel = getItem(position)
         viewHolder.txtName.text = item.name

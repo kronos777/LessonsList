@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -17,7 +16,8 @@ import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentPaymentItemListBinding
 import com.example.lessonslist.domain.payment.PaymentItem
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -30,7 +30,6 @@ class PaymentItemListFragment: Fragment() {
     private lateinit var viewModel: PaymentListViewModel
     private lateinit var paymentListAdapter: PaymentListAdapter
     private lateinit var args: Bundle
-    private var paymentEnabled = false
     private var studentId: Int = 0
     private var lessonsId: Int = 0
     private var dateId: String = ""
@@ -79,6 +78,7 @@ class PaymentItemListFragment: Fragment() {
         }
     }
     private fun showPayment(mode: String) {
+
         if(mode == "student_id_list") {
             studentId = args.getInt(STUDENT_ID)
             val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
@@ -118,42 +118,42 @@ class PaymentItemListFragment: Fragment() {
 
 
         } else if (mode == "date_id_list") {
-            val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
-            dateId = args.getString(DATE_ID)!!
+                    val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
+                    dateId = args.getString(DATE_ID)!!
 
-            if(dateId.contains("&debts")) {
-                val deptsExists = dateId.split("&debts")
+                    if(dateId.contains("&debts")) {
+                        val depotsExists = dateId.split("&debts")
 
-                viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
-                viewModel.paymentList.observe(viewLifecycleOwner) {
-                    for (payment in it) {
-                        val enabledPay = payment.enabled
-                        val pay = payment.datePayment.split(" ")
-                        val datePay = Date(pay[0])
-                        val dateFormated = SimpleDateFormat("d/M/yyyy").format(datePay)
-                        if(dateFormated == deptsExists[0] && !enabledPay){
-                            listArrayPayment.add(payment)
+                        viewModel = ViewModelProvider(this)[PaymentListViewModel::class.java]
+                        viewModel.paymentList.observe(viewLifecycleOwner) {
+                            for (payment in it) {
+                                val enabledPay = payment.enabled
+                                val pay = payment.datePayment.split(" ")
+                                val dateFormatted = stringConvertInDate(pay[0])
+                                val dateFormattedEnter = stringConvertInDateOther(depotsExists[0])
+                                if(dateFormatted == dateFormattedEnter && !enabledPay){
+                                    listArrayPayment.add(payment)
+                                }
+                            }
+                            paymentListAdapter.submitList(listArrayPayment.reversed())
+                        }
+                    } else {
+                        viewModel = ViewModelProvider(this)[PaymentListViewModel::class.java]
+                        viewModel.paymentList.observe(viewLifecycleOwner) {
+                            for (payment in it) {
+                               val pay = payment.datePayment.split(" ")
+                               val dateFormatted = stringConvertInDate(pay[0])
+                               val dateFormattedEnter = stringConvertInDateOther(dateId)
+                                if(dateFormatted == dateFormattedEnter){
+                                    listArrayPayment.add(payment)
+                                }
+                            }
+                            paymentListAdapter.submitList(listArrayPayment.reversed())
                         }
                     }
-                    paymentListAdapter.submitList(listArrayPayment.reversed())
-                }
-            } else {
-                viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
-                viewModel.paymentList.observe(viewLifecycleOwner) {
-                    for (payment in it) {
-                        val pay = payment.datePayment.split(" ")
-                        val datePay = Date(pay[0])
-                        val dateFormated = SimpleDateFormat("d/M/yyyy").format(datePay)
-                        if(dateFormated == dateId){
-                            listArrayPayment.add(payment)
-                        }
-                    }
-                    paymentListAdapter.submitList(listArrayPayment.reversed())
-                }
-            }
         } else if (mode == "payment_enabled") {
             val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
-            viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
+            viewModel = ViewModelProvider(this)[PaymentListViewModel::class.java]
             viewModel.paymentList.observe(viewLifecycleOwner) {
                 for (payment in it) {
                     val enabledPay = payment.enabled
@@ -165,7 +165,7 @@ class PaymentItemListFragment: Fragment() {
             }
         } else if (mode == "payment_yes") {
             val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
-            viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
+            viewModel = ViewModelProvider(this)[PaymentListViewModel::class.java]
             viewModel.paymentList.observe(viewLifecycleOwner) {
                 for (payment in it) {
                     val enabledPay = payment.enabled
@@ -176,20 +176,22 @@ class PaymentItemListFragment: Fragment() {
                 paymentListAdapter.submitList(listArrayPayment.reversed())
             }
         } else {
-            // Toast.makeText(activity, "we are here", Toast.LENGTH_SHORT).show()
-            viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
+            viewModel = ViewModelProvider(this)[PaymentListViewModel::class.java]
             viewModel.paymentList.observe(viewLifecycleOwner) {
-                /*it.forEach lit@{
-                    if(!it.enabled) {
-                        binding.buttonSwithPayment.visibility = View.VISIBLE
-                        return@lit
-                    }
-                }*/
                 paymentListAdapter.submitList(it.reversed())
             }
         }
     }
 
+
+    private fun stringConvertInDate(str: String): LocalDate {
+        val formatter = DateTimeFormatter.ofPattern("yyyy/M/d")
+        return LocalDate.parse(str, formatter)
+    }
+    private fun stringConvertInDateOther(str: String): LocalDate {
+        val formatter = DateTimeFormatter.ofPattern("d/M/yyyy")
+        return LocalDate.parse(str, formatter)
+    }
     private fun goCalendarFragmentBackPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
@@ -214,9 +216,7 @@ class PaymentItemListFragment: Fragment() {
             )
 
         }
-       // setupLongClickListener()
         setupClickListener()
-
     }
 
 
@@ -237,16 +237,24 @@ class PaymentItemListFragment: Fragment() {
         val navController = navHostFragment.navController
 
         val btnArgsLessons = Bundle().apply {
-            if(mode == "date_id_list") {
-                putString(PaymentItemFragment.DATE_ID_BACKSTACK, dateIdBackstack)
-            } else if(mode == "student_id_list") {
-                putString(PaymentItemFragment.STUDENT_ID_LIST, "student_id_list" + "&" + studentIdBackstack.toString())
-            } else if(mode == "student_no_pay_list") {
-                putString(PaymentItemFragment.STUDENT_NO_PAY_LIST, mode + "&" + studentIdBackstack)
-            } else if(mode == "payment_enabled") {
-                putString(PaymentItemFragment.STUDENT_NO_PAY_LIST, mode)
-            } else if(mode == "custom_list")  {
-                putString(PaymentItemFragment.STUDENT_NO_PAY_LIST, mode)
+            when (mode) {
+                "date_id_list" -> {
+                    putString(PaymentItemFragment.DATE_ID_BACKSTACK, dateIdBackstack)
+                }
+                "student_id_list" -> {
+                    putString(PaymentItemFragment.STUDENT_ID_LIST,
+                        "student_id_list&$studentIdBackstack"
+                    )
+                }
+                "student_no_pay_list" -> {
+                    putString(PaymentItemFragment.STUDENT_NO_PAY_LIST, "$mode&$studentIdBackstack")
+                }
+                "payment_enabled" -> {
+                    putString(PaymentItemFragment.STUDENT_NO_PAY_LIST, mode)
+                }
+                "custom_list" -> {
+                    putString(PaymentItemFragment.STUDENT_NO_PAY_LIST, mode)
+                }
             }
             putInt(PaymentItemFragment.PAYMENT_ITEM_ID, id)
         }

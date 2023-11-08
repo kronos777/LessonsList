@@ -37,8 +37,7 @@ class PaymentListRepositoryImpl(
     }
 
     override fun getPaymentItemExists(studentId: Int, lessonsId: Int): Boolean {
-        val data = paymentListDao.getPaymentItemExists(studentId, lessonsId)
-        return data
+        return paymentListDao.getPaymentItemExists(studentId, lessonsId)
     }
 
     override fun getPaymentList(): LiveData<List<PaymentItem>> = Transformations.map(

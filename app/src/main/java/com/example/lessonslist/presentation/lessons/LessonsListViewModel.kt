@@ -16,9 +16,7 @@ class LessonsListViewModel(application: Application) : AndroidViewModel(applicat
 
     private val getLessonsItemUseCase = GetLessonsItemUseCase(repository)
     private val getLessonsItemListUseCase = GetLessonsListItemUseCase(repository)
-    private val getLessonsListItemDateUseCase = GetLessonsListItemDateUseCase(repository)
     private val deleteLessonsItemUseCase = DeleteLessonsItemUseCase(repository)
-    private val editLessonsItemUseCase = EditLessonsItemUseCase(repository)
 
     val lessonsList = getLessonsItemListUseCase.getLessonsList()
 

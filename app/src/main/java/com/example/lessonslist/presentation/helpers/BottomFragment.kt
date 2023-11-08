@@ -1,5 +1,6 @@
 package com.example.lessonslist.presentation.helpers
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,15 +11,12 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ListView
 import android.widget.Toast
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.BottomSheetLayoutBinding
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
-import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.student.*
@@ -29,7 +27,6 @@ import com.example.lessonslist.presentation.student.notes.ListNotesAdapter
 import com.example.lessonslist.presentation.student.parentContact.DataParentContactStudentModel
 import com.example.lessonslist.presentation.student.parentContact.ListParentContactAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.TextInputLayout
 import java.text.SimpleDateFormat
@@ -39,7 +36,7 @@ private const val COLLAPSED_HEIGHT = 650
 
 class BottomFragment : BottomSheetDialogFragment() {
 
-    private var screenMode: String = BottomFragment.MODE_UNKNOWN
+    private var screenMode: String = MODE_UNKNOWN
     private var studentItemId: Int = StudentItem.UNDEFINED_ID
 
     //по листам
@@ -85,9 +82,9 @@ class BottomFragment : BottomSheetDialogFragment() {
 
         if(screenMode == "mode_notes") {
             binding.simpleTextTitle.text = "Заметки о студенте"
-            binding.etNotes.setHint("Внести заметку о студенте")
+            binding.etNotes.hint = "Внести заметку о студенте"
             binding.tilName.visibility = View.GONE
-            binding.etNotes.setInputType(InputType.TYPE_CLASS_TEXT)
+            binding.etNotes.inputType = InputType.TYPE_CLASS_TEXT
             showNotesStudent()
 
             binding.imageAddNotes.setOnClickListener {
@@ -100,10 +97,10 @@ class BottomFragment : BottomSheetDialogFragment() {
 
         if(screenMode == "contact_parent") {
             binding.simpleTextTitle.text = "Контакты родителей"
-            binding.etName.setHint("Введите имя")
-            binding.etNotes.setHint("Введите номер")
-            binding.etName.setInputType(InputType.TYPE_CLASS_TEXT)
-            binding.etNotes.setInputType(InputType.TYPE_CLASS_NUMBER)
+            binding.etName.hint = "Введите имя"
+            binding.etNotes.hint = "Введите номер"
+            binding.etName.inputType = InputType.TYPE_CLASS_TEXT
+            binding.etNotes.inputType = InputType.TYPE_CLASS_NUMBER
             showParentContact()
 
             binding.etNotes.addTextChangedListener(PhoneTextFormatter(binding.etNotes, "+7 (###) ###-####"))
@@ -128,26 +125,13 @@ class BottomFragment : BottomSheetDialogFragment() {
     }
 
 
-    private fun navigateEditPayment(id: Int) {
-
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
-        val btnArgsLessons = Bundle().apply {
-            putString(PaymentItemFragment.SCREEN_MODE, PaymentItemFragment.MODE_EDIT)
-            putInt(PaymentItemFragment.PAYMENT_ITEM_ID, id)
-        }
-
-        navController.navigate(R.id.paymentItemFragment, btnArgsLessons)
-    }
-
     private fun showGroupStudentList() {
         listView = binding.listView
         dataStudentGroupModel = ArrayList<DataStudentGroupModel>()
-        viewModelGroup = ViewModelProvider(this).get(GroupListViewModel::class.java)
+        viewModelGroup = ViewModelProvider(this)[GroupListViewModel::class.java]
         viewModelGroup.groupList.observe(viewLifecycleOwner) { groups ->
             for (group in groups) {
-                val studentIds = getStudentIds(group.student)
+                val studentIds = StringHelpers.getStudentIds(group.student)
                 if(studentIds.isNotEmpty()) {
                    if(studentIds.contains(studentItemId)) {
                        dataStudentGroupModel!!.add(DataStudentGroupModel(group.id, group.title))
@@ -161,13 +145,6 @@ class BottomFragment : BottomSheetDialogFragment() {
         }
     }
 
-
-    private fun getStudentIds(dataString: String): List<Int> {
-        var dataStr = dataString.replace("]", "")
-        dataStr = dataStr.replace("[", "")
-        return dataStr.split(",").map { it.trim().toInt() }
-    }
-
     private fun addParentContact() {
       //  binding.etNotes.setHint("")
         val textName = binding.etName.text.toString()
@@ -177,15 +154,15 @@ class BottomFragment : BottomSheetDialogFragment() {
         val checkTxtNumber = checkFiledBlank(textNumber)
 
         if (checkTxtName) {
-            hideError("", binding.tilName)
+            hideError(binding.tilName)
         } else {
-            showError("поле не может быть пустым", binding.tilName)
+            showError(binding.tilName)
         }
 
         if (checkTxtNumber) {
-            hideError("", binding.tilNotes)
+            hideError(binding.tilNotes)
         } else {
-            showError("поле не может быть пустым", binding.tilNotes)
+            showError(binding.tilNotes)
         }
 
         if (checkTxtName && checkTxtNumber) {
@@ -200,55 +177,43 @@ class BottomFragment : BottomSheetDialogFragment() {
         return str.isNotBlank()
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun addStudentNotes() {
         val textNotes = binding.etNotes.text.toString()
-
-        val calendarTimeZone: Calendar = Calendar.getInstance(TimeZone.getDefault())
-        val currentYear = calendarTimeZone[Calendar.YEAR]
-        val currentMonth = calendarTimeZone[Calendar.MONTH]
-        val currentDay = calendarTimeZone[Calendar.DAY_OF_MONTH]
-        val currentHour = calendarTimeZone[Calendar.HOUR]
-        val currentMinute = calendarTimeZone[Calendar.MINUTE]
 
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
         val currentDate = sdf.format(Date())
 
         if (checkFiledBlank(textNotes)) {
-            hideError("", binding.tilNotes)
+            hideError(binding.tilNotes)
             viewModelNotesItem = ViewModelProvider(this)[NotesItemViewModel::class.java]
             val answerNotes = viewModelNotesItem.addNotesItem(textNotes, currentDate, studentItemId)
-            if(answerNotes == true) {
+            if(answerNotes) {
                 binding.etNotes.text?.clear()
                 showNotesStudent()
             }
         } else {
-            showError("поле не может быть пустым", binding.tilNotes)
+            showError(binding.tilNotes)
         }
 
 
 
     }
 
-    private fun showError(error: String, element: TextInputLayout) {
-        element.setError(error)
+    private fun showError(element: TextInputLayout) {
+        element.error = "поле не может быть пустым"
     }
 
-    private fun hideError(error: String, element: TextInputLayout) {
-        element.setError(error)
+    private fun hideError(element: TextInputLayout) {
+        element.error = ""
     }
 
     private fun selectAction(number: String?) {
-        // val dialIntent = Intent(Intent.ACTION_SEND)
         val dialIntent = Intent(Intent.ACTION_VIEW)
-        dialIntent.data = Uri.parse("tel:" + number)
+        dialIntent.data = Uri.parse("tel:$number")
         startActivity(dialIntent)
     }
 
-    private fun call(number: String?) {
-        val dialIntent = Intent(Intent.ACTION_DIAL)
-        dialIntent.data = Uri.parse("tel:" + number)
-        startActivity(dialIntent)
-    }
 
     private fun showNotesStudent() {
         listView = binding.listView
@@ -284,7 +249,6 @@ class BottomFragment : BottomSheetDialogFragment() {
 
                 if (item.student == studentItemId){
                     map[item.name] = item.number
-                    //dataParentContactStudentModel!!.add(DataParentContactStudentModel(item.name, item.number))
                 }
 
             }
@@ -300,8 +264,7 @@ class BottomFragment : BottomSheetDialogFragment() {
 
         }
 
-        listView.setOnItemClickListener { parent, _, position, _ ->
-            val selectedItem = parent.getItemAtPosition(position)
+        listView.setOnItemClickListener { _, _, position, _ ->
             selectAction(dataParentContactStudentModel?.get(position)?.phone)
             //call(dataParentContactStudentModel?.get(position)?.phone)
         }
@@ -316,11 +279,11 @@ class BottomFragment : BottomSheetDialogFragment() {
 
         viewModelPayment.paymentList.observe(viewLifecycleOwner) {
             dataPaymentStudentModel!!.clear()
-            if(it.size > 0) {
+            if(it.isNotEmpty()) {
                 for (payment in it) {
                     if(payment.studentId == studentItemId) {
                         //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
-                        if (payment.enabled == true) {
+                        if (payment.enabled) {
                             dataPaymentStudentModel!!.add(DataPaymentStudentModel(payment.id, "Оплачен: " + payment.title, payment.price.toString()))
                         } else {
                             dataPaymentStudentModel!!.add(DataPaymentStudentModel(payment.id,"Долг: " + payment.title, "-" + payment.price.toString()))
@@ -359,32 +322,31 @@ class BottomFragment : BottomSheetDialogFragment() {
         viewModelLessons = ViewModelProvider(this)[LessonsItemViewModel::class.java]
 
         viewModelPayments.getPaymentItem(idPayment)
-        viewModelPayments.paymentItem.observe(viewLifecycleOwner) {
-            if(!it.enabled) {
-                val payOff = it.price
-                val itemPaymentId = it.id
-                val idLessons = it.lessonsId
-                viewModelStudent.getStudentItem(it.studentId)
-                viewModelStudent.studentItem.observe(viewLifecycleOwner) {
-                    if(it.paymentBalance >= ( - payOff)) {
+        viewModelPayments.paymentItem.observe(viewLifecycleOwner) {payItem->
+            if(!payItem.enabled) {
+                val payOff = payItem.price
+                val itemPaymentId = payItem.id
+                val idLessons = payItem.lessonsId
+                viewModelStudent.getStudentItem(payItem.studentId)
+                viewModelStudent.studentItem.observe(viewLifecycleOwner) {studentItem ->
+                    if(studentItem.paymentBalance >= ( - payOff)) {
                         //производит замену прайса с учетом списания долга в записи студента
-                        viewModelStudent.editPaymentBalance(it.id, (it.paymentBalance + payOff))
-                        val newBalance = it.paymentBalance
+                        viewModelStudent.editPaymentBalance(studentItem.id, (studentItem.paymentBalance + payOff))
                         //выстаявляет значение платежа в соответствии со стоимостью урока
                         viewModelLessons.getLessonsItem(idLessons)
-                        viewModelLessons.lessonsItem.observe(viewLifecycleOwner) {
-                            viewModelPayments.changeEnableState(it.price, itemPaymentId)
+                        viewModelLessons.lessonsItem.observe(viewLifecycleOwner) {lessItem->
+                            viewModelPayments.changeEnableState(lessItem.price, itemPaymentId)
 
                         }
-                        Toast.makeText(getActivity(),"Баланс: " + it.paymentBalance + " Долг:  " + payOff,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity,"Баланс: " + studentItem.paymentBalance + " Долг:  " + payOff,Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(getActivity(),"Баланс студента не позволяет списать долг.",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity,"Баланс студента не позволяет списать долг.",Toast.LENGTH_SHORT).show()
                     }
                 }
             } else {
-                Toast.makeText(getActivity(),"Платеж не является долгом и списывать его не нужно.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity,"Платеж не является долгом и списывать его не нужно.",Toast.LENGTH_SHORT).show()
             }
-       }
+        }
     }
 
 
@@ -404,40 +366,6 @@ class BottomFragment : BottomSheetDialogFragment() {
             // Выставляем высоту для состояния collapsed и выставляем состояние collapsed
             behavior.peekHeight = (COLLAPSED_HEIGHT * density).toInt()
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-
-            // Достаём корневые лэйауты
-            val coordinator = (it as BottomSheetDialog).findViewById<CoordinatorLayout>(com.google.android.material.R.id.coordinator)
-            val containerLayout = it.findViewById<FrameLayout>(com.google.android.material.R.id.container)
-
-            // Надуваем наш лэйаут с кнопкой
-         /*   val buttons = it.layoutInflater.inflate(R.layout.button_in_bsheet, null)
-
-            // Выставояем параметры для нашей кнопки
-            buttons.layoutParams = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                height = (60 * density).toInt()
-                gravity = Gravity.BOTTOM
-            }
-            // Добавляем кнопку в контейнер
-            containerLayout?.addView(buttons)
-
-            // Перерисовываем лэйаут
-            buttons.post {
-                (coordinator?.layoutParams as ViewGroup.MarginLayoutParams).apply {
-                    buttons.measure(
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-                    )
-                    // Устраняем разрыв между кнопкой и скролящейся частью
-                    this.bottomMargin = (buttons.measuredHeight - 8 * density).toInt()
-                    containerLayout?.requestLayout()
-                }
-            }*/
-
-
-
 
             behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
 
@@ -476,40 +404,37 @@ class BottomFragment : BottomSheetDialogFragment() {
 
     private fun parseParams() {
         val args = requireArguments()
-        if (!args.containsKey(BottomFragment.SCREEN_MODE)) {
+        if (!args.containsKey(SCREEN_MODE)) {
             throw RuntimeException("Param screen mode is absent")
         }
-        val mode = args.getString(BottomFragment.SCREEN_MODE)
-        if (mode == null) {
-            throw RuntimeException("Unknown screen mode $mode")
-        }
+        val mode = args.getString(SCREEN_MODE) ?: throw RuntimeException("Unknown screen mode")
         screenMode = mode
-        if (screenMode == BottomFragment.MODE_PAYMENT) {
-            if (!args.containsKey(BottomFragment.STUDENT_ITEM_ID)) {
+        if (screenMode == MODE_PAYMENT) {
+            if (!args.containsKey(STUDENT_ITEM_ID)) {
                 throw RuntimeException("Param id is absent")
             }
-            studentItemId = args.getInt(BottomFragment.STUDENT_ITEM_ID, StudentItem.UNDEFINED_ID)
+            studentItemId = args.getInt(STUDENT_ITEM_ID, StudentItem.UNDEFINED_ID)
         }
 
-        if (screenMode == BottomFragment.MODE_NOTES) {
-            if (!args.containsKey(BottomFragment.STUDENT_ITEM_ID)) {
+        if (screenMode == MODE_NOTES) {
+            if (!args.containsKey(STUDENT_ITEM_ID)) {
                 throw RuntimeException("Param id is absent")
             }
-            studentItemId = args.getInt(BottomFragment.STUDENT_ITEM_ID, StudentItem.UNDEFINED_ID)
+            studentItemId = args.getInt(STUDENT_ITEM_ID, StudentItem.UNDEFINED_ID)
         }
 
-        if (screenMode == BottomFragment.GROUP_STUDENT) {
-            if (!args.containsKey(BottomFragment.STUDENT_ITEM_ID)) {
+        if (screenMode == GROUP_STUDENT) {
+            if (!args.containsKey(STUDENT_ITEM_ID)) {
                 throw RuntimeException("Param id is absent")
             }
-            studentItemId = args.getInt(BottomFragment.STUDENT_ITEM_ID, StudentItem.UNDEFINED_ID)
+            studentItemId = args.getInt(STUDENT_ITEM_ID, StudentItem.UNDEFINED_ID)
         }
 
-        if (screenMode == BottomFragment.CONTACT_PARENT) {
-            if (!args.containsKey(BottomFragment.STUDENT_ITEM_ID)) {
+        if (screenMode == CONTACT_PARENT) {
+            if (!args.containsKey(STUDENT_ITEM_ID)) {
                 throw RuntimeException("Param id is absent")
             }
-            studentItemId = args.getInt(BottomFragment.STUDENT_ITEM_ID, StudentItem.UNDEFINED_ID)
+            studentItemId = args.getInt(STUDENT_ITEM_ID, StudentItem.UNDEFINED_ID)
         }
 
 
@@ -524,7 +449,6 @@ class BottomFragment : BottomSheetDialogFragment() {
         private const val MODE_NOTES = "mode_notes"
         private const val CONTACT_PARENT = "contact_parent"
         private const val GROUP_STUDENT = "group_student"
-      //  private const val MODE_ADD = "mode_add"
         private const val MODE_UNKNOWN = ""
 
 
@@ -541,15 +465,6 @@ class BottomFragment : BottomSheetDialogFragment() {
             return BottomFragment().apply {
                 arguments = Bundle().apply {
                     putString(SCREEN_MODE, MODE_NOTES)
-                    putInt(STUDENT_ITEM_ID, studentItemId)
-                }
-            }
-        }
-
-        fun newInstancePaymentBalance(studentItemId: Int): BottomFragment {
-            return BottomFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_PAYMENT)
                     putInt(STUDENT_ITEM_ID, studentItemId)
                 }
             }

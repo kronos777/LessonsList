@@ -1,6 +1,5 @@
 package com.example.lessonslist.presentation.info
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +25,7 @@ class InstructionFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentInstructionBinding.inflate(inflater, container, false)
         return binding.root
     }

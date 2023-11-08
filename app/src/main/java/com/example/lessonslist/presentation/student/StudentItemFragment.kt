@@ -28,8 +28,12 @@ import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.squareup.picasso.Picasso
-import java.io.*
-import java.lang.Thread.sleep
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
@@ -53,8 +57,8 @@ class StudentItemFragment : Fragment() {
 
     private lateinit var mImageView: ImageView
 
-    val myExecutor = Executors.newSingleThreadExecutor()
-    val myHandler = Handler(Looper.getMainLooper())
+    private val myExecutor: ExecutorService = Executors.newSingleThreadExecutor()
+    private val myHandler = Handler(Looper.getMainLooper())
 
     private var pathImageSrc: String = ""
 
@@ -136,7 +140,7 @@ class StudentItemFragment : Fragment() {
         }
     }
 
-    fun getImageLocal() {
+    private fun getImageLocal() {
         val photoPickerIntent = Intent(Intent.ACTION_GET_CONTENT)
         photoPickerIntent.type = "image/*"
         startActivityForResult(photoPickerIntent, 1)
@@ -150,8 +154,7 @@ class StudentItemFragment : Fragment() {
                     if (data != null) {
                         chosenImageUri = data.data!!
 
-                        var mImage: Bitmap?
-                        mImage = mLoadLocal(chosenImageUri.toString())
+                        val mImage: Bitmap? = mLoadLocal(chosenImageUri.toString())
                         myHandler.post {
 
                             Picasso.get()
@@ -174,7 +177,7 @@ class StudentItemFragment : Fragment() {
 
     private fun mLoadLocal(string: String): Bitmap? {
         try {
-            val inputStream: InputStream? = activity?.applicationContext?.getContentResolver()?.openInputStream(string.toUri())
+            val inputStream: InputStream? = activity?.applicationContext?.contentResolver?.openInputStream(string.toUri())
             return BitmapFactory.decodeStream(inputStream)
         } catch (e: IOException) {
             e.printStackTrace()
@@ -185,7 +188,7 @@ class StudentItemFragment : Fragment() {
 
     private fun mSaveMediaToStorage(bitmap: Bitmap?): File {
         val filename = "${System.currentTimeMillis()}.jpg"
-        var fos: OutputStream? = null
+        val fos: OutputStream?
 
         val imagesDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + "lessonslist")
         imagesDir.apply {
@@ -202,14 +205,6 @@ class StudentItemFragment : Fragment() {
 
         }
         return image
-    }
-
-    private fun launchFragment(fragment: Fragment) {
-        requireActivity().supportFragmentManager.popBackStack()
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_item_container, fragment)
-            .addToBackStack(null)
-            .commit()
     }
 
     private fun observeViewModel() {
@@ -304,7 +299,7 @@ class StudentItemFragment : Fragment() {
                             binding.etPaymentBalance.text.toString(),
                             "",
                             "",
-                            inputImage = pathImageSrc ?: " ",
+                            inputImage = pathImageSrc,
                             binding.etTelephone.text.toString()
                         )
                     } else {
@@ -378,21 +373,5 @@ class StudentItemFragment : Fragment() {
         const val MODE_ADD = "mode_add"
         const val MODE_UNKNOWN = ""
 
-        fun newInstanceAddItem(): StudentItemFragment {
-            return StudentItemFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_ADD)
-                }
-            }
-        }
-
-        fun newInstanceEditItem(shopItemId: Int): StudentItemFragment {
-            return StudentItemFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_EDIT)
-                    putInt(SHOP_ITEM_ID, shopItemId)
-                }
-            }
-        }
     }
 }

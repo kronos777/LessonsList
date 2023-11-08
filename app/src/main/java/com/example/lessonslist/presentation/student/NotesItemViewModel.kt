@@ -14,63 +14,32 @@ class NotesItemViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val repository = NotesListRepositoryImpl(application)
 
-    private val getNotesItemUseCase = GetNotesUseCase(repository)
+
     private val addNotesItemUseCase = AddNotesItemUseCase(repository)
-    private val editNotesItemUseCase = EditNotesUseCase(repository)
     val notesList = GetNotesListItemUseCase(repository)
 
-
-    private val _notesItem = MutableLiveData<NotesItem>()
-    val notesItem: LiveData<NotesItem>
-        get() = _notesItem
 
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
 
-    fun getNotesItem(notesItemId: Int) {
-        viewModelScope.launch {
-            val item = getNotesItemUseCase.getNotesItem(notesItemId)
-            _notesItem.value = item
-        }
-    }
 
-    fun addNotesItem(inputName: String, inputDate: String, inputStudentid: Int): Boolean {
+    fun addNotesItem(inputName: String, inputDate: String, inputStudentId: Int): Boolean {
         val name = parseName(inputName)
-        val date = inputDate
-        val idStudent = inputStudentid
 
-        val fieldsValid = validateInput(name, date)
-        if (fieldsValid) {
+        val fieldsValid = validateInput(name, inputDate)
+        return if (fieldsValid) {
             viewModelScope.launch {
-                val notesItem = NotesItem(name, date, idStudent)
+                val notesItem = NotesItem(name, inputDate, inputStudentId)
                 addNotesItemUseCase.addNotesItem(notesItem)
                 finishWork()
 
             }
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
-
-    fun editNotesItem(inputName: String, inputDate: String, inputStudentid: Int) {
-        val name = parseName(inputName)
-        val date = inputDate
-        val idStudent = inputStudentid
-
-        val fieldsValid = validateInput(name, date)
-        if (fieldsValid) {
-            _notesItem.value?.let {
-                viewModelScope.launch {
-                    val item = it.copy(text = name, date = date, student = idStudent)
-                    editNotesItemUseCase.editNotesItem(item)
-                    finishWork()
-                }
-            }
-        }
-    }
-
 
     private fun validateInput(name: String, date: String): Boolean {
         var result = true
@@ -89,13 +58,6 @@ class NotesItemViewModel(application: Application) : AndroidViewModel(applicatio
         return inputName?.trim() ?: ""
     }
 
-    private fun parsePaymentBalance(inputCount: String?): Int {
-        return try {
-            inputCount?.trim()?.toInt() ?: 0
-        } catch (e: Exception) {
-            0
-        }
-    }
 
 
     private fun finishWork() {

@@ -4,12 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -145,8 +143,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
     private fun goCalendarFragment() {
-        binding.toolBar?.setNavigationOnClickListener {
-            val navHostFragment = this?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        binding.toolBar.setNavigationOnClickListener {
+            val navHostFragment = this.supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
             val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
                 .setExitAnim(R.anim.slide_in_right)
