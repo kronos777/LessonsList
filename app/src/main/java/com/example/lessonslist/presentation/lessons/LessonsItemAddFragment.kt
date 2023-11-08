@@ -1,9 +1,9 @@
 package com.example.lessonslist.presentation.lessons
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -30,6 +30,7 @@ import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
 import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
+import com.example.lessonslist.presentation.helpers.StringHelpers
 import java.lang.Thread.sleep
 import java.text.SimpleDateFormat
 import java.time.Duration
@@ -38,6 +39,7 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 
 
 class LessonsItemAddFragment : Fragment()  {
@@ -51,7 +53,6 @@ class LessonsItemAddFragment : Fragment()  {
 
 
     private lateinit var adapter: ListStudentAdapter
-    private lateinit var listView: ListView
 
     private var dataStudentGroupModel: ArrayList<DataStudentGroupModel>? = null
 
@@ -259,7 +260,7 @@ class LessonsItemAddFragment : Fragment()  {
 */
     private fun validValueNotifications() {
         val notify = binding.etTimeNotifications.text.toString()
-        if (!notify.isBlank() && !binding.etDatestart.text.toString().isBlank()) {
+        if (notify.isNotBlank() && binding.etDatestart.text.toString().isNotBlank()) {
             val dateStart = binding.etDatestart.text.toString().split(" ")
             val timeDateStart = dateStart[1]
 
@@ -273,7 +274,7 @@ class LessonsItemAddFragment : Fragment()  {
             val mmnotify = hnotify[1].toInt()
             /*time*/
 
-            if (!notify.isBlank() && !timeDateStart.isBlank()) {
+            if (notify.isNotBlank() && timeDateStart.isNotBlank()) {
               //val formatter = SimpleDateFormat("HH:mm", Locale.ENGLISH)
                 //val formattedDatetimeDateNotifications = formatter.parse(timeDateStart)
                 //LocalTime time = LocalTime.of(23, 59);
@@ -292,7 +293,7 @@ class LessonsItemAddFragment : Fragment()  {
                 }
                 //Toast.makeText(activity, "this value start time" + formattedDatetimeDateStart.minusMinutes(20), Toast.LENGTH_SHORT).show()
 
-            } else if(notify.isBlank() && !timeDateStart.isBlank()) {
+            } else if(notify.isBlank() && timeDateStart.isNotBlank()) {
                 notificationString = ""
                 binding.tilTimeNotifications.error = ""
                 notificationBoolean = true
@@ -301,6 +302,7 @@ class LessonsItemAddFragment : Fragment()  {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun setNotifications() {
        /* binding.etTimeNotifications.setOnFocusChangeListener { view, hasFocus ->
             if(!hasFocus) {
@@ -327,7 +329,7 @@ class LessonsItemAddFragment : Fragment()  {
 
         val timePickerDialog = TimePickerDialog(activity,
 
-            OnTimeSetListener { view, hourOfDay, minute ->
+            { _, hourOfDay, minute ->
 
                 val minH = if (hourOfDay < 10) "0" + hourOfDay else hourOfDay
                 val minM = if (minute < 10) "0" + minute else minute
@@ -347,10 +349,10 @@ class LessonsItemAddFragment : Fragment()  {
         val year1 = cal.get(Calendar.YEAR)
         val month1 = cal.get(Calendar.MONTH)
         val day1 = cal.get(Calendar.DAY_OF_MONTH)
-        val mcurrentTime = Calendar.getInstance()
-        var year = mcurrentTime.get(Calendar.YEAR)
-        var month = mcurrentTime.get(Calendar.MONTH)
-        var day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
+        Calendar.getInstance()
+        var year: Int
+        var month: Int
+        var day: Int
 
 
         val endRepeat =
@@ -368,6 +370,7 @@ class LessonsItemAddFragment : Fragment()  {
         endRepeat!!.show()
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun checkRepeatDate() {
         val formatter = SimpleDateFormat("yyyy-M-d")
         //val formatter = DateTimeFormatter.ofPattern("yyyy-M-d")
@@ -384,30 +387,32 @@ class LessonsItemAddFragment : Fragment()  {
         if(startDate == endDate) {
             Toast.makeText(activity, "Время начала и конца урока не могут совпадать.",
                 Toast.LENGTH_SHORT).show()
-        } else if (startDate > endDate) {
-            Toast.makeText(activity, "Время начала урока не может превышать время конца урока.", Toast.LENGTH_SHORT).show()
-        } else if(startDate < endDate) {
-            val diffInMillies: Long = Math.abs(endDate.getTime() - startDate.getTime())
-            val diff: Long = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7
-            val calendarLoc = GregorianCalendar.getInstance()
-            val tempTime1 = timePicker1RepeatDate.split("-")
-            val tempHourStartTime1 = timePicker1RepeatStartHourMinuteDate.split(":")
-            val tempHourStartTime2 = timePicker2RepeatEndHourMinuteDate.split(":")
+        } else if (startDate != null) {
+            if (startDate > endDate) {
+                Toast.makeText(activity, "Время начала урока не может превышать время конца урока.", Toast.LENGTH_SHORT).show()
+            } else if(startDate < endDate) {
+                val diffInMillies: Long = abs(endDate!!.time - startDate.time)
+                val diff: Long = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) / 7
+                val calendarLoc = GregorianCalendar.getInstance()
+                val tempTime1 = timePicker1RepeatDate.split("-")
+                val tempHourStartTime1 = timePicker1RepeatStartHourMinuteDate.split(":")
+                val tempHourStartTime2 = timePicker2RepeatEndHourMinuteDate.split(":")
 
 
-            calendarLoc.set(tempTime1.get(0).toInt(), tempTime1.get(1).toInt() - 1, tempTime1.get(2).toInt())
+                calendarLoc.set(tempTime1[0].toInt(), tempTime1[1].toInt() - 1, tempTime1[2].toInt())
 
 
-            dateLessons.add(binding.etDatestart.text.toString())
-            dateLessons.add(binding.etDateend.text.toString())
-            for (i in 0..diff-1) {
-                calendarLoc.add(Calendar.DAY_OF_MONTH, 7)
-                val strAdd = calendarLoc.get(Calendar.YEAR).toString() + "/" + (calendarLoc.get(Calendar.MONTH) + 1).toString() + "/" + calendarLoc.get(Calendar.DAY_OF_MONTH).toString() + " " + tempHourStartTime1.get(0) + ":" + tempHourStartTime1.get(1)
-                val strAdd2 = calendarLoc.get(Calendar.YEAR).toString() + "/" + (calendarLoc.get(Calendar.MONTH) + 1).toString() + "/" + calendarLoc.get(Calendar.DAY_OF_MONTH).toString() + " " + tempHourStartTime2.get(0) + ":" + tempHourStartTime2.get(1)
-                dateLessons.add(strAdd)
-                dateLessons.add(strAdd2)
+                dateLessons.add(binding.etDatestart.text.toString())
+                dateLessons.add(binding.etDateend.text.toString())
+                for (i in 0 until diff) {
+                    calendarLoc.add(Calendar.DAY_OF_MONTH, 7)
+                    val strAdd = calendarLoc.get(Calendar.YEAR).toString() + "/" + (calendarLoc.get(Calendar.MONTH) + 1).toString() + "/" + calendarLoc.get(Calendar.DAY_OF_MONTH).toString() + " " + tempHourStartTime1.get(0) + ":" + tempHourStartTime1.get(1)
+                    val strAdd2 = calendarLoc.get(Calendar.YEAR).toString() + "/" + (calendarLoc.get(Calendar.MONTH) + 1).toString() + "/" + calendarLoc.get(Calendar.DAY_OF_MONTH).toString() + " " + tempHourStartTime2.get(0) + ":" + tempHourStartTime2.get(1)
+                    dateLessons.add(strAdd)
+                    dateLessons.add(strAdd2)
+                }
+
             }
-
         }
 
 
@@ -448,7 +453,7 @@ class LessonsItemAddFragment : Fragment()  {
                 }
 
                 binding.cardStudents.setOnClickListener {
-                    setStudentLessons(dataStudentGroupModel)
+                    setStudentLessons()
                 }
 
               //  adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
@@ -473,7 +478,7 @@ class LessonsItemAddFragment : Fragment()  {
 
     }
 
-    private fun setStudentLessons(dataList: ArrayList<DataStudentGroupModel>?) {
+    private fun setStudentLessons() {
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Выберите студентов урока")
 
@@ -503,7 +508,7 @@ class LessonsItemAddFragment : Fragment()  {
         dialog.show()
     }
 
-    private fun setGroupLessons(dataList: ArrayList<DataGroupLessonsModel>?) {
+    private fun setGroupLessons() {
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Выберите группы студентов")
 
@@ -525,30 +530,6 @@ class LessonsItemAddFragment : Fragment()  {
         dialog.show()
     }
 
-    private fun checkValidStudentAlertDialog(dataList: ArrayList<Int>): HashSet<Int?> {
-        val studentIds: String = dataList.toString()
-        val groupStudentIds: String
-        val allStudent: String
-        if (dataGroupListString) {
-            groupStudentIds = adapterGroup.arrayList.toString()
-            allStudent = studentIds + groupStudentIds
-        } else {
-            allStudent = studentIds
-        }
-
-        val lstValues: ArrayList<Int> = ArrayList()
-
-        allStudent.forEach {
-            if (it.isDigit()) {
-                val str = it.toString()
-                lstValues.add(str.toInt())
-            }
-        }
-
-
-        return HashSet(lstValues)
-
-    }
 
     private fun setGroupViewStudent() {
        // listViewGroup = binding.listViewGroup
@@ -570,7 +551,7 @@ class LessonsItemAddFragment : Fragment()  {
                     adapterGroup = ListGroupAdapter(dataGroupLessonsModel!!, requireContext().applicationContext)
                    // listViewGroup.adapter = adapterGroup
                     binding.cardGroupStudent.setOnClickListener {
-                        setGroupLessons(dataGroupLessonsModel)
+                        setGroupLessons()
                     }
                 }
             } else {
@@ -658,8 +639,8 @@ class LessonsItemAddFragment : Fragment()  {
 
         mTimePickerEnd = TimePickerDialog(context,
             { _, hourOfDay, minute ->
-                val minH = if (hourOfDay < 10) "0" + hourOfDay else if(hourOfDay == 0) "00" else hourOfDay
-                val minM = if (minute < 10) "0" + minute else if(minute == 0) "00" else minute
+                val minH = if (hourOfDay < 10) "0$hourOfDay" else if(hourOfDay == 0) "00" else hourOfDay
+                val minM = if (minute < 10) "0$minute" else if(minute == 0) "00" else minute
 //                Toast.makeText(getActivity(), setValue.toString(), Toast.LENGTH_SHORT).show()
                 binding.etDateend.setText(String.format("%d/%d/%d %s:%s", year, month + 1, day, minH, minM))
                 timePicker2 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + minH.toString() + ":" + minM.toString()
@@ -726,11 +707,12 @@ class LessonsItemAddFragment : Fragment()  {
         binding.etStudent.visibility = View.GONE
         binding.saveButton.setOnClickListener{
             validValueNotifications()
-            // Log.d("notificationsValue", notificationString)
             val valueStudent = checkValidStudent()
+            /*Toast.makeText(activity, "Студенты урока.$valueStudent",
+                Toast.LENGTH_SHORT).show()*/
             val checkField: Boolean
             if (valueStudent.size <= 0) {
-                 Toast.makeText(activity, "Урок не может создан без учеников", Toast.LENGTH_SHORT).show()
+                 Toast.makeText(activity, "Урок не может создан без учеников.", Toast.LENGTH_SHORT).show()
                  checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
                      binding.etDatestart.text.toString(), binding.etDateend.text.toString())
              } else {
@@ -741,14 +723,6 @@ class LessonsItemAddFragment : Fragment()  {
              if(checkField && valueStudent.size > 0 && notificationBoolean) {
                 if(binding.etRepeat.isChecked && dateLessons.size >= 2) {
                     for (index in dateLessons.indices step 2) {
-                        /* viewModel.addLessonsItem(
-                            binding.etTitle.text.toString(),
-                            notificationString,
-                            valueStudent.toString(),
-                            binding.etPrice.text.toString(),
-                            dateLessons.get(index).toString(),
-                            dateLessons.get(index + 1).toString()
-                        )*/
                         val lessonsItem = LessonsItem(
                             binding.etTitle.text.toString(),
                             notificationString,
@@ -822,38 +796,35 @@ class LessonsItemAddFragment : Fragment()  {
     }
 
 
-    private fun checkValidStudent(): HashSet<Int?> {
+    private fun checkValidStudent(): HashSet<Int> {
+        val lstValues: ArrayList<Int> = ArrayList()
         if ((::adapter.isInitialized && ::adapterGroup.isInitialized) || ::adapter.isInitialized) {
-            val studentIds: String = adapter.arrayList.toString()
-            val groupStudentIds: String
-            val allStudent: String
-            if (dataGroupListString) {
-                groupStudentIds = adapterGroup.arrayList.toString()
-                allStudent = studentIds + groupStudentIds
-            } else {
-                allStudent = studentIds
-            }
 
-            val lstValues: ArrayList<Int> = ArrayList()
 
-            allStudent.forEach {
-                if (it.isDigit()) {
-                    val str = it.toString()
-                    lstValues.add(str.toInt())
+            if (!adapterGroup.isEmpty) {
+                adapterGroup.arrayList.forEach {
+                    StringHelpers.getStudentIds(it).forEach { studentId ->
+                        lstValues.add(studentId)
+                    }
                 }
             }
+            if (adapter.arrayList.isNotEmpty()) {
+                adapter.arrayList.forEach {
+                    lstValues.add(it)
+                }
+            }
+
             return HashSet(lstValues)
         } else if (::adapterGroup.isInitialized) {
-            val lstValues: ArrayList<Int> = ArrayList()
-            val groupStudentIds = adapterGroup.arrayList.toString()
-            groupStudentIds.forEach {
-                if(it.isDigit()) {
-                    lstValues.add(it.toString().toInt())
+            if (!adapterGroup.isEmpty) {
+                adapterGroup.arrayList.forEach {
+                    StringHelpers.getStudentIds(it).forEach { studentId ->
+                        lstValues.add(studentId)
+                    }
                 }
             }
             return HashSet(lstValues)
         } else {
-            val lstValues: ArrayList<Int> = ArrayList()
             return HashSet(lstValues)
         }
     }

@@ -2,7 +2,6 @@ package com.example.lessonslist.presentation.payment
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentPaymentItemBinding
 import com.example.lessonslist.domain.payment.PaymentItem
-import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.student.StudentItemViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -33,9 +31,9 @@ class PaymentItemFragment: Fragment() {
     private val binding: FragmentPaymentItemBinding
         get() = _binding ?: throw RuntimeException("PaymentCardBinding == null")
 
-    private var screenMode: String = MODE_UNKNOWN
+    
     private var paymentItemId: Int = PaymentItem.UNDEFINED_ID
-    private var studentItemId: Int = StudentItem.UNDEFINED_ID
+    
 
 
 
@@ -81,13 +79,11 @@ class PaymentItemFragment: Fragment() {
         val bottomNavigationView =
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem2).isChecked = true
+        viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
 
+         viewModel.paymentItem.observe(viewLifecycleOwner) { paymentItem ->
 
-         viewModel.paymentItem.observe(viewLifecycleOwner) {
-
-            viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
-
-                if (it.enabled) {
+             if (paymentItem.enabled) {
                     binding.paymentOff.visibility = (View.GONE)
                     binding.valueStatusPayment.text = "Оплачен"
                     binding.paymentPicture.setBackgroundResource(R.drawable.ic_baseline_check_circle_24)
@@ -96,18 +92,18 @@ class PaymentItemFragment: Fragment() {
                     binding.paymentPicture.setBackgroundResource(R.drawable.ic_baseline_indeterminate_check_box_24)
                 }
 
-            val paymentCount = it.price
-            viewModelStudent.getStudentItem(it.studentId)
-            viewModelStudent.studentItem.observe(viewLifecycleOwner) {
+            val paymentCount = paymentItem.price
+            viewModelStudent.getStudentItem(paymentItem.studentId)
+            viewModelStudent.studentItem.observe(viewLifecycleOwner) {studentItem->
 
-                if(it.paymentBalance > ( - paymentCount)) {
+                if(studentItem.paymentBalance > ( - paymentCount)) {
                     binding.paymentOff.setOnClickListener {
                         deptOff()
                     }
 
                 } else {
                     binding.paymentOff.visibility = (View.GONE)
-                    Toast.makeText(getActivity(),"Баланс студента не позволяет списать долг.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity,"Баланс студента не позволяет списать долг.",Toast.LENGTH_SHORT).show()
 
                 }
             }
@@ -122,16 +118,16 @@ class PaymentItemFragment: Fragment() {
     private fun deptOff() {
         viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
         viewModelLessons = ViewModelProvider(this)[LessonsItemViewModel::class.java]
-        viewModel.paymentItem.observe(viewLifecycleOwner) {
-            if(!it.enabled) {
-                val payOff = it.price
-                val itemPaymentId = it.id
-                val idLessons = it.lessonsId
-                viewModelStudent.getStudentItem(it.studentId)
-                viewModelStudent.studentItem.observe(viewLifecycleOwner) {
-                    if(it.paymentBalance >= ( - payOff)) {
+        viewModel.paymentItem.observe(viewLifecycleOwner) { paymentItem ->
+            if(!paymentItem.enabled) {
+                val payOff = paymentItem.price
+                val itemPaymentId = paymentItem.id
+                val idLessons = paymentItem.lessonsId
+                viewModelStudent.getStudentItem(paymentItem.studentId)
+                viewModelStudent.studentItem.observe(viewLifecycleOwner) { studentItem ->
+                    if(studentItem.paymentBalance >= ( - payOff)) {
                         //производит замену прайса с учетом списания долга в записи студента
-                        viewModelStudent.editPaymentBalance(it.id, (it.paymentBalance + payOff))
+                        viewModelStudent.editPaymentBalance(studentItem.id, (studentItem.paymentBalance + payOff))
 
                         //выстаявляет значение платежа в соответствии со стоимостью урока
                         viewModelLessons.getLessonsItem(idLessons)
@@ -144,10 +140,10 @@ class PaymentItemFragment: Fragment() {
                         binding.valueStatusPayment.text = "Оплачен"
                         binding.paymentPicture.setBackgroundResource(R.drawable.ic_baseline_check_circle_24)
 
-                        Toast.makeText(getActivity(),"Баланс: " + it.paymentBalance + " Долг:  " + payOff,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity,"Баланс: " + studentItem.paymentBalance + " Долг:  " + payOff,Toast.LENGTH_SHORT).show()
 
                     } else {
-                        Toast.makeText(getActivity(),"Баланс студента не позволяет списать долг.",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity,"Баланс студента не позволяет списать долг.",Toast.LENGTH_SHORT).show()
                     }
                 }
 
@@ -176,23 +172,23 @@ class PaymentItemFragment: Fragment() {
                 putString(PaymentItemListFragment.DATE_ID, mode)
             }
             navController.navigate(R.id.paymentItemListFragment, args)
-        } else if (studentMode!![0] == "student_id_list" && dateMode!!.size == 1) {
+        } else if (studentMode!![0] == "student_id_list" && dateMode.size == 1) {
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
             val args = Bundle().apply {
                 putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.STUDENT_ID_LIST)
-                putInt(PaymentItemListFragment.STUDENT_ID, studentMode!![1].toInt())
+                putInt(PaymentItemListFragment.STUDENT_ID, studentMode[1].toInt())
             }
             navController.navigate(R.id.paymentItemListFragment, args)
-        } else if (studentMode!![0] == "student_no_pay_list" && dateMode!!.size == 1) {
+        } else if (studentMode[0] == "student_no_pay_list" && dateMode.size == 1) {
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
             val args = Bundle().apply {
                 putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.STUDENT_NO_PAY_LIST)
-                putInt(PaymentItemListFragment.STUDENT_ID, studentMode!![1].toInt())
+                putInt(PaymentItemListFragment.STUDENT_ID, studentMode[1].toInt())
             }
             navController.navigate(R.id.paymentItemListFragment, args)
-        } else if (studentMode!![0] == "payment_enabled" && dateMode!!.size == 1) {
+        } else if (studentMode[0] == "payment_enabled" && dateMode.size == 1) {
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
             val btnArgsLessons = Bundle().apply {
@@ -233,9 +229,6 @@ class PaymentItemFragment: Fragment() {
 
         const val SCREEN_MODE = "extra_mode"
         const val PAYMENT_ITEM_ID = "extra_payment_item_id"
-        const val MODE_EDIT = "mode_edit"
-        const val MODE_ADD = "mode_add"
-        const val MODE_UNKNOWN = ""
         const val DATE_ID_BACKSTACK = ""
         const val STUDENT_ID_LIST = ""
         const val STUDENT_NO_PAY_LIST = ""

@@ -29,22 +29,22 @@ class ListNotesAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
         convertView: View?,
         parent: ViewGroup
     ): View {
-        var convertView = convertView
+        var localConvertView = convertView
         val viewHolder: ViewHolder
         val result: View
-        if (convertView == null) {
+        if (localConvertView == null) {
             viewHolder = ViewHolder()
-            convertView =
+            localConvertView =
                 LayoutInflater.from(parent.context).inflate(R.layout.row_payment_student_item, parent, false)
             viewHolder.txtName =
-                convertView.findViewById(R.id.txtName)
+                localConvertView.findViewById(R.id.txtName)
             viewHolder.txtDate =
-                convertView.findViewById(R.id.txtPrice)
-            result = convertView
-            convertView.tag = viewHolder
+                localConvertView.findViewById(R.id.txtPrice)
+            result = localConvertView
+            localConvertView.tag = viewHolder
         } else {
-            viewHolder = convertView.tag as ViewHolder
-            result = convertView
+            viewHolder = localConvertView.tag as ViewHolder
+            result = localConvertView
         }
         val item: DataNotesStudentModel = getItem(position)
         viewHolder.txtName.text = item.text

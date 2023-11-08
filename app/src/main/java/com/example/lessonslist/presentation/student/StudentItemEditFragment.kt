@@ -1,5 +1,6 @@
 package com.example.lessonslist.presentation.student
 
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
@@ -44,8 +45,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
-import java.net.MalformedURLException
-import java.net.URL
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
@@ -70,24 +70,23 @@ class StudentItemEditFragment : Fragment() {
 
     private lateinit var mImageView: ImageView
 
-    val myExecutor = Executors.newSingleThreadExecutor()
-    val myHandler = Handler(Looper.getMainLooper())
+    private val myExecutor: ExecutorService = Executors.newSingleThreadExecutor()
+    private val myHandler = Handler(Looper.getMainLooper())
 
     private var pathImageSrc: String = ""
 
-    private val REQUEST_TAKE_PHOTO = 1
+    private val TAKEPHOTO = 1
 
     private val cropImage = registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
             // Use the returned uri.
             val uriContent = result.uriContent
-            val uriFilePath = result.getUriFilePath(requireContext()) // optional usage
             val bitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, uriContent)
             pathImageSrc = mSaveMediaToStorage(bitmap).toString()
             binding.imageView.setImageBitmap(bitmap)
         } else {
             // An error occurred.
-            val exception = result.error
+            result.error
         }
     }
 
@@ -101,7 +100,6 @@ class StudentItemEditFragment : Fragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
         parseParams()
     }
@@ -111,8 +109,8 @@ class StudentItemEditFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-            _binding = FragmentStudentItemEditBinding.inflate(inflater, container, false)
-            return binding.root
+       _binding = FragmentStudentItemEditBinding.inflate(inflater, container, false)
+       return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -127,7 +125,6 @@ class StudentItemEditFragment : Fragment() {
         bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
 
         viewModel.studentItem.observe(viewLifecycleOwner) { stItem ->
-            val payBalance = stItem.paymentBalance
             if (stItem.paymentBalance <= 0) {
                 totalDebt()
             }
@@ -145,18 +142,9 @@ class StudentItemEditFragment : Fragment() {
                 }
             }
 
-            val textTelephone = stItem.telephone.toString()
-
-            binding.cardTelephoneStudent.setOnClickListener {
-                /*if(textTelephone.count() > 0) {
-                       askEditNumber(stItem.telephone)
-                   } else {
-                       addPhoneNumber()
-                   }*/
-                askEditNumber(stItem.telephone)
-                //binding.textViewTelephone.text = stItem.telephone
+       binding.cardTelephoneStudent.setOnClickListener {
+               askEditNumber(stItem.telephone)
             }
-
         }
 
         mImageView = binding.imageView
@@ -170,20 +158,19 @@ class StudentItemEditFragment : Fragment() {
         }
 
         binding.cardAddNotes.setOnClickListener {
-            getActivity()?.let { BottomFragment.newInstanceNotesStudent(studentItemId).show(it.supportFragmentManager, "tag") }
+            activity?.let { BottomFragment.newInstanceNotesStudent(studentItemId).show(it.supportFragmentManager, "tag") }
         }
 
        binding.cardPaymentStudent.setOnClickListener {
                 getDialogPaymentStudent()
-                //getActivity()?.let { BottomFragment.newInstancePaymentBalance(studentItemId).show(it.supportFragmentManager, "tag") }
        }
 
         binding.cardGroupStudent.setOnClickListener {
-            getActivity()?.let { BottomFragment.newInstanceGroupStudent(studentItemId).show(it.supportFragmentManager, "tag") }
+            activity?.let { BottomFragment.newInstanceGroupStudent(studentItemId).show(it.supportFragmentManager, "tag") }
         }
 
        binding.cardParentContact.setOnClickListener {
-           getActivity()?.let { BottomFragment.newInstanceParentsContacts(studentItemId).show(it.supportFragmentManager, "tag") }
+           activity?.let { BottomFragment.newInstanceParentsContacts(studentItemId).show(it.supportFragmentManager, "tag") }
        }
 
         binding.cardDeleteData.setOnClickListener {
@@ -203,7 +190,6 @@ class StudentItemEditFragment : Fragment() {
             for (saleItem in sales.indices) {
                 if(studentItemId == sales[saleItem].idStudent) {
                     viewModelSale.deleteSaleItem(sales[saleItem].id)
-                    //  Log.d("studentDataForDelete", sales[saleItem].toString())
                 }
             }
 
@@ -299,7 +285,7 @@ class StudentItemEditFragment : Fragment() {
             alert.setPositiveButton("Изменить") { _, _ ->
                 addPhoneNumber()
             }
-            alert.setNeutralButton("Позвонить") { dialog, id ->
+            alert.setNeutralButton("Позвонить") { _, _ ->
                 callStudent(telephone)
             }
         } else {
@@ -320,6 +306,7 @@ class StudentItemEditFragment : Fragment() {
 
 
 
+    @SuppressLint("SetTextI18n")
     private fun actionAddMoney() {
         var newBalance: Int
         val inputEditTextField = EditText(requireActivity())
@@ -336,10 +323,10 @@ class StudentItemEditFragment : Fragment() {
                     newBalance = editTextInput.toInt()
                     viewModel.studentItem.observe(viewLifecycleOwner) {
                         viewModel.editPaymentBalance(it.id, (it.paymentBalance + newBalance))
-                        binding.textViewPaymentBalance.setText((it.paymentBalance + newBalance).toString())
+                        binding.textViewPaymentBalance.text = (it.paymentBalance + newBalance).toString()
                     }
                 } else {
-                    Toast.makeText(getActivity(),"Строка не является числом, сохранить невозможно.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity,"Строка не является числом, сохранить невозможно.",Toast.LENGTH_SHORT).show()
                 }
 
 
@@ -363,11 +350,11 @@ class StudentItemEditFragment : Fragment() {
         var summDept = 0
         viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelPayment.paymentList.observe(viewLifecycleOwner) {
-            if(it.size > 0) {
+            if(it.isNotEmpty()) {
                 for (payment in it) {
                     if(payment.studentId == studentItemId) {
                         //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
-                        if (payment.enabled == false) {
+                        if (!payment.enabled) {
                             summDept += payment.price
                              //dataPaymentStudentModel!!.add(DataPaymentStudentModel(payment.id,"Долг: " + payment.title, "-" + payment.price.toString()))
                         }
@@ -464,12 +451,6 @@ class StudentItemEditFragment : Fragment() {
         alert.show()
     }
 
-    fun updatePaymentBalance(money: Int) {
-        binding.textViewPaymentBalance.text = money.toString()
-    }
-
-
-
     fun getImageLocal() {
         val photoPickerIntent = Intent(Intent.ACTION_GET_CONTENT)
         photoPickerIntent.type = "image/*"
@@ -490,7 +471,7 @@ class StudentItemEditFragment : Fragment() {
     fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
         val bytes = ByteArrayOutputStream()
         inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes)
-        val path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null)
+        val path = MediaStore.Images.Media.insertImage(inContext.contentResolver, inImage, "Title", null)
         return Uri.parse(path)
     }
 
@@ -530,31 +511,24 @@ class StudentItemEditFragment : Fragment() {
         }
     }*/
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+        if (requestCode == TAKEPHOTO && resultCode == RESULT_OK) {
             // Фотка сделана, извлекаем миниатюру картинки
             if(data?.extras?.get("data") != null) {
-                // val thumbnailBitmap = data?.extras?.get("data") as Bitmap
-               // Toast.makeText(activity, data?.extras?.get("data").toString(), Toast.LENGTH_SHORT).show()
-                val imageUri: Uri? = getActivity()?.let { getImageUri(it.applicationContext,
-                    data?.extras?.get("data") as Bitmap
+                val imageUri: Uri? = activity?.let { getImageUri(it.applicationContext,
+                    data.extras?.get("data") as Bitmap
                 ) }
-
                 if (imageUri != null) {
                     startCrop(imageUri)
                 }
-                // binding.imageView.setImageBitmap(thumbnailBitmap)
             } else {
-                var bitmap: Bitmap? = null
-                val imageUri: Uri? = data?.getData()
+                val imageUri: Uri? = data?.data
                 if (imageUri != null) {
                     startCrop(imageUri)
                 }
-                // bitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, imageUri)
-
-                //  binding.imageView.setImageBitmap(bitmap)
             }
 
         }
@@ -562,16 +536,6 @@ class StudentItemEditFragment : Fragment() {
 
     }
 
-
-    // Function to convert string to URL
-    private fun mStringToURL(string: String): URL? {
-        try {
-            return URL(string)
-        } catch (e: MalformedURLException) {
-            e.printStackTrace()
-        }
-        return null
-    }
 
     private fun startCrop(uriFilePath: Uri) {
         // Start picker to get image for cropping and then use the image in cropping activity.
@@ -603,7 +567,7 @@ class StudentItemEditFragment : Fragment() {
 
     private fun mSaveMediaToStorage(bitmap: Bitmap?): File {
         val filename = "${System.currentTimeMillis()}.jpg"
-        var fos: OutputStream? = null
+        val fos: OutputStream?
 
         val imagesDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + "lessonslist")
         imagesDir.apply {
@@ -614,9 +578,7 @@ class StudentItemEditFragment : Fragment() {
         fos = FileOutputStream(image)
 
         fos.use {
-
             bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, it)
-
         }
         return image
     }
@@ -676,18 +638,7 @@ class StudentItemEditFragment : Fragment() {
         if (!args.containsKey(SCREEN_MODE)) {
             throw RuntimeException("Param screen mode is absent")
         }
-        val mode = args.getString(SCREEN_MODE)
-        if (mode != MODE_EDIT) {
-            throw RuntimeException("Unknown screen mode $mode")
-        }
-        screenMode = mode
-        if (screenMode == MODE_EDIT) {
-            if (!args.containsKey(SHOP_ITEM_ID)) {
-                throw RuntimeException("Param shop item id is absent")
-            }
-            studentItemId = args.getInt(SHOP_ITEM_ID, StudentItem.UNDEFINED_ID)
-
-        }
+        studentItemId = args.getInt(SHOP_ITEM_ID, StudentItem.UNDEFINED_ID)
     }
 
     private fun deletePaymentToStudent(studentId: Int) {
@@ -753,15 +704,6 @@ class StudentItemEditFragment : Fragment() {
         const val SHOP_ITEM_ID = "extra_shop_item_id"
         const val MODE_EDIT = "mode_edit"
         const val MODE_UNKNOWN = ""
-
-        fun newInstanceEditItem(shopItemId: Int): StudentItemEditFragment {
-            return StudentItemEditFragment().apply {
-                arguments = Bundle().apply {
-                    putString(SCREEN_MODE, MODE_EDIT)
-                    putInt(SHOP_ITEM_ID, shopItemId)
-                }
-            }
-        }
 
     }
 }

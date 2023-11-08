@@ -2,7 +2,6 @@ package com.example.lessonslist.presentation.lessons
 
 
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +17,6 @@ class LessonsListAdapter(
 ) : ListAdapter<LessonsItem, LessonsItemViewHolder>(LessonsItemDiffCallback()) {
 
     var onLessonsItemClickListener: ((LessonsItem) -> Unit)? = null
-    var onLessonsItemLongClickListener: ((LessonsItem) -> Unit)? = null
 
 
     private var isEnabled = false
@@ -98,13 +96,13 @@ class LessonsListAdapter(
         isEnabled = true
         viewHolder.binding.checkImage.visibility = View.VISIBLE
        // itemSelectedList.add(position)
-        pairList.put(lessonsItem.id, lessonsItem)
+        pairList[lessonsItem.id] = lessonsItem
         lessonsItem.student = "500"
         showMenuDelete(true)
     }
 
     override fun getItemViewType(position: Int): Int {
-        val item = getItem(position)
+        //val item = getItem(position)
         return VIEW_TYPE_ENABLED
 
     }

@@ -1,8 +1,18 @@
 package com.example.lessonslist.presentation.helpers
 
+import android.annotation.SuppressLint
+import java.text.SimpleDateFormat
+import java.util.Date
+
 object StringHelpers {
 
-
+    @SuppressLint("SimpleDateFormat")
+    fun calendarCreate(yourDateString: String): Date {
+        val dtValue = yourDateString.split(" ")
+        val pattern = "yyyy/M/dd"
+        val formatter = SimpleDateFormat(pattern)
+        return formatter.parse(dtValue[0]) as Date
+    }
     fun getStudentIds(dataString: String): List<Int> {
         var dataStr = dataString.replace("]", "")
         dataStr = dataStr.replace("[", "")

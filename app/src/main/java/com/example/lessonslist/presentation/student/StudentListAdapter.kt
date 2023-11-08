@@ -1,5 +1,6 @@
 package com.example.lessonslist.presentation.student
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,7 +57,8 @@ class StudentListAdapter(
             }
         }*/
         if (studentItem.group == "500") {
-            pairList[studentItem.id] = studentItem
+            //Log.d("itemStudentForDelete", studentItem.id.toString())
+           // pairList[studentItem.id] = studentItem
         }
 
         binding.root.setOnClickListener {

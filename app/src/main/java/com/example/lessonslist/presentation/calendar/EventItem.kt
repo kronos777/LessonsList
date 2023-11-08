@@ -8,7 +8,6 @@ import ru.cleverpumpkin.calendar.CalendarView
  */
 class EventItem(
     override val date: CalendarDate,
-    override val color: Int,
-    val eventName: String
+    override val color: Int
 
 ) : CalendarView.DateIndicator

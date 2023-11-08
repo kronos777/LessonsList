@@ -20,8 +20,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:padding="16dp"
         android:scrollbars="horizontal"
         tools:context=".presentation.lessons.LessonsItemAddFragment"
         >
@@ -331,7 +330,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginLeft="0dp"
                     android:layout_marginRight="15dp"
                     android:src="@drawable/ic_baseline_people_24" />
 
@@ -381,7 +380,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginLeft="0dp"
                     android:layout_marginRight="15dp"
                     android:src="@drawable/ic_baseline_groups_24" />
 

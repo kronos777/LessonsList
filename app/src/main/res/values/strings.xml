@@ -68,4 +68,5 @@
     <string name="txt_delete">удалить</string>
     <string name="text_label_tab_1">сегодня</string>
     <string name="text_label_tab_2">прошедшие</string>
+    <string name="change_date_lessons">Изменить дату урока</string>
 </resources>

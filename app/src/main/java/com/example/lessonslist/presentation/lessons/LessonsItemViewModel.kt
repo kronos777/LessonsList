@@ -123,7 +123,7 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
     }
 
 
-    fun validateInput(title: String, student: HashSet<Int?>, price: String, dateStart: String, dateEnd: String): Boolean {
+    fun validateInput(title: String, student: HashSet<Int>, price: String, dateStart: String, dateEnd: String): Boolean {
         var result = true
         if (title.isBlank()) {
             _errorInputTitle.value = true

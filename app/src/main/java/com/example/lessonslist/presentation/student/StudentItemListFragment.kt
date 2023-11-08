@@ -1,10 +1,10 @@
 package com.example.lessonslist.presentation.student
 
 
-import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -70,8 +69,8 @@ class StudentItemListFragment: Fragment(), MenuProvider {
 
         setupRecyclerView()
         viewModel = ViewModelProvider(this).get(StudentListViewModel::class.java)
-        viewModel.studentList.observe(viewLifecycleOwner) {
-            val studentSort = it.sortedBy { it.name }
+        viewModel.studentList.observe(viewLifecycleOwner) { listStudent ->
+            val studentSort = listStudent.sortedBy { it.name }
             studentListAdapter.submitList(studentSort)
         }
         val bottomNavigationView =
@@ -149,13 +148,13 @@ class StudentItemListFragment: Fragment(), MenuProvider {
 
     private fun showDeleteMenu(show: Boolean) {
         toolbar = (activity as AppCompatActivity).findViewById(R.id.tool_bar)
-        val bottom_navigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        val bottomNavigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         if(show) {
-            bottom_navigation.itemBackgroundResource = R.color.active_select_items
+            bottomNavigation.itemBackgroundResource = R.color.active_select_items
             toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.VISIBLE
             toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.VISIBLE
             (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0e0f0f")
-            toolbar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0e0f0f")))
+            toolbar?.background = ColorDrawable(Color.parseColor("#0e0f0f"))
             toolbar?.setOnMenuItemClickListener {
                 onMenuItemSelected(it)
             }
@@ -167,8 +166,8 @@ class StudentItemListFragment: Fragment(), MenuProvider {
             }
             hideModifyAppBar = true
         } else {
-            bottom_navigation.itemBackgroundResource = R.color.noactive_select_items
-            toolbar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0061A5")))
+            bottomNavigation.itemBackgroundResource = R.color.noactive_select_items
+            toolbar?.background = ColorDrawable(Color.parseColor("#0061A5"))
             (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")
             toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.GONE
             toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.GONE
@@ -186,13 +185,15 @@ class StudentItemListFragment: Fragment(), MenuProvider {
         viewModel.studentList.observe(viewLifecycleOwner) {
             val listNew = ArrayList<StudentItem>()
             if(b) {
-                it.forEach {
-                    val ns = it.copy(group = "500")
+                it.forEach {si->
+                    val ns = si.copy(group = "500")
+                    studentListAdapter.pairList[si.id] = si
                     listNew.add(ns)
                 }
             } else {
-                it.forEach {
-                    val ns = it.copy(group = "0")
+                it.forEach {si->
+                    val ns = si.copy(group = "0")
+                    studentListAdapter.pairList.remove(si.id)
                     listNew.add(ns)
                 }
             }
@@ -246,41 +247,70 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun delete() {
-        val alert = AlertDialog.Builder(requireContext())
-        alert.setTitle("Удалить студента")
+        if (studentListAdapter.pairList.isNotEmpty()) {
+            val alert = AlertDialog.Builder(requireContext())
+            alert.setTitle("Удалить студента")
 
-        val layout = LinearLayout(requireContext())
-        layout.orientation = LinearLayout.VERTICAL
+            val layout = LinearLayout(requireContext())
+            layout.orientation = LinearLayout.VERTICAL
 
-        val paymentsLabel = TextView(requireContext())
-        paymentsLabel.setSingleLine()
-        paymentsLabel.text = "Будьте внимательны вместе со студентом удаляются все данные о нем."
-        paymentsLabel.isSingleLine = false
-        paymentsLabel.height = 250
-        paymentsLabel.top = 15
-        layout.addView(paymentsLabel)
+            val paymentsLabel = TextView(requireContext())
+            paymentsLabel.setSingleLine()
+            paymentsLabel.text = "Будьте внимательны вместе со студентом удаляются все данные о нем."
+            paymentsLabel.isSingleLine = false
+            paymentsLabel.height = 250
+            paymentsLabel.top = 15
+            layout.addView(paymentsLabel)
 
 
-        layout.setPadding(50, 40, 50, 10)
+            layout.setPadding(50, 40, 50, 10)
 
-        alert.setView(layout)
+            alert.setView(layout)
 
-        alert.setPositiveButton("удалить") { _, _ ->
-            if (studentListAdapter.pairList.isNotEmpty()) {
-                studentListAdapter.pairList.forEach {
-                    deletePaymentToStudent(it.key)
-                    deleteAllSaleItem(it.key)
-                    viewModel.deleteStudentItem(it.key)
-                }
+            alert.setPositiveButton("удалить") { _, _ ->
+               // if (studentListAdapter.pairList.isNotEmpty()) {
+                    studentListAdapter.pairList.forEach {
+                        Log.d("itemStudentForDelete", it.toString())
+                        deletePaymentToStudent(it.key)
+                        deleteAllSaleItem(it.key)
+                        viewModel.deleteStudentItem(it.key)
+                    }
+               // }
             }
-        }
 
-        alert.setNegativeButton("не удалять") { dialog, _ ->
-            dialog.dismiss()
-        }
+            alert.setNegativeButton("не удалять") { dialog, _ ->
+                dialog.dismiss()
+            }
 
-        alert.setCancelable(false)
-        alert.show()
+            alert.setCancelable(false)
+            alert.show()
+        } else {
+            val alert = AlertDialog.Builder(requireContext())
+            alert.setTitle("Не выбран не один студент")
+
+            val layout = LinearLayout(requireContext())
+            layout.orientation = LinearLayout.VERTICAL
+
+            val paymentsLabel = TextView(requireContext())
+            paymentsLabel.setSingleLine()
+            paymentsLabel.text = "Выберите хотя бы одного студента для удаления."
+            paymentsLabel.isSingleLine = false
+            paymentsLabel.height = 250
+            paymentsLabel.top = 15
+            layout.addView(paymentsLabel)
+
+
+            layout.setPadding(50, 40, 50, 10)
+
+            alert.setView(layout)
+
+            alert.setNegativeButton("отмена") { dialog, _ ->
+                dialog.dismiss()
+            }
+
+            alert.setCancelable(false)
+            alert.show()
+        }
     }
 
     private fun deletePaymentToStudent(studentId: Int) {
@@ -316,12 +346,11 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun deleteAllSaleItem(id: Int) {
-        val studentItemId = id
         viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
         viewModelSale = ViewModelProvider(this)[SaleItemViewModel::class.java]
         viewModelSalesList.salesList.observe(viewLifecycleOwner) { sales ->
             for (saleItem in sales.indices) {
-                if(studentItemId == sales[saleItem].idStudent) {
+                if (id == sales[saleItem].idStudent) {
                     viewModelSale.deleteSaleItem(sales[saleItem].id)
                     //  Log.d("studentDataForDelete", sales[saleItem].toString())
                 }
@@ -364,44 +393,6 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     }
 
 
-    private fun dialogWindow(studentId: Int, student: StudentItem, title: String) {
-
-        val alert = AlertDialog.Builder(requireContext())
-        alert.setTitle("Удалить студента $title")
-
-        val layout = LinearLayout(requireContext())
-        layout.orientation = LinearLayout.VERTICAL
-
-        val paymentsLabel = TextView(requireContext())
-        paymentsLabel.setSingleLine()
-        paymentsLabel.text = "Будьте внимательны вместе со студентом удаляются все данные о нем."
-        paymentsLabel.isSingleLine = false
-        paymentsLabel.height = 250
-        paymentsLabel.top = 15
-        layout.addView(paymentsLabel)
-
-
-        layout.setPadding(50, 40, 50, 10)
-
-        alert.setView(layout)
-
-        alert.setPositiveButton("удалить", DialogInterface.OnClickListener {
-                dialog, id ->
-            //deleteLessonsPay
-          //  deletePaymentToStudent(studentId)
-          //  viewModel.deleteStudentItem(student)
-        })
-
-        alert.setNegativeButton("не удалять", DialogInterface.OnClickListener {
-                dialog, id ->
-            dialog.dismiss()
-        })
-
-        alert.setCancelable(false)
-        alert.show()
-
-    }
-
     override fun onStop() {
         super.onStop()
         if(hideModifyAppBar) {
@@ -410,8 +401,8 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun hideModifyAppBar() {
-        val bottom_navigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
-        bottom_navigation.itemBackgroundResource = R.color.noactive_select_items
+        val bottomNavigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        bottomNavigation.itemBackgroundResource = R.color.noactive_select_items
         toolbar?.background = ColorDrawable(Color.parseColor("#0061A5"))
         (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")
         toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.GONE

@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.databinding.FragmentSettingsItemBinding
 
 
@@ -21,14 +20,7 @@ class SettingsNotificationsFragment : Fragment() {
     private val binding: FragmentSettingsItemBinding
         get() = _binding ?: throw RuntimeException("FragmentGroupItemBinding == null")
 
-    private val appDatabase = AppDatabase
     private lateinit var contextForDump: Context
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-//        parseParams()
-    }
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -46,7 +38,7 @@ class SettingsNotificationsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
      //   return inflater.inflate(R.layout.fragment_group_item, container, false)
         _binding = FragmentSettingsItemBinding.inflate(inflater, container, false)
         return binding.root

@@ -20,9 +20,8 @@ class DateItemViewModel(application: Application) : AndroidViewModel(application
     private val checkExistsDateItemUseCase = CheckExistsDateItemUseCase(repository)
     private val addDateItemUseCase = AddDateItemUseCase(repository)
     private val deleteDateItemUseCase = DeleteDateItemUseCase(repository)
-    //private val getDateItemListUseCase = GetDateListItemUseCase(repository)
 
-    //val dateList = getDateItemListUseCase.getDateList()
+
 
     private val _dateItem = MutableLiveData<DateItem>()
     val dateItem: LiveData<DateItem>
@@ -46,9 +45,7 @@ class DateItemViewModel(application: Application) : AndroidViewModel(application
     fun addDateItem(inputDate: String) {
         viewModelScope.launch {
                 val dateItem = DateItem(inputDate)
-                //Log.d("viewModelLessonItem", lessonsItem.toString())
                 addDateItemUseCase.addDateItem(dateItem)
-               // finishWork()
             }
 
 

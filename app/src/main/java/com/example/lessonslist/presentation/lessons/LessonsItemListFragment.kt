@@ -30,11 +30,9 @@ import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Date
 
 
 class LessonsItemListFragment: Fragment(), MenuProvider {
@@ -117,13 +115,13 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
 
     fun showDeleteMenu(show: Boolean) {
       toolbar = (activity as AppCompatActivity).findViewById(R.id.tool_bar)
-      val bottom_navigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+      val bottomNavigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
       if(show) {
-          bottom_navigation.itemBackgroundResource = R.color.active_select_items
+          bottomNavigation.itemBackgroundResource = R.color.active_select_items
           toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.VISIBLE
           toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.VISIBLE
           (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0e0f0f")
-          toolbar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0e0f0f")))
+          toolbar?.background = ColorDrawable(Color.parseColor("#0e0f0f"))
           toolbar?.setOnMenuItemClickListener {
               onMenuItemSelected(it)
           }
@@ -135,8 +133,8 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
           }
           hideModifyAppBar = true
       } else {
-          bottom_navigation.itemBackgroundResource = R.color.noactive_select_items
-          toolbar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0061A5")))
+          bottomNavigation.itemBackgroundResource = R.color.noactive_select_items
+          toolbar?.background = ColorDrawable(Color.parseColor("#0061A5"))
           (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")
           toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.GONE
           toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.GONE
@@ -301,8 +299,8 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
 
                 if(listArrayPayment.size > 0) {
                     val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
-                    val sortLessons = listArrayPayment.sortedByDescending {
-                        LocalDate.parse(it.dateStart, formatter)
+                    val sortLessons = listArrayPayment.sortedByDescending {lessItem->
+                        LocalDate.parse(lessItem.dateStart, formatter)
                     }
                     lessonsListAdapter.submitList(sortLessons)
                 } else {
@@ -315,21 +313,21 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun setCustomDataLessons() {
-        viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
-        viewModel.lessonsList.observe(viewLifecycleOwner) {
+        viewModel = ViewModelProvider(this)[LessonsListViewModel::class.java]
+        viewModel.lessonsList.observe(viewLifecycleOwner) {listLessItem->
             val listNew = ArrayList<LessonsItem>()
             val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
-            it.forEach {
-                if(compareDateTimeLessonsAndNow(it.dateEnd)) {
-                    val nn = it.copy(notifications = "finished")
+            listLessItem.forEach {lessItem->
+                if(compareDateTimeLessonsAndNow(lessItem.dateEnd)) {
+                    val nn = lessItem.copy(notifications = "finished")
                     listNew.add(nn)
                 } else {
-                    listNew.add(it)
+                    listNew.add(lessItem)
                 }
 
             }
-            val sortLessons = listNew.sortedByDescending {
-                LocalDate.parse(it.dateStart, formatter)
+            val sortLessons = listNew.sortedByDescending {sortLessItem->
+                LocalDate.parse(sortLessItem.dateStart, formatter)
             }
             lessonsListAdapter.submitList(sortLessons)
         }
@@ -337,11 +335,11 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
 
 
     private fun setCustomDataLessonsCheckAll(selectAll: Boolean) {
-        viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
-        viewModel.lessonsList.observe(viewLifecycleOwner) {
+        viewModel = ViewModelProvider(this)[LessonsListViewModel::class.java]
+        viewModel.lessonsList.observe(viewLifecycleOwner) {listLessItem->
             val listNew = ArrayList<LessonsItem>()
             if(selectAll) {
-                it.forEach {
+                listLessItem.forEach {
                     if(compareDateTimeLessonsAndNow(it.dateEnd)) {
                         val nn = it.copy(notifications = "finished", student = "500")
                         listNew.add(nn)
@@ -351,7 +349,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
                     }
                 }
             } else {
-                it.forEach {
+                listLessItem.forEach {
                     if(compareDateTimeLessonsAndNow(it.dateEnd)) {
                         val nn = it.copy(notifications = "finished", student = "0")
                         listNew.add(nn)
@@ -407,8 +405,8 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
         val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
 
-        val argss = requireArguments()
-        val mode = argss.getString(DATE_ID)
+        val args = requireArguments()
+        val mode = args.getString(DATE_ID)
         if (mode != null) {
            // Toast.makeText(activity, "ne raven null", Toast.LENGTH_SHORT).show()
             val btnArgsLessons = Bundle().apply {
@@ -462,8 +460,8 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun hideModifyAppBar() {
-        val bottom_navigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
-        bottom_navigation.itemBackgroundResource = R.color.noactive_select_items
+        val bottomNavigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        bottomNavigation.itemBackgroundResource = R.color.noactive_select_items
         toolbar?.background = ColorDrawable(Color.parseColor("#0061A5"))
         (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")
         toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.GONE

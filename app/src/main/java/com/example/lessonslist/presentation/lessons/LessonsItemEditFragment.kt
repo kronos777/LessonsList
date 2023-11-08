@@ -1,5 +1,6 @@
 package com.example.lessonslist.presentation.lessons
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -27,6 +28,7 @@ import com.example.lessonslist.presentation.student.StudentListViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
 import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
+import com.example.lessonslist.presentation.helpers.StringHelpers
 import com.example.lessonslist.presentation.lessons.sale.*
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.student.StudentItemViewModel
@@ -74,10 +76,10 @@ class LessonsItemEditFragment : Fragment() {
     private var notificationString: String = ""
     private var notificationBoolean: Boolean = true
 
-    val mcurrentTime = Calendar.getInstance()
-    var year: Int = mcurrentTime.get(Calendar.YEAR)
-    var month: Int = mcurrentTime.get(Calendar.MONTH)
-    var day: Int = mcurrentTime.get(Calendar.DAY_OF_MONTH)
+    private val mCurrentTime: Calendar = Calendar.getInstance()
+    var year: Int = mCurrentTime.get(Calendar.YEAR)
+    var month: Int = mCurrentTime.get(Calendar.MONTH)
+    var day: Int = mCurrentTime.get(Calendar.DAY_OF_MONTH)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -164,9 +166,9 @@ class LessonsItemEditFragment : Fragment() {
     private fun setDataLessonsPayment() {
         listView = binding.listView
         dataStudentlList = ViewModelProvider(this)[StudentListViewModel::class.java]
-        dataStudentGroupModel = ArrayList<DataStudentGroupModel>()
+        dataStudentGroupModel = ArrayList()
         var studentName: Array<String> = emptyArray()
-        dataPaymentStudentModel = ArrayList<DataPaymentStudentLessonsModel>()
+        dataPaymentStudentModel = ArrayList()
         viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelPayment.paymentList.observe(viewLifecycleOwner) {
             if(it.isNotEmpty()) {
@@ -196,13 +198,9 @@ class LessonsItemEditFragment : Fragment() {
                             val id = student.id
                             studentName += name
                             if(viewModel.lessonsItem.value != null) {
-                                viewModel.lessonsItem.observe(viewLifecycleOwner) {
-                                    var dataString = it.student
-                                    dataString = dataString.replace("]", "")
-                                    dataString = dataString.replace("[", "")
+                                viewModel.lessonsItem.observe(viewLifecycleOwner) {lesson->
 
-
-                                    val lstValues: List<Int> = dataString.split(",").map { str -> str.trim().toInt() }
+                                    val lstValues: List<Int> = StringHelpers.getStudentIds(lesson.student)
                                     if(lstValues.contains(id)) {
                                         dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
                                     } else {
@@ -293,8 +291,8 @@ class LessonsItemEditFragment : Fragment() {
         val mTimePicker: TimePickerDialog
         val mTimePickerEnd: TimePickerDialog
 
-        val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
-        val minute = mcurrentTime.get(Calendar.MINUTE)
+        val hour = mCurrentTime.get(Calendar.HOUR_OF_DAY)
+        val minute = mCurrentTime.get(Calendar.MINUTE)
 
 
 
@@ -303,7 +301,7 @@ class LessonsItemEditFragment : Fragment() {
 
 
         mTimePicker = TimePickerDialog(context,
-            { view, hourOfDay, minute ->
+            { _, hourOfDay, minute ->
                 val minH = if (hourOfDay < 10) "0" + hourOfDay else if(hourOfDay == 0) "00" else hourOfDay
                 val minM = if (minute < 10) "0" + minute else if(minute == 0) "00" else minute
                 binding.etDatestart.setText(String.format("%d/%d/%d %s:%s", year, month + 1, day, minH, minM))
@@ -314,7 +312,7 @@ class LessonsItemEditFragment : Fragment() {
             }, hour, minute, true)
 
         mTimePickerEnd = TimePickerDialog(context,
-            { view, hourOfDay, minute ->
+            { _, hourOfDay, minute ->
                 val minH = if (hourOfDay < 10) "0" + hourOfDay else if(hourOfDay == 0) "00" else hourOfDay
                 val minM = if (minute < 10) "0" + minute else if(minute == 0) "00" else minute
                 binding.etDateend.setText(String.format("%d/%d/%d %s:%s", year, month + 1, day, minH, minM))
@@ -345,10 +343,10 @@ class LessonsItemEditFragment : Fragment() {
         val dpd =
             activity?.let {
                 DatePickerDialog(requireContext(), { _, yearcur, monthOfYear, dayOfMonth ->
-                    mcurrentTime.set(yearcur, monthOfYear, dayOfMonth)
-                    year = mcurrentTime[Calendar.YEAR]
-                    month = mcurrentTime[Calendar.MONTH]
-                    day = mcurrentTime[Calendar.DAY_OF_MONTH]
+                    mCurrentTime.set(yearcur, monthOfYear, dayOfMonth)
+                    year = mCurrentTime[Calendar.YEAR]
+                    month = mCurrentTime[Calendar.MONTH]
+                    day = mCurrentTime[Calendar.DAY_OF_MONTH]
                     binding.etDatestart.setText(String.format("%d/%d/%d %s:%s", year, month + 1, day, fTime.hour, fTime.minute))
                     binding.etDateend.setText(String.format("%d/%d/%d %s:%s", year, month + 1, day, tTime.hour, tTime.minute))
                 }, year, month, day)
@@ -778,22 +776,12 @@ class LessonsItemEditFragment : Fragment() {
 
 
     private fun checkValidStudent(): HashSet<Int?> {
-        val studentIds: String = adapter.arrayList.toString()
-        val allStudent: String
-        allStudent = studentIds
-
         val lstValues: ArrayList<Int> = ArrayList()
-
-        allStudent.forEach {
-            if (it.isDigit()) {
-                val str = it.toString()
-                lstValues.add(str.toInt())
-            }
+        adapter.arrayList.forEach {
+            lstValues.add(it)
         }
 
-
         return HashSet(lstValues)
-
     }
 
 
@@ -1003,7 +991,7 @@ class LessonsItemEditFragment : Fragment() {
 
     private fun goLessonsListFragmentBackPressed() {
         val argss = requireArguments()
-        val mode = argss.getString(LessonsItemEditFragment.DATE_ID_BACKSTACK)
+        val mode = argss.getString(DATE_ID_BACKSTACK)
 
         if (mode != null) {
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -1063,6 +1051,7 @@ class LessonsItemEditFragment : Fragment() {
             }
         }
     }
+    @SuppressLint("SetTextI18n")
     private fun setNotifications() {
 
         val c = Calendar.getInstance()
@@ -1071,7 +1060,7 @@ class LessonsItemEditFragment : Fragment() {
 
         val timePickerDialog = TimePickerDialog(activity,
 
-            TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+            { _, hourOfDay, minute ->
 
                 val minH = if (hourOfDay < 10) "0" + hourOfDay else hourOfDay
                 val minM = if (minute < 10) "0" + minute else minute
