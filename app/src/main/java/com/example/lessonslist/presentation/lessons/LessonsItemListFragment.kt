@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -264,20 +265,6 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
             viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
             viewModel.lessonsList.observe(viewLifecycleOwner) {
                 listArrayPayment.clear()
-                /*for (lessons in it) {
-                    val pay = lessons.dateEnd.split(" ")
-                    val datePay = Date(pay[0])
-                    val dateFormatted = SimpleDateFormat("d/M/yyyy").format(datePay)
-                    if(dateFormatted == dateFilter){
-                        if(compareDateTimeLessonsAndNow(lessons.dateEnd)) {
-                            val nn = lessons.copy(notifications = "finished")
-                            listArrayPayment.add(nn)
-                        } else {
-                            listArrayPayment.add(lessons)
-                        }
-
-                    }
-                }*/
                 for (lessons in it) {
                     val pay = lessons.dateEnd.split(" ")
                     val formatter = DateTimeFormatter.ofPattern("yyyy/M/d")

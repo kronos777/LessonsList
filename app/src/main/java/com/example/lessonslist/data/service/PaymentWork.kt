@@ -92,13 +92,13 @@ class PaymentWork(
                     } else {
                         //dbLessonGet()
                         //в противном случае на каждого ученика необходимо создать платеж
-                        log("в противном случае на каждого ученика необходимо создать платеж" + idLessons)
+                       // log("в противном случае на каждого ученика необходимо создать платеж" + idLessons)
                         /*dt*/
                         val current = LocalDateTime.now()
                         val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
                         var formatted = current.format(formatter)
                         val currentTime = LocalDateTime.parse(formatted, formatter)
-                        log("время текущее" + currentTime)
+                       // log("время текущее" + currentTime)
                         val lessonsItem = dbLessonGet.getLessonsItem(idLessons)
                         val formattedLess = (lessonsItem.dateEnd.format(formatter)).split(":")
                         val newFormatLess = (formattedLess[0] + ":" + formattedLess[1]).format(formatter)
@@ -106,20 +106,20 @@ class PaymentWork(
                         val timeStartLessons = LocalDateTime.parse(newFormatLess, formatter)
 
                         //val fLess = newFormatLess.format(formatter)
-                        log("время урока $timeStartLessons")
+                        //log("время урока $timeStartLessons")
                         //delay(100)
                         if(timeStartLessons >= currentTime) {
-                            log("время начала урока больше текущего текущее время:" + currentTime + " время начала урока:" + timeStartLessons)
+                           // log("время начала урока больше текущего текущее время:" + currentTime + " время начала урока:" + timeStartLessons)
                             //в этом блоке мы должны вычислить корректный вызов напоминания
                             if(lessonsItem.notifications != ""){
                                 sendNotifications(currentTime, timeStartLessons, lessonsItem)
                             }
                         } else if(currentTime >= timeStartLessons) {
-                            log("время начала урока меньше текущего те урок окончен текущее время:" + currentTime + " время начала урока:" + timeStartLessons)
+                           // log("время начала урока меньше текущего те урок окончен текущее время:" + currentTime + " время начала урока:" + timeStartLessons)
                             //log("время начала урока меньше текущего те урок окончен")
                           //  log("поле студенты " + lessonsItem.student.toString() + lessonsItem.title)
                             val stIds = getStudentIds(lessonsItem.student)
-                            log("в противном случае на каждого ученика необходимо создать платеж" + stIds)
+                        //    log("в противном случае на каждого ученика необходимо создать платеж" + stIds)
 
                             val namesStudentArrayList: ArrayList<String> = ArrayList()
                             var okPay = 0
@@ -128,8 +128,8 @@ class PaymentWork(
                             if(stIds.isNotEmpty()) {
                                 for (id in stIds.indices){
                                     val threadId = Thread.currentThread().id
-                                    log("id потока" + threadId)
-                                    log("id студента" + stIds[id])
+                                   // log("id потока" + threadId)
+                                  //  log("id студента" + stIds[id])
                                     val student = dbStudent.getStudentItem(stIds[id])
                                     log(student.name + student.lastname + student.paymentBalance)
                                     val studentData = student.name + " " + student.lastname
@@ -145,7 +145,7 @@ class PaymentWork(
                                     val saleTest = getSale(lessonsItem.id, student.id)
                                     var saleValue = 0
                                     if(saleTest.size > 0) {
-                                        log("наличие скидок" + saleTest[0].price.toString() + lessonsItem.title)
+                                      //  log("наличие скидок" + saleTest[0].price.toString() + lessonsItem.title)
                                         saleValue = saleTest[0].price
                                     }
                                     //пробуем проверить наличие скидки

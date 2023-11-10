@@ -72,6 +72,13 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
+    fun addLessonsItemTemp(lessonsItem: LessonsItem){
+        viewModelScope.launch {
+            addLessonsItemUseCase.addLessonsItem(lessonsItem)
+            finishWork()
+        }
+    }
+
     fun addLessonsItem(inputTitle: String, inputNotifications: String, inputStudent: String, inputPrice: String, inputDateStart: String, inputDateEnd: String) {
         val title = inputTitle
         val notifications = inputNotifications
