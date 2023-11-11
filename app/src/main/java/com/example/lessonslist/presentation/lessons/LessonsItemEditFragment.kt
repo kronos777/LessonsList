@@ -5,7 +5,6 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,7 +23,6 @@ import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemEditBinding
 import com.example.lessonslist.domain.group.GroupItem
 import com.example.lessonslist.domain.lessons.LessonsItem
-import com.example.lessonslist.presentation.student.StudentListViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
 import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
@@ -32,14 +30,13 @@ import com.example.lessonslist.presentation.helpers.StringHelpers
 import com.example.lessonslist.presentation.lessons.sale.*
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.student.StudentItemViewModel
+import com.example.lessonslist.presentation.student.StudentListViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashSet
 
 
 class LessonsItemEditFragment : Fragment() {
@@ -396,7 +393,7 @@ class LessonsItemEditFragment : Fragment() {
 
     private fun setListViewSaleFlexible(salePaymentValueDate: HashSet<Int?>) {
         listViewSale = binding.listSalePayment
-        dataStudentSaleModel = ArrayList<DataSalePaymentModel>()
+        dataStudentSaleModel = ArrayList()
         dataStudentlList = ViewModelProvider(this)[StudentListViewModel::class.java]
         viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
         viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
@@ -472,7 +469,7 @@ class LessonsItemEditFragment : Fragment() {
     private fun setListViewSalePayment(salePaymentValueDate: HashSet<Int?>, price: Int) {
 
         listViewSale = binding.listSalePayment
-        dataStudentSaleModel = ArrayList<DataSalePaymentModel>()
+        dataStudentSaleModel = ArrayList()
         dataStudentlList = ViewModelProvider(this)[StudentListViewModel::class.java]
         viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
         viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
@@ -485,7 +482,7 @@ class LessonsItemEditFragment : Fragment() {
             for (saleItem in sales.indices) {
                 if(sales[saleItem].idLessons == lessonsItemId) {
                     hideChoose = false
-                    dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
+                    dataStudentlList.studentList.observe(viewLifecycleOwner) {
                         if(it.isNotEmpty()) {
                             for(student in it){
                                 if(sales[saleItem].idStudent == student.id) {
@@ -527,7 +524,7 @@ class LessonsItemEditFragment : Fragment() {
             if(dataStudentSaleModel!!.size == 0 && hideChoose) {
                 //  Toast.makeText(activity, "в данном случае равно 0", Toast.LENGTH_SHORT).show()
                 //showSaleUIElement()
-                dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
+                dataStudentlList.studentList.observe(viewLifecycleOwner) {
                     if(it.isNotEmpty()) {
                         for(student in it){
                             if(salePaymentValueDate.contains(student.id)) {
@@ -783,40 +780,6 @@ class LessonsItemEditFragment : Fragment() {
     }
 
 
-    fun withMultiChoiceList(listData: Array<String>): ArrayList<String> {
-
-        //val items = arrayOf("Microsoft", "Apple", "Amazon", "Google")
-        val items = listData
-        val selectedList = ArrayList<Int>()
-        val builder = AlertDialog.Builder(context)
-        val selectedStrings = ArrayList<String>()
-        builder.setTitle("Выберите студентов")
-        builder.setMultiChoiceItems(items, null
-        ) { dialog, which, isChecked ->
-            if (isChecked) {
-                selectedList.add(which)
-            } else if (selectedList.contains(which)) {
-                selectedList.remove(Integer.valueOf(which))
-            }
-        }
-
-        builder.setPositiveButton("ок") { dialogInterface, i ->
-
-
-            for (j in selectedList.indices) {
-                selectedStrings.add(items[selectedList[j]])
-            }
-
-            // Toast.makeText(getContext(), "Items selected are: " + Arrays.toString(selectedStrings.toTypedArray()), Toast.LENGTH_SHORT).show()
-
-
-        }
-
-        builder.show()
-
-        return selectedStrings
-
-    }
 
     private fun checkAddDateTime(valueCheck1: String, valueCheck2: String): Boolean {
 

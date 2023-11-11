@@ -54,6 +54,8 @@ class StudentItemEditFragment : Fragment() {
     private lateinit var viewModel: StudentItemViewModel
     private lateinit var viewModelLessonsEdit: LessonsItemViewModel
     private lateinit var viewModelPayment: PaymentListViewModel
+    private lateinit var viewModelParentContact: ParentContactViewModel
+    private lateinit var viewModelNotesItem: NotesItemViewModel
 
     private lateinit var viewModelSale: SaleItemViewModel
     private lateinit var viewModelSalesList: SalesItemListViewModel
@@ -119,6 +121,7 @@ class StudentItemEditFragment : Fragment() {
         viewModel = ViewModelProvider(this)[StudentItemViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        viewModel.getStudentItem(studentItemId)
         launchRightMode()
         val bottomNavigationView =
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
@@ -176,9 +179,35 @@ class StudentItemEditFragment : Fragment() {
         binding.cardDeleteData.setOnClickListener {
             deleteAllSaleItem()
             deletePaymentToStudent(studentItemId)
+            deleteAllContactStudent()
+            deleteAllNotesStudent()
             viewModel.deleteStudentItem(studentItemId)
         }
 
+
+    }
+
+    private fun deleteAllNotesStudent() {
+        viewModelNotesItem = ViewModelProvider(this)[NotesItemViewModel::class.java]
+        viewModelNotesItem.notesList.getNotesList().observe(viewLifecycleOwner) {
+           for (item in it) {
+                if(item.student == studentItemId) {
+                    viewModelNotesItem.deleteNotesItem(id)
+                }
+            }
+
+        }
+    }
+
+    private fun deleteAllContactStudent() {
+        viewModelParentContact = ViewModelProvider(this)[ParentContactViewModel::class.java]
+        viewModelParentContact.parentContactList.getParentList().observe(viewLifecycleOwner) {
+            for (item in it) {
+                if (item.student == studentItemId) {
+                    viewModelParentContact.deleteParentContact(item.id)
+                }
+            }
+        }
 
     }
 
@@ -235,7 +264,7 @@ class StudentItemEditFragment : Fragment() {
     private fun callStudent(number: String?) {
         // val dialIntent = Intent(Intent.ACTION_SEND)
         val dialIntent = Intent(Intent.ACTION_VIEW)
-        dialIntent.data = Uri.parse("tel:" + number)
+        dialIntent.data = Uri.parse("tel:$number")
         startActivity(dialIntent)
     }
 
@@ -346,7 +375,7 @@ class StudentItemEditFragment : Fragment() {
     }
 
 
-    fun totalDebt() {
+    private fun totalDebt() {
         var summDept = 0
         viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelPayment.paymentList.observe(viewLifecycleOwner) {
@@ -451,65 +480,18 @@ class StudentItemEditFragment : Fragment() {
         alert.show()
     }
 
-    fun getImageLocal() {
+    private fun getImageLocal() {
         val photoPickerIntent = Intent(Intent.ACTION_GET_CONTENT)
         photoPickerIntent.type = "image/*"
         startActivityForResult(photoPickerIntent, 1)
     }
 
-/*
-    protected fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            1 -> {
-                if (resultCode == RESULT_OK) {
-                    val chosenImageUri: Uri? = data.data
-                }
-            }
-        }
-    }*/
-    fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+    private fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
         val bytes = ByteArrayOutputStream()
         inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes)
         val path = MediaStore.Images.Media.insertImage(inContext.contentResolver, inImage, "Title", null)
         return Uri.parse(path)
     }
-
-    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            1 -> {
-                if (resultCode == RESULT_OK) {
-                    if (data != null) {
-                        chosenImageUri = data.data!!
-
-                        var mImage: Bitmap?
-                        //Toast.makeText(getActivity(), "File path" + chosenImageUri, Toast.LENGTH_LONG).show()
-                        mImage = mLoadLocal(chosenImageUri.toString())
-
-                    //    binding.imagepath.setText(chosenImageUri.toString())
-                        myHandler.post {
-                                                  //mImageView.setImageBitmap(mImage)
-                                                  Picasso.get()
-                                                      .load(chosenImageUri.toString())
-                                                      .resize(400, 300)
-                                                      // .transform(CropCircleTransformation())
-                                                     .rotate(90f)
-                                                      .into(mImageView)
-
-
-                        if(mImage!=null){
-
-                                 pathImageSrc = mSaveMediaToStorage(mImage).toString()
-
-                              }
-                        }
-
-                    }
-                }
-            }
-        }
-    }*/
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -604,10 +586,10 @@ class StudentItemEditFragment : Fragment() {
     }
 
    private fun isLessthanZero(number: Int): Int {
-       if(number < 0) {
-           return 0
+       return if(number < 0) {
+           0
        } else {
-           return number
+           number
        }
    }
 
@@ -642,7 +624,7 @@ class StudentItemEditFragment : Fragment() {
     }
 
     private fun deletePaymentToStudent(studentId: Int) {
-        viewModelPayment = ViewModelProvider(this).get(PaymentListViewModel::class.java)
+        viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelPayment.paymentList.observe(viewLifecycleOwner) {
             for (payment in it) {
                 if(payment.studentId == studentId) {
@@ -655,7 +637,7 @@ class StudentItemEditFragment : Fragment() {
     }
 
     private fun editLessonsItem(idLessons: Int, studentId: Int) {
-        viewModelLessonsEdit = ViewModelProvider(this).get(LessonsItemViewModel::class.java)
+        viewModelLessonsEdit = ViewModelProvider(this)[LessonsItemViewModel::class.java]
         viewModelLessonsEdit.getLessonsItem(idLessons)
         // val lessonsItem = viewModelLessonsEdit.lessonsItem
         viewModelLessonsEdit.lessonsItem.observe(viewLifecycleOwner) {

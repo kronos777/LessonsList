@@ -64,9 +64,9 @@ class PaymentListAdapter : ListAdapter<PaymentItem, PaymentItemViewHolder>(Payme
     override fun getItemViewType(position: Int): Int {
         val item = getItem(position)
         return if (item.enabled) {
-           PaymentListAdapter.VIEW_TYPE_ENABLED
+           VIEW_TYPE_ENABLED
         } else {
-            PaymentListAdapter.VIEW_TYPE_DISABLED
+            VIEW_TYPE_DISABLED
         }
     }
 

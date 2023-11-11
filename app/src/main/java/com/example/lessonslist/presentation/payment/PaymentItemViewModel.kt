@@ -50,8 +50,7 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun checkExistsPaymentItem(studentId: Int, lessonsId: Int): Boolean {
-       val item = checkExistsPaymentUseCase.getPaymentItemExists(studentId, lessonsId)
-       return item
+        return checkExistsPaymentUseCase.getPaymentItemExists(studentId, lessonsId)
     }
 
 

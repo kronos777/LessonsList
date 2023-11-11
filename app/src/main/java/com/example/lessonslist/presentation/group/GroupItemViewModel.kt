@@ -65,12 +65,9 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
 
 
     fun addGroupItem(inputTitle: String, inputDescription: String, inputStudent: String) {
-        val title = inputTitle
-        val description = inputDescription
-        val student = inputStudent
 
-       viewModelScope.launch {
-                val groupItem = GroupItem(title, description, student)
+        viewModelScope.launch {
+                val groupItem = GroupItem(inputTitle, inputDescription, inputStudent)
                 addGroupItemUseCase.addGroupItem(groupItem)
                 finishWork()
             }
@@ -78,14 +75,15 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun editGroupItem(inputTitle: String, inputDescription: String, inputStudent: String) {
-        val title = inputTitle
-        val description = inputDescription
-        val student = inputStudent
 
         _groupItem.value?.let {
                 viewModelScope.launch {
                  //   val groupItem = GroupItem(title, description, student)
-                    val groupItem = it.copy(title = title, description = description, student = student)
+                    val groupItem = it.copy(
+                        title = inputTitle,
+                        description = inputDescription,
+                        student = inputStudent
+                    )
                     editGroupItemUseCase.editGroupItem(groupItem)
                     finishWork()
                 }

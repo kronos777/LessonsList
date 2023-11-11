@@ -9,8 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.BottomSheetLayoutBinding
@@ -57,6 +60,10 @@ class BottomFragment : BottomSheetDialogFragment() {
     private var dataStudentGroupModel: ArrayList<DataStudentGroupModel>? = null
     // Можно обойтись без биндинга и использовать findViewById
     lateinit var binding: BottomSheetLayoutBinding
+
+
+    private lateinit var adapterNotes: ListNotesAdapter
+
 
     // Переопределим тему, чтобы использовать нашу с закруглёнными углами
     override fun getTheme() = R.style.AppBottomSheetDialogTheme
@@ -208,56 +215,77 @@ class BottomFragment : BottomSheetDialogFragment() {
         element.error = ""
     }
 
-    private fun selectAction(number: String?) {
-        val dialIntent = Intent(Intent.ACTION_VIEW)
-        dialIntent.data = Uri.parse("tel:$number")
-        startActivity(dialIntent)
-    }
-
 
     private fun showNotesStudent() {
         listView = binding.listView
         dataNotesStudentModel = ArrayList<DataNotesStudentModel>()
         viewModelNotesItem = ViewModelProvider(this)[NotesItemViewModel::class.java]
-        val map: HashMap<String, String> = HashMap()
+        //val map: HashMap<String, String> = HashMap()
         viewModelNotesItem.notesList.getNotesList().observe(viewLifecycleOwner) {
-
+            dataNotesStudentModel!!.clear()
             for (item in it) {
                 if(item.student == studentItemId) {
-                    map[item.date] = item.text
+//                    map[item.date] = item.text
+                    dataNotesStudentModel!!.add(DataNotesStudentModel(item.text, item.date, item.id))
+                    //map[item.date] = item.text
                 }
             }
 
-            dataNotesStudentModel!!.clear()
-            for ((key, value) in map)  {
-                dataNotesStudentModel!!.add(DataNotesStudentModel(value, key))
-            }
-
-            val adapterNotes = ListNotesAdapter(dataNotesStudentModel!!, requireContext().applicationContext)
+            adapterNotes = ListNotesAdapter(dataNotesStudentModel!!, requireContext().applicationContext)
             listView.adapter = adapterNotes
+            setupClickListenerNotes()
+        }
 
+    }
+
+    private fun setupClickListenerNotes() {
+        adapterNotes.onNotesItemClickListener = {
+            getDialogNotesItem(it.date.toString(), it.text.toString(), it.id)
         }
     }
+
+    private fun getDialogNotesItem(title: String, textNotes: String, id: Int) {
+        val alert = AlertDialog.Builder(requireContext())
+        alert.setTitle(title)
+        val layout = LinearLayout(requireContext())
+        layout.orientation = LinearLayout.VERTICAL
+        val notesLabel = TextView(requireContext())
+        notesLabel.setSingleLine()
+        notesLabel.text = textNotes
+        notesLabel.textSize = 22.0F
+        notesLabel.isSingleLine = false
+        notesLabel.height = 250
+        notesLabel.top = 15
+        layout.addView(notesLabel)
+        layout.setPadding(50, 40, 50, 10)
+
+        alert.setView(layout)
+
+        alert.setPositiveButton("удалить") { _, _ ->
+            viewModelNotesItem.deleteNotesItem(id)
+        }
+
+        alert.setNegativeButton("закрыть") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        alert.setCancelable(false)
+        alert.show()
+    }
+
+
 
     private fun showParentContact() {
         listView = binding.listView
         viewModelParentContact = ViewModelProvider(this)[ParentContactViewModel::class.java]
         dataParentContactStudentModel = ArrayList<DataParentContactStudentModel>()
-        val map: HashMap<String, String> = HashMap()
         viewModelParentContact.parentContactList.getParentList().observe(viewLifecycleOwner) {
-            for (item in it) {
-
-                if (item.student == studentItemId){
-                    map[item.name] = item.number
-                }
-
-            }
-
             dataParentContactStudentModel!!.clear()
-            for ((key, value) in map)  {
-                dataParentContactStudentModel!!.add(DataParentContactStudentModel(key, value))
+            for (item in it) {
+                if(item.student == studentItemId) {
+                    dataParentContactStudentModel!!.add(DataParentContactStudentModel(item.name, item.number, item.id))
+                }
             }
-
             val adapterParentContact = ListParentContactAdapter(dataParentContactStudentModel!!, requireContext().applicationContext)
             listView.adapter = adapterParentContact
 
@@ -265,11 +293,50 @@ class BottomFragment : BottomSheetDialogFragment() {
         }
 
         listView.setOnItemClickListener { _, _, position, _ ->
-            selectAction(dataParentContactStudentModel?.get(position)?.phone)
-            //call(dataParentContactStudentModel?.get(position)?.phone)
+            //selectAction(dataParentContactStudentModel?.get(position)?.phone)
+            getDialogContactItem(dataParentContactStudentModel?.get(position)?.text, dataParentContactStudentModel?.get(position)?.phone, dataParentContactStudentModel?.get(position)!!.id)
         }
 
     }
+
+    private fun selectAction(number: String?) {
+        val dialIntent = Intent(Intent.ACTION_VIEW)
+        dialIntent.data = Uri.parse("tel:$number")
+        startActivity(dialIntent)
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun getDialogContactItem(name: String?, phone: String?, id: Int) {
+        val alert = AlertDialog.Builder(requireContext())
+        alert.setTitle("Выберите действие для контакта")
+        val layout = LinearLayout(requireContext())
+        layout.orientation = LinearLayout.VERTICAL
+        val parentLabel = TextView(requireContext())
+        parentLabel.setSingleLine()
+        parentLabel.text = name + "\n" + phone
+        parentLabel.textSize = 22.0F
+        parentLabel.isSingleLine = false
+        parentLabel.height = 250
+        parentLabel.top = 15
+        layout.addView(parentLabel)
+        layout.setPadding(50, 40, 50, 10)
+
+        alert.setView(layout)
+
+        alert.setPositiveButton("позвонить") { _, _ ->
+            selectAction(phone)
+        }
+
+        alert.setNegativeButton("удалить") { _, _ ->
+            viewModelParentContact.deleteParentContact(id)
+        }
+        alert.setNeutralButton("закрыть") { dialog, _ ->
+            dialog.dismiss()
+        }
+        alert.setCancelable(false)
+        alert.show()
+    }
+
 
     private fun showPaymentsList() {
         dataPaymentStudentModel = ArrayList<DataPaymentStudentModel>()

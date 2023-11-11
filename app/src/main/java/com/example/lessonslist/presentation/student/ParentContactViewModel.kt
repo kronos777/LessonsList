@@ -16,12 +16,22 @@ class ParentContactViewModel(application: Application) : AndroidViewModel(applic
 
 
     private val addParentContactUseCase = AddParentItemUseCase(repository)
+    private val deleteNotesItemUseCase = DeleteParentItemUseCase(repository)
+    private val getParentContactUseCase = GetParentContactUseCase(repository)
     val parentContactList = GetParentContactListItemUseCase(repository)
 
 
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
+
+
+    fun deleteParentContact(contactId: Int) {
+        viewModelScope.launch {
+            val item = getParentContactUseCase.getParentContact(contactId)
+            deleteNotesItemUseCase.deleteParent(item)
+        }
+    }
 
     fun addParentContact(inputName: String, inputPhone: String, inputStudentId: Int) {
         val name = parseName(inputName)

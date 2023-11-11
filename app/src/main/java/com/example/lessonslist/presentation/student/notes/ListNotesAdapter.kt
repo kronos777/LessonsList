@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.example.lessonslist.R
+import com.example.lessonslist.domain.notes.NotesItem
+import com.example.lessonslist.domain.student.StudentItem
 
 class ListNotesAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
     ArrayAdapter<Any?>(mContext, R.layout.row_payment_student_item, dataSet) {
@@ -16,7 +18,7 @@ class ListNotesAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
     }
 
     var arrayList: ArrayList<Int> = ArrayList()
-
+    var onNotesItemClickListener: ((DataNotesStudentModel) -> Unit)? = null
 
     override fun getCount(): Int {
         return dataSet.size
@@ -32,6 +34,7 @@ class ListNotesAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
         var localConvertView = convertView
         val viewHolder: ViewHolder
         val result: View
+
         if (localConvertView == null) {
             viewHolder = ViewHolder()
             localConvertView =
@@ -42,6 +45,7 @@ class ListNotesAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
                 localConvertView.findViewById(R.id.txtPrice)
             result = localConvertView
             localConvertView.tag = viewHolder
+
         } else {
             viewHolder = localConvertView.tag as ViewHolder
             result = localConvertView
@@ -50,9 +54,15 @@ class ListNotesAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
         viewHolder.txtName.text = item.text
         viewHolder.txtDate.text = item.date.toString()
 
+        localConvertView?.setOnClickListener {
+            onNotesItemClickListener?.invoke(item)
+        }
+
          return result
     }
 
 
 
 }
+
+

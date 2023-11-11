@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.ListAdapter
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.ItemGroupEnabledBinding
 import com.example.lessonslist.domain.group.GroupItem
-import com.example.lessonslist.domain.lessons.LessonsItem
-import com.example.lessonslist.presentation.lessons.LessonsItemViewHolder
 
 
 class GroupListAdapter(

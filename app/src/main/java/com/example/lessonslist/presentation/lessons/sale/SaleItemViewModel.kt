@@ -34,24 +34,18 @@ class SaleItemViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun addSaleItem(inputIdStudent: Int, inputIdLessons: Int, inputPrice: Int) {
-        val idStudent = inputIdStudent
-        val idLessons = inputIdLessons
-        val price = inputPrice
         viewModelScope.launch {
-            val saleItem = SaleItem(idStudent, idLessons, price)
+            val saleItem = SaleItem(inputIdStudent, inputIdLessons, inputPrice)
             addSaleItemUseCase.addSaleItem(saleItem)
            // finishWork()
         }
     }
 
     fun editSaleItem(saleItem: SaleItem, inputPrice: Int) {
-        val idStudent = saleItem.idStudent
-        val idLessons = saleItem.idLessons
-        val price = inputPrice
         viewModelScope.launch {
             val item = getSaleItemUseCase.getSaleItem(saleItem.id)
-            val saleItem = item.copy(price = price)
-            editSaleItemUseCase.editSaleItem(saleItem)
+            val saleItemLocal = item.copy(price = inputPrice)
+            editSaleItemUseCase.editSaleItem(saleItemLocal)
             finishWork()
         }
     }

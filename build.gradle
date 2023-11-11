@@ -20,7 +20,4 @@ plugins {
 }
 //ext.kotlin_version = '1.5.31'
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
 

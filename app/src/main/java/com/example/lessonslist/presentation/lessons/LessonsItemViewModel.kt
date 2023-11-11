@@ -1,20 +1,19 @@
 package com.example.lessonslist.presentation.lessons
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.lessonslist.data.lessons.LessonsListRepositoryImpl
-import com.example.lessonslist.domain.lessons.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
+import com.example.lessonslist.domain.lessons.AddLessonsItemUseCase
+import com.example.lessonslist.domain.lessons.DeleteLessonsItemUseCase
+import com.example.lessonslist.domain.lessons.EditLessonsItemUseCase
+import com.example.lessonslist.domain.lessons.GetLessonsItemUseCase
+import com.example.lessonslist.domain.lessons.GetLessonsListItemUseCase
+import com.example.lessonslist.domain.lessons.LessonsItem
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import kotlin.math.log
 
 class LessonsItemViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -80,15 +79,16 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun addLessonsItem(inputTitle: String, inputNotifications: String, inputStudent: String, inputPrice: String, inputDateStart: String, inputDateEnd: String) {
-        val title = inputTitle
-        val notifications = inputNotifications
-        val student = inputStudent
-        val price = inputPrice
-        val dateStart = inputDateStart
-        val dateEnd = inputDateEnd
 
-            viewModelScope.launch {
-                val lessonsItem = LessonsItem(title, notifications, student, price.toInt(), dateStart, dateEnd)
+        viewModelScope.launch {
+                val lessonsItem = LessonsItem(
+                    inputTitle,
+                    inputNotifications,
+                    inputStudent,
+                    inputPrice.toInt(),
+                    inputDateStart,
+                    inputDateEnd
+                )
                 //Log.d("viewModelLessonItem", lessonsItem.toString())
                 addLessonsItemUseCase.addLessonsItem(lessonsItem)
                 finishWork()
@@ -98,16 +98,17 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun editLessonsItem(inputTitle: String, inputNotifications: String, inputStudent: String, inputPrice: String, inputDateStart: String, inputDateEnd: String) {
-    val title = inputTitle
-    val notifications = inputNotifications
-    val student = inputStudent
-    val price = inputPrice
-    val dateStart = inputDateStart
-    val dateEnd = inputDateEnd
         // add validation fun
             _lessonsItem.value?.let {
                 viewModelScope.launch {
-                    val lessonsItem = it.copy(title = title, notifications = notifications, student = student, price = price.toInt(), dateStart = dateStart, dateEnd = dateEnd)
+                    val lessonsItem = it.copy(
+                        title = inputTitle,
+                        notifications = inputNotifications,
+                        student = inputStudent,
+                        price = inputPrice.toInt(),
+                        dateStart = inputDateStart,
+                        dateEnd = inputDateEnd
+                    )
                     editLessonsItemUseCase.editLessonsItem(lessonsItem)
                     finishWork()
                 }
@@ -116,11 +117,10 @@ class LessonsItemViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun editLessonsItemNotfication(idLessons: Int, inputNotifications: String) {
-        val notifications = inputNotifications
         getLessonsItem(idLessons)
         _lessonsItem.value?.let {
             viewModelScope.launch {
-                val lessonsItem = it.copy(notifications = notifications)
+                val lessonsItem = it.copy(notifications = inputNotifications)
                 editLessonsItemUseCase.editLessonsItem(lessonsItem)
                 //finishWork()
                 Log.d("editLessonsItemNotfication", idLessons.toString())

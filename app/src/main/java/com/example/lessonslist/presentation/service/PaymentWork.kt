@@ -1,4 +1,4 @@
-package com.example.lessonslist.data.service
+package com.example.lessonslist.presentation.service
 
 import android.app.Application
 import android.app.NotificationChannel
@@ -10,20 +10,13 @@ import android.media.RingtoneManager.TYPE_NOTIFICATION
 import android.media.RingtoneManager.getDefaultUri
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.data.lessons.LessonsItemDbModel
-import com.example.lessonslist.data.lessons.LessonsListMapper
-import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.domain.sale.SaleItem
 import com.example.lessonslist.presentation.MainActivity
-import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

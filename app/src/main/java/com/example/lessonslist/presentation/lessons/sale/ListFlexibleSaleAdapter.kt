@@ -9,8 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.TextView
 import com.example.lessonslist.R
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -23,7 +21,7 @@ class ListFlexibleSaleAdapter(private val dataSet: ArrayList<*>, mContext: Conte
         lateinit var checkBox: CheckBox
     }
 
-    var idValueMutableMap: MutableMap<Int, Int> = mutableMapOf<Int, Int>()
+    var idValueMutableMap: MutableMap<Int, Int> = mutableMapOf()
     //var arrayList: ArrayList<Int> = ArrayList()
     //val idValueMutableMap: MutableMap<Int, Int> = mutableMapOf()
 

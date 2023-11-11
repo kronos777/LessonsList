@@ -80,6 +80,10 @@ dependencies {
     //Hilt
   //  implementation 'com.google.dagger:hilt-android:2.48.1'
    // kapt 'com.google.dagger:hilt-compiler:2.48.1'
+    //koin
+  // def koin_version = "3.5.0"
+    //implementation "io.insert-koin:koin-core:$koin_version"
+  //  implementation "io.insert-koin:koin-android:$koin_version"
 
     kapt "androidx.room:room-compiler:2.4.3"
     testImplementation 'junit:junit:4.13.2'

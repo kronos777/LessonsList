@@ -16,6 +16,8 @@ class NotesItemViewModel(application: Application) : AndroidViewModel(applicatio
 
 
     private val addNotesItemUseCase = AddNotesItemUseCase(repository)
+    private val deleteNotesItemUseCase = DeleteNotesItemUseCase(repository)
+    private val getNotesUseCase = GetNotesUseCase(repository)
     val notesList = GetNotesListItemUseCase(repository)
 
 
@@ -23,6 +25,15 @@ class NotesItemViewModel(application: Application) : AndroidViewModel(applicatio
     val shouldCloseScreen: LiveData<Unit>
         get() = _shouldCloseScreen
 
+
+
+
+    fun deleteNotesItem(notesId: Int) {
+        viewModelScope.launch {
+            val notesItem = getNotesUseCase.getNotesItem(notesId)
+            deleteNotesItemUseCase.deleteNotesItem(notesItem)
+        }
+    }
 
     fun addNotesItem(inputName: String, inputDate: String, inputStudentId: Int): Boolean {
         val name = parseName(inputName)

@@ -1,6 +1,5 @@
 package com.example.lessonslist.data.date
 import com.example.lessonslist.domain.date.DateItem
-import com.example.lessonslist.domain.group.GroupItem
 
 
 class DateListMapper {

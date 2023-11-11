@@ -98,7 +98,7 @@ class GroupItemFragment : Fragment() {
         listView = binding.listView
 
         dataStudentlList = ViewModelProvider(this)[StudentListViewModel::class.java]
-        dataStudentGroupModel = ArrayList<DataStudentGroupModel>()
+        dataStudentGroupModel = ArrayList()
 
         dataStudentlList.studentList.observe(viewLifecycleOwner) {
 
@@ -257,11 +257,6 @@ class GroupItemFragment : Fragment() {
 
     }
 
-    private fun getStudentIds(dataString: String): List<Int> {
-        var dataStr = dataString.replace("]", "")
-        dataStr = dataStr.replace("[", "")
-        return dataStr.split(",").map { it.trim().toInt() }
-    }
 
     private fun observeViewModel() {
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {

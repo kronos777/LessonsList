@@ -24,7 +24,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
-import com.example.lessonslist.data.service.PaymentWork
+import com.example.lessonslist.presentation.service.PaymentWork
 import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.domain.payment.PaymentItem
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
