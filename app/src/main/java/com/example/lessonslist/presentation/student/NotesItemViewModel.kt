@@ -1,11 +1,16 @@
 package com.example.lessonslist.presentation.student
 
 
+import android.app.Activity
 import android.app.Application
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.lessonslist.data.notes.NotesListMapper
 import com.example.lessonslist.data.notes.NotesListRepositoryImpl
 import com.example.lessonslist.domain.notes.*
 import kotlinx.coroutines.launch

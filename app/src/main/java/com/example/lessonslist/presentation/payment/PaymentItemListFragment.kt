@@ -89,6 +89,7 @@ class PaymentItemListFragment: Fragment() {
                         listArrayPayment.add(payment)
                     }
                 }
+                showImageNoneItem(listArrayPayment)
                 paymentListAdapter.submitList(listArrayPayment.reversed())
             }
         } else if(mode == "student_no_pay_list") {
@@ -101,6 +102,7 @@ class PaymentItemListFragment: Fragment() {
                         listArrayPayment.add(payment)
                     }
                 }
+                showImageNoneItem(listArrayPayment)
                 paymentListAdapter.submitList(listArrayPayment.reversed())
             }
         } else if (mode == "lesson_id_list") {
@@ -113,6 +115,7 @@ class PaymentItemListFragment: Fragment() {
                         listArrayPayment.add(payment)
                     }
                 }
+                showImageNoneItem(listArrayPayment)
                 paymentListAdapter.submitList(listArrayPayment.reversed())
             }
 
@@ -135,6 +138,7 @@ class PaymentItemListFragment: Fragment() {
                                     listArrayPayment.add(payment)
                                 }
                             }
+                            showImageNoneItem(listArrayPayment)
                             paymentListAdapter.submitList(listArrayPayment.reversed())
                         }
                     } else {
@@ -148,6 +152,7 @@ class PaymentItemListFragment: Fragment() {
                                     listArrayPayment.add(payment)
                                 }
                             }
+                            showImageNoneItem(listArrayPayment)
                             paymentListAdapter.submitList(listArrayPayment.reversed())
                         }
                     }
@@ -161,6 +166,7 @@ class PaymentItemListFragment: Fragment() {
                         listArrayPayment.add(payment)
                     }
                 }
+                showImageNoneItem(listArrayPayment)
                 paymentListAdapter.submitList(listArrayPayment.reversed())
             }
         } else if (mode == "payment_yes") {
@@ -173,17 +179,25 @@ class PaymentItemListFragment: Fragment() {
                         listArrayPayment.add(payment)
                     }
                 }
+                showImageNoneItem(listArrayPayment)
                 paymentListAdapter.submitList(listArrayPayment.reversed())
             }
         } else {
             viewModel = ViewModelProvider(this)[PaymentListViewModel::class.java]
             viewModel.paymentList.observe(viewLifecycleOwner) {
+                showImageNoneItem(it)
                 paymentListAdapter.submitList(it.reversed())
             }
         }
+
     }
 
 
+    private fun showImageNoneItem(listItem: List<PaymentItem>) {
+        if (listItem.isEmpty()) {
+            binding.noPayment.visibility = View.VISIBLE
+        }
+    }
     private fun stringConvertInDate(str: String): LocalDate {
         val formatter = DateTimeFormatter.ofPattern("yyyy/M/d")
         return LocalDate.parse(str, formatter)

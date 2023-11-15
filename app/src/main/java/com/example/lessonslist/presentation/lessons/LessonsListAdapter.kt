@@ -2,10 +2,12 @@ package com.example.lessonslist.presentation.lessons
 
 
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.ListAdapter
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.ItemLessonsEnabledBinding
@@ -21,7 +23,8 @@ class LessonsListAdapter(
 
     private var isEnabled = false
     val pairList = hashMapOf<Int, LessonsItem>()
-
+    val listItem = mutableListOf<Int>()
+    //lateinit var listItem: LiveData<ArrayList<Int>>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LessonsItemViewHolder {
        // Log.d("viewType", viewType.toString())
@@ -58,10 +61,12 @@ class LessonsListAdapter(
                 selectItem(viewHolder, lessonsItem, position)
             }
 
-        }*/
+        }
         if (lessonsItem.student == "500") {
             pairList[lessonsItem.id] = lessonsItem
-        }
+        }*/
+        listItem.add(lessonsItem.id)
+        Log.d("currentLessonsItem", listItem.toString())
 
         binding.root.setOnClickListener {
             //Log.d("thisCurrentPosition", position.toString())

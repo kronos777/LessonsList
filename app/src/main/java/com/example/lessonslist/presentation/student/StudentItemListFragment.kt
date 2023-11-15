@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -45,6 +46,8 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     private lateinit var viewModelPayment: PaymentListViewModel
     private lateinit var viewModelSale: SaleItemViewModel
     private lateinit var viewModelSalesList: SalesItemListViewModel
+    private lateinit var viewModelParentContact: ParentContactViewModel
+    private lateinit var viewModelNotesItem: NotesItemViewModel
 
     private lateinit var studentListAdapter: StudentListAdapter
 
@@ -68,11 +71,9 @@ class StudentItemListFragment: Fragment(), MenuProvider {
         (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = "Список учеников"
 
         setupRecyclerView()
-        viewModel = ViewModelProvider(this).get(StudentListViewModel::class.java)
-        viewModel.studentList.observe(viewLifecycleOwner) { listStudent ->
-            val studentSort = listStudent.sortedBy { it.name }
-            studentListAdapter.submitList(studentSort)
-        }
+        setData()
+
+
         val bottomNavigationView =
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
@@ -81,6 +82,18 @@ class StudentItemListFragment: Fragment(), MenuProvider {
         }
 
         goCalendarFragmentBackPressed()
+    }
+
+    private fun setData() {
+        viewModel = ViewModelProvider(this)[StudentListViewModel::class.java]
+        viewModel.studentList.observe(viewLifecycleOwner) { listStudent ->
+            if(listStudent.isNotEmpty()) {
+                val studentSort = listStudent.sortedBy { it.name }
+                studentListAdapter.submitList(studentSort)
+            } else {
+                binding.noStudent.visibility = View.VISIBLE
+            }
+        }
     }
 
 
@@ -270,9 +283,11 @@ class StudentItemListFragment: Fragment(), MenuProvider {
             alert.setPositiveButton("удалить") { _, _ ->
                // if (studentListAdapter.pairList.isNotEmpty()) {
                     studentListAdapter.pairList.forEach {
-                        Log.d("itemStudentForDelete", it.toString())
+                        //Log.d("itemStudentForDelete", it.toString())
                         deletePaymentToStudent(it.key)
                         deleteAllSaleItem(it.key)
+                        deleteAllContactStudent(it.key)
+                        deleteAllNotesStudent(it.key)
                         viewModel.deleteStudentItem(it.key)
                     }
                // }
@@ -312,13 +327,41 @@ class StudentItemListFragment: Fragment(), MenuProvider {
             alert.show()
         }
     }
+    private fun deleteAllNotesStudent(studentItemId: Int) {
+        viewModelNotesItem = ViewModelProvider(this)[NotesItemViewModel::class.java]
+        val listDeleteId = HashSet<Int>()
+        viewModelNotesItem.notesList.getNotesList().observe(viewLifecycleOwner) {
+            for (item in it) {
+                if(item.student == studentItemId) {
+                    if (!listDeleteId.contains(item.id)) {
+                        listDeleteId.add(item.id)
+                        viewModelNotesItem.deleteNotesItem(item.id)
+                    }
+                }
+            }
+        }
+    }
 
+    private fun deleteAllContactStudent(studentItemId: Int) {
+        viewModelParentContact = ViewModelProvider(this)[ParentContactViewModel::class.java]
+        val listDeleteId = HashSet<Int>()
+        viewModelParentContact.parentContactList.getParentList().observe(viewLifecycleOwner) {
+            for (item in it) {
+                if (item.student == studentItemId) {
+                    if (!listDeleteId.contains(item.id)) {
+                        listDeleteId.add(item.id)
+                        viewModelParentContact.deleteParentContact(item.id)
+                    }
+                }
+            }
+        }
+
+    }
     private fun deletePaymentToStudent(studentId: Int) {
-        viewModelPayment = ViewModelProvider(this).get(PaymentListViewModel::class.java)
+        viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelPayment.paymentList.observe(viewLifecycleOwner) {
             for (payment in it) {
                 if(payment.studentId == studentId) {
-                    //Log.d("payment.lessonsId", payment.lessonsId.toString())
                     editLessonsItem(payment.lessonsId, studentId)
                     viewModelPayment.deletePaymentItem(payment)
                 }
@@ -327,7 +370,7 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun editLessonsItem(idLessons: Int, studentId: Int) {
-        viewModelLessonsEdit = ViewModelProvider(this).get(LessonsItemViewModel::class.java)
+        viewModelLessonsEdit = ViewModelProvider(this)[LessonsItemViewModel::class.java]
         viewModelLessonsEdit.getLessonsItem(idLessons)
         // val lessonsItem = viewModelLessonsEdit.lessonsItem
         viewModelLessonsEdit.lessonsItem.observe(viewLifecycleOwner) {
@@ -347,16 +390,16 @@ class StudentItemListFragment: Fragment(), MenuProvider {
 
     private fun deleteAllSaleItem(id: Int) {
         viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
-        viewModelSale = ViewModelProvider(this)[SaleItemViewModel::class.java]
+        val listDeleteId = HashSet<Int>()
         viewModelSalesList.salesList.observe(viewLifecycleOwner) { sales ->
-            for (saleItem in sales.indices) {
-                if (id == sales[saleItem].idStudent) {
-                    viewModelSale.deleteSaleItem(sales[saleItem].id)
-                    //  Log.d("studentDataForDelete", sales[saleItem].toString())
+            for (item in sales) {
+                if(item.idStudent == id) {
+                    if (!listDeleteId.contains(item.id)) {
+                        listDeleteId.add(item.id)
+                        viewModelSalesList.deleteSaleItem(item.id)
+                    }
                 }
             }
-
-
         }
     }
 
@@ -382,12 +425,6 @@ class StudentItemListFragment: Fragment(), MenuProvider {
 
     private fun setupClickListener() {
         studentListAdapter.onStudentItemClickListener = {
-           /* fragmentManager?.beginTransaction()
-             //   ?.replace(R.id.fragment_item_container, StudentItemFragment.newInstanceEditItem(it.id))
-                ?.replace(R.id.fragment_item_container, StudentItemEditFragment.newInstanceEditItem(it.id))
-                ?.addToBackStack("listStudent")
-                ?.commit()*/
-           // Toast.makeText(activity, "ggg" + it.id, Toast.LENGTH_SHORT).show()
             navigateBtnEditStudent(it.id)
        }
     }

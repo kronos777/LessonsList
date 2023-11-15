@@ -21,8 +21,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentGroupItemListBinding
 import com.example.lessonslist.domain.group.GroupItem
@@ -58,7 +56,7 @@ class GroupItemListFragment: Fragment(), MenuProvider {
         (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = "Список групп"
 
         setupRecyclerView()
-        setCustomDataGroupsCheckAll(false)
+        setCustomDataGroups()
 
         val bottomNavigationView =
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
@@ -66,24 +64,20 @@ class GroupItemListFragment: Fragment(), MenuProvider {
 
 
         binding.buttonAddGroupItem.setOnClickListener {
-            /*fragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment_item_container, GroupItemFragment.newInstanceAddItem())
-                ?.addToBackStack(null)
-                ?.commit()*/
             navigateBtnAddGroup()
         }
 
         goCalendarFragmentBackPressed()
-        setupLongClickListener()
+        //setupLongClickListener()
     }
 
-    private fun setupLongClickListener() {
+   /* private fun setupLongClickListener() {
         groupListAdapter.onGroupItemLongClickListener = { group ->
             val item = groupListAdapter.currentList[group.id -1]
             // viewModel.deleteStudentItem(item)
             dialogWindow(item, item.title)
         }
-    }
+    }*/
 
     private fun goCalendarFragment() {
         val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
@@ -97,39 +91,6 @@ class GroupItemListFragment: Fragment(), MenuProvider {
         navController.navigate(R.id.calendarItemFragment, null, animationOptions)
     }
 
-    private fun dialogWindow(group: GroupItem, title: String) {
-        val alert = AlertDialog.Builder(requireContext())
-        alert.setTitle("Удалить группу $title")
-
-        val layout = LinearLayout(requireContext())
-        layout.orientation = LinearLayout.HORIZONTAL
-
-        val paymentsLabel = TextView(requireContext())
-        paymentsLabel.setSingleLine()
-        paymentsLabel.text = "Вы уверены что хотите удалить группу?"
-        paymentsLabel.isSingleLine = false
-        paymentsLabel.height = 250
-        paymentsLabel.top = 15
-        layout.addView(paymentsLabel)
-
-
-        layout.setPadding(50, 40, 50, 10)
-
-        alert.setView(layout)
-
-        alert.setPositiveButton("удалить") { _, _ ->
-            //deleteLessonsPay
-            viewModel.deleteGroupItem(group)
-        }
-
-        alert.setNegativeButton("не удалять") { dialog, _ ->
-            dialog.dismiss()
-        }
-
-        alert.setCancelable(false)
-        alert.show()
-
-    }
 
     private fun goCalendarFragmentBackPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -202,39 +163,15 @@ class GroupItemListFragment: Fragment(), MenuProvider {
         navController.navigate(R.id.groupItemFragment, btnArgsGroup, animationOptions)
     }
 
-    private fun setupSwipeListener(rvGroupList: RecyclerView) {
-        val callback = object : ItemTouchHelper.SimpleCallback(
-            0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
-
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val item = groupListAdapter.currentList[viewHolder.adapterPosition]
-                viewModel.deleteGroupItem(item)
-            }
-        }
-        val itemTouchHelper = ItemTouchHelper(callback)
-        itemTouchHelper.attachToRecyclerView(rvGroupList)
-    }
-
-
     private fun showDeleteMenu(show: Boolean) {
         toolbar = (activity as AppCompatActivity).findViewById(R.id.tool_bar)
-        val bottom_navigation = (activity as AppCompatActivity?)!!.window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        val bottomNavigation = (activity as AppCompatActivity?)!!.window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         if(show) {
-            bottom_navigation.itemBackgroundResource = R.color.active_select_items
+            bottomNavigation.itemBackgroundResource = R.color.active_select_items
             toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.VISIBLE
             toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.VISIBLE
             (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0e0f0f")
-            toolbar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0e0f0f")))
+            toolbar?.background = ColorDrawable(Color.parseColor("#0e0f0f"))
             toolbar?.setOnMenuItemClickListener {
                 onMenuItemSelected(it)
             }
@@ -246,8 +183,8 @@ class GroupItemListFragment: Fragment(), MenuProvider {
             }
             hideModifyAppBar = true
         } else {
-            bottom_navigation.itemBackgroundResource = R.color.noactive_select_items
-            toolbar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#0061A5")))
+            bottomNavigation.itemBackgroundResource = R.color.noactive_select_items
+            toolbar?.background = ColorDrawable(Color.parseColor("#0061A5"))
             (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")
             toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.GONE
             toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.GONE
@@ -261,22 +198,33 @@ class GroupItemListFragment: Fragment(), MenuProvider {
         menuChoice?.findItem(R.id.menu_select_all)?.isVisible = show
     }
 
+    private fun setCustomDataGroups() {
+        viewModel = ViewModelProvider(this)[GroupListViewModel::class.java]
+        viewModel.groupList.observe(viewLifecycleOwner) { listGroup ->
+            groupListAdapter.submitList(listGroup)
+            if (listGroup.isEmpty()) {
+                binding.noGroup.visibility = View.VISIBLE
+            }
+        }
+    }
     private fun setCustomDataGroupsCheckAll(selectAll: Boolean) {
         viewModel = ViewModelProvider(this)[GroupListViewModel::class.java]
-        viewModel.groupList.observe(viewLifecycleOwner) {
-            val listNew = ArrayList<GroupItem>()
-            if(selectAll) {
-                it.forEach {
-                    val nn = it.copy(description = "500")
-                    listNew.add(nn)
+        viewModel.groupList.observe(viewLifecycleOwner) { listGroup ->
+            if(listGroup.isNotEmpty()){
+                val listNew = ArrayList<GroupItem>()
+                if(selectAll) {
+                    listGroup.forEach {
+                        val nn = it.copy(description = "500")
+                        listNew.add(nn)
+                    }
+                } else {
+                    listGroup.forEach {
+                        val nn = it.copy(description = "0")
+                        listNew.add(nn)
+                    }
                 }
-            } else {
-                it.forEach {
-                    val nn = it.copy(description = "0")
-                    listNew.add(nn)
-                }
+                groupListAdapter.submitList(listNew)
             }
-            groupListAdapter.submitList(listNew)
         }
     }
 
@@ -370,8 +318,8 @@ class GroupItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun hideModifyAppBar() {
-        val bottom_navigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
-        bottom_navigation.itemBackgroundResource = R.color.noactive_select_items
+        val bottomNavigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
+        bottomNavigation.itemBackgroundResource = R.color.noactive_select_items
         toolbar?.background = ColorDrawable(Color.parseColor("#0061A5"))
         (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")
         toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.GONE

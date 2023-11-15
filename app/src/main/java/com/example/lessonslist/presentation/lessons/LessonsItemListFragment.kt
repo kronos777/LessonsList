@@ -27,6 +27,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemListBinding
 import com.example.lessonslist.domain.lessons.LessonsItem
+import com.example.lessonslist.presentation.lessons.sale.SalesItemListViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -44,7 +45,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
     private lateinit var viewModel: LessonsListViewModel
     private lateinit var lessonsListAdapter: LessonsListAdapter
     private lateinit var viewModelPayment: PaymentListViewModel
-
+    private lateinit var viewModelSalesList: SalesItemListViewModel
 
     private var toolbar: MaterialToolbar? = null
     private var menuChoice: Menu? = null
@@ -214,6 +215,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
             if (lessonsListAdapter.pairList.isNotEmpty()) {
                 lessonsListAdapter.pairList.forEach {
                     deletePaymentToLessons(it.key)
+                    deleteAllSaleItem(it.key)
                     viewModel.deleteLessonsItem(it.value)
                 }
             }
@@ -226,6 +228,23 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
         alert.setCancelable(false)
         alert.show()
     }
+
+
+    private fun deleteAllSaleItem(id: Int) {
+        viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
+        val listDeleteId = HashSet<Int>()
+        viewModelSalesList.salesList.observe(viewLifecycleOwner) { sales ->
+            for (item in sales) {
+                if(item.idLessons == id) {
+                    if (!listDeleteId.contains(item.id)) {
+                        listDeleteId.add(item.id)
+                        viewModelSalesList.deleteSaleItem(item.id)
+                    }
+                }
+            }
+        }
+    }
+
 
     private fun selectAll() {
         val itemCount = lessonsListAdapter.itemCount
@@ -261,7 +280,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
     private fun showDateOrCustomList(dateFilter: String?) {
         if(dateFilter != null) {
             val listArrayPayment: ArrayList<LessonsItem> = ArrayList()
-            viewModel = ViewModelProvider(this).get(LessonsListViewModel::class.java)
+            viewModel = ViewModelProvider(this)[LessonsListViewModel::class.java]
             viewModel.lessonsList.observe(viewLifecycleOwner) {
                 listArrayPayment.clear()
                 for (lessons in it) {
@@ -281,8 +300,6 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
                     }
                 }
 
-
-
                 if(listArrayPayment.size > 0) {
                     val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
                     val sortLessons = listArrayPayment.sortedByDescending {lessItem->
@@ -291,16 +308,19 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
                     lessonsListAdapter.submitList(sortLessons)
                 } else {
                     Toast.makeText(activity,"На эту дату уроков не запланировано!",Toast.LENGTH_SHORT).show()
+                    showImageNoneItem()
                 }
             }
         } else {
             setCustomDataLessons()
         }
+
+
     }
 
     private fun setCustomDataLessons() {
         viewModel = ViewModelProvider(this)[LessonsListViewModel::class.java]
-        viewModel.lessonsList.observe(viewLifecycleOwner) {listLessItem->
+        viewModel.lessonsList.observe(viewLifecycleOwner) { listLessItem ->
             val listNew = ArrayList<LessonsItem>()
             val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
             listLessItem.forEach {lessItem->
@@ -316,9 +336,17 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
                 LocalDate.parse(sortLessItem.dateStart, formatter)
             }
             lessonsListAdapter.submitList(sortLessons)
+            if(listLessItem.isEmpty()) {
+                showImageNoneItem()
+            }
+
         }
     }
 
+
+    private fun showImageNoneItem() {
+        binding.noLessons.visibility = View.VISIBLE
+    }
 
     private fun setCustomDataLessonsCheckAll(selectAll: Boolean) {
         viewModel = ViewModelProvider(this)[LessonsListViewModel::class.java]
@@ -328,9 +356,11 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
                 listLessItem.forEach {
                     if(compareDateTimeLessonsAndNow(it.dateEnd)) {
                         val nn = it.copy(notifications = "finished", student = "500")
+                        lessonsListAdapter.pairList[it.id] = it
                         listNew.add(nn)
                     } else {
                         val nn = it.copy(student = "500")
+                        lessonsListAdapter.pairList[it.id] = it
                         listNew.add(nn)
                     }
                 }
@@ -338,9 +368,11 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
                 listLessItem.forEach {
                     if(compareDateTimeLessonsAndNow(it.dateEnd)) {
                         val nn = it.copy(notifications = "finished", student = "0")
+                        lessonsListAdapter.pairList.remove(it.id)
                         listNew.add(nn)
                     } else {
                         val nn = it.copy(student = "0")
+                        lessonsListAdapter.pairList.remove(it.id)
                         listNew.add(nn)
                     }
                 }
@@ -351,6 +383,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
                 LocalDate.parse(it.dateStart, formatter)
             }
             lessonsListAdapter.submitList(sortLessons)
+
         }
     }
 

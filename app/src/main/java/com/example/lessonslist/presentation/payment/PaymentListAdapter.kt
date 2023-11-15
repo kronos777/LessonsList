@@ -16,7 +16,7 @@ import com.example.lessonslist.domain.payment.PaymentItem
 class PaymentListAdapter : ListAdapter<PaymentItem, PaymentItemViewHolder>(PaymentItemDiffCallback()) {
 
     var onPaymentItemClickListener: ((PaymentItem) -> Unit)? = null
-
+    val listItem = mutableListOf<Int>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PaymentItemViewHolder {
         //val layout = R.layout.item_payment_enabled
@@ -40,7 +40,7 @@ class PaymentListAdapter : ListAdapter<PaymentItem, PaymentItemViewHolder>(Payme
         binding.root.setOnClickListener {
             onPaymentItemClickListener?.invoke(paymentItem)
         }
-
+        listItem.add(paymentItem.id)
         /*       when (binding) {
             is ItemStudentDisabledBinding -> {
                 binding.studentItem = studentItem

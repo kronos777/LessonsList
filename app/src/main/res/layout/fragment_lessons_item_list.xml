@@ -48,7 +48,17 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_lessons_enabled"/>
-
+        <ImageView
+            android:id="@+id/noLessons"
+            android:visibility="gone"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/baseline_content_paste_off_24_none_item"
+            />
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_add_lessons_item"
             android:layout_width="wrap_content"

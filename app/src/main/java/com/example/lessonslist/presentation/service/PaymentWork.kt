@@ -126,7 +126,6 @@ class PaymentWork(
                                     val student = dbStudent.getStudentItem(stIds[id])
                                     log(student.name + student.lastname + student.paymentBalance)
                                     val studentData = student.name + " " + student.lastname
-
                                     //тут необходимо на каждого студента создать платеж и
                                     //(inputTitle: String, inputDescription: String, inputLessonsId: Int, inputStudentId: Int, inputStudent: String, inputPrice: String)
                                     val newBalanceStudent = calculatePaymentPriceAdd(student.paymentBalance, lessonsItem.price)
@@ -138,7 +137,7 @@ class PaymentWork(
                                     val saleTest = getSale(lessonsItem.id, student.id)
                                     var saleValue = 0
                                     if(saleTest.size > 0) {
-                                      //  log("наличие скидок" + saleTest[0].price.toString() + lessonsItem.title)
+                                        //  log("наличие скидок" + saleTest[0].price.toString() + lessonsItem.title)
                                         saleValue = saleTest[0].price
                                     }
                                     //пробуем проверить наличие скидки
@@ -235,6 +234,7 @@ class PaymentWork(
 
                                         }
                                     }
+
                                 }
                             }
                             lateinit var notificationString: String
@@ -243,8 +243,6 @@ class PaymentWork(
                             } else {
                                 notificationString = "Выставлены счета " + namesStudentArrayList.size + " ученикам, " + okPay + " оплат успешных и " + noPay + " остались неоплаченными."
                             }
-                          //  val dateTimeNotify = LocalTime.now().toString().split(".")
-                           // val idNotification = dateTimeNotify[1].toInt()
                             createNotification(lessonsItem.id, "Прошел урок: " + lessonsItem.title, notificationString, lessonsItem.id)
                         }
 
@@ -323,8 +321,6 @@ class PaymentWork(
     }
 
     private fun getSale(idLessons: Int, idStudent: Int): ArrayList<SaleItem> {
-      //  val viewModelSale = SaleItemViewModel(applicationContext as Application)
-     //   val viewModelSaleList = SalesItemListViewModel(applicationContext as Application)
         val dbSales = appDatabase.getInstance(applicationContext as Application).SaleListDao().getSalesIdLessons(idLessons)
         val valueExistsSale = ArrayList<SaleItem>()
 
@@ -334,8 +330,6 @@ class PaymentWork(
                     if(idStudent == item.idStudent) {
                         valueExistsSale.add(SaleItem(item.idStudent, item.idLessons, item.price, item.id))
                     }
-
-                    //log("exists lessons sale" + item.id + " " + item.price + " " + item.idLessons + " " + item.idStudent)
                 }
             }
         }

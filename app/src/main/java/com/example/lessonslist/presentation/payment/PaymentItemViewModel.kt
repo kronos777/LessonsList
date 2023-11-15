@@ -18,23 +18,12 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
     private val addPaymentItemUseCase = AddPaymentItemUseCase(repository)
     //private val editPaymentItemUseCase = EditPaymentItemUseCase(repository)
     //private val deletePaymentItemUseCase = DeletePaymentItemUseCase(repository)
-    private val ChangeEnableStatePaymentItemUseCase = ChangeEnableStatePaymentItemUseCase(repository)
+    private val changeEnableStatePaymentItemUseCase = ChangeEnableStatePaymentItemUseCase(repository)
 
     private val _paymentItem = MutableLiveData<PaymentItem>()
     val paymentItem: LiveData<PaymentItem>
         get() = _paymentItem
 
-    private val _errorInputTitle = MutableLiveData<Boolean>()
-    val errorInputTitle: LiveData<Boolean>
-        get() = _errorInputTitle
-
-   /* private val _errorInputDescription = MutableLiveData<Boolean>()
-    val errorInputDescription: LiveData<Boolean>
-        get() = _errorInputDescription
-
-    private val _errorInputStudent = MutableLiveData<Boolean>()
-    val errorInputStudent: LiveData<Boolean>
-        get() = _errorInputStudent*/
 
     private val _shouldCloseScreen = MutableLiveData<Unit>()
     val shouldCloseScreen: LiveData<Unit>
@@ -154,7 +143,7 @@ class PaymentItemViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch {
             /*val newItem = paymentItem.copy(price = price, enabled = !paymentItem.enabled)
             editPaymentItemUseCase.editPaymentItem(newItem)*/
-            ChangeEnableStatePaymentItemUseCase.changeEnableStatePaymentItem(price, id)
+            changeEnableStatePaymentItemUseCase.changeEnableStatePaymentItem(price, id)
         }
     }
 

@@ -34,6 +34,7 @@ import com.example.lessonslist.databinding.FragmentStudentItemEditBinding
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.helpers.BottomFragment
 import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
+import com.example.lessonslist.presentation.helpers.StringHelpers
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.lessons.sale.SaleItemViewModel
 import com.example.lessonslist.presentation.lessons.sale.SalesItemListViewModel
@@ -182,6 +183,7 @@ class StudentItemEditFragment : Fragment() {
             deleteAllContactStudent()
             deleteAllNotesStudent()
             viewModel.deleteStudentItem(studentItemId)
+            observeViewModel()
         }
 
 
@@ -189,22 +191,29 @@ class StudentItemEditFragment : Fragment() {
 
     private fun deleteAllNotesStudent() {
         viewModelNotesItem = ViewModelProvider(this)[NotesItemViewModel::class.java]
+        val listDeleteId = HashSet<Int>()
         viewModelNotesItem.notesList.getNotesList().observe(viewLifecycleOwner) {
            for (item in it) {
                 if(item.student == studentItemId) {
-                    viewModelNotesItem.deleteNotesItem(id)
+                    if (!listDeleteId.contains(item.id)) {
+                        listDeleteId.add(item.id)
+                        viewModelNotesItem.deleteNotesItem(item.id)
+                    }
                 }
-            }
-
+           }
         }
     }
 
     private fun deleteAllContactStudent() {
         viewModelParentContact = ViewModelProvider(this)[ParentContactViewModel::class.java]
+        val listDeleteId = HashSet<Int>()
         viewModelParentContact.parentContactList.getParentList().observe(viewLifecycleOwner) {
             for (item in it) {
                 if (item.student == studentItemId) {
-                    viewModelParentContact.deleteParentContact(item.id)
+                    if (!listDeleteId.contains(item.id)) {
+                        listDeleteId.add(item.id)
+                        viewModelParentContact.deleteParentContact(item.id)
+                    }
                 }
             }
         }
@@ -642,7 +651,7 @@ class StudentItemEditFragment : Fragment() {
         // val lessonsItem = viewModelLessonsEdit.lessonsItem
         viewModelLessonsEdit.lessonsItem.observe(viewLifecycleOwner) {
             //Log.d("valStudent", it.student)
-            val newValueStudent = dropElementList(getStudentIds(it.student), studentId)
+            val newValueStudent = dropElementList(StringHelpers.getStudentIds(it.student), studentId)
             //Log.d("delStudent", newValueStudent)
             viewModelLessonsEdit.editLessonsItem(
                 it.title,
@@ -665,13 +674,6 @@ class StudentItemEditFragment : Fragment() {
         }
         return elementList.toString()
     }
-
-    private fun getStudentIds(dataString: String): List<Int> {
-        var dataStr = dataString.replace("]", "")
-        dataStr = dataStr.replace("[", "")
-        return dataStr.split(",").map { it.trim().toInt() }
-    }
-
 
     interface OnEditingFinishedListener {
 

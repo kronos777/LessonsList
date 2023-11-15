@@ -54,11 +54,11 @@ class StudentListAdapter(
             is ItemStudentEnabledBinding -> {
                 binding.studentItem = studentItem
             }
-        }*/
+        }
         if (studentItem.group == "500") {
             //Log.d("itemStudentForDelete", studentItem.id.toString())
            // pairList[studentItem.id] = studentItem
-        }
+        }*/
 
         binding.root.setOnClickListener {
             if(studentItem.group != "500" && pairList.isEmpty()){
