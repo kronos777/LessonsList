@@ -32,6 +32,7 @@ import ru.cleverpumpkin.calendar.CalendarView
 import ru.cleverpumpkin.calendar.extension.getColorInt
 import ru.cleverpumpkin.calendar.sample.events.EventItem
 import ru.cleverpumpkin.calendar.sample.events.EventItemsList
+import java.time.LocalDateTime
 import java.util.Calendar
 import java.util.TimeZone
 
@@ -104,6 +105,11 @@ class CalendarItemFragment : Fragment() {
         //(activity as AppCompatActivity).findViewById<MaterialToolbar>(R.id.tool_bar).setNavigationIcon(R.drawable.ic_baseline_menu_24)
     }
 
+    private fun getCurrentDate(): LocalDateTime {
+        return LocalDateTime.now()
+    }
+
+
     private fun getDate() {
         val calendarView = binding.calendarView
         val calendar = Calendar.getInstance()
@@ -172,7 +178,8 @@ class CalendarItemFragment : Fragment() {
 
                var minDateNumberLessons: CalendarDate
                if(arrayListLessons.size == 0){
-                   calendar.set(2000, Calendar.JANUARY, 1)
+                   calendar.set(getCurrentDate().year, getCurrentDate().month.value, getCurrentDate().dayOfMonth)
+                   //calendar.set(2000, Calendar.JANUARY, 1)
                    minDateNumberLessons = CalendarDate(calendar.time)
                } else {
                    minDateNumberLessons = arrayListLessons[0]
@@ -185,7 +192,7 @@ class CalendarItemFragment : Fragment() {
 
                 var minDateNumberPayments: CalendarDate
                 if (arrayListPayments.size == 0) {
-                    calendar.set(2000, Calendar.JANUARY, 1)
+                    calendar.set(getCurrentDate().year, getCurrentDate().month.value, getCurrentDate().dayOfMonth)
                     minDateNumberPayments = CalendarDate(calendar.time)
                 } else {
                     minDateNumberPayments = arrayListPayments[0]
@@ -217,7 +224,7 @@ class CalendarItemFragment : Fragment() {
 
 
                 val minDate: CalendarDate
-                calendar.set(2000, Calendar.JANUARY, 1)
+                calendar.set(getCurrentDate().year, getCurrentDate().month.value, getCurrentDate().dayOfMonth)
                 val checkDate =  CalendarDate(calendar.time)
 
 
@@ -239,7 +246,7 @@ class CalendarItemFragment : Fragment() {
 
                     //  Toast.makeText(activity, "min date here !!!" + minDate.toString(), Toast.LENGTH_SHORT).show()
 // Maximum available date
-                calendar.set(2032, Calendar.DECEMBER, 31)
+                calendar.set(getCurrentDate().year + 10, Calendar.DECEMBER, 31)
                 val maxDate = CalendarDate(calendar.time)
 
 
@@ -328,17 +335,12 @@ class CalendarItemFragment : Fragment() {
             calendarView.onDateClickListener = { date ->
                 val calendarDateList = mutableListOf<EventItemsList>()
                 for (index in calendarShowMessageList.indices) {
-
                     if(calendarShowMessageList[index].date == date) {
                         calendarDateList += calendarShowMessageList[index]
                     }
                 }
-
                 dialogWindow(date, calendarDateList)
             }
-
-
-
 
         }
 
@@ -536,7 +538,6 @@ class CalendarItemFragment : Fragment() {
         val eventItems = mutableListOf<EventItem>()
 
         for (event in calendarPicList.indices) {
-                val title = calendarPicList[event].eventName
                 val date = calendarPicList[event].date
 
                if (calendarPicList[event].color == "lessons") {

@@ -98,11 +98,9 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
     /*new menu in bar */
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        //Toast.makeText(activity, "menu choice is active", Toast.LENGTH_SHORT).show()
         menuChoice = menu
         menuInflater.inflate(R.menu.menu_recycler_choice, menu)
         showDeleteMenu(false)
-        //return super.onCreateOptionsMenu(menu, menuInflater)
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -114,10 +112,11 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
         return false
     }
 
-    fun showDeleteMenu(show: Boolean) {
+    private fun showDeleteMenu(show: Boolean) {
       toolbar = (activity as AppCompatActivity).findViewById(R.id.tool_bar)
       val bottomNavigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
       if(show) {
+          binding.lessonsListRecyclerLayout.background = ColorDrawable(Color.parseColor("#CFCACA"))
           bottomNavigation.itemBackgroundResource = R.color.active_select_items
           toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.VISIBLE
           toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.VISIBLE
@@ -134,6 +133,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
           }
           hideModifyAppBar = true
       } else {
+          binding.lessonsListRecyclerLayout.background = ColorDrawable(Color.parseColor("#FFFFFF"))
           bottomNavigation.itemBackgroundResource = R.color.noactive_select_items
           toolbar?.background = ColorDrawable(Color.parseColor("#0061A5"))
           (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")

@@ -167,6 +167,7 @@ class GroupItemListFragment: Fragment(), MenuProvider {
         toolbar = (activity as AppCompatActivity).findViewById(R.id.tool_bar)
         val bottomNavigation = (activity as AppCompatActivity?)!!.window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         if(show) {
+            binding.groupListRecyclerLayout.background = ColorDrawable(Color.parseColor("#CFCACA"))
             bottomNavigation.itemBackgroundResource = R.color.active_select_items
             toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.VISIBLE
             toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.VISIBLE
@@ -183,6 +184,7 @@ class GroupItemListFragment: Fragment(), MenuProvider {
             }
             hideModifyAppBar = true
         } else {
+            binding.groupListRecyclerLayout.background = ColorDrawable(Color.parseColor("#FFFFFF"))
             bottomNavigation.itemBackgroundResource = R.color.noactive_select_items
             toolbar?.background = ColorDrawable(Color.parseColor("#0061A5"))
             (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")

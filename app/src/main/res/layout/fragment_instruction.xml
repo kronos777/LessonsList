@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         tools:context=".presentation.info.InstructionFragment"
         android:padding="16dp"
+
         >
 
         <ImageView
@@ -137,7 +138,7 @@
                     android:textSize="24dp"
                     android:lineHeight="24dp"
                     android:textColor="@color/black"
-                    android:text="2 Добавление данных"/>
+                    android:text="2 Вкладка платежи."/>
 
                 <!-- HEADER INDICATOR -->
                 <ImageView
@@ -201,7 +202,7 @@
                     android:textSize="24dp"
                     android:lineHeight="24dp"
                     android:textColor="@color/black"
-                    android:text="3 Изменение данных"/>
+                    android:text="3 Вкладка группы."/>
 
                 <!-- HEADER INDICATOR -->
                 <ImageView
@@ -236,94 +237,134 @@
             </com.github.florent37.expansionpanel.ExpansionLayout>
         </LinearLayout>
         <!--free accordion-->
-        <TextView
-            android:id="@+id/til_description1"
-            android:layout_width="match_parent"
+        <!--four accordion-->
+        <LinearLayout
+            android:id="@+id/accordion_four_linear"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/accordion_free_linear"
-            android:gravity="left"
-            app:layout_constraintVertical_chainStyle="packed"
-            android:textSize="18sp"
-            android:text="1 Перед началом работы необходимо добавить студентов."
-            />
-        <TextView
-            android:id="@+id/til_description2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="14dp"
+            android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_description1"
-            android:gravity="left"
-            app:layout_constraintVertical_chainStyle="packed"
-            android:textSize="18sp"
-            android:text="2 Группы создаются по желанию и необязательны к добавлению."
-            />
-        <TextView
-            android:id="@+id/til_description3"
+            app:layout_constraintTop_toBottomOf="@+id/accordion_free_linear"
+            >
+
+            <com.github.florent37.expansionpanel.ExpansionHeader
+                android:id="@+id/accordion_four"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                app:expansion_headerIndicator="@id/headerIndicator4"
+                app:expansion_layout="@id/expansionLayout4"
+                app:expansion_toggleOnClick="true">
+
+                <!-- HEADER -->
+
+                <TextView
+                    android:id="@+id/accordion_title4"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:textFontWeight="500"
+                    android:textSize="24dp"
+                    android:lineHeight="24dp"
+                    android:textColor="@color/black"
+                    android:text="4 Вкладка уроки."/>
+
+                <!-- HEADER INDICATOR -->
+                <ImageView
+                    android:adjustViewBounds="true"
+                    android:id="@+id/headerIndicator4"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_width="wrap_content"
+                    app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp" />
+
+
+            </com.github.florent37.expansionpanel.ExpansionHeader>
+
+            <com.github.florent37.expansionpanel.ExpansionLayout
+                android:id="@+id/expansionLayout4"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:padding="8dp"
+                >
+
+                <!-- CONTENT -->
+                <TextView
+                    android:id="@+id/accordion_description_4"
+                    android:textFontWeight="400"
+                    android:textSize="18dp"
+                    android:lineHeight="20dp"
+                    android:textColor="@color/black"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"/>
+
+            </com.github.florent37.expansionpanel.ExpansionLayout>
+        </LinearLayout>
+        <!--four accordion-->
+        <!--five accordion-->
+        <LinearLayout
+            android:id="@+id/accordion_five_linear"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="14dp"
+            android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_description2"
-            android:gravity="left"
-            app:layout_constraintVertical_chainStyle="packed"
-            android:textSize="18sp"
-            android:text="3 После добавления учеников и групп создайте урок, в случае создания урока с главного экрана нажмите и удерживайте дату появится экран создания урока дата будет та что Вы выбрали, установите время  начала и конца урока выберите студентов, установите цену и нажмите сохранить."
-            />
-        <TextView
-            android:id="@+id/til_description31"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_description3"
-            android:gravity="left"
-            app:layout_constraintVertical_chainStyle="packed"
-            android:textSize="18sp"
-            android:text="3.1 Когда урок создан преподаватель может добавить скидки отдельным ученикам. Сумма скидки не должна превышать стоимость урока.
-                            Сумму скидки можно прописать целым числом или указать в процентном соотношение от стоимости урока.
-                            В результате платеж будет создан со скидкой."
-            />
-        <TextView
-            android:id="@+id/til_description4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_description31"
-            android:gravity="left"
-            app:layout_constraintVertical_chainStyle="packed"
-            android:textSize="18sp"
-            android:text="4 Платежи создаются автоматически по времени окончания урока."
-            />
-        <TextView
-            android:id="@+id/til_description5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/til_description4"
-            android:gravity="left"
-            app:layout_constraintVertical_chainStyle="packed"
-            android:textSize="18sp"
-            android:text="5 В карточке студента Вы можете указать телефон студента, родителей и/или близких родственников, пополнить баланс, списать долг, указать фото, добавить заметку,
-                            посмотреть группы в которых содержится студент.\n
-Из карточки студента Вы можете удалить его, но при этом будьте внимательны студент удаляется вместе с платежами. Так же студент будет удален из уроков и групп."
-            />
+            app:layout_constraintTop_toBottomOf="@+id/accordion_four_linear"
+            >
+
+            <com.github.florent37.expansionpanel.ExpansionHeader
+                android:id="@+id/accordion_five"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                app:expansion_headerIndicator="@id/headerIndicator5"
+                app:expansion_layout="@id/expansionLayout5"
+                app:expansion_toggleOnClick="true">
+
+                <!-- HEADER -->
+
+                <TextView
+                    android:id="@+id/accordion_title5"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:textFontWeight="500"
+                    android:textSize="24dp"
+                    android:lineHeight="24dp"
+                    android:textColor="@color/black"
+                    android:text="5 Вкладка ученики."/>
+
+                <!-- HEADER INDICATOR -->
+                <ImageView
+                    android:adjustViewBounds="true"
+                    android:id="@+id/headerIndicator5"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_width="wrap_content"
+                    app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp" />
+
+
+            </com.github.florent37.expansionpanel.ExpansionHeader>
+
+            <com.github.florent37.expansionpanel.ExpansionLayout
+                android:id="@+id/expansionLayout5"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:padding="8dp"
+                >
+
+                <!-- CONTENT -->
+                <TextView
+                    android:id="@+id/accordion_description_5"
+                    android:textFontWeight="400"
+                    android:textSize="18dp"
+                    android:lineHeight="20dp"
+                    android:textColor="@color/black"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"/>
+
+            </com.github.florent37.expansionpanel.ExpansionLayout>
+        </LinearLayout>
+        <!--five accordion-->
     </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

@@ -19,7 +19,6 @@ class GroupListViewModel(application: Application) : AndroidViewModel(applicatio
     private val getGroupItemUseCase = GetGroupItemUseCase(repository)
     private val getGroupItemListUseCase = GetGroupListItemUseCase(repository)
     private val deleteGroupItemUseCase = DeleteGroupItemUseCase(repository)
-    private val editGroupItemUseCase = EditGroupItemUseCase(repository)
 
     val groupList = getGroupItemListUseCase.getGroupList()
 
@@ -27,11 +26,6 @@ class GroupListViewModel(application: Application) : AndroidViewModel(applicatio
     val groupItem: LiveData<GroupItem>
         get() = _groupItem
 
-    fun deleteGroupItem(groupItem: GroupItem) {
-        viewModelScope.launch {
-            deleteGroupItemUseCase.deleteGroupItem(groupItem)
-        }
-    }
     fun deleteGroupItemId(groupItemId: Int) {
         viewModelScope.launch {
             val item = getGroupItemUseCase.getGroupItem(groupItemId)

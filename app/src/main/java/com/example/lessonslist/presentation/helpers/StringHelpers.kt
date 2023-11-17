@@ -18,4 +18,15 @@ object StringHelpers {
         dataStr = dataStr.replace("[", "")
         return dataStr.split(",").map { it.trim().toInt() }
     }
+
+    fun timeForLessons(number: Int): String {
+        return if (number < 10) {
+            "0$number"
+        } else if (number > 10) {
+            number.toString()
+        } else {
+            "00"
+        }
+    }
+
 }

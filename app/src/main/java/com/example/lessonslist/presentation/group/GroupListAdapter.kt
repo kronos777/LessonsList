@@ -17,7 +17,6 @@ class GroupListAdapter(
 ) : ListAdapter<GroupItem, GroupItemViewHolder>(GroupItemDiffCallback()) {
 
     var onGroupItemClickListener: ((GroupItem) -> Unit)? = null
-    var onGroupItemLongClickListener: ((GroupItem) -> Unit)? = null
 
 
     private var isEnabled = false
@@ -76,7 +75,7 @@ class GroupListAdapter(
         isEnabled = true
         viewHolder.binding.checkImage.visibility = View.VISIBLE
         // itemSelectedList.add(position)
-        pairList.put(groupItem.id, groupItem)
+        pairList[groupItem.id] = groupItem
         groupItem.description = "500"
         showMenuDelete(true)
     }

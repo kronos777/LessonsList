@@ -26,9 +26,6 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
     val errorInputTitle: LiveData<Boolean>
         get() = _errorInputTitle
 
-    private val _errorInputDescription = MutableLiveData<Boolean>()
-    val errorInputDescription: LiveData<Boolean>
-        get() = _errorInputDescription
 
     private val _errorInputStudent = MutableLiveData<Boolean>()
     val errorInputStudent: LiveData<Boolean>
@@ -104,12 +101,6 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun resetErrorInputTitle() {
         _errorInputTitle.value = false
-    }
-
-    fun deleteGroupItem(groupItem: GroupItem) {
-        viewModelScope.launch {
-            deleteGroupItemUseCase.deleteGroupItem(groupItem)
-        }
     }
 
     private fun finishWork() {

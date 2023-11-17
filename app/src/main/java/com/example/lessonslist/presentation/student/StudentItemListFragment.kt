@@ -44,7 +44,6 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     private lateinit var viewModel: StudentListViewModel
     private lateinit var viewModelLessonsEdit: LessonsItemViewModel
     private lateinit var viewModelPayment: PaymentListViewModel
-    private lateinit var viewModelSale: SaleItemViewModel
     private lateinit var viewModelSalesList: SalesItemListViewModel
     private lateinit var viewModelParentContact: ParentContactViewModel
     private lateinit var viewModelNotesItem: NotesItemViewModel
@@ -163,6 +162,7 @@ class StudentItemListFragment: Fragment(), MenuProvider {
         toolbar = (activity as AppCompatActivity).findViewById(R.id.tool_bar)
         val bottomNavigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         if(show) {
+            binding.studentListRecyclerLayout.background = ColorDrawable(Color.parseColor("#CFCACA"))
             bottomNavigation.itemBackgroundResource = R.color.active_select_items
             toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.VISIBLE
             toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.VISIBLE
@@ -179,6 +179,7 @@ class StudentItemListFragment: Fragment(), MenuProvider {
             }
             hideModifyAppBar = true
         } else {
+            binding.studentListRecyclerLayout.background = ColorDrawable(Color.parseColor("#FFFFFF"))
             bottomNavigation.itemBackgroundResource = R.color.noactive_select_items
             toolbar?.background = ColorDrawable(Color.parseColor("#0061A5"))
             (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")

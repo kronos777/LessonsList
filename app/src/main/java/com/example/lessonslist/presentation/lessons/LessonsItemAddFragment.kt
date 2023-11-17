@@ -42,6 +42,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 
+@Suppress("NAME_SHADOWING")
 class LessonsItemAddFragment : Fragment()  {
 
     private lateinit var viewModel: LessonsItemViewModel
@@ -627,11 +628,11 @@ class LessonsItemAddFragment : Fragment()  {
 
         mTimePicker = TimePickerDialog(context,
             { _, hourOfDay, minute ->
-                val minH = if (hourOfDay < 10) "0" + hourOfDay else if(hourOfDay == 0) "00" else hourOfDay
-                val minM = if (minute < 10) "0" + minute else if(minute == 0) "00" else minute
+                val minH = StringHelpers.timeForLessons(hourOfDay)
+                val minM = StringHelpers.timeForLessons(minute)
                 binding.etDatestart.setText(String.format("%d/%d/%d %s:%s", year, month + 1, day, minH, minM))
-                timePicker1 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + minH.toString() + ":" + minM.toString()
-                timePicker1RepeatStartHourMinuteDate = minH.toString() + ":" + minM.toString()
+                timePicker1 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + minH + ":" + minM
+                timePicker1RepeatStartHourMinuteDate = "$minH:$minM"
                 if (timePicker1.isNotEmpty() && timePicker2.isNotEmpty()) {
                     checkAddDateTime(timePicker1, timePicker2)
                 }
@@ -639,12 +640,12 @@ class LessonsItemAddFragment : Fragment()  {
 
         mTimePickerEnd = TimePickerDialog(context,
             { _, hourOfDay, minute ->
-                val minH = if (hourOfDay < 10) "0$hourOfDay" else if(hourOfDay == 0) "00" else hourOfDay
-                val minM = if (minute < 10) "0$minute" else if(minute == 0) "00" else minute
+                val minH = StringHelpers.timeForLessons(hourOfDay)
+                val minM = StringHelpers.timeForLessons(minute)
 //                Toast.makeText(getActivity(), setValue.toString(), Toast.LENGTH_SHORT).show()
                 binding.etDateend.setText(String.format("%d/%d/%d %s:%s", year, month + 1, day, minH, minM))
-                timePicker2 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + minH.toString() + ":" + minM.toString()
-                timePicker2RepeatEndHourMinuteDate = minH.toString() + ":" + minM.toString()
+                timePicker2 = year.toString() + "-" + (month + 1).toString() + "-" + day.toString() + " " + minH + ":" + minM
+                timePicker2RepeatEndHourMinuteDate = "$minH:$minM"
                 if (timePicker1.isNotEmpty() && timePicker2.isNotEmpty()) {
                     checkAddDateTime(timePicker1, timePicker2)
                 }

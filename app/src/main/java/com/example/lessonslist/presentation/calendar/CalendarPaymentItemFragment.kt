@@ -368,7 +368,6 @@ class CalendarPaymentItemFragment : Fragment() {
         val eventItems = mutableListOf<EventItem>()
 
         for (event in calendarPicList.indices) {
-            val title = calendarPicList[event].eventName
             val date = calendarPicList[event].date
 
             if (calendarPicList[event].color == "paymentyes") {
