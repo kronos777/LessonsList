@@ -186,7 +186,6 @@ class StudentItemEditFragment : Fragment() {
             observeViewModel()
         }
 
-
     }
 
     private fun deleteAllNotesStudent() {
@@ -560,13 +559,15 @@ class StudentItemEditFragment : Fragment() {
         val filename = "${System.currentTimeMillis()}.jpg"
         val fos: OutputStream?
 
-        val imagesDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + "lessonslist")
+        val imagesDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + "/" + "lessonsList")
+
         imagesDir.apply {
             if (!this.exists()) this.mkdir()
         }
         //val imagesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         val image = File(imagesDir, filename)
         fos = FileOutputStream(image)
+
 
         fos.use {
             bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, it)
@@ -589,12 +590,13 @@ class StudentItemEditFragment : Fragment() {
     }
 
     private fun launchRightMode() {
-        when (screenMode) {
+        /*when (screenMode) {
             MODE_EDIT -> launchEditMode()
-        }
+        }*/
+        launchEditMode()
     }
 
-   private fun isLessthanZero(number: Int): Int {
+   private fun isLessThanZero(number: Int): Int {
        return if(number < 0) {
            0
        } else {
@@ -609,7 +611,7 @@ class StudentItemEditFragment : Fragment() {
             viewModel.editStudentItem(
                 viewModel.studentItem.value?.name,
                 viewModel.studentItem.value?.lastname,
-                isLessthanZero(binding.textViewPaymentBalance.text.toString().toInt()).toString(),
+                isLessThanZero(binding.textViewPaymentBalance.text.toString().toInt()).toString(),
                 " ",
                 " ",
                 pathImageSrc,

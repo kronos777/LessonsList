@@ -34,12 +34,13 @@ class ActSplash : AppCompatActivity() {
         viewModel.checkExistsDateItem(currentDate().toString())
         viewModel.dateItem.observe(this) {
             if(it!=null) {
+                onFromSplash(1000)
                 goMain()
                 return@observe
             } else {
                 viewModel.addDateItem(currentDate().toString())
                 deletePrevDate()
-                onFromSplash()
+                onFromSplash(5000)
                 return@observe
             }
         }
@@ -59,9 +60,9 @@ class ActSplash : AppCompatActivity() {
     }
 
 
-    private fun onFromSplash() {
+    private fun onFromSplash(valueSleep: Long) {
         if (timer == null) {
-            timer = Timer().schedule(4000) {
+            timer = Timer().schedule(valueSleep) {
                 openMainAct.postValue(true)
                 goMain()
             }
