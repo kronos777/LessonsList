@@ -22,6 +22,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavOptions
@@ -129,6 +131,7 @@ class StudentItemEditFragment : Fragment() {
         bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
 
         viewModel.studentItem.observe(viewLifecycleOwner) { stItem ->
+            setNameStudent(stItem.name + " " + stItem.lastname)
             if (stItem.paymentBalance <= 0) {
                 totalDebt()
             }
@@ -186,6 +189,10 @@ class StudentItemEditFragment : Fragment() {
             observeViewModel()
         }
 
+    }
+
+    private fun setNameStudent(nameStudent: String) {
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = nameStudent
     }
 
     private fun deleteAllNotesStudent() {

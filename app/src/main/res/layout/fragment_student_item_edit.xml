@@ -30,11 +30,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/til_name"
             android:src="@drawable/ic_baseline_add_a_photo_24"
             />
 
-        <TextView
+        <!--<TextView
             android:id="@+id/til_name"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -44,7 +43,7 @@
             android:textSize="22sp"
             android:gravity="center"
             android:text="@{viewModel.studentItem.name + ' ' + viewModel.studentItem.lastname}"
-            />
+            />-->
 
 
         <TextView
@@ -60,7 +59,7 @@
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_name"
+                app:layout_constraintTop_toBottomOf="@+id/imageView"
                 android:text="@{String.valueOf(viewModel.studentItem.paymentBalance)}" />
 
 
@@ -325,7 +324,7 @@
             android:id="@+id/card_payment_student"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card_group_student"

@@ -90,14 +90,7 @@ class StudentListAdapter(
         studentItem.group = "500"
         showMenuDelete(true)
     }
-    override fun getItemViewType(position: Int): Int {
-        val item = getItem(position)
-        return if (item.enabled) {
-            VIEW_TYPE_ENABLED
-        } else {
-            VIEW_TYPE_DISABLED
-        }
-    }
+
 
     companion object {
         const val VIEW_TYPE_ENABLED = 100

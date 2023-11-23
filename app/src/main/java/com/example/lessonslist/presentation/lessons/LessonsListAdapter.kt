@@ -106,12 +106,6 @@ class LessonsListAdapter(
         showMenuDelete(true)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        //val item = getItem(position)
-        return VIEW_TYPE_ENABLED
-
-    }
-
 
     companion object {
 
