@@ -49,17 +49,19 @@
         <TextView
                 android:id="@+id/textViewPaymentBalance"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:textSize="32dp"
                 android:textAlignment="center"
+                android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView"
+                app:layout_constraintBottom_toTopOf="@id/card_telephone_student"
                 android:text="@{String.valueOf(viewModel.studentItem.paymentBalance)}" />
 
 
