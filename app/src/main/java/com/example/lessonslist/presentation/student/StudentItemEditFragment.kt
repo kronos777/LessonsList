@@ -353,22 +353,40 @@ class StudentItemEditFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun actionAddMoney() {
         var newBalance: Int
+
+        val layout = LinearLayout(requireContext())
+        layout.orientation = LinearLayout.VERTICAL
+
         val inputEditTextField = EditText(requireActivity())
-        //inputEditTextField.setInputType(InputType.TYPE_CLASS_NUMBER)
         inputEditTextField.inputType = 2
+        //inputEditTextField.setInputType(InputType.TYPE_CLASS_NUMBER)
+        layout.setPadding(50, 40, 50, 10)
+        layout.addView(inputEditTextField)
+
+
         val dialog = AlertDialog.Builder(requireContext())
             .setTitle("Пополнить баланс студента.")
             //.setMessage("Message")
-            .setView(inputEditTextField)
+            .setView(layout)
             .setPositiveButton("OK") { _, _ ->
                 val editTextInput = inputEditTextField.text.toString()
 
                 if(isNumeric(editTextInput)){
                     newBalance = editTextInput.toInt()
+                    viewModel.editPaymentBalance(studentItemId, (binding.textViewPaymentBalance.text.toString().toInt() + newBalance))
+                    viewModel.getStudentItem(studentItemId)
                     viewModel.studentItem.observe(viewLifecycleOwner) {
-                        viewModel.editPaymentBalance(it.id, (it.paymentBalance + newBalance))
-                        binding.textViewPaymentBalance.text = (it.paymentBalance + newBalance).toString()
+                        binding.textViewPaymentBalance.text = it.paymentBalance.toString()
                     }
+                   /* viewModel.studentItem.observe(viewLifecycleOwner) {
+                        Log.d("currentBalance before", it.paymentBalance.toString())
+                        viewModel.editPaymentBalance(it.id, (it.paymentBalance + newBalance))
+                    }
+                    viewModel.getStudentItem(studentItemId)
+                    viewModel.studentItem.observe(viewLifecycleOwner) {
+                        binding.textViewPaymentBalance.text = (it.paymentBalance + newBalance).toString()
+                        Log.d("currentBalance after", it.paymentBalance.toString())
+                    }*/
                 } else {
                     Toast.makeText(activity,"Строка не является числом, сохранить невозможно.",Toast.LENGTH_SHORT).show()
                 }

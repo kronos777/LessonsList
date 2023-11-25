@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         initDrawerNavigation()
         //initBottomNavigation()
-        startWorkManager()
+       // startWorkManager()
         initWorkManager()
         initMaterialToolBar()
         getDeptPayment()
