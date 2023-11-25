@@ -130,6 +130,7 @@ class StudentItemEditFragment : Fragment() {
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
 
+
         viewModel.studentItem.observe(viewLifecycleOwner) { stItem ->
             setNameStudent(stItem.name + " " + stItem.lastname)
             if (stItem.paymentBalance <= 0) {
@@ -139,19 +140,18 @@ class StudentItemEditFragment : Fragment() {
             if(stItem.image.isNotBlank()) {
                 myHandler.post {
                     val file = File(stItem.image)
-                    Log.d("imageTag", stItem.image)
                     Picasso.get()
                         .load(file)
                         .resize(200, 200)
-                       // .rotate(90f)
                         .into(mImageView)
                     pathImageSrc = file.toString()
                 }
             }
 
-       binding.cardTelephoneStudent.setOnClickListener {
-               askEditNumber(stItem.telephone)
+           binding.cardTelephoneStudent.setOnClickListener {
+                   askEditNumber(stItem.telephone)
             }
+
         }
 
         mImageView = binding.imageView
@@ -272,7 +272,7 @@ class StudentItemEditFragment : Fragment() {
         }
 
 
-        alert.setCancelable(false)
+        alert.setCancelable(true)
         alert.show()
     }
 
@@ -314,14 +314,10 @@ class StudentItemEditFragment : Fragment() {
 
     private fun askEditNumber(telephone: String?) {
         val alert = AlertDialog.Builder(requireContext())
-
-
-
         val layout = LinearLayout(requireContext())
         layout.orientation = LinearLayout.VERTICAL
 
         layout.setPadding(50, 40, 50, 10)
-
         alert.setView(layout)
 
         if(!telephone.isNullOrBlank()) {
@@ -344,7 +340,7 @@ class StudentItemEditFragment : Fragment() {
             dialog.dismiss()
         }
 
-        alert.setCancelable(false)
+        alert.setCancelable(true)
         alert.show()
     }
 
@@ -359,7 +355,6 @@ class StudentItemEditFragment : Fragment() {
 
         val inputEditTextField = EditText(requireActivity())
         inputEditTextField.inputType = 2
-        //inputEditTextField.setInputType(InputType.TYPE_CLASS_NUMBER)
         layout.setPadding(50, 40, 50, 10)
         layout.addView(inputEditTextField)
 
@@ -489,11 +484,9 @@ class StudentItemEditFragment : Fragment() {
         amountET.inputType = TYPE_CLASS_NUMBER
         amountET.addTextChangedListener(PhoneTextFormatter(amountET, "+7 (###) ###-####"))
         layout.addView(amountET)
-
         layout.setPadding(50, 40, 50, 10)
 
         alert.setView(layout)
-
         alert.setPositiveButton("Добавить") { _, _ ->
             val number = amountET.text.toString()
            // Toast.makeText(activity, "Saved Sucessfully" + number, Toast.LENGTH_LONG).show()
