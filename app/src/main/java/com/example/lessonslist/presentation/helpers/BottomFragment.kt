@@ -58,6 +58,10 @@ class BottomFragment : BottomSheetDialogFragment() {
     private var dataNotesStudentModel: ArrayList<DataNotesStudentModel>? = null
     private var dataParentContactStudentModel: ArrayList<DataParentContactStudentModel>? = null
     private var dataStudentGroupModel: ArrayList<DataStudentGroupModel>? = null
+
+    private var countContactParent: Int? = null
+    private var countNotes: Int? = null
+
     // Можно обойтись без биндинга и использовать findViewById
     lateinit var binding: BottomSheetLayoutBinding
 
@@ -173,9 +177,13 @@ class BottomFragment : BottomSheetDialogFragment() {
         }
 
         if (checkTxtName && checkTxtNumber) {
-            viewModelParentContact.addParentContact(textName, textNumber, studentItemId)
-            binding.etName.text?.clear()
-            binding.etNotes.text?.clear()
+            if(countContactParent!! < 4) {
+                viewModelParentContact.addParentContact(textName, textNumber, studentItemId)
+                binding.etName.text?.clear()
+                binding.etNotes.text?.clear()
+            } else {
+                Toast.makeText(activity, "Больше 4 контактов добавить нельзя.", Toast.LENGTH_LONG).show()
+            }
         }
 
     }
@@ -187,24 +195,23 @@ class BottomFragment : BottomSheetDialogFragment() {
     @SuppressLint("SimpleDateFormat")
     private fun addStudentNotes() {
         val textNotes = binding.etNotes.text.toString()
-
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
         val currentDate = sdf.format(Date())
-
         if (checkFiledBlank(textNotes)) {
-            hideError(binding.tilNotes)
-            viewModelNotesItem = ViewModelProvider(this)[NotesItemViewModel::class.java]
-            val answerNotes = viewModelNotesItem.addNotesItem(textNotes, currentDate, studentItemId)
-            if(answerNotes) {
-                binding.etNotes.text?.clear()
-                showNotesStudent()
+            if(countNotes!! < 40) {
+                hideError(binding.tilNotes)
+                viewModelNotesItem = ViewModelProvider(this)[NotesItemViewModel::class.java]
+                val answerNotes = viewModelNotesItem.addNotesItem(textNotes, currentDate, studentItemId)
+                if(answerNotes) {
+                    binding.etNotes.text?.clear()
+                    showNotesStudent()
+                }
+            } else {
+                Toast.makeText(activity, "Больше 40 заметок добавить нельзя.", Toast.LENGTH_LONG).show()
             }
         } else {
             showError(binding.tilNotes)
         }
-
-
-
     }
 
     private fun showError(element: TextInputLayout) {
@@ -230,7 +237,7 @@ class BottomFragment : BottomSheetDialogFragment() {
                     //map[item.date] = item.text
                 }
             }
-
+            countNotes = dataNotesStudentModel!!.size ?: 0
             adapterNotes = ListNotesAdapter(dataNotesStudentModel!!, requireContext().applicationContext)
             listView.adapter = adapterNotes
             setupClickListenerNotes()
@@ -286,6 +293,7 @@ class BottomFragment : BottomSheetDialogFragment() {
                     dataParentContactStudentModel!!.add(DataParentContactStudentModel(item.name, item.number, item.id))
                 }
             }
+            countContactParent = dataParentContactStudentModel!!.size ?: 0
             val adapterParentContact = ListParentContactAdapter(dataParentContactStudentModel!!, requireContext().applicationContext)
             listView.adapter = adapterParentContact
 
