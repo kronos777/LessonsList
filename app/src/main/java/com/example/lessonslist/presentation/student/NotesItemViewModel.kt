@@ -42,14 +42,12 @@ class NotesItemViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun addNotesItem(inputName: String, inputDate: String, inputStudentId: Int): Boolean {
         val name = parseName(inputName)
-
         val fieldsValid = validateInput(name, inputDate)
         return if (fieldsValid) {
             viewModelScope.launch {
                 val notesItem = NotesItem(name, inputDate, inputStudentId)
                 addNotesItemUseCase.addNotesItem(notesItem)
                 finishWork()
-
             }
             true
         } else {

@@ -7,9 +7,13 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.example.lessonslist.R
+import com.example.lessonslist.domain.group.GroupItem
 
 class ListStudentGroupAdapter(private val dataSet: ArrayList<*>, mContext: Context) :
     ArrayAdapter<Any?>(mContext, R.layout.row_student_group_item, dataSet) {
+
+    var onGroupItemClick: ((DataStudentGroupModel) -> Unit)? = null
+
     private class ViewHolder {
         lateinit var txtName: TextView
 
@@ -47,8 +51,14 @@ class ListStudentGroupAdapter(private val dataSet: ArrayList<*>, mContext: Conte
         }
         val item: DataStudentGroupModel = getItem(position)
         viewHolder.txtName.text = item.name
+        val groupItem = getItem(position)
+        //onGroupItemClick.s
+        viewHolder.txtName.setOnClickListener {
+            onGroupItemClick?.invoke(groupItem)
+        }
 
-         return result
+
+        return result
     }
 
 

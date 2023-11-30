@@ -15,9 +15,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.BottomSheetLayoutBinding
 import com.example.lessonslist.domain.student.StudentItem
+import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
@@ -72,6 +75,12 @@ class BottomFragment : BottomSheetDialogFragment() {
     // Переопределим тему, чтобы использовать нашу с закруглёнными углами
     override fun getTheme() = R.style.AppBottomSheetDialogTheme
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        parseParams()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = BottomSheetLayoutBinding.bind(inflater.inflate(R.layout.bottom_sheet_layout, container))
         return binding.root
@@ -81,7 +90,7 @@ class BottomFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        parseParams()
+
 
         if(screenMode == "mode_payment") {
             binding.simpleTextTitle.text = "Платежи студента"
@@ -153,9 +162,30 @@ class BottomFragment : BottomSheetDialogFragment() {
             }
             val adapterGroup = ListStudentGroupAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
             listView.adapter = adapterGroup
+            setupGroupItemAdapterClick(adapterGroup)
         }
     }
 
+    private fun setupGroupItemAdapterClick(adapterGroup: ListStudentGroupAdapter) {
+        adapterGroup.onGroupItemClick = {
+            navigateBtnEditGroup(it.id)
+        }
+    }
+    private fun navigateBtnEditGroup(id: Int) {
+
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val btnArgsGroup = Bundle().apply {
+            putString(GroupItemFragment.SCREEN_MODE, GroupItemFragment.MODE_EDIT)
+            putInt(GroupItemFragment.GROUP_ITEM_ID, id)
+        }
+        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
+            .setExitAnim(R.anim.slide_in_right)
+            .setPopEnterAnim(R.anim.slide_out_left)
+            .setPopExitAnim(R.anim.slide_out_right).build()
+        navController.navigate(R.id.groupItemFragment, btnArgsGroup, animationOptions)
+    }
     private fun addParentContact() {
       //  binding.etNotes.setHint("")
         val textName = binding.etName.text.toString()
