@@ -29,7 +29,7 @@ class StudentListViewModel(application: Application) : AndroidViewModel(applicat
     fun deleteStudentItem(studentItemId: Int) {
         viewModelScope.launch {
             val item = getStudentItemUseCase.getStudentItem(studentItemId)
-            _studentItem.value = item
+           // _studentItem.value = item
             deleteStudentItemUseCase.deleteStudentItem(item)
 
         }

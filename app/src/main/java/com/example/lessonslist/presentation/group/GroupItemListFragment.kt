@@ -71,14 +71,6 @@ class GroupItemListFragment: Fragment(), MenuProvider {
         //setupLongClickListener()
     }
 
-   /* private fun setupLongClickListener() {
-        groupListAdapter.onGroupItemLongClickListener = { group ->
-            val item = groupListAdapter.currentList[group.id -1]
-            // viewModel.deleteStudentItem(item)
-            dialogWindow(item, item.title)
-        }
-    }*/
-
     private fun goCalendarFragment() {
         val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
@@ -295,11 +287,12 @@ class GroupItemListFragment: Fragment(), MenuProvider {
         alert.setView(layout)
 
         alert.setPositiveButton("удалить") { _, _ ->
-            //deleteLessonsPay
             if (groupListAdapter.pairList.isNotEmpty()) {
                 groupListAdapter.pairList.forEach {
                     viewModel.deleteGroupItemId(it.key)
                 }
+                setCustomDataGroupsCheckAll(false)
+                showDeleteMenu(false)
             }
         }
 

@@ -35,6 +35,7 @@ import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentStudentItemEditBinding
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.helpers.BottomFragment
+import com.example.lessonslist.presentation.helpers.NavigationOptions
 import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
 import com.example.lessonslist.presentation.helpers.StringHelpers
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
@@ -70,7 +71,6 @@ class StudentItemEditFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentStudentItemEditBinding == null")
 
 
-    private var screenMode: String = MODE_UNKNOWN
     private var studentItemId: Int = StudentItem.UNDEFINED_ID
 
     private lateinit var mImageView: ImageView
@@ -259,11 +259,11 @@ class StudentItemEditFragment : Fragment() {
         alert.setView(layout)
 
         alert.setPositiveButton("Платежи") { _, _ ->
-            navigateBtnAddStudent("all_payment")
+            showWindowPayment("all_payment")
         }
 
         alert.setNegativeButton("Долги") { _, _ ->
-            navigateBtnAddStudent("all_false_payment")
+            showWindowPayment("all_false_payment")
 
         }
 
@@ -283,21 +283,17 @@ class StudentItemEditFragment : Fragment() {
         startActivity(dialIntent)
     }
 
-    private fun navigateBtnAddStudent(params: String) {
+    private fun showWindowPayment(params: String) {
 
         val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
 
         if(params == "all_payment") {
             val btnArgsStudentNoParams = Bundle().apply {
                 putInt(PaymentItemListFragment.STUDENT_ID, studentItemId)
                 putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.STUDENT_ID_LIST)
             }
-            navController.navigate(R.id.paymentItemListFragment, btnArgsStudentNoParams, animationOptions)
+            navController.navigate(R.id.paymentItemListFragment, btnArgsStudentNoParams, NavigationOptions().animationOptions())
         } else if(params == "all_false_payment") {
             val btnArgsStudentFalsePayment = Bundle().apply {
                 putInt(PaymentItemListFragment.STUDENT_ID, studentItemId)
@@ -306,7 +302,7 @@ class StudentItemEditFragment : Fragment() {
                     PaymentItemListFragment.STUDENT_NO_PAY_LIST
                 )
             }
-            navController.navigate(R.id.paymentItemListFragment, btnArgsStudentFalsePayment, animationOptions)
+            navController.navigate(R.id.paymentItemListFragment, btnArgsStudentFalsePayment, NavigationOptions().animationOptions())
         }
 
     }

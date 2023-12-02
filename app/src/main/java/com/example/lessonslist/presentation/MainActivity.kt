@@ -419,9 +419,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     /* this work copy*/
         val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
             .build()
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+        //WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "paymentWork",
-            ExistingPeriodicWorkPolicy.REPLACE,
+            ExistingPeriodicWorkPolicy.KEEP,
+            //ExistingPeriodicWorkPolicy.REPLACE,
             request
         )
         /*work manager */

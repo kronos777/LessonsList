@@ -1,5 +1,6 @@
 package com.example.lessonslist.presentation.student
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,6 +62,7 @@ class StudentListAdapter(
         }*/
 
         binding.root.setOnClickListener {
+            Log.d("hideModifyAppBar", showMenuDelete.toString())
             if(studentItem.group != "500" && pairList.isEmpty()){
                 onStudentItemClickListener?.invoke(studentItem)
             } else if(pairList.containsKey(studentItem.id)) {
@@ -94,7 +96,6 @@ class StudentListAdapter(
 
     companion object {
         const val VIEW_TYPE_ENABLED = 100
-        const val VIEW_TYPE_DISABLED = 101
         const val MAX_POOL_SIZE = 30
     }
 }

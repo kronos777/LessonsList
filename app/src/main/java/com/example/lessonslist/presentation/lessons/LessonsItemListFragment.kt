@@ -218,6 +218,8 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
                     deleteAllSaleItem(it.key)
                     viewModel.deleteLessonsItem(it.value)
                 }
+                showDeleteMenu(false)
+                setCustomDataLessonsCheckAll(false)
             }
         }
 

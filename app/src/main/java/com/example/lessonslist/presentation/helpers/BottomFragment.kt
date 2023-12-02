@@ -22,9 +22,6 @@ import com.example.lessonslist.databinding.BottomSheetLayoutBinding
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupListViewModel
-import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
-import com.example.lessonslist.presentation.payment.PaymentItemViewModel
-import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.student.*
 import com.example.lessonslist.presentation.student.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.student.group.ListStudentGroupAdapter
@@ -47,17 +44,10 @@ class BottomFragment : BottomSheetDialogFragment() {
 
     //по листам
     private lateinit var listView: ListView
-    private lateinit var listView2: ListView
-
-    private lateinit var viewModelPayment: PaymentListViewModel
-    private lateinit var viewModelPayments: PaymentItemViewModel
     private lateinit var viewModelNotesItem: NotesItemViewModel
     private lateinit var viewModelParentContact: ParentContactViewModel
-    private lateinit var viewModelStudent: StudentItemViewModel
-    private lateinit var viewModelLessons: LessonsItemViewModel
     private lateinit var viewModelGroup: GroupListViewModel
 
-    private var dataPaymentStudentModel: ArrayList<DataPaymentStudentModel>? = null
     private var dataNotesStudentModel: ArrayList<DataNotesStudentModel>? = null
     private var dataParentContactStudentModel: ArrayList<DataParentContactStudentModel>? = null
     private var dataStudentGroupModel: ArrayList<DataStudentGroupModel>? = null
@@ -90,60 +80,50 @@ class BottomFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
-        if(screenMode == "mode_payment") {
-            binding.simpleTextTitle.text = "Платежи студента"
-            binding.tilName.visibility = View.GONE
-            binding.tilNotes.visibility = View.GONE
-            binding.imageAddNotes.visibility = View.GONE
-            showPaymentsList()
+        when(screenMode) {
+            "mode_notes" -> showModeNotes()
+            "contact_parent" -> showModeContactParent()
+            "group_student" -> showModeGroupStudent()
         }
 
-        if(screenMode == "mode_notes") {
-            binding.simpleTextTitle.text = "Заметки о студенте"
-            binding.etNotes.hint = "Внести заметку о студенте"
-            binding.tilName.visibility = View.GONE
-            binding.etNotes.inputType = InputType.TYPE_CLASS_TEXT
-            showNotesStudent()
-
-            binding.imageAddNotes.setOnClickListener {
-                addStudentNotes()
-            }
-
-           // binding.layoutCollapsed.orientation = LinearLayout.HORIZONTAL
-        }
-
-
-        if(screenMode == "contact_parent") {
-            binding.simpleTextTitle.text = "Контакты родителей"
-            binding.etName.hint = "Введите имя"
-            binding.etNotes.hint = "Введите номер"
-            binding.etName.inputType = InputType.TYPE_CLASS_TEXT
-            binding.etNotes.inputType = InputType.TYPE_CLASS_NUMBER
-            showParentContact()
-
-            binding.etNotes.addTextChangedListener(PhoneTextFormatter(binding.etNotes, "+7 (###) ###-####"))
-
-            binding.imageAddNotes.setOnClickListener {
-                addParentContact()
-            }
-        }
-
-
-        /*group studentd*/
-        if(screenMode == "group_student") {
-            binding.simpleTextTitle.text = "Группы студента"
-            binding.tilName.visibility = View.GONE
-            binding.tilNotes.visibility = View.GONE
-            binding.imageAddNotes.visibility = View.GONE
-            showGroupStudentList()
-        }
-        /*group studentd*/
 
 
     }
 
+    private fun showModeNotes() {
+        binding.simpleTextTitle.text = "Заметки о студенте"
+        binding.etNotes.hint = "Внести заметку о студенте"
+        binding.tilName.visibility = View.GONE
+        binding.etNotes.inputType = InputType.TYPE_CLASS_TEXT
+        showNotesStudent()
+
+        binding.imageAddNotes.setOnClickListener {
+            addStudentNotes()
+        }
+    }
+
+    private fun showModeContactParent() {
+        binding.simpleTextTitle.text = "Контакты родителей"
+        binding.etName.hint = "Введите имя"
+        binding.etNotes.hint = "Введите номер"
+        binding.etName.inputType = InputType.TYPE_CLASS_TEXT
+        binding.etNotes.inputType = InputType.TYPE_CLASS_NUMBER
+        showParentContact()
+
+        binding.etNotes.addTextChangedListener(PhoneTextFormatter(binding.etNotes, "+7 (###) ###-####"))
+
+        binding.imageAddNotes.setOnClickListener {
+            addParentContact()
+        }
+    }
+
+    private fun showModeGroupStudent() {
+        binding.simpleTextTitle.text = "Группы студента"
+        binding.tilName.visibility = View.GONE
+        binding.tilNotes.visibility = View.GONE
+        binding.imageAddNotes.visibility = View.GONE
+        showGroupStudentList()
+    }
 
     private fun showGroupStudentList() {
         listView = binding.listView
@@ -267,7 +247,7 @@ class BottomFragment : BottomSheetDialogFragment() {
                     //map[item.date] = item.text
                 }
             }
-            countNotes = dataNotesStudentModel!!.size ?: 0
+            countNotes = dataNotesStudentModel?.size ?: 0
             adapterNotes = ListNotesAdapter(dataNotesStudentModel!!, requireContext().applicationContext)
             listView.adapter = adapterNotes
             setupClickListenerNotes()
@@ -323,7 +303,7 @@ class BottomFragment : BottomSheetDialogFragment() {
                     dataParentContactStudentModel!!.add(DataParentContactStudentModel(item.name, item.number, item.id))
                 }
             }
-            countContactParent = dataParentContactStudentModel!!.size ?: 0
+            countContactParent = dataParentContactStudentModel?.size ?: 0
             val adapterParentContact = ListParentContactAdapter(dataParentContactStudentModel!!, requireContext().applicationContext)
             listView.adapter = adapterParentContact
 
@@ -376,87 +356,8 @@ class BottomFragment : BottomSheetDialogFragment() {
     }
 
 
-    private fun showPaymentsList() {
-        dataPaymentStudentModel = ArrayList<DataPaymentStudentModel>()
-        listView = binding.listView
-        listView2 = binding.listView2
-        viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
-
-        viewModelPayment.paymentList.observe(viewLifecycleOwner) {
-            dataPaymentStudentModel!!.clear()
-            if(it.isNotEmpty()) {
-                for (payment in it) {
-                    if(payment.studentId == studentItemId) {
-                        //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
-                        if (payment.enabled) {
-                            dataPaymentStudentModel!!.add(DataPaymentStudentModel(payment.id, "Оплачен: " + payment.title, payment.price.toString()))
-                        } else {
-                            dataPaymentStudentModel!!.add(DataPaymentStudentModel(payment.id,"Долг: " + payment.title, "-" + payment.price.toString()))
-                        }
-
-                    }
-                }
-            }
-/*                adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
-                listView.adapter = adapter*/
-            val adapter =  ListPaymentAdapter(dataPaymentStudentModel!!, requireContext().applicationContext)
-            listView.adapter = adapter
-            listView2.adapter = adapter
-
-            listView.setOnItemClickListener { parent, _, position, _ ->
-                val selectedItem = parent.getItemAtPosition(position) as DataPaymentStudentModel
-                deptOff(selectedItem.id)
-
-               // navigateEditPayment(selectedItem.id)
-            }
-
-            listView2.setOnItemClickListener { parent, _, position, _ ->
-                val selectedItem = parent.getItemAtPosition(position) as DataPaymentStudentModel
-                deptOff(selectedItem.id)
-                //navigateEditPayment(selectedItem.id)
-            }
-
-        }
 
 
-    }
-
-    private fun deptOff(idPayment: Int) {
-        viewModelPayments = ViewModelProvider(this)[PaymentItemViewModel::class.java]
-        viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
-        viewModelLessons = ViewModelProvider(this)[LessonsItemViewModel::class.java]
-
-        viewModelPayments.getPaymentItem(idPayment)
-        viewModelPayments.paymentItem.observe(viewLifecycleOwner) {payItem->
-            if(!payItem.enabled) {
-                val payOff = payItem.price
-                val itemPaymentId = payItem.id
-                val idLessons = payItem.lessonsId
-                viewModelStudent.getStudentItem(payItem.studentId)
-                viewModelStudent.studentItem.observe(viewLifecycleOwner) {studentItem ->
-                    if(studentItem.paymentBalance >= ( - payOff)) {
-                        //производит замену прайса с учетом списания долга в записи студента
-                        viewModelStudent.editPaymentBalance(studentItem.id, (studentItem.paymentBalance + payOff))
-                        //выстаявляет значение платежа в соответствии со стоимостью урока
-                        viewModelLessons.getLessonsItem(idLessons)
-                        viewModelLessons.lessonsItem.observe(viewLifecycleOwner) {lessItem->
-                            viewModelPayments.changeEnableState(lessItem.price, itemPaymentId)
-
-                        }
-                        Toast.makeText(activity,"Баланс: " + studentItem.paymentBalance + " Долг:  " + payOff,Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(activity,"Баланс студента не позволяет списать долг.",Toast.LENGTH_SHORT).show()
-                    }
-                }
-            } else {
-                Toast.makeText(activity,"Платеж не является долгом и списывать его не нужно.",Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-
-    // Я выбрал этот метод ЖЦ, и считаю, что это удачное место
-    // Вы можете попробовать производить эти действия не в этом методе ЖЦ, а например в onCreateDialog()
     override fun onStart() {
         super.onStart()
 

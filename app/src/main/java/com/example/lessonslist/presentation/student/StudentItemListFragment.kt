@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +27,6 @@ import com.example.lessonslist.databinding.FragmentStudentItemListBinding
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.helpers.StringHelpers
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
-import com.example.lessonslist.presentation.lessons.sale.SaleItemViewModel
 import com.example.lessonslist.presentation.lessons.sale.SalesItemListViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.google.android.material.appbar.MaterialToolbar
@@ -53,6 +51,7 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     private var toolbar: MaterialToolbar? = null
     private var menuChoice: Menu? = null
     private var hideModifyAppBar = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -87,6 +86,9 @@ class StudentItemListFragment: Fragment(), MenuProvider {
         viewModel = ViewModelProvider(this)[StudentListViewModel::class.java]
         viewModel.studentList.observe(viewLifecycleOwner) { listStudent ->
             if(listStudent.isNotEmpty()) {
+                if(binding.noStudent.visibility == View.VISIBLE) {
+                    binding.noStudent.visibility = View.GONE
+                }
                 val studentSort = listStudent.sortedBy { it.name }
                 studentListAdapter.submitList(studentSort)
             } else {
@@ -175,7 +177,7 @@ class StudentItemListFragment: Fragment(), MenuProvider {
             toolbar?.setNavigationOnClickListener {
                 showDeleteMenu(false)
                 studentListAdapter.pairList.clear()
-                setCustomDataStudentsCheckAll(false)
+                setCustomDataStudentsSelectAll(false)
             }
             hideModifyAppBar = true
         } else {
@@ -195,7 +197,7 @@ class StudentItemListFragment: Fragment(), MenuProvider {
         menuChoice?.findItem(R.id.menu_select_all)?.isVisible = show
     }
 
-    private fun setCustomDataStudentsCheckAll(b: Boolean) {
+    private fun setCustomDataStudentsSelectAll(b: Boolean) {
         viewModel.studentList.observe(viewLifecycleOwner) {
             val listNew = ArrayList<StudentItem>()
             if(b) {
@@ -245,18 +247,17 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     private fun selectAll() {
         val itemCount = studentListAdapter.itemCount
         if(studentListAdapter.pairList.isNotEmpty() && studentListAdapter.pairList.size < itemCount) {//notEmpty
-            if(studentListAdapter.pairList.size >= 3) {
+            if(studentListAdapter.pairList.size > 3) {
                 studentListAdapter.pairList.clear()
-                setCustomDataStudentsCheckAll(false)
+                setCustomDataStudentsSelectAll(false)
             } else {
-                setCustomDataStudentsCheckAll(true)
+                setCustomDataStudentsSelectAll(true)
             }
-
         } else if (studentListAdapter.pairList.size == itemCount){
             studentListAdapter.pairList.clear()
-            setCustomDataStudentsCheckAll(false)
+            setCustomDataStudentsSelectAll(false)
         } else if (studentListAdapter.pairList.isEmpty()) {
-            setCustomDataStudentsCheckAll(true)
+            setCustomDataStudentsSelectAll(true)
         }
     }
 
@@ -282,16 +283,17 @@ class StudentItemListFragment: Fragment(), MenuProvider {
             alert.setView(layout)
 
             alert.setPositiveButton("удалить") { _, _ ->
-               // if (studentListAdapter.pairList.isNotEmpty()) {
+                if (studentListAdapter.pairList.isNotEmpty()) {
                     studentListAdapter.pairList.forEach {
-                        //Log.d("itemStudentForDelete", it.toString())
                         deletePaymentToStudent(it.key)
                         deleteAllSaleItem(it.key)
                         deleteAllContactStudent(it.key)
                         deleteAllNotesStudent(it.key)
                         viewModel.deleteStudentItem(it.key)
                     }
-               // }
+                    setCustomDataStudentsSelectAll(false)
+                    showDeleteMenu(false)
+                }
             }
 
             alert.setNegativeButton("не удалять") { dialog, _ ->
