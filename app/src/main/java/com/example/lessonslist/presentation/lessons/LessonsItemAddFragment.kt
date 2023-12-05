@@ -696,10 +696,12 @@ class LessonsItemAddFragment : Fragment()  {
         if ((::adapter.isInitialized && ::adapterGroup.isInitialized) || ::adapter.isInitialized) {
 
 
-            if (!adapterGroup.isEmpty) {
-                adapterGroup.arrayList.forEach {
-                    StringHelpers.getStudentIds(it).forEach { studentId ->
-                        lstValues.add(studentId)
+            if (::adapterGroup.isInitialized) {
+                if (!adapterGroup.isEmpty) {
+                    adapterGroup.arrayList.forEach {
+                        StringHelpers.getStudentIds(it).forEach { studentId ->
+                            lstValues.add(studentId)
+                        }
                     }
                 }
             }
