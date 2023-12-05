@@ -164,7 +164,6 @@ class BottomFragment : BottomSheetDialogFragment() {
         navController.navigate(R.id.groupItemFragment, btnArgsGroup, NavigationOptions().invoke())
     }
     private fun addParentContact() {
-      //  binding.etNotes.setHint("")
         val textName = binding.etName.text.toString()
         val textNumber = binding.etNotes.text.toString()
 
