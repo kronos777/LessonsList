@@ -25,6 +25,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentStudentItemListBinding
 import com.example.lessonslist.domain.student.StudentItem
+import com.example.lessonslist.presentation.helpers.NavigationOptions
 import com.example.lessonslist.presentation.helpers.StringHelpers
 import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.lessons.sale.SalesItemListViewModel
@@ -103,12 +104,8 @@ class StudentItemListFragment: Fragment(), MenuProvider {
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
             navController.popBackStack(R.id.calendarItemFragment, true)
-            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-                .setExitAnim(R.anim.slide_in_right)
-                .setPopEnterAnim(R.anim.slide_out_left)
-                .setPopExitAnim(R.anim.slide_out_right).build()
 
-            navController.navigate(R.id.calendarItemFragment, null, animationOptions)
+            navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
         }
     }
 
@@ -120,11 +117,9 @@ class StudentItemListFragment: Fragment(), MenuProvider {
         val btnArgsLessons = Bundle().apply {
             putString(StudentItemFragment.SCREEN_MODE, StudentItemFragment.MODE_ADD)
         }
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
-        navController.navigate(R.id.studentItemFragment, btnArgsLessons, animationOptions)
+
+
+        navController.navigate(R.id.studentItemFragment, btnArgsLessons, NavigationOptions().invoke())
     }
 
     private fun navigateBtnEditStudent(id: Int) {
@@ -136,11 +131,8 @@ class StudentItemListFragment: Fragment(), MenuProvider {
             putString(StudentItemEditFragment.SCREEN_MODE, StudentItemEditFragment.MODE_EDIT)
             putInt(StudentItemEditFragment.SHOP_ITEM_ID, id)
         }
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
-        navController.navigate(R.id.studentItemEditFragment, btnArgsLessons, animationOptions)
+
+        navController.navigate(R.id.studentItemEditFragment, btnArgsLessons, NavigationOptions().invoke())
     }
 
 
@@ -221,12 +213,7 @@ class StudentItemListFragment: Fragment(), MenuProvider {
         val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
 
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
-
-        navController.navigate(R.id.calendarItemFragment, null, animationOptions)
+        navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {

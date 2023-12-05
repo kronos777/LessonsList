@@ -24,6 +24,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentGroupItemListBinding
 import com.example.lessonslist.domain.group.GroupItem
+import com.example.lessonslist.presentation.helpers.NavigationOptions
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -75,12 +76,7 @@ class GroupItemListFragment: Fragment(), MenuProvider {
         val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
 
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
-
-        navController.navigate(R.id.calendarItemFragment, null, animationOptions)
+        navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
     }
 
 
@@ -89,11 +85,8 @@ class GroupItemListFragment: Fragment(), MenuProvider {
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
             navController.popBackStack(R.id.calendarItemFragment, true)
-            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-                .setExitAnim(R.anim.slide_in_right)
-                .setPopEnterAnim(R.anim.slide_out_left)
-                .setPopExitAnim(R.anim.slide_out_right).build()
-            navController.navigate(R.id.calendarItemFragment, null, animationOptions)
+
+            navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
         }
     }
 
@@ -108,19 +101,14 @@ class GroupItemListFragment: Fragment(), MenuProvider {
             )
 
         }
-       // setupLongClickListener()
+
         setupClickListener()
-    // setupSwipeListener(binding.rvGroupList)
     }
 
 
     private fun setupClickListener() {
         groupListAdapter.onGroupItemClickListener = {
-           /* fragmentManager?.beginTransaction()
-                ?.replace(R.id.fragment_item_container, GroupItemFragment.newInstanceEditItem(it.id))
-                ?.addToBackStack(null)
-                ?.commit()*/
-            navigateBtnEditGroup(it.id)
+           navigateBtnEditGroup(it.id)
        }
     }
 
@@ -132,11 +120,8 @@ class GroupItemListFragment: Fragment(), MenuProvider {
         val btnArgsGroup = Bundle().apply {
             putString(GroupItemFragment.SCREEN_MODE, GroupItemFragment.MODE_ADD)
         }
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
-        navController.navigate(R.id.groupItemFragment, btnArgsGroup, animationOptions)
+
+        navController.navigate(R.id.groupItemFragment, btnArgsGroup, NavigationOptions().invoke())
     }
 
     private fun navigateBtnEditGroup(id: Int) {
@@ -148,11 +133,8 @@ class GroupItemListFragment: Fragment(), MenuProvider {
             putString(GroupItemFragment.SCREEN_MODE, GroupItemFragment.MODE_EDIT)
             putInt(GroupItemFragment.GROUP_ITEM_ID, id)
         }
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
-        navController.navigate(R.id.groupItemFragment, btnArgsGroup, animationOptions)
+
+        navController.navigate(R.id.groupItemFragment, btnArgsGroup, NavigationOptions().invoke())
     }
 
     private fun showDeleteMenu(show: Boolean) {

@@ -4,13 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -22,18 +19,21 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.lessonslist.R
 import com.example.lessonslist.data.AppDatabase
-import com.example.lessonslist.presentation.service.PaymentWork
+import com.example.lessonslist.data.service.PaymentMinuteWork
+import com.example.lessonslist.data.service.PaymentWork
 import com.example.lessonslist.databinding.ActivityMainBinding
 import com.example.lessonslist.domain.payment.PaymentItem
 import com.example.lessonslist.presentation.calendar.CalendarItemFragment
 import com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupListViewModel
+import com.example.lessonslist.presentation.helpers.NavigationOptions
 import com.example.lessonslist.presentation.lessons.LessonsItemAddFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemEditFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
@@ -49,7 +49,6 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
-import java.io.File
 import java.util.Calendar
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
@@ -88,7 +87,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         initDrawerNavigation()
         //initBottomNavigation()
        // startWorkManager()
-        initWorkManager()
+        startWorkManageMinute()
+       // initWorkManager()
         initMaterialToolBar()
         getDeptPayment()
         initNavHeader()
@@ -112,7 +112,14 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     }
 
-
+    private fun startWorkManageMinute() {
+        val workManager = WorkManager.getInstance(application)
+        workManager.enqueueUniqueWork(
+            PaymentMinuteWork.NAME,
+            ExistingWorkPolicy.REPLACE,
+            PaymentMinuteWork.makeRequest()
+        )
+    }
 
 
     private fun onDestinationChanged(currentDestination: Int) {
@@ -127,12 +134,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                     //this.findViewById(R.id.tool_bar)?.setNavigationIcon(R.drawable.ic_baseline_navigate_before_24)
                     paymentBtnAppBarTop.visibility = View.VISIBLE
                     backupBtnAppBarTop.visibility = View.VISIBLE
-                }/* R.id.lessonsItemListFragment -> {
-                    enableHomeBackIcon(true)
-                    toggle.setHomeAsUpIndicator(R.drawable.ic_baseline_navigate_before_24)
-                    paymentBtnAppBarTop.visibility = View.GONE
-                    backupBtnAppBarTop.visibility = View.GONE
-                } */else -> {
+                } else -> {
                     enableHomeBackIcon(true)
                     toggle.setHomeAsUpIndicator(R.drawable.ic_baseline_navigate_before_24)
                     paymentBtnAppBarTop.visibility = View.GONE
@@ -151,11 +153,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         binding.toolBar.setNavigationOnClickListener {
             val navHostFragment = this.supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
-            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-                .setExitAnim(R.anim.slide_in_right)
-                .setPopEnterAnim(R.anim.slide_out_left)
-                .setPopExitAnim(R.anim.slide_out_right).build()
-            navController.navigate(R.id.calendarItemFragment, null, animationOptions)
+            navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
         }
     }
 
@@ -172,28 +170,22 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.CUSTOM_LIST)
         }
 
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
-
-
         bottomNavigationView.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.bottomItem1 -> {
-                    navController.navigate(R.id.calendarItemFragment, null, animationOptions)
+                    navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
                 }
                 R.id.bottomItem2 -> {
-                    navController.navigate(R.id.paymentItemListFragment, btnArgsPayment, animationOptions)
+                    navController.navigate(R.id.paymentItemListFragment, btnArgsPayment, NavigationOptions().invoke())
                 }
                 R.id.bottomItem3 -> {
-                    navController.navigate(R.id.groupItemListFragment, null, animationOptions)
+                    navController.navigate(R.id.groupItemListFragment, null, NavigationOptions().invoke())
                 }
                 R.id.bottomItem4 -> {
-                    navController.navigate(R.id.lessonsItemListFragment, btnArgsLessons, animationOptions)
+                    navController.navigate(R.id.lessonsItemListFragment, btnArgsLessons, NavigationOptions().invoke())
                 }
                 R.id.bottomItem5 -> {
-                    navController.navigate(R.id.studentItemListFragment, null, animationOptions)
+                    navController.navigate(R.id.studentItemListFragment, null, NavigationOptions().invoke())
                 }
             }
             true
@@ -359,26 +351,17 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             setToolbarNavigationClickListener {
                 // Back to home fragment for any hit to the back button
                 navController.navigate(R.id.main_navigation)
-               // Log.d("clickBtn", "cl1")
             }
-            // Intialize the icon at the app start
+
             enableHomeBackIcon(false)
         }
 
-        //toggle.syncState()
-
-
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
 
 
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
-               // R.id.muItem2 ->  navController.navigate(R.id.settingsNotificationsFragment, null, animationOptions)
-                R.id.muItem3 ->  navController.navigate(R.id.instructionFragment, null, animationOptions)
-                R.id.muItem4 -> navController.navigate(R.id.aboutFragment, null, animationOptions)
+                R.id.muItem3 ->  navController.navigate(R.id.instructionFragment, null, NavigationOptions().invoke())
+                R.id.muItem4 -> navController.navigate(R.id.aboutFragment, null, NavigationOptions().invoke())
                 R.id.muItem5 -> exitApplication()
             }
             true

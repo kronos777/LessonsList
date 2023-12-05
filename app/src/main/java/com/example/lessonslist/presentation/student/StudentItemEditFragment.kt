@@ -293,7 +293,7 @@ class StudentItemEditFragment : Fragment() {
                 putInt(PaymentItemListFragment.STUDENT_ID, studentItemId)
                 putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.STUDENT_ID_LIST)
             }
-            navController.navigate(R.id.paymentItemListFragment, btnArgsStudentNoParams, NavigationOptions().animationOptions())
+            navController.navigate(R.id.paymentItemListFragment, btnArgsStudentNoParams, NavigationOptions().invoke())
         } else if(params == "all_false_payment") {
             val btnArgsStudentFalsePayment = Bundle().apply {
                 putInt(PaymentItemListFragment.STUDENT_ID, studentItemId)
@@ -302,7 +302,7 @@ class StudentItemEditFragment : Fragment() {
                     PaymentItemListFragment.STUDENT_NO_PAY_LIST
                 )
             }
-            navController.navigate(R.id.paymentItemListFragment, btnArgsStudentFalsePayment, NavigationOptions().animationOptions())
+            navController.navigate(R.id.paymentItemListFragment, btnArgsStudentFalsePayment, NavigationOptions().invoke())
         }
 
     }

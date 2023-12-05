@@ -24,8 +24,6 @@ class ActSplash : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.act_splash)
-       // val imgSplash = findViewById<ImageView>(R.id.actSplash)
-        //imgSplash.colorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(0f)})
         showProgressBarOrNot()
     }
 

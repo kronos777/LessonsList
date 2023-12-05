@@ -19,6 +19,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentCalndarBinding
+import com.example.lessonslist.presentation.helpers.NavigationOptions
 import com.example.lessonslist.presentation.helpers.StringHelpers
 import com.example.lessonslist.presentation.lessons.LessonsItemAddFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
@@ -363,13 +364,7 @@ class CalendarItemFragment : Fragment() {
             putString(LessonsItemAddFragment.SCREEN_MODE, LessonsItemAddFragment.MODE_ADD)
             putString(LessonsItemAddFragment.DATE_ADD, date)
         }
-
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
-
-        navController.navigate(R.id.lessonsItemAddFragment, btnArgsLessons, animationOptions)
+        navController.navigate(R.id.lessonsItemAddFragment, btnArgsLessons, NavigationOptions().invoke())
     }
 
     private fun launchLessonsListFragment(date: String) {
@@ -382,12 +377,7 @@ class CalendarItemFragment : Fragment() {
             putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.DATE_ID_LIST)
         }
 
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
-
-        navController.navigate(R.id.lessonsItemListFragment, btnArgsLessons, animationOptions)
+        navController.navigate(R.id.lessonsItemListFragment, btnArgsLessons, NavigationOptions().invoke())
     }
 
     private fun launchPaymentListFragment(date: String) {
@@ -400,12 +390,7 @@ class CalendarItemFragment : Fragment() {
             putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.DATE_ID_LIST)
         }
 
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
-
-        navController.navigate(R.id.paymentItemListFragment, btnArgsPayments, animationOptions)
+        navController.navigate(R.id.paymentItemListFragment, btnArgsPayments, NavigationOptions().invoke())
     }
 
     private fun dialogWindow(date: CalendarDate, dataDate: MutableList<EventItemsList>) {

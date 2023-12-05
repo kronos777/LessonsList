@@ -20,17 +20,17 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemAddBinding
 import com.example.lessonslist.domain.lessons.LessonsItem
-import com.example.lessonslist.presentation.student.StudentListViewModel
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
+import com.example.lessonslist.presentation.helpers.NavigationOptions
 import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
 import com.example.lessonslist.presentation.helpers.StringHelpers
+import com.example.lessonslist.presentation.student.StudentListViewModel
 import java.lang.Thread.sleep
 import java.text.SimpleDateFormat
 import java.time.Duration
@@ -105,27 +105,18 @@ class LessonsItemAddFragment : Fragment()  {
         super.onViewCreated(view, savedInstanceState)
 
         (activity as AppCompatActivity).supportActionBar?.title = "Урок"
-
         viewModel = ViewModelProvider(this)[LessonsItemViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        //addTextChangeListeners()
-        //launchRightMode()
 
         launchAddMode()
         observeViewModel()
         lessonsTextChangeListeners()
 
-
-       // binding.tilStudent.visibility = View.GONE
-      //  binding.listViewGroup.visibility = View.GONE
-
-
         chooseDateLessons()
 
         setListViewStudent()
         setGroupViewStudent()
-     //   listenSwitchGroup()
         goLessonsListFragmentBackPressed()
 
         repeatLessons()
@@ -142,48 +133,20 @@ class LessonsItemAddFragment : Fragment()  {
                 putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.CUSTOM_LIST)
             }
             navController.popBackStack(R.id.lessonsItemListFragment, true)
-            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-                .setExitAnim(R.anim.slide_in_right)
-                .setPopEnterAnim(R.anim.slide_out_left)
-                .setPopExitAnim(R.anim.slide_out_right).build()
-            navController.navigate(R.id.lessonsItemListFragment, arguments, animationOptions)
+            navController.navigate(R.id.lessonsItemListFragment, arguments, NavigationOptions().invoke())
         }
     }
-
-   /* private fun listenSwitchGroup() {
-        val switchChoose = binding.switch1
-        switchChoose.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked) {
-                binding.listViewGroup.visibility = View.VISIBLE
-                binding.listView.visibility = View.GONE
-                binding.textViewChangeStateCheckbox.text = "Список групп."
-              //  Toast.makeText(activity, "isChecked", Toast.LENGTH_SHORT).show()
-            } else {
-                binding.listViewGroup.visibility = View.GONE
-                binding.listView.visibility = View.VISIBLE
-                binding.textViewChangeStateCheckbox.text = "Список учеников."
-              //  Toast.makeText(activity, "unchecked", Toast.LENGTH_SHORT).show()
-            }
-
-        }
-    }*/
-
 
     private fun repeatLessons() {
         val switchChoose = binding.etRepeat
         switchChoose.setOnCheckedChangeListener { _, isChecked ->
                 if(isChecked) {
-                 //   Toast.makeText(activity, "checked", Toast.LENGTH_SHORT).show()
                     binding.cardRepeatLessons.visibility = View.VISIBLE
-                  /*  binding.etDatestartRepeat.setOnClickListener {
-                        chooseDateStartRepeat()
-                    }*/
                     binding.etDateendRepeat.setOnClickListener {
                         chooseDateEndRepeat()
                     }
                 } else {
                     binding.cardRepeatLessons.visibility = View.GONE
-                    //Toast.makeText(activity, "unchecked", Toast.LENGTH_SHORT).show()
                 }
             }
     }
@@ -191,17 +154,12 @@ class LessonsItemAddFragment : Fragment()  {
     private fun notificationsLessons() {
         val switchChoose = binding.etNotifications
         binding.etTimeNotifications.addTextChangedListener(PhoneTextFormatter(binding.etTimeNotifications, "##:##"))
-        //textChangedListener(PhoneTextFormatter(binding.etTimeNotifications, "##:##"))
         switchChoose.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked) {
-                //   Toast.makeText(activity, "checked", Toast.LENGTH_SHORT).show()
                 binding.cardNotifications.visibility = View.VISIBLE
                 binding.etTimeNotifications.setOnClickListener {
                     setNotifications()
                 }
-                /*binding.etDateendRepeat.setOnClickListener {
-                    chooseDateEndRepeat()
-                }*/
             } else {
                 Toast.makeText(activity, "Вы убрали уведомление.", Toast.LENGTH_SHORT).show()
                 binding.cardNotifications.visibility = View.GONE
@@ -209,56 +167,10 @@ class LessonsItemAddFragment : Fragment()  {
                 binding.tilTimeNotifications.error = ""
                 binding.etTimeNotifications.setText("")
                 notificationBoolean = true
-                //Toast.makeText(activity, "unchecked", Toast.LENGTH_SHORT).show()
             }
         }
     }
-   /* private fun chooseDateStartRepeat() {
-        val cal = Calendar.getInstance()
-        val year1 = cal.get(Calendar.YEAR)
-        val month1 = cal.get(Calendar.MONTH)
-        val day1 = cal.get(Calendar.DAY_OF_MONTH)
-        val mcurrentTime = Calendar.getInstance()
-        var year = mcurrentTime.get(Calendar.YEAR)
-        var month = mcurrentTime.get(Calendar.MONTH)
-        var day = mcurrentTime.get(Calendar.DAY_OF_MONTH)
 
-
-        val startRepeat =
-            activity?.let {
-                DatePickerDialog(it, { _, yearcur, monthOfYear, dayOfMonth ->
-                    cal.set(yearcur, monthOfYear, dayOfMonth)
-                    year = cal[Calendar.YEAR]
-                    month = cal[Calendar.MONTH]
-                    day = cal[Calendar.DAY_OF_MONTH]
-                    binding.etDatestartRepeat.setText(String.format("%d/%d/%d", year, month + 1, day))
-                    timePicker1RepeatDate = year.toString() + "-" + (month + 1).toString() + "-" + day.toString()
-                }, year1, month1, day1)
-            }
-        startRepeat!!.show()
-        //binding.tilDatestartRepeat.error = "Период повторения не может быть мене текущей даты."
-    }*/
-/*    private fun checkDateTimeNotifications() {
-       val valueNotifications = binding.etTimeNotifications.text.toString()
-       Log.d("countChars", valueNotifications.count().toString())
-       if(valueNotifications.count() == 5) {
-           val hh = valueNotifications.split(":")
-           val h = hh[0]
-           val m = hh[1]
-           if((h.toInt() >= 24 || m.toInt() >= 60) || (h.toInt() >= 24 && m.toInt() >= 60)) {
-               binding.tilTimeNotifications.error = "Формат даты не может быть более 23:59"
-           } else {
-               binding.tilTimeNotifications.error = ""
-
-           }
-       } else if (valueNotifications.count() < 5) {
-           binding.tilTimeNotifications.error = "Введите время корректно"
-       } else if (valueNotifications.count() == 0) {
-           binding.tilTimeNotifications.error = ""
-       }
-
-    }
-*/
     private fun validValueNotifications() {
         val notify = binding.etTimeNotifications.text.toString()
         if (notify.isNotBlank() && binding.etDatestart.text.toString().isNotBlank()) {
@@ -276,15 +188,11 @@ class LessonsItemAddFragment : Fragment()  {
             /*time*/
 
             if (notify.isNotBlank() && timeDateStart.isNotBlank()) {
-              //val formatter = SimpleDateFormat("HH:mm", Locale.ENGLISH)
-                //val formattedDatetimeDateNotifications = formatter.parse(timeDateStart)
-                //LocalTime time = LocalTime.of(23, 59);
                 val formattedDatetimeDateNotifications = LocalTime.of(hhnotify, mmnotify)
                 val formattedDatetimeDateStart = LocalTime.of(hhstart, mmstart)
-                //val formattedDatetimeDateStart = formatter.parse(timeDateStart)
-                if(formattedDatetimeDateNotifications >= formattedDatetimeDateStart.minusMinutes(20)) {
-                    Toast.makeText(activity, "Значение даты напоминания не может быть больше или равному дате начала урока за 20 минут.", Toast.LENGTH_SHORT).show()
-                    binding.tilTimeNotifications.error = "Значение даты напоминания не может быть больше или равному дате начала урока за 20 минут."
+                if(formattedDatetimeDateNotifications >= formattedDatetimeDateStart.minusMinutes(9)) {
+                    Toast.makeText(activity, "Значение даты напоминания не может быть больше или равному дате начала урока за 9 минут.", Toast.LENGTH_SHORT).show()
+                    binding.tilTimeNotifications.error = "Значение даты напоминания не может быть больше или равному дате начала урока за 9 минут."
                     notificationBoolean = false
                 } else {
                     notificationString = formattedDatetimeDateNotifications.toString()
@@ -292,7 +200,6 @@ class LessonsItemAddFragment : Fragment()  {
                     notificationBoolean = true
 
                 }
-                //Toast.makeText(activity, "this value start time" + formattedDatetimeDateStart.minusMinutes(20), Toast.LENGTH_SHORT).show()
 
             } else if(notify.isBlank() && timeDateStart.isNotBlank()) {
                 notificationString = ""
@@ -332,8 +239,8 @@ class LessonsItemAddFragment : Fragment()  {
 
             { _, hourOfDay, minute ->
 
-                val minH = if (hourOfDay < 10) "0" + hourOfDay else hourOfDay
-                val minM = if (minute < 10) "0" + minute else minute
+                val minH = if (hourOfDay < 10) "0$hourOfDay" else hourOfDay
+                val minM = if (minute < 10) "0$minute" else minute
 
                 binding.etTimeNotifications.setText("$minH:$minM")
                // binding.tilNotifications.setEndIconDrawable(R.drawable.ic_baseline_circle_24)
@@ -427,7 +334,7 @@ class LessonsItemAddFragment : Fragment()  {
         dataStudentlList = ViewModelProvider(this)[StudentListViewModel::class.java]
         var studentName: Array<String> = emptyArray()
 
-        dataStudentlList.studentList.observe(viewLifecycleOwner) { it ->
+        dataStudentlList.studentList.observe(viewLifecycleOwner) {
             if(it.isNotEmpty()) {
                 for(student in it){
                     val name = student.name + " " + student.lastname
@@ -435,10 +342,7 @@ class LessonsItemAddFragment : Fragment()  {
                     studentName += name
                     if(viewModel.lessonsItem.value != null) {
                         viewModel.lessonsItem.observe(viewLifecycleOwner) { item ->
-                            var dataString = item.student
-                            dataString = dataString.replace("]", "")
-                            dataString = dataString.replace("[", "")
-                            val lstValues: List<Int> = dataString.split(",").map { it.trim().toInt() }
+                            val lstValues = StringHelpers.getStudentIds(item.student)
                             if(lstValues.contains(id)) {
                                 dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
                             } else {
@@ -456,16 +360,6 @@ class LessonsItemAddFragment : Fragment()  {
                 binding.cardStudents.setOnClickListener {
                     setStudentLessons()
                 }
-
-              //  adapter = ListStudentAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
-                /*  listView.adapter = adapter
-
-                  listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                      val dataStudent: DataStudentGroupModel = dataStudentGroupModel!![position]
-                      dataStudent.checked = !dataStudent.checked
-                      adapter.notifyDataSetChanged()
-                  }*/
-
 
             } else {
 
@@ -767,9 +661,9 @@ class LessonsItemAddFragment : Fragment()  {
             Toast.makeText(activity, "Урок не может быть добавлен задним числом.", Toast.LENGTH_SHORT).show()
             return
         }
-        viewModel.lessonsList.observe(viewLifecycleOwner) {
+        viewModel.lessonsList.observe(viewLifecycleOwner) { listLessons ->
             var ret = true
-            it.forEach {
+            listLessons.forEach {
                 val dateStartLesson = LocalDateTime.parse(it.dateStart, formatter)
                 val dateEndLesson = LocalDateTime.parse(it.dateEnd, formatter)
                 if(dateStart in dateStartLesson..dateEndLesson || dateEnd in dateStartLesson..dateEndLesson) {
@@ -943,11 +837,7 @@ class LessonsItemAddFragment : Fragment()  {
         val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
 
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
-        navController.navigate(R.id.studentItemListFragment, null, animationOptions)
+       navController.navigate(R.id.studentItemListFragment, null, NavigationOptions().invoke())
     }
 
 

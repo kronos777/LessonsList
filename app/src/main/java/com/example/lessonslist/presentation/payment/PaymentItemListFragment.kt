@@ -10,15 +10,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentPaymentItemListBinding
 import com.example.lessonslist.domain.payment.PaymentItem
+import com.example.lessonslist.presentation.helpers.NavigationOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 
 class PaymentItemListFragment: Fragment() {
@@ -64,16 +63,7 @@ class PaymentItemListFragment: Fragment() {
         binding.buttonSwithPayment.setOnClickListener {
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
-            navController.navigate(R.id.calendarPaymentItemFragment, null)
-            /*if(!paymentEnabled) {
-                binding.buttonSwithPayment.setImageResource(R.drawable.baseline_attach_money_24)
-                showPayment("payment_enabled")
-                paymentEnabled = true
-            } else {
-                binding.buttonSwithPayment.setImageResource(R.drawable.baseline_money_off_24)
-                showPayment("payment_yes")
-                paymentEnabled = false
-            }*/
+            navController.navigate(R.id.calendarPaymentItemFragment, null, NavigationOptions().invoke())
 
         }
     }
@@ -211,11 +201,7 @@ class PaymentItemListFragment: Fragment() {
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
             navController.popBackStack(R.id.calendarItemFragment, true)
-            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-                .setExitAnim(R.anim.slide_in_right)
-                .setPopEnterAnim(R.anim.slide_out_left)
-                .setPopExitAnim(R.anim.slide_out_right).build()
-            navController.navigate(R.id.calendarItemFragment, null, animationOptions)
+            navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
         }
     }
 
@@ -273,12 +259,7 @@ class PaymentItemListFragment: Fragment() {
             putInt(PaymentItemFragment.PAYMENT_ITEM_ID, id)
         }
 
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
-
-        navController.navigate(R.id.paymentItemFragment, btnArgsLessons, animationOptions)
+        navController.navigate(R.id.paymentItemFragment, btnArgsLessons, NavigationOptions().invoke())
     }
 
 

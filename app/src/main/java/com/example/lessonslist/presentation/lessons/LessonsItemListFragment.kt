@@ -27,6 +27,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemListBinding
 import com.example.lessonslist.domain.lessons.LessonsItem
+import com.example.lessonslist.presentation.helpers.NavigationOptions
 import com.example.lessonslist.presentation.lessons.sale.SalesItemListViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.google.android.material.appbar.MaterialToolbar
@@ -153,12 +154,8 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
         val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
         val navController = navHostFragment.navController
 
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
 
-        navController.navigate(R.id.calendarItemFragment, null, animationOptions)
+        navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
     }
 
     /*
@@ -395,11 +392,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
             navController.popBackStack(R.id.calendarItemFragment, true)
-            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-                .setExitAnim(R.anim.slide_in_right)
-                .setPopEnterAnim(R.anim.slide_out_left)
-                .setPopExitAnim(R.anim.slide_out_right).build()
-            navController.navigate(R.id.calendarItemFragment, null, animationOptions)
+            navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
         }
     }
 
@@ -435,21 +428,15 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
                 putString(LessonsItemEditFragment.DATE_ID_BACKSTACK, mode)
                 putInt(LessonsItemEditFragment.LESSONS_ITEM_ID, id)
             }
-            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-                .setExitAnim(R.anim.slide_in_right)
-                .setPopEnterAnim(R.anim.slide_out_left)
-                .setPopExitAnim(R.anim.slide_out_right).build()
-            navController.navigate(R.id.lessonsItemEditFragment, btnArgsLessons, animationOptions)
+
+            navController.navigate(R.id.lessonsItemEditFragment, btnArgsLessons, NavigationOptions().invoke())
         } else {
             val btnArgsLessons = Bundle().apply {
                 putString(LessonsItemEditFragment.SCREEN_MODE, LessonsItemEditFragment.MODE_EDIT)
                 putInt(LessonsItemEditFragment.LESSONS_ITEM_ID, id)
             }
-            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-                .setExitAnim(R.anim.slide_in_right)
-                .setPopEnterAnim(R.anim.slide_out_left)
-                .setPopExitAnim(R.anim.slide_out_right).build()
-            navController.navigate(R.id.lessonsItemEditFragment, btnArgsLessons, animationOptions)
+
+            navController.navigate(R.id.lessonsItemEditFragment, btnArgsLessons, NavigationOptions().invoke())
         }
 
 
@@ -464,11 +451,8 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
             putString(LessonsItemAddFragment.SCREEN_MODE, LessonsItemAddFragment.MODE_ADD)
             putString(LessonsItemAddFragment.DATE_ADD, dateId)
         }
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
-        navController.navigate(R.id.lessonsItemAddFragment, btnArgsLessons, animationOptions)
+
+        navController.navigate(R.id.lessonsItemAddFragment, btnArgsLessons, NavigationOptions().invoke())
     }
 
 

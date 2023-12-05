@@ -19,6 +19,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentGroupItemBinding
 import com.example.lessonslist.domain.group.GroupItem
+import com.example.lessonslist.presentation.helpers.NavigationOptions
 import com.example.lessonslist.presentation.student.StudentListViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -139,11 +140,7 @@ class GroupItemFragment : Fragment() {
             val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
             val navController = navHostFragment.navController
             navController.popBackStack(R.id.groupItemListFragment, true)
-            val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-                .setExitAnim(R.anim.slide_in_right)
-                .setPopEnterAnim(R.anim.slide_out_left)
-                .setPopExitAnim(R.anim.slide_out_right).build()
-            navController.navigate(R.id.groupItemListFragment, null, animationOptions)
+            navController.navigate(R.id.groupItemListFragment, null, NavigationOptions().invoke())
         }
     }
 

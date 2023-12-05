@@ -17,6 +17,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentCalendarPaymentBinding
+import com.example.lessonslist.presentation.helpers.NavigationOptions
 import com.example.lessonslist.presentation.helpers.StringHelpers
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
@@ -396,13 +397,7 @@ class CalendarPaymentItemFragment : Fragment() {
             putString(PaymentItemListFragment.DATE_ID, date)
             putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.DATE_ID_LIST)
         }
-
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
-
-        navController.navigate(R.id.paymentItemListFragment, btnArgsPayments, animationOptions)
+        navController.navigate(R.id.paymentItemListFragment, btnArgsPayments, NavigationOptions().invoke())
     }
 
 

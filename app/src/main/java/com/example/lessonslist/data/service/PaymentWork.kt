@@ -1,4 +1,4 @@
-package com.example.lessonslist.presentation.service
+package com.example.lessonslist.data.service
 
 import android.app.Application
 import android.app.NotificationChannel
@@ -17,6 +17,7 @@ import com.example.lessonslist.data.AppDatabase
 import com.example.lessonslist.data.lessons.LessonsItemDbModel
 import com.example.lessonslist.domain.sale.SaleItem
 import com.example.lessonslist.presentation.MainActivity
+import com.example.lessonslist.presentation.helpers.StringHelpers
 import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -35,17 +36,11 @@ class PaymentWork(
 
     private val appDatabase = AppDatabase
 
-    fun getStudentIds(dataString: String): List<Int> {
-        var dataStr = dataString.replace("]", "")
-        dataStr = dataStr.replace("[", "")
-        return dataStr.split(",").map { it.trim().toInt() }
-    }
-
-
-
 
    // @OptIn(DelicateCoroutinesApi::class)
    override suspend fun doWork(): Result {
+
+
 
        withContext(Dispatchers.Default) {
 
@@ -111,7 +106,7 @@ class PaymentWork(
                            // log("время начала урока меньше текущего те урок окончен текущее время:" + currentTime + " время начала урока:" + timeStartLessons)
                             //log("время начала урока меньше текущего те урок окончен")
                           //  log("поле студенты " + lessonsItem.student.toString() + lessonsItem.title)
-                            val stIds = getStudentIds(lessonsItem.student)
+                            val stIds = StringHelpers.getStudentIds(lessonsItem.student)
                         //    log("в противном случае на каждого ученика необходимо создать платеж" + stIds)
 
                             val namesStudentArrayList: ArrayList<String> = ArrayList()
@@ -238,7 +233,7 @@ class PaymentWork(
                                 }
                             }
                             lateinit var notificationString: String
-                            if (noPay == 0) {
+                            if(noPay == 0) {
                                 notificationString = "Выставлены счета " + namesStudentArrayList.size + " ученикам и все оплаты прошли успешно."
                             } else {
                                 notificationString = "Выставлены счета " + namesStudentArrayList.size + " ученикам, " + okPay + " оплат успешных и " + noPay + " остались неоплаченными."
@@ -246,7 +241,6 @@ class PaymentWork(
                             createNotification(lessonsItem.id, "Прошел урок: " + lessonsItem.title, notificationString, lessonsItem.id)
                         }
 
-                        /*dt*/
 
                     }
                 }
@@ -258,7 +252,6 @@ class PaymentWork(
         }
 
         return Result.success()
-      //  Log.d("lesList", less.toString())
 
     }
 

@@ -24,6 +24,7 @@ import com.example.lessonslist.domain.group.GroupItem
 import com.example.lessonslist.domain.lessons.LessonsItem
 import com.example.lessonslist.presentation.group.DataStudentGroupModel
 import com.example.lessonslist.presentation.group.ListStudentAdapter
+import com.example.lessonslist.presentation.helpers.NavigationOptions
 import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
 import com.example.lessonslist.presentation.helpers.StringHelpers
 import com.example.lessonslist.presentation.lessons.sale.*
@@ -617,11 +618,8 @@ class LessonsItemEditFragment : Fragment() {
         val btnArgsLessons = Bundle().apply {
             putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.CUSTOM_LIST)
         }
-        val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-            .setExitAnim(R.anim.slide_in_right)
-            .setPopEnterAnim(R.anim.slide_out_left)
-            .setPopExitAnim(R.anim.slide_out_right).build()
-        navController.navigate(R.id.lessonsItemListFragment, btnArgsLessons, animationOptions)
+
+        navController.navigate(R.id.lessonsItemListFragment, btnArgsLessons, NavigationOptions().invoke())
 
     }
 
@@ -729,11 +727,8 @@ class LessonsItemEditFragment : Fragment() {
                     putString(LessonsItemListFragment.DATE_ID, mode)
                 }
                 navController.popBackStack(R.id.lessonsItemListFragment, true)
-                val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-                    .setExitAnim(R.anim.slide_in_right)
-                    .setPopEnterAnim(R.anim.slide_out_left)
-                    .setPopExitAnim(R.anim.slide_out_right).build()
-                navController.navigate(R.id.lessonsItemListFragment, arguments, animationOptions)
+
+                navController.navigate(R.id.lessonsItemListFragment, arguments, NavigationOptions().invoke())
             }
         } else {
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -743,11 +738,8 @@ class LessonsItemEditFragment : Fragment() {
                     putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.CUSTOM_LIST)
                 }
                 navController.popBackStack(R.id.lessonsItemListFragment, true)
-                val animationOptions = NavOptions.Builder().setEnterAnim(R.anim.slide_in_left)
-                    .setExitAnim(R.anim.slide_in_right)
-                    .setPopEnterAnim(R.anim.slide_out_left)
-                    .setPopExitAnim(R.anim.slide_out_right).build()
-                navController.navigate(R.id.lessonsItemListFragment, arguments, animationOptions)
+
+                navController.navigate(R.id.lessonsItemListFragment, arguments, NavigationOptions().invoke())
             }
         }
 
