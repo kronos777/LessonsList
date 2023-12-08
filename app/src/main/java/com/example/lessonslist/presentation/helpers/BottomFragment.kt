@@ -282,7 +282,7 @@ class BottomFragment : BottomSheetDialogFragment() {
             dialog.dismiss()
         }
 
-        alert.setCancelable(false)
+        alert.setCancelable(true)
         alert.show()
     }
 
@@ -347,7 +347,7 @@ class BottomFragment : BottomSheetDialogFragment() {
         alert.setNeutralButton("закрыть") { dialog, _ ->
             dialog.dismiss()
         }
-        alert.setCancelable(false)
+        alert.setCancelable(true)
         alert.show()
     }
 

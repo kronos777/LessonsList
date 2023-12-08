@@ -24,8 +24,6 @@ import com.example.lessonslist.presentation.payment.PaymentItemViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import java.lang.Exception
-import java.lang.Thread.sleep
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -258,15 +256,15 @@ class PaymentMinuteWork(
 
        //вычислить текущую дату и совпадение с временем начала урока
         val formatterCurentDay = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        var currentDay = currentTime.format(formatterCurentDay)
-        var dayLessons = startLessonsTime.format(formatterCurentDay)
+        val currentDay = currentTime.format(formatterCurentDay)
+        val dayLessons = startLessonsTime.format(formatterCurentDay)
 
         if(dayLessons == currentDay) {  //if today
            // log("текущеее время " + currentTime + " время урока " + startLessonsTime + " время уведомления " + notification + " урок " + lessonsItem.title)
             //проверить условия для отправки уведомлений
             //а условие попадание в диапазон времени  текущем в значение уведомления
-            val hstart = currentTime.toString().split("T")
-            val shstart = hstart[1].split(":")
+            val hStart = currentTime.toString().split("T")
+            val shstart = hStart[1].split(":")
             val hhstart = shstart[0].toInt()
             val mmstart = shstart[1].toInt()
 
@@ -315,20 +313,13 @@ class PaymentMinuteWork(
         val dbSales = appDatabase.getInstance(applicationContext as Application).SaleListDao().getSalesIdLessons(idLessons)
         val valueExistsSale = ArrayList<SaleItem>()
 
-        if(dbSales !== null) {
-            dbSales.let {
-                for (item in it) {
-                    if(idStudent == item.idStudent) {
-                        valueExistsSale.add(SaleItem(item.idStudent, item.idLessons, item.price, item.id))
-                    }
+        dbSales.let {
+            for (item in it) {
+                if(idStudent == item.idStudent) {
+                    valueExistsSale.add(SaleItem(item.idStudent, item.idLessons, item.price, item.id))
                 }
             }
         }
-
-        /*
-        * проверить наличие скидки на урок
-        * проверить наличие скидки на студента
-        * */
 
         return valueExistsSale
 
@@ -378,7 +369,6 @@ class PaymentMinuteWork(
             .setContentTitle(title)
             .setStyle(NotificationCompat.BigTextStyle()
                 .bigText(description))
-            //.setContentText(description)
             .setSound(ringtoneManager)
             .addAction(R.drawable.ic_baseline_phone_forwarded_24, "Подробнее", resultPendingIntent)
             .setSmallIcon(R.drawable.ic_baseline_menu_book_24)

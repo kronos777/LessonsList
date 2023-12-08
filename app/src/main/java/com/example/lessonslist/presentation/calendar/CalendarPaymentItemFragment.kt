@@ -282,7 +282,7 @@ class CalendarPaymentItemFragment : Fragment() {
                 dialog.dismiss()
             }
 
-            alert.setCancelable(false)
+            alert.setCancelable(true)
             alert.show()
         } else {
             val alert = AlertDialog.Builder(requireContext())
@@ -353,7 +353,7 @@ class CalendarPaymentItemFragment : Fragment() {
                 dialog.dismiss()
             }
 
-            alert.setCancelable(false)
+            alert.setCancelable(true)
             alert.show()
 
         }

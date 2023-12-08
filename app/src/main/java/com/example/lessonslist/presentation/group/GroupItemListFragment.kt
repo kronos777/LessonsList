@@ -282,7 +282,7 @@ class GroupItemListFragment: Fragment(), MenuProvider {
             dialog.dismiss()
         }
 
-        alert.setCancelable(false)
+        alert.setCancelable(true)
         alert.show()
     }
 

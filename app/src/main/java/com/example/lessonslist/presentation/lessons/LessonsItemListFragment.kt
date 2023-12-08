@@ -224,7 +224,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
             dialog.dismiss()
         }
 
-        alert.setCancelable(false)
+        alert.setCancelable(true)
         alert.show()
     }
 

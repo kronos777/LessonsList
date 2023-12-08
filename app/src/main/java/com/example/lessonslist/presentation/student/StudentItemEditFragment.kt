@@ -498,7 +498,7 @@ class StudentItemEditFragment : Fragment() {
             dialog.dismiss()
         }
 
-        alert.setCancelable(false)
+        alert.setCancelable(true)
         alert.show()
     }
 

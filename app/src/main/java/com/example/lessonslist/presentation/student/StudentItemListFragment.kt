@@ -287,7 +287,7 @@ class StudentItemListFragment: Fragment(), MenuProvider {
                 dialog.dismiss()
             }
 
-            alert.setCancelable(false)
+            alert.setCancelable(true)
             alert.show()
         } else {
             val alert = AlertDialog.Builder(requireContext())
@@ -313,7 +313,7 @@ class StudentItemListFragment: Fragment(), MenuProvider {
                 dialog.dismiss()
             }
 
-            alert.setCancelable(false)
+            alert.setCancelable(true)
             alert.show()
         }
     }

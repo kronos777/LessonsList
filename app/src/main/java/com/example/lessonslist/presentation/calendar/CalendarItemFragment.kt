@@ -408,7 +408,7 @@ class CalendarItemFragment : Fragment() {
                 dialog.dismiss()
             }
 
-            alert.setCancelable(false)
+            alert.setCancelable(true)
             alert.show()
         } else {
             val alert = AlertDialog.Builder(requireContext())
@@ -507,7 +507,7 @@ class CalendarItemFragment : Fragment() {
                 dialog.dismiss()
             }
 
-            alert.setCancelable(false)
+            alert.setCancelable(true)
             alert.show()
 
         }
