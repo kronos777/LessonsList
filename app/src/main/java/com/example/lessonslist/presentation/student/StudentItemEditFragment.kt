@@ -26,7 +26,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
@@ -80,7 +79,7 @@ class StudentItemEditFragment : Fragment() {
 
     private var pathImageSrc: String = ""
 
-    private val TAKEPHOTO = 1
+    private val takeFoto = 1
 
     private val cropImage = registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
@@ -424,47 +423,6 @@ class StudentItemEditFragment : Fragment() {
     }
 
 
-/*
-    private fun addParentContactStudent() {
-
-        val alert = AlertDialog.Builder(requireContext())
-        alert.setTitle("Добавить телефон родителей.")
-        //alert.setMessage("Enter phone details and amount to buy airtime.")
-
-        val layout = LinearLayout(requireContext())
-        layout.orientation = LinearLayout.VERTICAL
-
-
-        val mobileNoET = EditText(requireContext())
-        mobileNoET.setSingleLine()
-        mobileNoET.hint = "Имя"
-        layout.addView(mobileNoET)
-
-        val amountET = EditText(requireContext())
-        amountET.setSingleLine()
-        amountET.hint = "Телефон"
-        amountET.inputType = TYPE_CLASS_NUMBER
-        amountET.addTextChangedListener(PhoneTextFormatter(amountET, "+7 (###) ###-####"))
-        layout.addView(amountET)
-
-        layout.setPadding(50, 40, 50, 10)
-
-        alert.setView(layout)
-
-        alert.setPositiveButton("Добавить") { _, _ ->
-            val name = mobileNoET.text.toString()
-            val number = amountET.text.toString()
-            Toast.makeText(activity, "Saved Sucessfully", Toast.LENGTH_LONG).show()
-            viewModelParentContact.addParentContact(name, number, studentItemId)
-        }
-
-        alert.setNegativeButton("отмена") { dialog, _ ->
-            dialog.dismiss()
-        }
-
-        alert.setCancelable(false)
-        alert.show()
-    }*/
 
     private fun addPhoneNumber() {
         val alert = AlertDialog.Builder(requireContext())
@@ -485,13 +443,7 @@ class StudentItemEditFragment : Fragment() {
         alert.setView(layout)
         alert.setPositiveButton("Добавить") { _, _ ->
             val number = amountET.text.toString()
-           // Toast.makeText(activity, "Saved Sucessfully" + number, Toast.LENGTH_LONG).show()
             viewModel.editPhoneNumber(studentItemId, number)
-          //  sleep(100)
-           /* viewModel.studentItem.observe(viewLifecycleOwner) {
-                binding.textViewTelephone.text = it.telephone
-             //   Toast.makeText(activity, "new phone" + it.telephone, Toast.LENGTH_LONG).show()
-            }*/
         }
 
         alert.setNegativeButton("отмена") { dialog, _ ->
@@ -519,7 +471,7 @@ class StudentItemEditFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == TAKEPHOTO && resultCode == RESULT_OK) {
+        if (requestCode == takeFoto && resultCode == RESULT_OK) {
             // Фотка сделана, извлекаем миниатюру картинки
             if(data?.extras?.get("data") != null) {
                 val imageUri: Uri? = activity?.let { getImageUri(it.applicationContext,
@@ -703,7 +655,6 @@ class StudentItemEditFragment : Fragment() {
         const val SCREEN_MODE = "extra_mode"
         const val SHOP_ITEM_ID = "extra_shop_item_id"
         const val MODE_EDIT = "mode_edit"
-        const val MODE_UNKNOWN = ""
 
     }
 }
