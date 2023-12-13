@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -18,23 +17,23 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.BottomSheetLayoutBinding
+import com.example.lessonslist.domain.group.GroupItem
+import com.example.lessonslist.domain.notes.NotesItem
+import com.example.lessonslist.domain.parent.ParentContact
 import com.example.lessonslist.domain.student.StudentItem
 import com.example.lessonslist.presentation.group.GroupItemFragment
 import com.example.lessonslist.presentation.group.GroupListViewModel
 import com.example.lessonslist.presentation.student.*
-import com.example.lessonslist.presentation.student.group.DataStudentGroupModel
-import com.example.lessonslist.presentation.student.group.ListStudentGroupAdapter
-import com.example.lessonslist.presentation.student.notes.DataNotesStudentModel
-import com.example.lessonslist.presentation.student.notes.ListNotesAdapter
-import com.example.lessonslist.presentation.student.parentContact.DataParentContactStudentModel
-import com.example.lessonslist.presentation.student.parentContact.ListParentContactAdapter
+import com.example.lessonslist.presentation.student.group.GroupListAdapterBottomFragment
+import com.example.lessonslist.presentation.student.notes.NotesListAdapterBottomFragment
+import com.example.lessonslist.presentation.student.parentContact.ParentListAdapterBottomFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.TextInputLayout
 import java.text.SimpleDateFormat
 import java.util.*
 
-private const val COLLAPSED_HEIGHT = 650
+private const val COLLAPSED_HEIGHT = 400
 
 class BottomFragment : BottomSheetDialogFragment() {
 
@@ -42,14 +41,16 @@ class BottomFragment : BottomSheetDialogFragment() {
     private var studentItemId: Int = StudentItem.UNDEFINED_ID
 
     //по листам
-    private lateinit var listView: ListView
     private lateinit var viewModelNotesItem: NotesItemViewModel
     private lateinit var viewModelParentContact: ParentContactViewModel
     private lateinit var viewModelGroup: GroupListViewModel
 
-    private var dataNotesStudentModel: ArrayList<DataNotesStudentModel>? = null
-    private var dataParentContactStudentModel: ArrayList<DataParentContactStudentModel>? = null
-    private var dataStudentGroupModel: ArrayList<DataStudentGroupModel>? = null
+
+    private lateinit var groupListAdapter: GroupListAdapterBottomFragment
+
+    private lateinit var parentListAdapter: ParentListAdapterBottomFragment
+
+    private lateinit var notesListAdapter: NotesListAdapterBottomFragment
 
     private var countContactParent: Int? = null
     private var countNotes: Int? = null
@@ -58,9 +59,9 @@ class BottomFragment : BottomSheetDialogFragment() {
     lateinit var binding: BottomSheetLayoutBinding
 
 
-    private lateinit var adapterNotes: ListNotesAdapter
-
-
+    private val allNotes = ArrayList<NotesItem>()
+    private val allContact = ArrayList<ParentContact>()
+    private val listGroup = ArrayList<GroupItem>()
     // Переопределим тему, чтобы использовать нашу с закруглёнными углами
     override fun getTheme() = R.style.AppBottomSheetDialogTheme
 
@@ -88,6 +89,10 @@ class BottomFragment : BottomSheetDialogFragment() {
 
 
     }
+
+
+
+
 
     private fun showModeNotes() {
         binding.simpleTextTitle.text = "Заметки о студенте"
@@ -121,32 +126,172 @@ class BottomFragment : BottomSheetDialogFragment() {
         binding.tilName.visibility = View.GONE
         binding.tilNotes.visibility = View.GONE
         binding.imageAddNotes.visibility = View.GONE
-        showGroupStudentList()
+        //showGroupStudentList()
+        //setupGroupStudentRecycler()
+        showGroupStudent()
     }
 
-    private fun showGroupStudentList() {
-        listView = binding.listView
-        dataStudentGroupModel = ArrayList<DataStudentGroupModel>()
-        viewModelGroup = ViewModelProvider(this)[GroupListViewModel::class.java]
-        viewModelGroup.groupList.observe(viewLifecycleOwner) { groups ->
-            for (group in groups) {
-                val studentIds = StringHelpers.getStudentIds(group.student)
-                if(studentIds.isNotEmpty()) {
-                   if(studentIds.contains(studentItemId)) {
-                       dataStudentGroupModel!!.add(DataStudentGroupModel(group.id, group.title))
 
-                   }
 
-                }
-            }
-            val adapterGroup = ListStudentGroupAdapter(dataStudentGroupModel!!, requireContext().applicationContext)
-            listView.adapter = adapterGroup
-            setupGroupItemAdapterClick(adapterGroup)
+    private fun setupNotesRecycler() {
+        with(binding.rvList) {
+            notesListAdapter = NotesListAdapterBottomFragment()
+            adapter = notesListAdapter
+            recycledViewPool.setMaxRecycledViews(
+                NotesListAdapterBottomFragment.VIEW_TYPE_ENABLED,
+                NotesListAdapterBottomFragment.MAX_POOL_SIZE
+            )
+        }
+
+    }
+
+
+    private fun setupParentRecycler() {
+        with(binding.rvList) {
+            parentListAdapter = ParentListAdapterBottomFragment()
+            adapter = parentListAdapter
+            recycledViewPool.setMaxRecycledViews(
+                ParentListAdapterBottomFragment.VIEW_TYPE_ENABLED,
+                ParentListAdapterBottomFragment.MAX_POOL_SIZE
+            )
         }
     }
 
-    private fun setupGroupItemAdapterClick(adapterGroup: ListStudentGroupAdapter) {
-        adapterGroup.onGroupItemClick = {
+
+    private fun setupGroupStudentRecycler() {
+        with(binding.rvList) {
+            groupListAdapter = GroupListAdapterBottomFragment()
+            adapter = groupListAdapter
+            recycledViewPool.setMaxRecycledViews(
+                GroupListAdapterBottomFragment.VIEW_TYPE_ENABLED,
+                GroupListAdapterBottomFragment.MAX_POOL_SIZE
+            )
+        }
+    }
+
+    private fun setupExpandedRecycler() {
+        when(screenMode) {
+            "mode_notes" -> showModeExpandedNotes()
+            "contact_parent" -> showModeExpandedContactParent()
+            "group_student" -> showModeExpandedGroupStudent()
+        }
+    }
+
+    private fun showModeExpandedGroupStudent() {
+        with(binding.rvListExpanded) {
+            adapter =  groupListAdapter
+            recycledViewPool.setMaxRecycledViews(
+                GroupListAdapterBottomFragment.VIEW_TYPE_ENABLED,
+                GroupListAdapterBottomFragment.MAX_POOL_SIZE
+            )
+        }
+
+        if(listGroup.isNotEmpty()) {
+            groupListAdapter.submitList(listGroup)
+            setupGroupItemAdapterClick()
+        }
+    }
+
+    private fun showModeExpandedNotes() {
+        with(binding.rvListExpanded) {
+            adapter =  notesListAdapter
+            recycledViewPool.setMaxRecycledViews(
+                NotesListAdapterBottomFragment.VIEW_TYPE_ENABLED,
+                NotesListAdapterBottomFragment.MAX_POOL_SIZE
+            )
+        }
+
+        if(allNotes.isNotEmpty()){
+            notesListAdapter.submitList(allNotes)
+            setupClickListenerNotes()
+        }
+    }
+
+    private fun showModeExpandedContactParent() {
+        with(binding.rvListExpanded) {
+            adapter =  parentListAdapter
+            recycledViewPool.setMaxRecycledViews(
+                ParentListAdapterBottomFragment.VIEW_TYPE_ENABLED,
+                ParentListAdapterBottomFragment.MAX_POOL_SIZE
+            )
+        }
+
+        if(allContact.isNotEmpty()) {
+            parentListAdapter.submitList(allContact)
+            setupParentClickListener()
+        }
+
+    }
+
+
+    private fun showNotesStudent() {
+        viewModelNotesItem = ViewModelProvider(this)[NotesItemViewModel::class.java]
+        viewModelNotesItem.notesList.getNotesList().observe(viewLifecycleOwner) {
+            allNotes.clear()
+            for (item in it) {
+                if(item.student == studentItemId) {
+                    allNotes.add(item)
+                }
+            }
+            countNotes = allNotes.size
+            if(allNotes.isNotEmpty()){
+                setupNotesRecycler()
+                notesListAdapter.submitList(allNotes)
+                setupClickListenerNotes()
+            }
+        }
+    }
+
+
+
+
+    private fun showParentContact() {
+        viewModelParentContact = ViewModelProvider(this)[ParentContactViewModel::class.java]
+        viewModelParentContact.parentContactList.getParentList().observe(viewLifecycleOwner) { listContact ->
+            allContact.clear()
+            listContact.forEach {
+                if(it.student == studentItemId) {
+                    allContact.add(it)
+                }
+            }
+            countContactParent = allContact.size
+            if(allContact.isNotEmpty()) {
+                setupParentRecycler()
+                parentListAdapter.submitList(allContact)
+                setupParentClickListener()
+            }
+        }
+    }
+
+    private fun setupParentClickListener() {
+        parentListAdapter.onParentItemClickListener = {
+            getDialogContactItem(it.name, it.number, it.id)
+        }
+    }
+
+
+    private fun showGroupStudent() {
+        viewModelGroup = ViewModelProvider(this)[GroupListViewModel::class.java]
+        viewModelGroup.groupList.observe(viewLifecycleOwner) { groups ->
+            groups.forEach { 
+                if(StringHelpers.getStudentIds(it.student).contains(studentItemId)) {
+                    listGroup.add(it)
+                }
+            }
+            if(listGroup.isNotEmpty()) {
+                setupGroupStudentRecycler()
+                groupListAdapter.submitList(listGroup)
+                setupGroupItemAdapterClick()
+            }
+
+        }
+    }
+
+
+
+
+    private fun setupGroupItemAdapterClick() {
+        groupListAdapter.onGroupItemClickListener = {
             navigateBtnEditGroup(it.id)
         }
     }
@@ -228,32 +373,9 @@ class BottomFragment : BottomSheetDialogFragment() {
         element.error = ""
     }
 
-
-    private fun showNotesStudent() {
-        listView = binding.listView
-        dataNotesStudentModel = ArrayList<DataNotesStudentModel>()
-        viewModelNotesItem = ViewModelProvider(this)[NotesItemViewModel::class.java]
-        //val map: HashMap<String, String> = HashMap()
-        viewModelNotesItem.notesList.getNotesList().observe(viewLifecycleOwner) {
-            dataNotesStudentModel!!.clear()
-            for (item in it) {
-                if(item.student == studentItemId) {
-//                    map[item.date] = item.text
-                    dataNotesStudentModel!!.add(DataNotesStudentModel(item.text, item.date, item.id))
-                    //map[item.date] = item.text
-                }
-            }
-            countNotes = dataNotesStudentModel?.size ?: 0
-            adapterNotes = ListNotesAdapter(dataNotesStudentModel!!, requireContext().applicationContext)
-            listView.adapter = adapterNotes
-            setupClickListenerNotes()
-        }
-
-    }
-
     private fun setupClickListenerNotes() {
-        adapterNotes.onNotesItemClickListener = {
-            getDialogNotesItem(it.date.toString(), it.text.toString(), it.id)
+        notesListAdapter.onNotesItemClickListener = {
+            getDialogNotesItem(it.date, it.text, it.id)
         }
     }
 
@@ -284,33 +406,6 @@ class BottomFragment : BottomSheetDialogFragment() {
 
         alert.setCancelable(true)
         alert.show()
-    }
-
-
-
-    private fun showParentContact() {
-        listView = binding.listView
-        viewModelParentContact = ViewModelProvider(this)[ParentContactViewModel::class.java]
-        dataParentContactStudentModel = ArrayList<DataParentContactStudentModel>()
-        viewModelParentContact.parentContactList.getParentList().observe(viewLifecycleOwner) {
-            dataParentContactStudentModel!!.clear()
-            for (item in it) {
-                if(item.student == studentItemId) {
-                    dataParentContactStudentModel!!.add(DataParentContactStudentModel(item.name, item.number, item.id))
-                }
-            }
-            countContactParent = dataParentContactStudentModel?.size ?: 0
-            val adapterParentContact = ListParentContactAdapter(dataParentContactStudentModel!!, requireContext().applicationContext)
-            listView.adapter = adapterParentContact
-
-
-        }
-
-        listView.setOnItemClickListener { _, _, position, _ ->
-            //selectAction(dataParentContactStudentModel?.get(position)?.phone)
-            getDialogContactItem(dataParentContactStudentModel?.get(position)?.text, dataParentContactStudentModel?.get(position)?.phone, dataParentContactStudentModel?.get(position)!!.id)
-        }
-
     }
 
     private fun selectAction(number: String?) {
@@ -386,8 +481,10 @@ class BottomFragment : BottomSheetDialogFragment() {
 
                             // Когда оффсет превышает половину, мы скрываем collapsed layout и делаем видимым expanded
                             if (slideOffset > 0.5) {
+                                setupExpandedRecycler()
                                 layoutCollapsed.visibility = View.GONE
                                 layoutExpanded.visibility = View.VISIBLE
+                                layoutExpanded.minimumHeight = 700
                             }
 
                             // Если же оффсет меньше половины, а expanded layout всё ещё виден, то нужно скрывать его и показывать collapsed
@@ -484,3 +581,4 @@ class BottomFragment : BottomSheetDialogFragment() {
     }
 
 }
+
