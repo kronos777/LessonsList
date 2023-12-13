@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentCalndarBinding
@@ -48,7 +47,7 @@ class CalendarItemFragment : Fragment() {
 
 
     val arrayList: ArrayList<String> = ArrayList()
-    val calendarList: ArrayList<CalendarDate> = ArrayList()
+    private val calendarList: ArrayList<CalendarDate> = ArrayList()
 
     lateinit var viewModel: LessonsListViewModel
     lateinit var viewModelPaymentList: PaymentListViewModel
@@ -140,19 +139,12 @@ class CalendarItemFragment : Fragment() {
             }
 
             for (item in it) {
-
-                //val date = item.dateEnd.split(" ")
                 val nameLessons = item.title
-                /*Log.d("calendarDate", testCreateDt(date[0]).toString())
-                Log.d("calendarDate 2", Date(date[0]).toString())
-                val  dd = CalendarDate(Date(date[0]))*/
-                //val tv = calendarCreate(item.dateEnd)
-                val  dd = CalendarDate(StringHelpers.calendarCreate(item.dateEnd))
-                arrayListLessons.add(dd)
-             //   calendarList.add(dd)
-                calendarPicList += EventItemsList(dd, "lessons", nameLessons)
-                calendarShowMessageList += EventItemsList(dd, "lessons", nameLessons)
-                dateTitleMutableMap[dd.toString()] = nameLessons
+                val dateEndLessons = CalendarDate(StringHelpers.calendarCreate(item.dateEnd))
+                arrayListLessons.add(dateEndLessons)
+                calendarPicList += EventItemsList(dateEndLessons, "lessons", nameLessons)
+                calendarShowMessageList += EventItemsList(dateEndLessons, "lessons", nameLessons)
+                dateTitleMutableMap[dateEndLessons.toString()] = nameLessons
             }
 
 
@@ -178,13 +170,12 @@ class CalendarItemFragment : Fragment() {
 
 
                var minDateNumberLessons: CalendarDate
-               if(arrayListLessons.size == 0){
-                   calendar.set(getCurrentDate().year, getCurrentDate().month.value, getCurrentDate().dayOfMonth)
-                   //calendar.set(2000, Calendar.JANUARY, 1)
-                   minDateNumberLessons = CalendarDate(calendar.time)
-               } else {
-                   minDateNumberLessons = arrayListLessons[0]
-               }
+                minDateNumberLessons = if(arrayListLessons.size == 0){
+                    calendar.set(getCurrentDate().year, getCurrentDate().month.value, getCurrentDate().dayOfMonth)
+                    CalendarDate(calendar.time)
+                } else {
+                    arrayListLessons[0]
+                }
 
                 for (dates in arrayListLessons) {
                     if(minDateNumberLessons > dates)
@@ -192,11 +183,11 @@ class CalendarItemFragment : Fragment() {
                 }
 
                 var minDateNumberPayments: CalendarDate
-                if (arrayListPayments.size == 0) {
+                minDateNumberPayments = if (arrayListPayments.size == 0) {
                     calendar.set(getCurrentDate().year, getCurrentDate().month.value, getCurrentDate().dayOfMonth)
-                    minDateNumberPayments = CalendarDate(calendar.time)
+                    CalendarDate(calendar.time)
                 } else {
-                    minDateNumberPayments = arrayListPayments[0]
+                    arrayListPayments[0]
                 }
 
                 for (dates in arrayListPayments) {
@@ -230,18 +221,16 @@ class CalendarItemFragment : Fragment() {
 
 
 
-                if(minDateForSetMinDateTime == CalendarDate(StringHelpers.calendarCreate("2000/01/01 00:00").time)) {
+                minDate = if(minDateForSetMinDateTime == CalendarDate(StringHelpers.calendarCreate("2000/01/01 00:00").time)) {
                     Log.d("calendarDate", minDateForSetMinDateTime.toString())
-                //if(minDateForSetMindateTime == CalendarDate(Date(2000, 1, 1).time)) {
-                    minDate = minDateForSetMinDateTime
+                    //if(minDateForSetMindateTime == CalendarDate(Date(2000, 1, 1).time)) {
+                    minDateForSetMinDateTime
                 } else if((minDateNumberLessons > minDateNumberPayments || minDateNumberLessons < minDateNumberPayments || minDateNumberLessons == minDateNumberPayments) && minDateForSetMinDateTime != checkDate) {
-                    minDate = minDateForSetMinDateTime
-
+                    minDateForSetMinDateTime
                 } else if(minDateForSetMinDateTime == checkDate) {
-                    minDate = initialDate
+                    initialDate
                 } else {
-                    minDate = initialDate
-
+                    initialDate
                 }
 
 
@@ -255,18 +244,20 @@ class CalendarItemFragment : Fragment() {
                 //сортировать платежи долги
 
                 for (index in calendarPicList.indices) {
+                   calendarNewPaymentPicList += when (calendarPicList[index].color) {
+                        "paymentyes" -> {
+                            EventItemsList(calendarPicList[index].date, calendarPicList[index].color, "успешный платеж")
 
+                        }
+                        "payment" -> {
 
-                    if(calendarPicList[index].color == "paymentyes") {
-                        calendarNewPaymentPicList += EventItemsList(calendarPicList[index].date, calendarPicList[index].color, "успешный платеж")
+                            EventItemsList(calendarPicList[index].date, calendarPicList[index].color, "долг")
 
-                    } else if (calendarPicList[index].color == "payment") {
+                        }
+                        else -> {
+                            EventItemsList(calendarPicList[index].date, calendarPicList[index].color, "урок")
 
-                        calendarNewPaymentPicList += EventItemsList(calendarPicList[index].date, calendarPicList[index].color, "долг")
-
-                    } else {
-                        calendarNewPaymentPicList += EventItemsList(calendarPicList[index].date, calendarPicList[index].color, "урок")
-
+                        }
                     }
                 }
 
@@ -298,9 +289,7 @@ class CalendarItemFragment : Fragment() {
                                   calendarNewPaymentPicList[index].color
                               newCalendarNewPaymentPicList += calendarNewPaymentPicList[index]
                           }
-
-
-                      }
+                }
 
 
                 val indicators: List<CalendarView.DateIndicator> = setDatesIndicators(newCalendarNewPaymentPicList)
@@ -426,12 +415,6 @@ class CalendarItemFragment : Fragment() {
             for (index in dataDate.indices) {
                 if(dataDate[index].color == "lessons"){
                    val nameEvent = dataDate[index].eventName
-                    /*val index = TextView(requireContext()).apply {
-                        setSingleLine()
-                        //this.text = nameEvent
-                        this.text = nameEvent
-                        this.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
-                    }*/
                     layout.addView(TextView(requireContext()).apply {
                         setSingleLine()
                         this.text = nameEvent
@@ -492,7 +475,6 @@ class CalendarItemFragment : Fragment() {
 
             if(countPayYes != 0 || countPayNo != 0) {
                 alert.setPositiveButton("Платежи") { _, _ ->
-                    // launchFragment(PaymentItemListFragment.newInstanceDateId(date.toString()))
                     launchPaymentListFragment(date.toString())
                 }
             }
@@ -500,7 +482,6 @@ class CalendarItemFragment : Fragment() {
 
 
             alert.setNegativeButton("Уроки") { _, _ ->
-                //  launchFragment(LessonsItemListFragment.newInstanceDateId(date.toString()))
                 launchLessonsListFragment(date.toString())
             }
             alert.setNeutralButton("Закрыть") { dialog, _ ->
@@ -555,7 +536,5 @@ class CalendarItemFragment : Fragment() {
    interface OnEditingFinishedListener {
             fun onEditingFinished()
    }
-
-
 
 }
