@@ -399,7 +399,7 @@ class StudentItemEditFragment : Fragment() {
 
 
     private fun totalDebt() {
-        var summDept = 0
+        var sumDept = 0
         viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelPayment.paymentList.observe(viewLifecycleOwner) {
             if(it.isNotEmpty()) {
@@ -407,15 +407,16 @@ class StudentItemEditFragment : Fragment() {
                     if(payment.studentId == studentItemId) {
                         //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
                         if (!payment.enabled) {
-                            summDept += payment.price
+                            sumDept += payment.price
                              //dataPaymentStudentModel!!.add(DataPaymentStudentModel(payment.id,"Долг: " + payment.title, "-" + payment.price.toString()))
                         }
 
                     }
                 }
+                //Toast.makeText(activity, "Сумма долга + "+sumDept, Toast.LENGTH_SHORT).show()
                 //Log.d("summDept", summDept.toString())
-                binding.textViewPaymentBalance.text = summDept.toString()
                 binding.textViewPaymentBalance.setTextColor(R.color.custom_calendar_weekend_days_bar_text_color.dec())
+                binding.textViewPaymentBalance.text = sumDept.toString()
                 //binding.textViewPaymentBalance.setTextColor(-0x000000ff)
             }
 

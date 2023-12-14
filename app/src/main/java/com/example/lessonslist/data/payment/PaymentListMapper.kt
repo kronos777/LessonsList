@@ -12,7 +12,7 @@ class PaymentListMapper {
         lessonsId = paymentItem.lessonsId,
         datePayment = paymentItem.datePayment,
         price = paymentItem.price,
-        allprice = paymentItem.allprice,
+        allprice = paymentItem.allPrice,
         enabled = paymentItem.enabled,
         id = paymentItem.id
     )
@@ -25,7 +25,7 @@ class PaymentListMapper {
         lessonsId = paymentItemDbModel.lessonsId,
         datePayment = paymentItemDbModel.datePayment,
         price = paymentItemDbModel.price,
-        allprice = paymentItemDbModel.allprice,
+        allPrice = paymentItemDbModel.allprice,
         enabled = paymentItemDbModel.enabled,
         id = paymentItemDbModel.id
 

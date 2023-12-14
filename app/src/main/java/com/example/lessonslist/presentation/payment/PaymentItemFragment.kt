@@ -96,7 +96,7 @@ class PaymentItemFragment: Fragment() {
             viewModelStudent.getStudentItem(paymentItem.studentId)
             viewModelStudent.studentItem.observe(viewLifecycleOwner) {studentItem->
 
-                if(studentItem.paymentBalance > ( - paymentCount)) {
+                if(studentItem.paymentBalance >= ( - paymentCount)) {
                     binding.paymentOff.setOnClickListener {
                         deptOff()
                     }
@@ -125,6 +125,7 @@ class PaymentItemFragment: Fragment() {
                 val idLessons = paymentItem.lessonsId
                 viewModelStudent.getStudentItem(paymentItem.studentId)
                 viewModelStudent.studentItem.observe(viewLifecycleOwner) { studentItem ->
+
                     if(studentItem.paymentBalance >= ( - payOff)) {
                         //производит замену прайса с учетом списания долга в записи студента
                         viewModelStudent.editPaymentBalance(studentItem.id, (studentItem.paymentBalance + payOff))
@@ -145,6 +146,7 @@ class PaymentItemFragment: Fragment() {
                     } else {
                         Toast.makeText(activity,"Баланс студента не позволяет списать долг.",Toast.LENGTH_SHORT).show()
                     }
+
                 }
 
             }

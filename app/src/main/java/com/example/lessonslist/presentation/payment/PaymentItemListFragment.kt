@@ -2,6 +2,7 @@ package com.example.lessonslist.presentation.payment
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -174,7 +175,7 @@ class PaymentItemListFragment: Fragment() {
             }
         } else {
             viewModel = ViewModelProvider(this)[PaymentListViewModel::class.java]
-            viewModel.paymentList.observe(viewLifecycleOwner) {
+            viewModel.paymentList.observe(viewLifecycleOwner) { it ->
                 showImageNoneItem(it)
                 paymentListAdapter.submitList(it.reversed())
             }

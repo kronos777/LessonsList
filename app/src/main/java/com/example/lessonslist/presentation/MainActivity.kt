@@ -498,8 +498,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                     actualMoney += it[index].price
                     paidLessons++
                 } else {
-                    if(it[index].price != it[index].allprice) {
-                        actualMoney += (it[index].allprice + it[index].price)
+                    if(it[index].price != it[index].allPrice) {
+                        actualMoney += (it[index].allPrice + it[index].price)
 
                     }
                     deptMoney += it[index].price
