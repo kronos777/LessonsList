@@ -22,7 +22,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemListBinding
@@ -43,15 +42,24 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
     private val binding: FragmentLessonsItemListBinding
         get() = _binding ?: throw RuntimeException("FragmentGroupItemListBinding == null")
 
-    private lateinit var viewModel: LessonsListViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(this)[LessonsListViewModel::class.java]
+    }
     private lateinit var lessonsListAdapter: LessonsListAdapter
-    private lateinit var viewModelPayment: PaymentListViewModel
-    private lateinit var viewModelSalesList: SalesItemListViewModel
+    private val viewModelPayment by lazy {
+        ViewModelProvider(this)[PaymentListViewModel::class.java]
+    }
+    private val viewModelSalesList by lazy {
+        ViewModelProvider(this)[SalesItemListViewModel::class.java]
+    }
 
     private var toolbar: MaterialToolbar? = null
     private var menuChoice: Menu? = null
     private var hideModifyAppBar = false
 
+    private val navController by lazy {
+        (activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,7 +88,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
         bottomNavigationView.menu.findItem(R.id.bottomItem4).isChecked = true
 
         binding.buttonAddLessonsItem.setOnClickListener {
-            navigateBtnAddLessons("")
+            navigateBtnAddLessons()
         }
 
         goCalendarFragmentBackPressed()
@@ -151,10 +159,6 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun goCalendarFragment() {
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
-
         navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
     }
 
@@ -230,7 +234,6 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
 
 
     private fun deleteAllSaleItem(id: Int) {
-        viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
         val listDeleteId = HashSet<Int>()
         viewModelSalesList.salesList.observe(viewLifecycleOwner) { sales ->
             for (item in sales) {
@@ -264,7 +267,6 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun deletePaymentToLessons(lessonsId: Int) {
-        viewModelPayment = ViewModelProvider(this).get(PaymentListViewModel::class.java)
         viewModelPayment.paymentList.observe(viewLifecycleOwner) {
             for (payment in it) {
                 if(payment.lessonsId == lessonsId) {
@@ -279,7 +281,6 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
     private fun showDateOrCustomList(dateFilter: String?) {
         if(dateFilter != null) {
             val listArrayPayment: ArrayList<LessonsItem> = ArrayList()
-            viewModel = ViewModelProvider(this)[LessonsListViewModel::class.java]
             viewModel.lessonsList.observe(viewLifecycleOwner) {
                 listArrayPayment.clear()
                 for (lessons in it) {
@@ -318,7 +319,6 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun setCustomDataLessons() {
-        viewModel = ViewModelProvider(this)[LessonsListViewModel::class.java]
         viewModel.lessonsList.observe(viewLifecycleOwner) { listLessItem ->
             val listNew = ArrayList<LessonsItem>()
             val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
@@ -348,7 +348,6 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun setCustomDataLessonsCheckAll(selectAll: Boolean) {
-        viewModel = ViewModelProvider(this)[LessonsListViewModel::class.java]
         viewModel.lessonsList.observe(viewLifecycleOwner) {listLessItem->
             val listNew = ArrayList<LessonsItem>()
             if(selectAll) {
@@ -389,8 +388,6 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
 
     private fun goCalendarFragmentBackPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-            val navController = navHostFragment.navController
             navController.popBackStack(R.id.calendarItemFragment, true)
             navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
         }
@@ -416,9 +413,6 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun navigateBtnEditLessons(id: Int) {
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
         val args = requireArguments()
         val mode = args.getString(DATE_ID)
         if (mode != null) {
@@ -442,14 +436,10 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
 
     }
 
-    private fun navigateBtnAddLessons(dateId: String) {
-
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
+    private fun navigateBtnAddLessons() {
         val btnArgsLessons = Bundle().apply {
             putString(LessonsItemAddFragment.SCREEN_MODE, LessonsItemAddFragment.MODE_ADD)
-            putString(LessonsItemAddFragment.DATE_ADD, dateId)
+            putString(LessonsItemAddFragment.DATE_ADD, "")
         }
 
         navController.navigate(R.id.lessonsItemAddFragment, btnArgsLessons, NavigationOptions().invoke())

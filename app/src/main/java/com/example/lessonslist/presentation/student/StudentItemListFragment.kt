@@ -4,7 +4,6 @@ package com.example.lessonslist.presentation.student
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -20,7 +19,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentStudentItemListBinding
@@ -40,12 +38,24 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     private val binding: FragmentStudentItemListBinding
         get() = _binding ?: throw RuntimeException("FragmentGroupItemListBinding == null")
 
-    private lateinit var viewModel: StudentListViewModel
-    private lateinit var viewModelLessonsEdit: LessonsItemViewModel
-    private lateinit var viewModelPayment: PaymentListViewModel
-    private lateinit var viewModelSalesList: SalesItemListViewModel
-    private lateinit var viewModelParentContact: ParentContactViewModel
-    private lateinit var viewModelNotesItem: NotesItemViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(this)[StudentListViewModel::class.java]
+    }
+    private val viewModelLessonsEdit by lazy {
+        ViewModelProvider(this)[LessonsItemViewModel::class.java]
+    }
+    private val viewModelPayment by lazy {
+        ViewModelProvider(this)[PaymentListViewModel::class.java]
+    }
+    private val viewModelSalesList by lazy {
+        ViewModelProvider(this)[SalesItemListViewModel::class.java]
+    }
+    private val viewModelParentContact by lazy {
+        ViewModelProvider(this)[ParentContactViewModel::class.java]
+    }
+    private val viewModelNotesItem by lazy {
+        ViewModelProvider(this)[NotesItemViewModel::class.java]
+    }
 
     private lateinit var studentListAdapter: StudentListAdapter
 
@@ -53,6 +63,9 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     private var menuChoice: Menu? = null
     private var hideModifyAppBar = false
 
+    private val navController by lazy {
+        (activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,7 +97,6 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun setData() {
-        viewModel = ViewModelProvider(this)[StudentListViewModel::class.java]
         viewModel.studentList.observe(viewLifecycleOwner) { listStudent ->
             if(listStudent.isNotEmpty()) {
                 if(binding.noStudent.visibility == View.VISIBLE) {
@@ -101,18 +113,12 @@ class StudentItemListFragment: Fragment(), MenuProvider {
 
     private fun goCalendarFragmentBackPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-            val navController = navHostFragment.navController
             navController.popBackStack(R.id.calendarItemFragment, true)
-
             navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
         }
     }
 
     private fun navigateBtnAddStudent() {
-
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
 
         val btnArgsLessons = Bundle().apply {
             putString(StudentItemFragment.SCREEN_MODE, StudentItemFragment.MODE_ADD)
@@ -123,9 +129,6 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun navigateBtnEditStudent(id: Int) {
-
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
 
         val btnArgsLessons = Bundle().apply {
             putString(StudentItemEditFragment.SCREEN_MODE, StudentItemEditFragment.MODE_EDIT)
@@ -210,9 +213,6 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun goCalendarFragment() {
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
         navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
     }
 
@@ -318,7 +318,6 @@ class StudentItemListFragment: Fragment(), MenuProvider {
         }
     }
     private fun deleteAllNotesStudent(studentItemId: Int) {
-        viewModelNotesItem = ViewModelProvider(this)[NotesItemViewModel::class.java]
         val listDeleteId = HashSet<Int>()
         viewModelNotesItem.notesList.getNotesList().observe(viewLifecycleOwner) {
             for (item in it) {
@@ -333,7 +332,6 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun deleteAllContactStudent(studentItemId: Int) {
-        viewModelParentContact = ViewModelProvider(this)[ParentContactViewModel::class.java]
         val listDeleteId = HashSet<Int>()
         viewModelParentContact.parentContactList.getParentList().observe(viewLifecycleOwner) {
             for (item in it) {
@@ -348,7 +346,6 @@ class StudentItemListFragment: Fragment(), MenuProvider {
 
     }
     private fun deletePaymentToStudent(studentId: Int) {
-        viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelPayment.paymentList.observe(viewLifecycleOwner) {
             for (payment in it) {
                 if(payment.studentId == studentId) {
@@ -360,13 +357,9 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun editLessonsItem(idLessons: Int, studentId: Int) {
-        viewModelLessonsEdit = ViewModelProvider(this)[LessonsItemViewModel::class.java]
         viewModelLessonsEdit.getLessonsItem(idLessons)
-        // val lessonsItem = viewModelLessonsEdit.lessonsItem
         viewModelLessonsEdit.lessonsItem.observe(viewLifecycleOwner) {
-            //Log.d("valStudent", it.student)
             val newValueStudent = dropElementList(StringHelpers.getStudentIds(it.student), studentId)
-            //Log.d("delStudent", newValueStudent)
             viewModelLessonsEdit.editLessonsItem(
                 it.title,
                 it.notifications,
@@ -379,7 +372,6 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun deleteAllSaleItem(id: Int) {
-        viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
         val listDeleteId = HashSet<Int>()
         viewModelSalesList.salesList.observe(viewLifecycleOwner) { sales ->
             for (item in sales) {

@@ -18,7 +18,9 @@ class ActSplash : AppCompatActivity() {
 
     private val openMainAct = MutableLiveData<Boolean>()
     private var timer: TimerTask? = null
-    lateinit var viewModel: DateItemViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(this)[DateItemViewModel::class.java]
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +30,6 @@ class ActSplash : AppCompatActivity() {
     }
 
     private fun showProgressBarOrNot() {
-        viewModel = ViewModelProvider(this)[DateItemViewModel::class.java]
         viewModel.checkExistsDateItem(currentDate().toString())
         viewModel.dateItem.observe(this) {
             if(it!=null) {

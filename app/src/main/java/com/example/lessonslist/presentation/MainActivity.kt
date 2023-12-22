@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -36,7 +35,6 @@ import com.example.lessonslist.presentation.helpers.NavigationOptions
 import com.example.lessonslist.presentation.lessons.LessonsItemAddFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemEditFragment
 import com.example.lessonslist.presentation.lessons.LessonsItemListFragment
-import com.example.lessonslist.presentation.lessons.LessonsItemViewModel
 import com.example.lessonslist.presentation.lessons.LessonsListViewModel
 import com.example.lessonslist.presentation.payment.PaymentItemFragment
 import com.example.lessonslist.presentation.payment.PaymentItemListFragment
@@ -64,23 +62,30 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private var redCircle: FrameLayout? = null
     private var countTextView: TextView? = null
 
-    private lateinit var viewModelPayment: PaymentListViewModel
-    private lateinit var viewModelLessons: LessonsListViewModel
-    private lateinit var viewModelGroup: GroupListViewModel
-    private lateinit var viewModelStudent: StudentListViewModel
-    private lateinit var viewModelLesson: LessonsItemViewModel
+    private val viewModelPayment by lazy {
+        ViewModelProvider(this)[PaymentListViewModel::class.java]
+    }
+    private val viewModelLessons by lazy {
+        ViewModelProvider(this)[LessonsListViewModel::class.java]
+    }
+    private val viewModelGroup by lazy {
+        ViewModelProvider(this)[GroupListViewModel::class.java]
+    }
+    private val viewModelStudent by lazy {
+        ViewModelProvider(this)[StudentListViewModel::class.java]
+    }
+
     // create Firebase authentication object
-    private lateinit var navControllerTest: NavController
+    private val navController by lazy {
+        (supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        // Initialising auth object
-       /*launchMainFragment(SignInFragment(), "registration")*/
         parseParamsExtra()
-      //  launchMainFragment(CalendarItemFragment(), "calendar")
         backup = RoomBackup(this)
 
         initDrawerNavigation()
@@ -92,19 +97,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         getDeptPayment()
         initNavHeader()
         initBottomNavigationJetpack()
-        //binding.fab.hide()
-       /* val navController: NavController =
-            findNavController(this, R.id.fragment_item_container)
-        val bottomNavigationView =
-            findViewById<BottomNavigationView>(R.id.nav_view_bottom)
-        setupWithNavController(bottomNavigationView, navController)
 
-*/
-
-
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        navControllerTest = navHostFragment.navController
-        navControllerTest.addOnDestinationChangedListener { _, destination, _ ->
+        navController.addOnDestinationChangedListener { _, destination, _ ->
             onDestinationChanged(destination.id)
         }
 
@@ -150,15 +144,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     private fun goCalendarFragment() {
         binding.toolBar.setNavigationOnClickListener {
-            val navHostFragment = this.supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-            val navController = navHostFragment.navController
             navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
         }
     }
 
     private fun initBottomNavigationJetpack() {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
         val bottomNavigationView =
             findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         setupWithNavController(bottomNavigationView, navController)
@@ -225,9 +215,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
     private fun launchPaymentListEnabledFragment() {
-         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
         val btnArgsLessons = Bundle().apply {
             putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.PAYMENT_ENABLED)
         }
@@ -236,9 +223,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
     private fun launchPaymentListNoParamsFragment() {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
         val btnArgsLessons = Bundle().apply {
             putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.CUSTOM_LIST)
         }
@@ -308,10 +292,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
     private fun launchLessonsItemEditFragmentId(lessonIdForFragment: String) {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
-        val btnArgsLessons = Bundle().apply {
+         val btnArgsLessons = Bundle().apply {
             putString(LessonsItemEditFragment.SCREEN_MODE, LessonsItemEditFragment.MODE_EDIT)
             putInt(LessonsItemEditFragment.LESSONS_ITEM_ID, lessonIdForFragment.toInt())
         }
@@ -322,7 +303,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     private fun getDeptPayment() {
         val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
-        viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelPayment.paymentList.observe(this) {
             listArrayPayment.clear()
             for (payment in it) {
@@ -343,8 +323,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
     private fun initDrawerNavigation() {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
         toggle = getActionBarDrawerToggle(binding.drawerLayoutId, binding.toolBar).apply {
 
             setToolbarNavigationClickListener {
@@ -450,12 +428,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         calendar.set(currentYear, currentMonth, currentDay, currentHour, currentMinute)
         val initialDate = calendar.time
-
-        viewModelLessons = ViewModelProvider(this)[LessonsListViewModel::class.java]
-        viewModelStudent = ViewModelProvider(this)[StudentListViewModel::class.java]
-        viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
-        viewModelGroup = ViewModelProvider(this)[GroupListViewModel::class.java]
-        viewModelLesson = ViewModelProvider(this)[LessonsItemViewModel::class.java]
 
         viewModelLessons.lessonsList.observe(this) {
             var zaplanLessons = 0

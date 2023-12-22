@@ -30,6 +30,6 @@ interface StudentListDao {
 
 
     @Query("SELECT * FROM student_items WHERE name=:studentName AND lastname=:studentLastName LIMIT 1")
-    suspend fun checkExistsStudentItem(studentName: String, studentLastName: String): StudentItemDbModel
+    suspend fun checkExistsStudentItem(studentName: String, studentLastName: String): StudentItemDbModel?
 
 }

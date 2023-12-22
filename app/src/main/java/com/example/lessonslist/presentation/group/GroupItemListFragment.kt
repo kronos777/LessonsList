@@ -19,7 +19,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentGroupItemListBinding
@@ -35,12 +34,19 @@ class GroupItemListFragment: Fragment(), MenuProvider {
     private val binding: FragmentGroupItemListBinding
         get() = _binding ?: throw RuntimeException("FragmentGroupItemListBinding == null")
 
-    private lateinit var viewModel: GroupListViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(this)[GroupListViewModel::class.java]
+    }
+
     private lateinit var groupListAdapter: GroupListAdapter
 
     private var toolbar: MaterialToolbar? = null
     private var menuChoice: Menu? = null
     private var hideModifyAppBar = false
+
+    private val navController by lazy {
+        (activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,23 +75,16 @@ class GroupItemListFragment: Fragment(), MenuProvider {
         }
 
         goCalendarFragmentBackPressed()
-        //setupLongClickListener()
     }
 
     private fun goCalendarFragment() {
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
         navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
     }
 
 
     private fun goCalendarFragmentBackPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-            val navController = navHostFragment.navController
             navController.popBackStack(R.id.calendarItemFragment, true)
-
             navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
         }
     }
@@ -113,10 +112,6 @@ class GroupItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun navigateBtnAddGroup() {
-
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
         val btnArgsGroup = Bundle().apply {
             putString(GroupItemFragment.SCREEN_MODE, GroupItemFragment.MODE_ADD)
         }
@@ -125,15 +120,10 @@ class GroupItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun navigateBtnEditGroup(id: Int) {
-
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
         val btnArgsGroup = Bundle().apply {
             putString(GroupItemFragment.SCREEN_MODE, GroupItemFragment.MODE_EDIT)
             putInt(GroupItemFragment.GROUP_ITEM_ID, id)
         }
-
         navController.navigate(R.id.groupItemFragment, btnArgsGroup, NavigationOptions().invoke())
     }
 
@@ -175,7 +165,6 @@ class GroupItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun setCustomDataGroups() {
-        viewModel = ViewModelProvider(this)[GroupListViewModel::class.java]
         viewModel.groupList.observe(viewLifecycleOwner) { listGroup ->
             groupListAdapter.submitList(listGroup)
             if (listGroup.isEmpty()) {
@@ -184,7 +173,6 @@ class GroupItemListFragment: Fragment(), MenuProvider {
         }
     }
     private fun setCustomDataGroupsCheckAll(selectAll: Boolean) {
-        viewModel = ViewModelProvider(this)[GroupListViewModel::class.java]
         viewModel.groupList.observe(viewLifecycleOwner) { listGroup ->
             if(listGroup.isNotEmpty()){
                 val listNew = ArrayList<GroupItem>()

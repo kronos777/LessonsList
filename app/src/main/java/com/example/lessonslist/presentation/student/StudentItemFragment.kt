@@ -39,7 +39,9 @@ import java.util.concurrent.Executors
 
 class StudentItemFragment : Fragment() {
 
-    private lateinit var viewModel: StudentItemViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(this)[StudentItemViewModel::class.java]
+    }
 
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
@@ -88,16 +90,13 @@ class StudentItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = "Добавить ученика"
-        viewModel = ViewModelProvider(this)[StudentItemViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         addTextChangeListeners()
         launchRightMode()
         observeViewModel()
 
-
         mImageView = binding.imageView
-
         mImageView.setOnClickListener {
             actionChangeImage()
         }
@@ -105,30 +104,7 @@ class StudentItemFragment : Fragment() {
         val bottomNavigationView =
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
-      //  binding.etPaymentBalance.addTextChangedListener(PhoneTextFormatter(binding.etPaymentBalance, "### ### ### ### ### ### ### ###"))
         binding.etTelephone.addTextChangedListener(PhoneTextFormatter(binding.etTelephone, "+7 (###) ###-####"))
-
-     /*   binding.etTelephone.addTextChangedListener(object : TextWatcher {
-            var length_before = 0
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                length_before = s.length
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable) {
-                if (length_before < s.length) {
-                    if (s.length == 3 || s.length == 7) s.append("-")
-                    if (s.length > 3) {
-                        if (Character.isDigit(s[3])) s.insert(3, "-")
-                    }
-                    if (s.length > 7) {
-                        if (Character.isDigit(s[7])) s.insert(7, "-")
-                    }
-                }
-            }
-        })*/
-
-
     }
 
 

@@ -49,11 +49,19 @@ class CalendarItemFragment : Fragment() {
     val arrayList: ArrayList<String> = ArrayList()
     private val calendarList: ArrayList<CalendarDate> = ArrayList()
 
-    lateinit var viewModel: LessonsListViewModel
-    lateinit var viewModelPaymentList: PaymentListViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(this)[LessonsListViewModel::class.java]
+    }
+    private val viewModelPaymentList by lazy {
+        ViewModelProvider(this)[PaymentListViewModel::class.java]
+    }
+
+    private val navController by lazy {
+        (activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
+    }
+
     private val dateTitleMutableMap: MutableMap<String, String> =
         mutableMapOf()
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnEditingFinishedListener) {
@@ -102,7 +110,6 @@ class CalendarItemFragment : Fragment() {
         (activity as AppCompatActivity).findViewById<NavigationView>(R.id.navView).visibility = View.VISIBLE
         (activity as AppCompatActivity).findViewById<View>(R.id.payment).visibility = View.VISIBLE
         (activity as AppCompatActivity).findViewById<View>(R.id.backup).visibility = View.VISIBLE
-        //(activity as AppCompatActivity).findViewById<MaterialToolbar>(R.id.tool_bar).setNavigationIcon(R.drawable.ic_baseline_menu_24)
     }
 
     private fun getCurrentDate(): LocalDateTime {
@@ -123,8 +130,7 @@ class CalendarItemFragment : Fragment() {
         val calendarPicList = mutableListOf<EventItemsList>()
         val calendarShowMessageList = mutableListOf<EventItemsList>()
 
-        viewModel = ViewModelProvider(this)[LessonsListViewModel::class.java]
-        viewModelPaymentList = ViewModelProvider(this)[PaymentListViewModel::class.java]
+
         viewModel.lessonsList.observe(viewLifecycleOwner) {
 
             val arrayListLessons: ArrayList<CalendarDate> = ArrayList()
@@ -133,7 +139,6 @@ class CalendarItemFragment : Fragment() {
 
 
             if(calendarShowMessageList.size > 0) {
-               // Toast.makeText(getActivity(),"Размер больше 0 ", Toast.LENGTH_SHORT).show()
                 calendarShowMessageList.clear()
                 calendarPicList.clear()
             }
@@ -222,8 +227,6 @@ class CalendarItemFragment : Fragment() {
 
 
                 minDate = if(minDateForSetMinDateTime == CalendarDate(StringHelpers.calendarCreate("2000/01/01 00:00").time)) {
-                    Log.d("calendarDate", minDateForSetMinDateTime.toString())
-                    //if(minDateForSetMindateTime == CalendarDate(Date(2000, 1, 1).time)) {
                     minDateForSetMinDateTime
                 } else if((minDateNumberLessons > minDateNumberPayments || minDateNumberLessons < minDateNumberPayments || minDateNumberLessons == minDateNumberPayments) && minDateForSetMinDateTime != checkDate) {
                     minDateForSetMinDateTime
@@ -233,9 +236,6 @@ class CalendarItemFragment : Fragment() {
                     initialDate
                 }
 
-
-                    //  Toast.makeText(activity, "min date here !!!" + minDate.toString(), Toast.LENGTH_SHORT).show()
-// Maximum available date
                 calendar.set(getCurrentDate().year + 10, Calendar.DECEMBER, 31)
                 val maxDate = CalendarDate(calendar.time)
 
@@ -345,10 +345,6 @@ class CalendarItemFragment : Fragment() {
 
 
     private fun launchLessonsAddFragment(date: String) {
-
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
         val btnArgsLessons = Bundle().apply {
             putString(LessonsItemAddFragment.SCREEN_MODE, LessonsItemAddFragment.MODE_ADD)
             putString(LessonsItemAddFragment.DATE_ADD, date)
@@ -357,11 +353,7 @@ class CalendarItemFragment : Fragment() {
     }
 
     private fun launchLessonsListFragment(date: String) {
-
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
-        val btnArgsLessons = Bundle().apply {
+         val btnArgsLessons = Bundle().apply {
             putString(LessonsItemListFragment.DATE_ID, date)
             putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.DATE_ID_LIST)
         }
@@ -370,15 +362,10 @@ class CalendarItemFragment : Fragment() {
     }
 
     private fun launchPaymentListFragment(date: String) {
-
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
         val btnArgsPayments = Bundle().apply {
             putString(PaymentItemListFragment.DATE_ID, date)
             putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.DATE_ID_LIST)
         }
-
         navController.navigate(R.id.paymentItemListFragment, btnArgsPayments, NavigationOptions().invoke())
     }
 
@@ -504,25 +491,27 @@ class CalendarItemFragment : Fragment() {
         val eventItems = mutableListOf<EventItem>()
 
         for (event in calendarPicList.indices) {
-                val date = calendarPicList[event].date
-
-               if (calendarPicList[event].color == "lessons") {
-                     eventItems += EventItem(
-                         date = date,
-                         color = context.getColorInt(R.color.event_2_color)
-                     )
-                } else if (calendarPicList[event].color == "payment") {
+            val date = calendarPicList[event].date
+            when (calendarPicList[event].color) {
+                "lessons" -> {
+                    eventItems += EventItem(
+                        date = date,
+                        color = context.getColorInt(R.color.event_2_color)
+                    )
+                }
+                "payment" -> {
                     eventItems += EventItem(
                         date = date,
                         color = context.getColorInt(R.color.event_1_color)
                     )
-                } else if (calendarPicList[event].color == "paymentyes") {
-
+                }
+                "paymentyes" -> {
                     eventItems += EventItem(
                         date = date,
                         color = context.getColorInt(R.color.event_3_color)
                     )
                 }
+            }
 
         }
 

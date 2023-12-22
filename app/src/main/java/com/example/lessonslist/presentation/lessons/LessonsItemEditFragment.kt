@@ -16,7 +16,6 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentLessonsItemEditBinding
@@ -29,7 +28,6 @@ import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
 import com.example.lessonslist.presentation.helpers.StringHelpers
 import com.example.lessonslist.presentation.lessons.sale.*
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
-import com.example.lessonslist.presentation.student.StudentItemViewModel
 import com.example.lessonslist.presentation.student.StudentListViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.time.Duration
@@ -42,10 +40,25 @@ import java.util.*
 @Suppress("NAME_SHADOWING", "ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE", "UNUSED_EXPRESSION")
 class LessonsItemEditFragment : Fragment() {
 
-    private lateinit var viewModel: LessonsItemViewModel
-    private lateinit var viewModelSale: SaleItemViewModel
-    private lateinit var viewModelSalesList: SalesItemListViewModel
-    private lateinit var viewModelStudent: StudentItemViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(this)[LessonsItemViewModel::class.java]
+    }
+    private val viewModelSale by lazy {
+        ViewModelProvider(this)[SaleItemViewModel::class.java]
+    }
+    private val viewModelSalesList by lazy {
+        ViewModelProvider(this)[SalesItemListViewModel::class.java]
+    }
+
+    private val dataStudentlList by lazy {
+        ViewModelProvider(this)[StudentListViewModel::class.java]
+    }
+
+    private val viewModelPayment by lazy {
+        ViewModelProvider(this)[PaymentListViewModel::class.java]
+    }
+
+
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
     private var _binding: FragmentLessonsItemEditBinding? = null
@@ -64,9 +77,7 @@ class LessonsItemEditFragment : Fragment() {
     private lateinit var adapter: ListStudentAdapter
     private lateinit var listView: ListView
     private var dataStudentGroupModel: ArrayList<DataStudentGroupModel>? = null
-    private lateinit var dataStudentlList: StudentListViewModel
 
-    private lateinit var viewModelPayment: PaymentListViewModel
 
     private var dataPaymentStudentModel: ArrayList<DataPaymentStudentLessonsModel>? = null
     private var notificationString: String = ""
@@ -77,6 +88,9 @@ class LessonsItemEditFragment : Fragment() {
     private var month: Int = mCurrentTime.get(Calendar.MONTH)
     private var day: Int = mCurrentTime.get(Calendar.DAY_OF_MONTH)
 
+    private val navController by lazy {
+        (activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,7 +122,6 @@ class LessonsItemEditFragment : Fragment() {
 
         (activity as AppCompatActivity).supportActionBar?.title = "Урок"
 
-        viewModel = ViewModelProvider(this)[LessonsItemViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         launchEditMode()
@@ -174,11 +187,9 @@ class LessonsItemEditFragment : Fragment() {
 
     private fun setDataLessonsPayment() {
         listView = binding.listView
-        dataStudentlList = ViewModelProvider(this)[StudentListViewModel::class.java]
         dataStudentGroupModel = ArrayList()
         var studentName: Array<String> = emptyArray()
         dataPaymentStudentModel = ArrayList()
-        viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelPayment.paymentList.observe(viewLifecycleOwner) { paymentItemList ->
             if(paymentItemList.isNotEmpty()) {
                 for (payment in paymentItemList) {
@@ -393,9 +404,6 @@ class LessonsItemEditFragment : Fragment() {
     private fun setListViewSaleFlexible(salePaymentValueDate: HashSet<Int?>) {
         listViewSale = binding.listSalePayment
         dataStudentSaleModel = ArrayList()
-        dataStudentlList = ViewModelProvider(this)[StudentListViewModel::class.java]
-        viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
-        viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
         var studentName: Array<String> = emptyArray()
         var hideChoose = true
         val existsStudentId = ArrayList<Int>()
@@ -461,7 +469,6 @@ class LessonsItemEditFragment : Fragment() {
 
 
     private fun deleteAllSaleInCurrentLessons() {
-        viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
         viewModelSalesList.salesList.observe(viewLifecycleOwner) { sales ->
             dataStudentSaleModel!!.clear()
             for (saleItem in sales.indices) {
@@ -485,8 +492,6 @@ class LessonsItemEditFragment : Fragment() {
     }
 
     private fun currentLessonHaveSaleOrNotHave(adapterValue: MutableMap<Int, Int>) {
-        viewModelSale = ViewModelProvider(this)[SaleItemViewModel::class.java]
-        viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
         viewModelSalesList.currentLessonHaveSale(lessonsItemId).observe(viewLifecycleOwner) { sales ->
             if(sales.isNotEmpty()) {
                 //видим что скидки уже есть и возможно требуется их изменение или добавление новых и все это делается в этом блоке кода
@@ -611,10 +616,6 @@ class LessonsItemEditFragment : Fragment() {
 
 
     private fun launchLessonsListFragment() {
-
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
         val btnArgsLessons = Bundle().apply {
             putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.CUSTOM_LIST)
         }
@@ -720,25 +721,19 @@ class LessonsItemEditFragment : Fragment() {
 
         if (mode != null) {
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-                val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-                val navController = navHostFragment.navController
                 val arguments = Bundle().apply {
                     putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.DATE_ID_LIST)
                     putString(LessonsItemListFragment.DATE_ID, mode)
                 }
                 navController.popBackStack(R.id.lessonsItemListFragment, true)
-
                 navController.navigate(R.id.lessonsItemListFragment, arguments, NavigationOptions().invoke())
             }
         } else {
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-                val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-                val navController = navHostFragment.navController
                 val arguments = Bundle().apply {
                     putString(LessonsItemListFragment.SCREEN_MODE, LessonsItemListFragment.CUSTOM_LIST)
                 }
                 navController.popBackStack(R.id.lessonsItemListFragment, true)
-
                 navController.navigate(R.id.lessonsItemListFragment, arguments, NavigationOptions().invoke())
             }
         }

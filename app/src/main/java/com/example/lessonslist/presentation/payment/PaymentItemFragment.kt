@@ -20,9 +20,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class PaymentItemFragment: Fragment() {
 
 
-    private lateinit var viewModel: PaymentItemViewModel
-    private lateinit var viewModelStudent: StudentItemViewModel
-    private lateinit var viewModelLessons: LessonsItemViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(this)[PaymentItemViewModel::class.java]
+    }
+    private val viewModelStudent by lazy {
+        ViewModelProvider(this)[StudentItemViewModel::class.java]
+    }
+    private val viewModelLessons by lazy {
+      ViewModelProvider(this)[LessonsItemViewModel::class.java]
+    }
 
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
@@ -33,8 +39,10 @@ class PaymentItemFragment: Fragment() {
 
     
     private var paymentItemId: Int = PaymentItem.UNDEFINED_ID
-    
 
+    private val navController by lazy {
+        (activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
+    }
 
 
 
@@ -70,8 +78,6 @@ class PaymentItemFragment: Fragment() {
 
         (activity as AppCompatActivity).supportActionBar?.title = "Платежи"
 
-
-        viewModel = ViewModelProvider(this)[PaymentItemViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         launchRightMode()
@@ -79,7 +85,6 @@ class PaymentItemFragment: Fragment() {
         val bottomNavigationView =
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem2).isChecked = true
-        viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
 
          viewModel.paymentItem.observe(viewLifecycleOwner) { paymentItem ->
 
@@ -116,8 +121,6 @@ class PaymentItemFragment: Fragment() {
 
 
     private fun deptOff() {
-        viewModelStudent = ViewModelProvider(this)[StudentItemViewModel::class.java]
-        viewModelLessons = ViewModelProvider(this)[LessonsItemViewModel::class.java]
         viewModel.paymentItem.observe(viewLifecycleOwner) { paymentItem ->
             if(!paymentItem.enabled) {
                 val payOff = paymentItem.price
@@ -161,45 +164,35 @@ class PaymentItemFragment: Fragment() {
     }
 
     private fun goListNavigation() {
-        val argss = requireArguments()
-        val mode = argss.getString(DATE_ID_BACKSTACK)
+        val args = requireArguments()
+        val mode = args.getString(DATE_ID_BACKSTACK)
         val dateMode = mode?.split("/")
         val studentMode = mode?.split("&")
 
         if (dateMode!!.size == 3) {
-            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-            val navController = navHostFragment.navController
             val args = Bundle().apply {
                 putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.DATE_ID_LIST)
                 putString(PaymentItemListFragment.DATE_ID, mode)
             }
             navController.navigate(R.id.paymentItemListFragment, args)
         } else if (studentMode!![0] == "student_id_list" && dateMode.size == 1) {
-            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-            val navController = navHostFragment.navController
             val args = Bundle().apply {
                 putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.STUDENT_ID_LIST)
                 putInt(PaymentItemListFragment.STUDENT_ID, studentMode[1].toInt())
             }
             navController.navigate(R.id.paymentItemListFragment, args)
         } else if (studentMode[0] == "student_no_pay_list" && dateMode.size == 1) {
-            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-            val navController = navHostFragment.navController
             val args = Bundle().apply {
                 putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.STUDENT_NO_PAY_LIST)
                 putInt(PaymentItemListFragment.STUDENT_ID, studentMode[1].toInt())
             }
             navController.navigate(R.id.paymentItemListFragment, args)
         } else if (studentMode[0] == "payment_enabled" && dateMode.size == 1) {
-            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-            val navController = navHostFragment.navController
             val btnArgsLessons = Bundle().apply {
                 putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.PAYMENT_ENABLED)
             }
             navController.navigate(R.id.paymentItemListFragment, btnArgsLessons)
         } else {
-            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-            val navController = navHostFragment.navController
             val args = Bundle().apply {
                 putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.CUSTOM_LIST)
             }
@@ -223,7 +216,6 @@ class PaymentItemFragment: Fragment() {
     }
 
     interface OnEditingFinishedListener {
-
         fun onEditingFinished()
     }
 

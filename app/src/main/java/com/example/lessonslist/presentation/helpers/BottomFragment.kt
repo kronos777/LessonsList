@@ -41,9 +41,17 @@ class BottomFragment : BottomSheetDialogFragment() {
     private var studentItemId: Int = StudentItem.UNDEFINED_ID
 
     //по листам
-    private lateinit var viewModelNotesItem: NotesItemViewModel
-    private lateinit var viewModelParentContact: ParentContactViewModel
-    private lateinit var viewModelGroup: GroupListViewModel
+    private val viewModelNotesItem by lazy {
+        ViewModelProvider(this)[NotesItemViewModel::class.java]
+    }
+
+    private val viewModelParentContact by lazy {
+        ViewModelProvider(this)[ParentContactViewModel::class.java]
+    }
+
+    private val viewModelGroup by lazy {
+        ViewModelProvider(this)[GroupListViewModel::class.java]
+    }
 
 
     private lateinit var groupListAdapter: GroupListAdapterBottomFragment
@@ -62,6 +70,12 @@ class BottomFragment : BottomSheetDialogFragment() {
     private val allNotes = ArrayList<NotesItem>()
     private val allContact = ArrayList<ParentContact>()
     private val listGroup = ArrayList<GroupItem>()
+
+    private val navController by lazy {
+        (activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
+    }
+
+
     // Переопределим тему, чтобы использовать нашу с закруглёнными углами
     override fun getTheme() = R.style.AppBottomSheetDialogTheme
 
@@ -225,7 +239,6 @@ class BottomFragment : BottomSheetDialogFragment() {
 
 
     private fun showNotesStudent() {
-        viewModelNotesItem = ViewModelProvider(this)[NotesItemViewModel::class.java]
         viewModelNotesItem.notesList.getNotesList().observe(viewLifecycleOwner) {
             allNotes.clear()
             for (item in it) {
@@ -246,7 +259,6 @@ class BottomFragment : BottomSheetDialogFragment() {
 
 
     private fun showParentContact() {
-        viewModelParentContact = ViewModelProvider(this)[ParentContactViewModel::class.java]
         viewModelParentContact.parentContactList.getParentList().observe(viewLifecycleOwner) { listContact ->
             allContact.clear()
             listContact.forEach {
@@ -271,7 +283,6 @@ class BottomFragment : BottomSheetDialogFragment() {
 
 
     private fun showGroupStudent() {
-        viewModelGroup = ViewModelProvider(this)[GroupListViewModel::class.java]
         viewModelGroup.groupList.observe(viewLifecycleOwner) { groups ->
             groups.forEach { 
                 if(StringHelpers.getStudentIds(it.student).contains(studentItemId)) {
@@ -296,16 +307,10 @@ class BottomFragment : BottomSheetDialogFragment() {
         }
     }
     private fun navigateBtnEditGroup(id: Int) {
-
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
-
         val btnArgsGroup = Bundle().apply {
             putString(GroupItemFragment.SCREEN_MODE, GroupItemFragment.MODE_EDIT)
             putInt(GroupItemFragment.GROUP_ITEM_ID, id)
         }
-
-
         navController.navigate(R.id.groupItemFragment, btnArgsGroup, NavigationOptions().invoke())
     }
     private fun addParentContact() {
@@ -351,7 +356,6 @@ class BottomFragment : BottomSheetDialogFragment() {
         if (checkFiledBlank(textNotes)) {
             if(countNotes!! < 40) {
                 hideError(binding.tilNotes)
-                viewModelNotesItem = ViewModelProvider(this)[NotesItemViewModel::class.java]
                 val answerNotes = viewModelNotesItem.addNotesItem(textNotes, currentDate, studentItemId)
                 if(answerNotes) {
                     binding.etNotes.text?.clear()

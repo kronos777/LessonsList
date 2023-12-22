@@ -14,24 +14,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentGroupItemBinding
 import com.example.lessonslist.domain.group.GroupItem
 import com.example.lessonslist.presentation.helpers.NavigationOptions
+import com.example.lessonslist.presentation.helpers.StringHelpers
 import com.example.lessonslist.presentation.student.StudentListViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class GroupItemFragment : Fragment() {
 
-    private lateinit var viewModel: GroupItemViewModel
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
-
-//    private var _bindingItem: RowGroupStudentItemBinding? = null
-   // private lateinit var bindingItem: RowGroupStudentItemBinding
-  //      get() = _bindingItem ?: throw RuntimeException("RowGroupItemBinding == null")
 
 
     private var _binding: FragmentGroupItemBinding? = null
@@ -45,9 +40,18 @@ class GroupItemFragment : Fragment() {
     private lateinit var adapter: ListStudentAdapter
     private lateinit var listView: ListView
     private var dataStudentGroupModel: ArrayList<DataStudentGroupModel>? = null
-    private lateinit var dataStudentlList: StudentListViewModel
 
+    private val viewModel by lazy {
+      ViewModelProvider(this)[GroupItemViewModel::class.java]
+    }
 
+    private val dataStudentlList by lazy {
+        ViewModelProvider(this)[StudentListViewModel::class.java]
+    }
+
+    private val navController by lazy {
+        (activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +74,6 @@ class GroupItemFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-     //   return inflater.inflate(R.layout.fragment_group_item, container, false)
         _binding = FragmentGroupItemBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -81,10 +84,8 @@ class GroupItemFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.title = "Группа"
 
 
-        viewModel = ViewModelProvider(this)[GroupItemViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        //addTextChangeListeners()
         launchRightMode()
         observeViewModel()
 
@@ -94,24 +95,18 @@ class GroupItemFragment : Fragment() {
 
 
 
-        binding.tilStudent.setVisibility (View.GONE)
-
+        binding.tilStudent.visibility = View.GONE
         listView = binding.listView
 
-        dataStudentlList = ViewModelProvider(this)[StudentListViewModel::class.java]
         dataStudentGroupModel = ArrayList()
 
         dataStudentlList.studentList.observe(viewLifecycleOwner) {
-
             for(student in it){
                 val name = student.name + " " + student.lastname
                 val id = student.id
                 if(viewModel.groupItem.value != null) {
-                    viewModel.groupItem.observe(viewLifecycleOwner) {
-                        var dataString = it.student
-                        dataString = dataString.replace("]", "")
-                        dataString = dataString.replace("[", "")
-                        val lstValues: List<Int> = dataString.split(",").map { it.trim().toInt() }
+                    viewModel.groupItem.observe(viewLifecycleOwner) { group ->
+                        val lstValues: List<Int> = StringHelpers.getStudentIds(group.student)
                         if(lstValues.contains(id)) {
                             dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
                         } else {
@@ -137,8 +132,6 @@ class GroupItemFragment : Fragment() {
 
     private fun goGroupListFragmentBackPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-            val navController = navHostFragment.navController
             navController.popBackStack(R.id.groupItemListFragment, true)
             navController.navigate(R.id.groupItemListFragment, null, NavigationOptions().invoke())
         }
@@ -188,7 +181,6 @@ class GroupItemFragment : Fragment() {
 
 
     private fun launchEditMode() {
-
         viewModel.getGroupItem(groupItemId)
         binding.saveButton.setOnClickListener{
             var studentIds: String = adapter.arrayList.toString()
@@ -214,7 +206,6 @@ class GroupItemFragment : Fragment() {
         if(valueStudent.size <= 0) {
             Toast.makeText(activity, "Без учеников группа не может быть создана.", Toast.LENGTH_LONG).show()
             binding.textViewChangeStateCheckbox.setTextColor(ContextCompat.getColor(requireContext().applicationContext,R.color.custom_calendar_weekend_days_bar_text_color))
-            checkField = viewModel.validateInput(binding.etTitle.text.toString())
             setHideError()
              return@setOnClickListener
         } else {

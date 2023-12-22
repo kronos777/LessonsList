@@ -2,7 +2,6 @@ package com.example.lessonslist.presentation.payment
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,12 +26,19 @@ class PaymentItemListFragment: Fragment() {
     private val binding: FragmentPaymentItemListBinding
         get() = _binding ?: throw RuntimeException("FragmentGroupItemListBinding == null")
 
-    private lateinit var viewModel: PaymentListViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(this)[PaymentListViewModel::class.java]
+    }
+
     private lateinit var paymentListAdapter: PaymentListAdapter
     private lateinit var args: Bundle
     private var studentId: Int = 0
     private var lessonsId: Int = 0
     private var dateId: String = ""
+
+    private val navController by lazy {
+        (activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,10 +68,7 @@ class PaymentItemListFragment: Fragment() {
 
     private fun switchViewPayments() {
         binding.buttonSwithPayment.setOnClickListener {
-            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-            val navController = navHostFragment.navController
             navController.navigate(R.id.calendarPaymentItemFragment, null, NavigationOptions().invoke())
-
         }
     }
     private fun showPayment(mode: String) {
@@ -73,7 +76,6 @@ class PaymentItemListFragment: Fragment() {
         if(mode == "student_id_list") {
             studentId = args.getInt(STUDENT_ID)
             val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
-            viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
             viewModel.paymentList.observe(viewLifecycleOwner) {
                 for (payment in it) {
                     if(payment.studentId == studentId){
@@ -86,7 +88,6 @@ class PaymentItemListFragment: Fragment() {
         } else if(mode == "student_no_pay_list") {
             studentId = args.getInt(STUDENT_ID)
             val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
-            viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
             viewModel.paymentList.observe(viewLifecycleOwner) {
                 for (payment in it) {
                     if(payment.studentId == studentId && !payment.enabled){
@@ -99,7 +100,6 @@ class PaymentItemListFragment: Fragment() {
         } else if (mode == "lesson_id_list") {
             lessonsId = args.getInt(LESSONS_ID)
             val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
-            viewModel = ViewModelProvider(this).get(PaymentListViewModel::class.java)
             viewModel.paymentList.observe(viewLifecycleOwner) {
                 for (payment in it) {
                     if(payment.lessonsId == lessonsId){
@@ -118,7 +118,6 @@ class PaymentItemListFragment: Fragment() {
                     if(dateId.contains("&debts")) {
                         val depotsExists = dateId.split("&debts")
 
-                        viewModel = ViewModelProvider(this)[PaymentListViewModel::class.java]
                         viewModel.paymentList.observe(viewLifecycleOwner) {
                             for (payment in it) {
                                 val enabledPay = payment.enabled
@@ -133,7 +132,6 @@ class PaymentItemListFragment: Fragment() {
                             paymentListAdapter.submitList(listArrayPayment.reversed())
                         }
                     } else {
-                        viewModel = ViewModelProvider(this)[PaymentListViewModel::class.java]
                         viewModel.paymentList.observe(viewLifecycleOwner) {
                             for (payment in it) {
                                val pay = payment.datePayment.split(" ")
@@ -149,7 +147,6 @@ class PaymentItemListFragment: Fragment() {
                     }
         } else if (mode == "payment_enabled") {
             val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
-            viewModel = ViewModelProvider(this)[PaymentListViewModel::class.java]
             viewModel.paymentList.observe(viewLifecycleOwner) {
                 for (payment in it) {
                     val enabledPay = payment.enabled
@@ -162,7 +159,6 @@ class PaymentItemListFragment: Fragment() {
             }
         } else if (mode == "payment_yes") {
             val listArrayPayment: ArrayList<PaymentItem> = ArrayList()
-            viewModel = ViewModelProvider(this)[PaymentListViewModel::class.java]
             viewModel.paymentList.observe(viewLifecycleOwner) {
                 for (payment in it) {
                     val enabledPay = payment.enabled
@@ -174,8 +170,7 @@ class PaymentItemListFragment: Fragment() {
                 paymentListAdapter.submitList(listArrayPayment.reversed())
             }
         } else {
-            viewModel = ViewModelProvider(this)[PaymentListViewModel::class.java]
-            viewModel.paymentList.observe(viewLifecycleOwner) { it ->
+            viewModel.paymentList.observe(viewLifecycleOwner) {
                 showImageNoneItem(it)
                 paymentListAdapter.submitList(it.reversed())
             }
@@ -199,8 +194,6 @@ class PaymentItemListFragment: Fragment() {
     }
     private fun goCalendarFragmentBackPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-            val navController = navHostFragment.navController
             navController.popBackStack(R.id.calendarItemFragment, true)
             navController.navigate(R.id.calendarItemFragment, null, NavigationOptions().invoke())
         }
@@ -233,9 +226,6 @@ class PaymentItemListFragment: Fragment() {
         val mode = args.getString(SCREEN_MODE)
         val dateIdBackstack = args.getString(DATE_ID)
         val studentIdBackstack = args.getInt(STUDENT_ID)
-
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
 
         val btnArgsLessons = Bundle().apply {
             when (mode) {

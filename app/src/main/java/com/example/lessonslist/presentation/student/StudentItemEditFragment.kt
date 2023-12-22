@@ -54,14 +54,27 @@ import java.util.concurrent.Executors
 
 class StudentItemEditFragment : Fragment() {
 
-    private lateinit var viewModel: StudentItemViewModel
-    private lateinit var viewModelLessonsEdit: LessonsItemViewModel
-    private lateinit var viewModelPayment: PaymentListViewModel
-    private lateinit var viewModelParentContact: ParentContactViewModel
-    private lateinit var viewModelNotesItem: NotesItemViewModel
-
-    private lateinit var viewModelSale: SaleItemViewModel
-    private lateinit var viewModelSalesList: SalesItemListViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(this)[StudentItemViewModel::class.java]
+    }
+    private val viewModelLessonsEdit by lazy {
+        ViewModelProvider(this)[LessonsItemViewModel::class.java]
+    }
+    private val viewModelPayment by lazy {
+        ViewModelProvider(this)[PaymentListViewModel::class.java]
+    }
+    private val viewModelParentContact by lazy {
+        ViewModelProvider(this)[ParentContactViewModel::class.java]
+    }
+    private val viewModelNotesItem by lazy {
+        ViewModelProvider(this)[NotesItemViewModel::class.java]
+    }
+    private val viewModelSale by lazy {
+        ViewModelProvider(this)[SaleItemViewModel::class.java]
+    }
+    private val viewModelSalesList by lazy {
+        ViewModelProvider(this)[SalesItemListViewModel::class.java]
+    }
 
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
@@ -80,6 +93,11 @@ class StudentItemEditFragment : Fragment() {
     private var pathImageSrc: String = ""
 
     private val takeFoto = 1
+
+    private val navController by lazy {
+        (activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
+    }
+
 
     private val cropImage = registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
@@ -119,8 +137,6 @@ class StudentItemEditFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(this)[StudentItemViewModel::class.java]
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
         viewModel.getStudentItem(studentItemId)
@@ -195,7 +211,6 @@ class StudentItemEditFragment : Fragment() {
     }
 
     private fun deleteAllNotesStudent() {
-        viewModelNotesItem = ViewModelProvider(this)[NotesItemViewModel::class.java]
         val listDeleteId = HashSet<Int>()
         viewModelNotesItem.notesList.getNotesList().observe(viewLifecycleOwner) {
            for (item in it) {
@@ -210,7 +225,6 @@ class StudentItemEditFragment : Fragment() {
     }
 
     private fun deleteAllContactStudent() {
-        viewModelParentContact = ViewModelProvider(this)[ParentContactViewModel::class.java]
         val listDeleteId = HashSet<Int>()
         viewModelParentContact.parentContactList.getParentList().observe(viewLifecycleOwner) {
             for (item in it) {
@@ -227,8 +241,6 @@ class StudentItemEditFragment : Fragment() {
 
 
     private fun deleteAllSaleItem() {
-        viewModelSalesList = ViewModelProvider(this)[SalesItemListViewModel::class.java]
-        viewModelSale = ViewModelProvider(this)[SaleItemViewModel::class.java]
         viewModelSalesList.salesList.observe(viewLifecycleOwner) { sales ->
             for (saleItem in sales.indices) {
                 if(studentItemId == sales[saleItem].idStudent) {
@@ -283,9 +295,6 @@ class StudentItemEditFragment : Fragment() {
     }
 
     private fun showWindowPayment(params: String) {
-
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
 
         if(params == "all_payment") {
             val btnArgsStudentNoParams = Bundle().apply {
@@ -400,24 +409,18 @@ class StudentItemEditFragment : Fragment() {
 
     private fun totalDebt() {
         var sumDept = 0
-        viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelPayment.paymentList.observe(viewLifecycleOwner) {
             if(it.isNotEmpty()) {
                 for (payment in it) {
                     if(payment.studentId == studentItemId) {
-                        //dataStudentGroupModel!!.add(DataStudentGroupModel(name, id,true))
                         if (!payment.enabled) {
                             sumDept += payment.price
-                             //dataPaymentStudentModel!!.add(DataPaymentStudentModel(payment.id,"Долг: " + payment.title, "-" + payment.price.toString()))
                         }
 
                     }
                 }
-                //Toast.makeText(activity, "Сумма долга + "+sumDept, Toast.LENGTH_SHORT).show()
-                //Log.d("summDept", summDept.toString())
                 binding.textViewPaymentBalance.setTextColor(R.color.custom_calendar_weekend_days_bar_text_color.dec())
                 binding.textViewPaymentBalance.text = sumDept.toString()
-                //binding.textViewPaymentBalance.setTextColor(-0x000000ff)
             }
 
         }
@@ -602,7 +605,6 @@ class StudentItemEditFragment : Fragment() {
     }
 
     private fun deletePaymentToStudent(studentId: Int) {
-        viewModelPayment = ViewModelProvider(this)[PaymentListViewModel::class.java]
         viewModelPayment.paymentList.observe(viewLifecycleOwner) {
             for (payment in it) {
                 if(payment.studentId == studentId) {
@@ -615,13 +617,9 @@ class StudentItemEditFragment : Fragment() {
     }
 
     private fun editLessonsItem(idLessons: Int, studentId: Int) {
-        viewModelLessonsEdit = ViewModelProvider(this)[LessonsItemViewModel::class.java]
         viewModelLessonsEdit.getLessonsItem(idLessons)
-        // val lessonsItem = viewModelLessonsEdit.lessonsItem
         viewModelLessonsEdit.lessonsItem.observe(viewLifecycleOwner) {
-            //Log.d("valStudent", it.student)
             val newValueStudent = dropElementList(StringHelpers.getStudentIds(it.student), studentId)
-            //Log.d("delStudent", newValueStudent)
             viewModelLessonsEdit.editLessonsItem(
                 it.title,
                 it.notifications,

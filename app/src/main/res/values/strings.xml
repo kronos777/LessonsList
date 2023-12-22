@@ -63,7 +63,7 @@
     <string name="lessons_price_sale_buttom">Сохранить скидки</string>
     <string name="text_info_notifications">Уведомление придет в указанное время дня урока</string>
     <string name="lessons_value_notifications">Укажите время</string>
-    <string name="button_swith_payment">переключить</string>
+    <string name="button_switch_payment">переключить</string>
     <string name="txt_choice_all">выбрать все</string>
     <string name="txt_delete">удалить</string>
     <string name="text_label_tab_1">сегодня</string>

@@ -66,6 +66,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:clickable="true"
+            app:tint="@android:color/white"
             android:contentDescription="@string/add_lessons_item_content_description"
             android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"

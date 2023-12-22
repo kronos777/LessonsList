@@ -2,7 +2,6 @@ package com.example.lessonslist.presentation.calendar
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
 import com.example.lessonslist.databinding.FragmentCalendarPaymentBinding
@@ -40,7 +38,13 @@ class CalendarPaymentItemFragment : Fragment() {
 
     val arrayList: ArrayList<String> = ArrayList()
     private val calendarList: ArrayList<CalendarDate> = ArrayList()
-    lateinit var viewModel: PaymentListViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(this)[PaymentListViewModel::class.java]
+    }
+
+    private val navController by lazy {
+        (activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -74,8 +78,7 @@ class CalendarPaymentItemFragment : Fragment() {
             val btnArgsPayment = Bundle().apply {
                 putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.CUSTOM_LIST)
             }
-            val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-            val navController = navHostFragment.navController
+
             navController.navigate(R.id.paymentItemListFragment, btnArgsPayment)
         }
     }
@@ -83,14 +86,10 @@ class CalendarPaymentItemFragment : Fragment() {
     private fun getDate() {
         val calendarView = binding.calendarPaymentView
         val calendar = Calendar.getInstance()
-        // The first day of week
         val firstDayOfWeek = Calendar.MONDAY
 
-
         val calendarPicList = mutableListOf<EventItemsList>()
-        val calendarShowMessgeList = mutableListOf<EventItemsList>()
-
-        viewModel = ViewModelProvider(this)[PaymentListViewModel::class.java]
+        val calendarShowMessageList = mutableListOf<EventItemsList>()
 
         viewModel.paymentList.observe(viewLifecycleOwner) {
             val arrayListPayments: java.util.ArrayList<CalendarDate> = java.util.ArrayList()
@@ -101,12 +100,12 @@ class CalendarPaymentItemFragment : Fragment() {
                         arrayListPayments.add(dd)
                         if(!item.enabled) {
                             calendarPicList += EventItemsList(dd, "payment", item.student)
-                            calendarShowMessgeList += EventItemsList(dd, "dolg", item.student)
+                            calendarShowMessageList += EventItemsList(dd, "dolg", item.student)
 
                         } else {
 
                             calendarPicList += EventItemsList(dd, "paymentyes", item.student)
-                            calendarShowMessgeList += EventItemsList(dd, "paymentyes", item.student)
+                            calendarShowMessageList += EventItemsList(dd, "paymentyes", item.student)
                         }
                     } else {
                         continue
@@ -218,8 +217,8 @@ class CalendarPaymentItemFragment : Fragment() {
 
 
             val indicators: List<CalendarView.DateIndicator> = setDatesIndicators(newCalendarNewPaymentPicList)
-            Log.d("calendarDta", newCalendarNewPaymentPicList.toString())
-            //val indicators: List<CalendarView.DateIndicator> = setDatesIndicators(calendarPicList) work
+
+
             calendarView.datesIndicators = indicators
 
             calendar.set(currentYear, currentMonth, currentDay)
@@ -250,10 +249,10 @@ class CalendarPaymentItemFragment : Fragment() {
 
             calendarView.onDateClickListener = { date ->
                 val calendarDateList = mutableListOf<EventItemsList>()
-                for (index in calendarShowMessgeList.indices) {
+                for (index in calendarShowMessageList.indices) {
 
-                    if(calendarShowMessgeList[index].date == date) {
-                        calendarDateList += calendarShowMessgeList[index]
+                    if(calendarShowMessageList[index].date == date) {
+                        calendarDateList += calendarShowMessageList[index]
                     }
                 }
 
@@ -263,17 +262,11 @@ class CalendarPaymentItemFragment : Fragment() {
 
 
 
-        }
-
-        /*calendarView.onDateLongClickListener = { date ->
-           // launchLessonsAddFragment(date.toString())
-        }*/
-
+    }
 
 
     private fun dialogWindow(date: CalendarDate, dataDate: MutableList<EventItemsList>) {
         if(dataDate.size == 0) {
-            // Toast.makeText(getActivity(),"На сегодня ничего нет", Toast.LENGTH_SHORT).show()
             val alert = AlertDialog.Builder(requireContext())
             alert.setTitle("$date")
             alert.setMessage("Платежей нет.")
@@ -389,9 +382,6 @@ class CalendarPaymentItemFragment : Fragment() {
     }
 
     private fun launchPaymentListFragment(date: String) {
-
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment
-        val navController = navHostFragment.navController
 
         val btnArgsPayments = Bundle().apply {
             putString(PaymentItemListFragment.DATE_ID, date)
