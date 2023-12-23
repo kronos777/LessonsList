@@ -602,10 +602,10 @@ class LessonsItemAddFragment : Fragment()  {
                             dateLessons[index],
                             dateLessons[index + 1]
                         )
-                        checkExistsLessonsCurrentDateTime(dateLessons[index],
-                            dateLessons[index + 1], lessonsItem)
+                        checkExistsLessonsCurrentDateTime(dateLessons[index], dateLessons[index + 1], lessonsItem)
+                        //viewModel.addLessonsItem(lessonsItem.title, lessonsItem.notifications, lessonsItem.student,
+                           // lessonsItem.price.toString(), dateLessons[index], dateLessons[index + 1])
                     }
-
                  } else {
                     val lessonsItem = LessonsItem(
                         binding.etTitle.text.toString(),
@@ -614,9 +614,9 @@ class LessonsItemAddFragment : Fragment()  {
                         binding.etPrice.text.toString().toInt(),
                         binding.etDatestart.text.toString(),
                         binding.etDateend.text.toString())
-                    //checkExistsLessonsCurrentDateTime(binding.etDatestart.text.toString(), binding.etDateend.text.toString(), lessonsItem)
-                    viewModel.addLessonsItem(lessonsItem.title, lessonsItem.notifications, lessonsItem.student,
-                        lessonsItem.price.toString(), lessonsItem.dateStart, lessonsItem.dateEnd)
+                    checkExistsLessonsCurrentDateTime(binding.etDatestart.text.toString(), binding.etDateend.text.toString(), lessonsItem)
+                    //viewModel.addLessonsItem(lessonsItem.title, lessonsItem.notifications, lessonsItem.student,
+                       // lessonsItem.price.toString(), lessonsItem.dateStart, lessonsItem.dateEnd)
                  }
              } else {
                  setHideError()
