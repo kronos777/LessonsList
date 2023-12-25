@@ -16,7 +16,6 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
     private val checkExistsGroupItemUseCase = CheckExistsGroupItemUseCase(repository)
     private val addGroupItemUseCase = AddGroupItemUseCase(repository)
     private val editGroupItemUseCase = EditGroupItemUseCase(repository)
-    private val deleteGroupItemUseCase = DeleteGroupItemUseCase(repository)
 
     private val _groupItem = MutableLiveData<GroupItem>()
     val groupItem: LiveData<GroupItem>
@@ -36,17 +35,17 @@ class GroupItemViewModel(application: Application) : AndroidViewModel(applicatio
         get() = _shouldCloseScreen
 
 
-    private val _checkExistsgroupItem = MutableLiveData<GroupItem?>()
+    private val _checkExistsGroupItem = MutableLiveData<GroupItem?>()
     val checkExistsGroupItem: LiveData<GroupItem?>
-        get() = _checkExistsgroupItem
+        get() = _checkExistsGroupItem
 
     fun checkExistsGroupItem(groupName: String) {
         viewModelScope.launch {
             val item = checkExistsGroupItemUseCase.checkExistsGroupItem(groupName)
             if(item != null) {
-                _checkExistsgroupItem.value = item
+                _checkExistsGroupItem.value = item
             } else {
-                _checkExistsgroupItem.value = null
+                _checkExistsGroupItem.value = null
             }
 
         }

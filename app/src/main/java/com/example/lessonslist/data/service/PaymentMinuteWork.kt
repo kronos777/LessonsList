@@ -61,7 +61,7 @@ class PaymentMinuteWork(
                         }
 
                     }
-                    //  log("arrlist"+listIdsLessons.toString())
+
                     dbPayment.let {
                         for (payItem in it) {
                             listIdsPayment.add(payItem.lessonsId)
@@ -70,9 +70,7 @@ class PaymentMinuteWork(
 
                     if (listIdsLessons.size > 0) {
                         for (idLessons in listIdsLessons) {
-                            if(listIdsPayment.contains(idLessons)) {
-                                log("нет необходимости что либо создавать.")
-                            } else {
+                            if(!listIdsPayment.contains(idLessons)) {
                                 val threadId = Thread.currentThread().id
                                 log("id потока" + threadId)
                                 val current = LocalDateTime.now()

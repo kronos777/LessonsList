@@ -13,12 +13,11 @@
     <ScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:fillViewport="true">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="650dp"
             tools:context=".presentation.payment.PaymentItemFragment"
             android:padding="16dp"
             >
@@ -26,7 +25,6 @@
                 android:id="@+id/payment_picture"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toTopOf="@id/til_title"
@@ -38,6 +36,7 @@
                 android:id="@+id/til_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="4dp"
@@ -167,33 +166,25 @@
                 />
 
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/relative_button"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/til_status_payment"
-                >
+                android:orientation="vertical">
                 <Button
                     android:id="@+id/payment_off"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/payment_payment_off"
-                    app:layout_constraintBottom_toTopOf="@id/save_button"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     />
 
                 <Button
                     android:id="@+id/save_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/payment_off"
-                    android:text="@string/go_list_btn"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-            </RelativeLayout>
+                    android:text="@string/go_list_btn" />
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

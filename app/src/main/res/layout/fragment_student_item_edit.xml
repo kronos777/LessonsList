@@ -12,14 +12,13 @@
     <ScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:fillViewport="true">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:minHeight="695dp"
-        android:scrollbars="horizontal"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
         tools:context=".presentation.student.StudentItemEditFragment"
         >
 
@@ -61,469 +60,477 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView"
-                app:layout_constraintBottom_toTopOf="@id/card_telephone_student"
+                app:layout_constraintBottom_toTopOf="@+id/groupCardLinear"
                 android:text="@{String.valueOf(viewModel.studentItem.paymentBalance)}" />
 
+<LinearLayout
+    android:id="@+id/groupCardLinear"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintBottom_toBottomOf="parent">
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_telephone_student"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewPaymentBalance"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="0dp"
+        >
 
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_telephone_student"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewPaymentBalance"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="0dp"
-            >
+            android:layout_height="50dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp">
+            <ImageView
+                android:id="@+id/imageTelephoneStudent"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/baseline_phone_24" />
 
-                <ImageView
-                    android:id="@+id/imageTelephoneStudent"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="15dp"
-                    android:src="@drawable/baseline_phone_24" />
+            <TextView
+                android:id="@+id/banks_telephone_h1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="left"
+                android:layout_toRightOf="@id/imageTelephoneStudent"
+                android:layout_weight="1"
+                android:lineHeight="24dp"
+                android:text="Телефон студента"
+                android:textColor="@color/black"
+                android:textFontWeight="500"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/banks_telephone_h1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="left"
-                    android:layout_toRightOf="@id/imageTelephoneStudent"
-                    android:layout_weight="1"
-                    android:lineHeight="24dp"
-                    android:text="Телефон студента"
-                    android:textColor="@color/black"
-                    android:textFontWeight="500"
-                    android:textSize="16sp" />
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_baseline_chevron_right_24" />
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="32dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_baseline_chevron_right_24" />
+        </RelativeLayout>
 
-            </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-        </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_parent_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card_telephone_student"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="0dp"
+        >
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_parent_contact"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_telephone_student"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="0dp"
-            >
+            android:layout_height="50dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp">
+            <ImageView
+                android:id="@+id/imageViewParentContact"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/ic_baseline_family_restroom_24" />
 
-                <ImageView
-                    android:id="@+id/imageViewParentContact"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="15dp"
-                    android:src="@drawable/ic_baseline_family_restroom_24" />
+            <TextView
+                android:id="@+id/banks_parent_h1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="left"
+                android:layout_toRightOf="@id/imageViewParentContact"
+                android:layout_weight="1"
+                android:lineHeight="24dp"
+                android:text="Контакты родителей"
+                android:textColor="@color/black"
+                android:textFontWeight="500"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/banks_parent_h1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="left"
-                    android:layout_toRightOf="@id/imageViewParentContact"
-                    android:layout_weight="1"
-                    android:lineHeight="24dp"
-                    android:text="Контакты родителей"
-                    android:textColor="@color/black"
-                    android:textFontWeight="500"
-                    android:textSize="16sp" />
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_baseline_chevron_right_24" />
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="32dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_baseline_chevron_right_24" />
+        </RelativeLayout>
 
-            </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-        </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_add_notes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card_parent_contact"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="0dp"
+        >
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_add_notes"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_parent_contact"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="0dp"
-            >
+            android:layout_height="50dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp">
+            <ImageView
+                android:id="@+id/imageViewAddNotes"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/ic_baseline_notes_24" />
 
-                <ImageView
-                    android:id="@+id/imageViewAddNotes"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="15dp"
-                    android:src="@drawable/ic_baseline_notes_24" />
+            <TextView
+                android:id="@+id/banks_notes_h1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="left"
+                android:layout_toRightOf="@id/imageViewAddNotes"
+                android:layout_weight="1"
+                android:lineHeight="24dp"
+                android:text="Заметки о студенте"
+                android:textColor="@color/black"
+                android:textFontWeight="500"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/banks_notes_h1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="left"
-                    android:layout_toRightOf="@id/imageViewAddNotes"
-                    android:layout_weight="1"
-                    android:lineHeight="24dp"
-                    android:text="Заметки о студенте"
-                    android:textColor="@color/black"
-                    android:textFontWeight="500"
-                    android:textSize="16sp" />
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_baseline_chevron_right_24" />
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="32dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_baseline_chevron_right_24" />
+        </RelativeLayout>
 
-            </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-        </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_add_balance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card_add_notes"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="0dp"
+        >
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_add_balance"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_add_notes"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="0dp"
-            >
+            android:layout_height="50dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp">
+            <ImageView
+                android:id="@+id/imageViewBanksCard"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/ic_baseline_account_balance_wallet_24" />
 
-                <ImageView
-                    android:id="@+id/imageViewBanksCard"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="15dp"
-                    android:src="@drawable/ic_baseline_account_balance_wallet_24" />
+            <TextView
+                android:id="@+id/banks_card_h1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="left"
+                android:layout_toRightOf="@id/imageViewBanksCard"
+                android:layout_weight="1"
+                android:lineHeight="24dp"
+                android:text="Пополнить баланс"
+                android:textColor="@color/black"
+                android:textFontWeight="500"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/banks_card_h1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="left"
-                    android:layout_toRightOf="@id/imageViewBanksCard"
-                    android:layout_weight="1"
-                    android:lineHeight="24dp"
-                    android:text="Пополнить баланс"
-                    android:textColor="@color/black"
-                    android:textFontWeight="500"
-                    android:textSize="16sp" />
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_baseline_chevron_right_24" />
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="32dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_baseline_chevron_right_24" />
+        </RelativeLayout>
 
-            </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-        </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_group_student"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card_add_balance"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="0dp"
+        >
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_group_student"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_add_balance"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="0dp"
-            >
+            android:layout_height="50dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp">
+            <ImageView
+                android:id="@+id/imageViewGroupStCard"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/ic_baseline_groups_24" />
 
-                <ImageView
-                    android:id="@+id/imageViewGroupStCard"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="15dp"
-                    android:src="@drawable/ic_baseline_groups_24" />
+            <TextView
+                android:id="@+id/group_st_card_h1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="left"
+                android:layout_toRightOf="@id/imageViewGroupStCard"
+                android:layout_weight="1"
+                android:lineHeight="24dp"
+                android:text="Группы студента"
+                android:textColor="@color/black"
+                android:textFontWeight="500"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/group_st_card_h1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="left"
-                    android:layout_toRightOf="@id/imageViewGroupStCard"
-                    android:layout_weight="1"
-                    android:lineHeight="24dp"
-                    android:text="Группы студента"
-                    android:textColor="@color/black"
-                    android:textFontWeight="500"
-                    android:textSize="16sp" />
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_baseline_chevron_right_24" />
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="32dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_baseline_chevron_right_24" />
+        </RelativeLayout>
 
-            </RelativeLayout>
-
-        </com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.card.MaterialCardView>
 
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_payment_student"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_payment_student"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card_group_student"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="0dp"
+        >
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_group_student"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="0dp"
-            >
+            android:layout_height="50dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp">
+            <ImageView
+                android:id="@+id/imageViewSafetyCard"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/ic_baseline_payments_24" />
 
-                <ImageView
-                    android:id="@+id/imageViewSafetyCard"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="15dp"
-                    android:src="@drawable/ic_baseline_payments_24" />
+            <TextView
+                android:id="@+id/safety_card_h1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="left"
+                android:layout_toRightOf="@id/imageViewSafetyCard"
+                android:layout_weight="1"
+                android:lineHeight="24dp"
+                android:text="Платежи студента"
+                android:textColor="@color/black"
+                android:textFontWeight="500"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/safety_card_h1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="left"
-                    android:layout_toRightOf="@id/imageViewSafetyCard"
-                    android:layout_weight="1"
-                    android:lineHeight="24dp"
-                    android:text="Платежи студента"
-                    android:textColor="@color/black"
-                    android:textFontWeight="500"
-                    android:textSize="16sp" />
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_baseline_chevron_right_24" />
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="32dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_baseline_chevron_right_24" />
+        </RelativeLayout>
 
-            </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-        </com.google.android.material.card.MaterialCardView>
+    <!--com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_payment_off"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/card_save_data"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="0dp"
+        >
 
-        <!--com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_payment_off"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/card_save_data"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="0dp"
-            >
+            android:layout_height="60dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp">
+            <ImageView
+                android:id="@+id/imageViewPaymentoff"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/ic_baseline_money_off_24" />
 
-                <ImageView
-                    android:id="@+id/imageViewPaymentoff"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="15dp"
-                    android:src="@drawable/ic_baseline_money_off_24" />
+            <TextView
+                android:id="@+id/payment_off_h1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="left"
+                android:layout_toRightOf="@id/imageViewPaymentoff"
+                android:layout_weight="1"
+                android:lineHeight="24dp"
+                android:text="Списать долг"
+                android:textColor="@color/black"
+                android:textFontWeight="500"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/payment_off_h1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="left"
-                    android:layout_toRightOf="@id/imageViewPaymentoff"
-                    android:layout_weight="1"
-                    android:lineHeight="24dp"
-                    android:text="Списать долг"
-                    android:textColor="@color/black"
-                    android:textFontWeight="500"
-                    android:textSize="16sp" />
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_baseline_chevron_right_24" />
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="32dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_baseline_chevron_right_24" />
+        </RelativeLayout>
 
-            </RelativeLayout>
-
-        </com.google.android.material.card.MaterialCardView-->
+    </com.google.android.material.card.MaterialCardView-->
 
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_save_data"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_save_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card_payment_student"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="0dp"
+        >
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_payment_student"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="0dp"
-            >
+            android:layout_height="50dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp">
+            <ImageView
+                android:id="@+id/imageViewSettingsCard"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/ic_baseline_save_24" />
 
-                <ImageView
-                    android:id="@+id/imageViewSettingsCard"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="15dp"
-                    android:src="@drawable/ic_baseline_save_24" />
+            <TextView
+                android:id="@+id/banks_settings_h1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="left"
+                android:layout_toRightOf="@id/imageViewSettingsCard"
+                android:layout_weight="1"
+                android:lineHeight="24dp"
+                android:text="Сохранить/Выйти"
+                android:textColor="@color/black"
+                android:textFontWeight="500"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/banks_settings_h1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="left"
-                    android:layout_toRightOf="@id/imageViewSettingsCard"
-                    android:layout_weight="1"
-                    android:lineHeight="24dp"
-                    android:text="Сохранить/Выйти"
-                    android:textColor="@color/black"
-                    android:textFontWeight="500"
-                    android:textSize="16sp" />
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_baseline_chevron_right_24" />
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="32dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_baseline_chevron_right_24" />
+        </RelativeLayout>
 
-            </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_delete_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/card_save_data"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="0dp"
+        >
 
-        </com.google.android.material.card.MaterialCardView>
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_delete_data"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_save_data"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="0dp"
-            >
+            android:layout_height="40dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp">
+            <ImageView
+                android:id="@+id/imageViewDeleteSettingsCard"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/ic_baseline_delete_forever_24" />
 
-                <ImageView
-                    android:id="@+id/imageViewDeleteSettingsCard"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="15dp"
-                    android:src="@drawable/ic_baseline_delete_forever_24" />
+            <TextView
+                android:id="@+id/banks_settings_delete_h1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="left"
+                android:layout_toRightOf="@id/imageViewDeleteSettingsCard"
+                android:layout_weight="1"
+                android:lineHeight="24dp"
+                android:text="Удалить"
+                android:textColor="@color/event_1_color"
+                android:textFontWeight="500"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/banks_settings_delete_h1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="left"
-                    android:layout_toRightOf="@id/imageViewDeleteSettingsCard"
-                    android:layout_weight="1"
-                    android:lineHeight="24dp"
-                    android:text="Удалить"
-                    android:textColor="@color/event_1_color"
-                    android:textFontWeight="500"
-                    android:textSize="16sp" />
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_baseline_chevron_right_24" />
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="32dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/ic_baseline_chevron_right_24" />
+        </RelativeLayout>
 
-            </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-        </com.google.android.material.card.MaterialCardView>
+</LinearLayout>
+
+
         <!--com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_notes"
             android:layout_width="0dp"

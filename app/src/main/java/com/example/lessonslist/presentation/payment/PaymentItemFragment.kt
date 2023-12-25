@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -86,16 +87,24 @@ class PaymentItemFragment: Fragment() {
             requireActivity().findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigationView.menu.findItem(R.id.bottomItem2).isChecked = true
 
-         viewModel.paymentItem.observe(viewLifecycleOwner) { paymentItem ->
 
-             if (paymentItem.enabled) {
-                    binding.paymentOff.visibility = (View.GONE)
-                    binding.valueStatusPayment.text = "Оплачен"
-                    binding.paymentPicture.setBackgroundResource(R.drawable.ic_baseline_check_circle_24)
-                } else {
-                    binding.valueStatusPayment.text = "Долг"
-                    binding.paymentPicture.setBackgroundResource(R.drawable.ic_baseline_indeterminate_check_box_24)
-                }
+
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.paymentItem.observe(viewLifecycleOwner) { paymentItem ->
+            val statusPayment= if(paymentItem.enabled) { "Оплачен" } else { "Долг" }
+            setTitleInfo(statusPayment)
+            if (paymentItem.enabled) {
+                binding.paymentOff.visibility = (View.GONE)
+                binding.valueStatusPayment.text = statusPayment
+                binding.paymentPicture.setBackgroundResource(R.drawable.ic_baseline_check_circle_24)
+            } else {
+                binding.valueStatusPayment.text = statusPayment
+                binding.paymentPicture.setBackgroundResource(R.drawable.ic_baseline_indeterminate_check_box_24)
+            }
 
             val paymentCount = paymentItem.price
             viewModelStudent.getStudentItem(paymentItem.studentId)
@@ -114,11 +123,11 @@ class PaymentItemFragment: Fragment() {
             }
 
         }
-
-
-
     }
 
+    private fun setTitleInfo(infoTitle: String) {
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = infoTitle
+    }
 
     private fun deptOff() {
         viewModel.paymentItem.observe(viewLifecycleOwner) { paymentItem ->

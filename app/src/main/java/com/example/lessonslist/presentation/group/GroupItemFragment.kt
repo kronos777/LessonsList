@@ -11,8 +11,10 @@ import android.widget.ListView
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
@@ -94,7 +96,6 @@ class GroupItemFragment : Fragment() {
         bottomNavigationView.menu.findItem(R.id.bottomItem3).isChecked = true
 
 
-
         binding.tilStudent.visibility = View.GONE
         listView = binding.listView
 
@@ -124,10 +125,19 @@ class GroupItemFragment : Fragment() {
             listView.adapter = adapter
 
 
+
+
         }
 
         addTextChangeListeners()
         goGroupListFragmentBackPressed()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.groupItem.observe(this) { group ->
+            setTitleInfo(group.title)
+        }
     }
 
     private fun goGroupListFragmentBackPressed() {
@@ -171,6 +181,9 @@ class GroupItemFragment : Fragment() {
         })
     }
 
+    private fun setTitleInfo(infoTitle: String) {
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = infoTitle
+    }
 
     private fun launchRightMode() {
         when (screenMode) {

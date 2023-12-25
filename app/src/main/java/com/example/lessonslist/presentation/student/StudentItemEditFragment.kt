@@ -48,6 +48,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
+import java.lang.Thread.sleep
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -146,35 +147,6 @@ class StudentItemEditFragment : Fragment() {
         bottomNavigationView.menu.findItem(R.id.bottomItem5).isChecked = true
 
 
-        viewModel.studentItem.observe(viewLifecycleOwner) { stItem ->
-            setNameStudent(stItem.name + " " + stItem.lastname)
-            if (stItem.paymentBalance <= 0) {
-                totalDebt()
-            }
-
-            if(stItem.image.isNotBlank()) {
-                myHandler.post {
-                    val file = File(stItem.image)
-                    Picasso.get()
-                        .load(file)
-                        .resize(200, 200)
-                        .into(mImageView)
-                    pathImageSrc = file.toString()
-                }
-            }
-
-           binding.cardTelephoneStudent.setOnClickListener {
-                   askEditNumber(stItem.telephone)
-            }
-
-        }
-
-        mImageView = binding.imageView
-
-        mImageView.setOnClickListener {
-            actionChangeImage()
-        }
-
         binding.cardAddBalance.setOnClickListener {
             actionAddMoney()
         }
@@ -206,6 +178,38 @@ class StudentItemEditFragment : Fragment() {
 
     }
 
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.studentItem.observe(viewLifecycleOwner) { stItem ->
+            setNameStudent(stItem.name + " " + stItem.lastname)
+            if (stItem.paymentBalance <= 0) {
+                totalDebt()
+            }
+
+            if(stItem.image.isNotBlank()) {
+                myHandler.post {
+                    val file = File(stItem.image)
+                    Picasso.get()
+                        .load(file)
+                        .resize(200, 200)
+                        .into(mImageView)
+                    pathImageSrc = file.toString()
+                }
+            }
+
+            binding.cardTelephoneStudent.setOnClickListener {
+                askEditNumber(stItem.telephone)
+            }
+
+        }
+
+        mImageView = binding.imageView
+
+        mImageView.setOnClickListener {
+            actionChangeImage()
+        }
+    }
     private fun setNameStudent(nameStudent: String) {
         (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = nameStudent
     }
@@ -372,11 +376,18 @@ class StudentItemEditFragment : Fragment() {
 
                 if(isNumeric(editTextInput)){
                     newBalance = editTextInput.toInt()
-                    viewModel.editPaymentBalance(studentItemId, (binding.textViewPaymentBalance.text.toString().toInt() + newBalance))
-                    viewModel.getStudentItem(studentItemId)
+                    val currentBalanceView = if(binding.textViewPaymentBalance.text.toString().toInt() > 0) {
+                        binding.textViewPaymentBalance.text.toString().toInt()
+                    } else {
+                        0
+                    }
+                    viewModel.editPaymentBalance(studentItemId, (currentBalanceView + newBalance))
+                    binding.textViewPaymentBalance.text = (currentBalanceView + newBalance).toString()
+                    /*viewModel.getStudentItem(studentItemId)
+                    sleep(1500)
                     viewModel.studentItem.observe(viewLifecycleOwner) {
                         binding.textViewPaymentBalance.text = it.paymentBalance.toString()
-                    }
+                    }*/
                    /* viewModel.studentItem.observe(viewLifecycleOwner) {
                         Log.d("currentBalance before", it.paymentBalance.toString())
                         viewModel.editPaymentBalance(it.id, (it.paymentBalance + newBalance))
@@ -422,7 +433,6 @@ class StudentItemEditFragment : Fragment() {
                 binding.textViewPaymentBalance.setTextColor(R.color.custom_calendar_weekend_days_bar_text_color.dec())
                 binding.textViewPaymentBalance.text = sumDept.toString()
             }
-
         }
     }
 

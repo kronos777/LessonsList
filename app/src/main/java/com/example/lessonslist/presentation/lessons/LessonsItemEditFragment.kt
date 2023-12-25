@@ -14,6 +14,7 @@ import android.widget.ListView
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -143,21 +144,18 @@ class LessonsItemEditFragment : Fragment() {
         changeDataLessons()
         initDate()
 
-
-        //tempEdit
-        /* val lll = LessonsItem(
-            title = "Хмыревание",
-            notifications = "",
-            student = "1, 2, 8, 9, 10",
-            price = 450,
-            dateStart = "2023/11/25 17:00",
-            dateEnd = "2023/11/25 18:00",
-            id = 13
-        )
-        viewModel.addLessonsItemTemp(lll)*/
-        //tempEdit
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.lessonsItem.observe(this) { lessonItem ->
+            setTitleInfo(lessonItem.title)
+        }
+    }
+
+    private fun setTitleInfo(infoTitle: String) {
+        (activity as AppCompatActivity).findViewById<Toolbar>(R.id.tool_bar).title = infoTitle
+    }
     private fun initDate() {
         viewModel.lessonsItem.observe(viewLifecycleOwner) {
             // Toast.makeText(activity, "curDate: " + it.dateStart, Toast.LENGTH_SHORT).show()
