@@ -62,7 +62,6 @@ class StudentListAdapter(
         }*/
 
         binding.root.setOnClickListener {
-            Log.d("hideModifyAppBar", showMenuDelete.toString())
             if(studentItem.group != "500" && pairList.isEmpty()){
                 onStudentItemClickListener?.invoke(studentItem)
             } else if(pairList.containsKey(studentItem.id)) {
