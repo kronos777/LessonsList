@@ -592,20 +592,26 @@ class LessonsItemAddFragment : Fragment()  {
 
              if(checkField && valueStudent.size > 0 && notificationBoolean) {
                 if(binding.etRepeat.isChecked && dateLessons.size >= 2) {
-                    //if(dateLessons.size > 12) ...
-                    //Log.d("thisLessonsTime", dateLessons.size.toString())
-                    for (index in dateLessons.indices step 2) {
-                        val lessonsItem = LessonsItem(
-                            binding.etTitle.text.toString(),
-                            notificationString,
-                            valueStudent.toString(),
-                            binding.etPrice.text.toString().toInt(),
-                            dateLessons[index],
-                            dateLessons[index + 1]
-                        )
-                        //checkExistsLessonsCurrentDateTime(dateLessons[index], dateLessons[index + 1], lessonsItem)
-                        //viewModel.addLessonsItem(lessonsItem.title, lessonsItem.notifications, lessonsItem.student,
-                           // lessonsItem.price.toString(), dateLessons[index], dateLessons[index + 1])
+                   // Log.d("thisLessonsTime", dateLessons.size.toString())
+                  //  Log.d("thisLessonsTime value", dateLessons.toString())
+                    if(dateLessons.size <= 10) {
+                        Log.d("thisLessonsTime", dateLessons.size.toString())
+                        for (index in dateLessons.indices step 2) {
+                            val lessonsItem = LessonsItem(
+                                binding.etTitle.text.toString(),
+                                notificationString,
+                                valueStudent.toString(),
+                                binding.etPrice.text.toString().toInt(),
+                                dateLessons[index],
+                                dateLessons[index + 1]
+                            )
+                            checkExistsLessonsCurrentDateTime(dateLessons[index], dateLessons[index + 1], lessonsItem)
+                            //viewModel.addLessonsItem(lessonsItem.title, lessonsItem.notifications, lessonsItem.student,
+                            // lessonsItem.price.toString(), dateLessons[index], dateLessons[index + 1])
+                        }
+                    } else {
+                        Toast.makeText(activity, "Нельзя повторять урок больше пяти раз.", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
                     }
                  } else {
                     val lessonsItem = LessonsItem(
