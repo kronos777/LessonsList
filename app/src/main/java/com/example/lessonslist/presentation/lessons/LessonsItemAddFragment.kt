@@ -281,7 +281,7 @@ class LessonsItemAddFragment : Fragment()  {
 
         val startDate = formatter.parse(timePicker1RepeatDate)
         val endDate = formatter.parse(timePicker2RepeatDate)
-
+        dateLessons.clear()
         if(startDate == endDate) {
             Toast.makeText(activity, "Время начала и конца урока не могут совпадать.",
                 Toast.LENGTH_SHORT).show()
@@ -304,8 +304,8 @@ class LessonsItemAddFragment : Fragment()  {
                 dateLessons.add(binding.etDateend.text.toString())
                 for (i in 0 until diff) {
                     calendarLoc.add(Calendar.DAY_OF_MONTH, 7)
-                    val strAdd = calendarLoc.get(Calendar.YEAR).toString() + "/" + (calendarLoc.get(Calendar.MONTH) + 1).toString() + "/" + calendarLoc.get(Calendar.DAY_OF_MONTH).toString() + " " + tempHourStartTime1.get(0) + ":" + tempHourStartTime1.get(1)
-                    val strAdd2 = calendarLoc.get(Calendar.YEAR).toString() + "/" + (calendarLoc.get(Calendar.MONTH) + 1).toString() + "/" + calendarLoc.get(Calendar.DAY_OF_MONTH).toString() + " " + tempHourStartTime2.get(0) + ":" + tempHourStartTime2.get(1)
+                    val strAdd = calendarLoc.get(Calendar.YEAR).toString() + "/" + (calendarLoc.get(Calendar.MONTH) + 1).toString() + "/" + calendarLoc.get(Calendar.DAY_OF_MONTH).toString() + " " + tempHourStartTime1[0] + ":" + tempHourStartTime1[1]
+                    val strAdd2 = calendarLoc.get(Calendar.YEAR).toString() + "/" + (calendarLoc.get(Calendar.MONTH) + 1).toString() + "/" + calendarLoc.get(Calendar.DAY_OF_MONTH).toString() + " " + tempHourStartTime2[0] + ":" + tempHourStartTime2[1]
                     dateLessons.add(strAdd)
                     dateLessons.add(strAdd2)
                 }
@@ -581,18 +581,19 @@ class LessonsItemAddFragment : Fragment()  {
         binding.saveButton.setOnClickListener{
             validValueNotifications()
             val valueStudent = checkValidStudent()
-            val checkField: Boolean
-            if (valueStudent.size <= 0) {
-                 Toast.makeText(activity, "Урок не может создан без учеников.", Toast.LENGTH_SHORT).show()
-                 checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
-                     binding.etDatestart.text.toString(), binding.etDateend.text.toString())
-             } else {
-                 checkField = viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
-                     binding.etDatestart.text.toString(), binding.etDateend.text.toString())
-             }
+            val checkField: Boolean = if (valueStudent.size <= 0) {
+                Toast.makeText(activity, "Урок не может создан без учеников.", Toast.LENGTH_SHORT).show()
+                viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
+                    binding.etDatestart.text.toString(), binding.etDateend.text.toString())
+            } else {
+                viewModel.validateInput(binding.etTitle.text.toString(), valueStudent, binding.etPrice.text.toString(),
+                    binding.etDatestart.text.toString(), binding.etDateend.text.toString())
+            }
 
              if(checkField && valueStudent.size > 0 && notificationBoolean) {
                 if(binding.etRepeat.isChecked && dateLessons.size >= 2) {
+                    //if(dateLessons.size > 12) ...
+                    //Log.d("thisLessonsTime", dateLessons.size.toString())
                     for (index in dateLessons.indices step 2) {
                         val lessonsItem = LessonsItem(
                             binding.etTitle.text.toString(),
@@ -602,7 +603,7 @@ class LessonsItemAddFragment : Fragment()  {
                             dateLessons[index],
                             dateLessons[index + 1]
                         )
-                        checkExistsLessonsCurrentDateTime(dateLessons[index], dateLessons[index + 1], lessonsItem)
+                        //checkExistsLessonsCurrentDateTime(dateLessons[index], dateLessons[index + 1], lessonsItem)
                         //viewModel.addLessonsItem(lessonsItem.title, lessonsItem.notifications, lessonsItem.student,
                            // lessonsItem.price.toString(), dateLessons[index], dateLessons[index + 1])
                     }
@@ -673,8 +674,6 @@ class LessonsItemAddFragment : Fragment()  {
     private fun checkValidStudent(): HashSet<Int> {
         val lstValues: ArrayList<Int> = ArrayList()
         if ((::adapter.isInitialized && ::adapterGroup.isInitialized) || ::adapter.isInitialized) {
-
-
             if (::adapterGroup.isInitialized) {
                 if (!adapterGroup.isEmpty) {
                     adapterGroup.arrayList.forEach {
