@@ -592,10 +592,7 @@ class LessonsItemAddFragment : Fragment()  {
 
              if(checkField && valueStudent.size > 0 && notificationBoolean) {
                 if(binding.etRepeat.isChecked && dateLessons.size >= 2) {
-                   // Log.d("thisLessonsTime", dateLessons.size.toString())
-                  //  Log.d("thisLessonsTime value", dateLessons.toString())
                     if(dateLessons.size <= 10) {
-                        Log.d("thisLessonsTime", dateLessons.size.toString())
                         for (index in dateLessons.indices step 2) {
                             val lessonsItem = LessonsItem(
                                 binding.etTitle.text.toString(),
