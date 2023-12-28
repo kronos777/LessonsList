@@ -29,9 +29,9 @@
                 android:id="@+id/finishedImage"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_baseline_money_off_24_payment"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 />
 
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{paymentItem.title}"
                 style="@style/CardStyle"
-                android:layout_marginLeft="40dp"
+                android:layout_marginStart="40dp"
                 tools:text="Урок" />
 
             <TextView
@@ -51,7 +51,7 @@
                 android:text='@{"Платильщик" + " " + paymentItem.student}'
                 style="@style/CardDateTimeStyle"
                 android:textColor="@color/grey"
-                android:layout_marginLeft="40dp"
+                android:layout_marginStart="40dp"
                 android:layout_below="@id/tv_title"
                 tools:text="Платильщик Вася Петров"
                 />
@@ -61,9 +61,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{String.valueOf(paymentItem.price)}"
-                android:layout_marginRight="40dp"
+                android:layout_marginEnd="40dp"
                 android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 tools:text="150"
                 />
         </RelativeLayout>

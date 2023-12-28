@@ -15,7 +15,7 @@
         android:visibility="gone"
         android:layout_width="50dp"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@id/nameStudent"
+        android:layout_toEndOf="@id/nameStudent"
         android:id="@+id/newPrice"/>
     <CheckBox
         android:id="@+id/checkBox"

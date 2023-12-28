@@ -37,8 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@id/idIVCourse"
-            android:layout_toRightOf="@id/idIVCourse"
-            android:text="Название урока:"
+            android:text="@string/lessons_name"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -48,7 +47,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@id/idTVCourseTitle"
-            android:layout_toRightOf="@id/idTVCourseTitle"
             android:text="@{viewModel.paymentItem.title}"
             android:textColor="@color/black"
             android:textSize="18sp"
@@ -59,9 +57,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/idTVCourseTitle"
-            android:layout_toRightOf="@id/idIVCourse"
+            android:layout_toEndOf="@id/idIVCourse"
             android:layout_marginTop="10dp"
-            android:text="Цена урока:"
+            android:text="@string/price_lessons"
             android:textColor="@color/black"
             android:textSize="15sp" />
         <TextView
@@ -69,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/idTVCourseTitle"
-            android:layout_alignRight ="@+id/idTVCourseTracksTitle"
+            android:layout_alignEnd ="@+id/idTVCourseTracksTitle"
             android:layout_marginTop="10dp"
             android:text="@{viewModel.paymentItem.price}"
             android:textColor="@color/black"
@@ -83,8 +81,7 @@
             android:layout_below="@id/idTVCourseTracks"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@id/idIVCourse"
-            android:layout_toRightOf="@id/idIVCourse"
-            android:text="Время начала урока:"
+            android:text="@string/time_start_lessons"
             android:textColor="@color/black"
             android:textSize="15sp" />
         <TextView
@@ -92,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/idTVCourseTitle"
-            android:layout_alignRight ="@+id/idTVCourseDurationTitle"
+            android:layout_alignEnd ="@+id/idTVCourseDurationTitle"
             android:layout_marginTop="40dp"
             android:text="@{viewModel.paymentItem.datePayment}"
             android:textColor="@color/black"
@@ -105,8 +102,7 @@
             android:layout_below="@+id/idTVCourseDurationValue"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@id/idIVCourse"
-            android:layout_toRightOf="@id/idIVCourse"
-            android:text="Оплачен:"
+            android:text="@string/pay_yes"
             android:textColor="@color/black"
             android:textSize="15sp" />
         <TextView
@@ -114,9 +110,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/idTVCourseDurationValue"
-            android:layout_alignRight ="@+id/idTVCourseDurationTitle2"
+            android:layout_alignEnd ="@+id/idTVCourseDurationTitle2"
             android:layout_marginTop="10dp"
-            android:text="да"
+            android:text="@string/yes"
             android:textColor="@color/black"
             android:textSize="15sp" />
         <!--button for dismissing our dialog-->
@@ -129,7 +125,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:text="без базара"
+            android:text="@string/no"
             android:textAllCaps="false" />
 
     </RelativeLayout>

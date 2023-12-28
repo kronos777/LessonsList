@@ -90,9 +90,9 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         initDrawerNavigation()
         //initBottomNavigation()
-       // startWorkManager()
+        //startWorkManager()
         startWorkManageMinute()
-       // initWorkManager()
+        initWorkManager()
         initMaterialToolBar()
         getDeptPayment()
         initNavHeader()

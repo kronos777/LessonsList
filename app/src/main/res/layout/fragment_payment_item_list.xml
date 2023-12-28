@@ -32,7 +32,7 @@
             android:src="@drawable/baseline_money_off_24_none_item"
             />
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_swith_payment"
+            android:id="@+id/button_switch_payment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"

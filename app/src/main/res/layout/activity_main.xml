@@ -18,7 +18,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:menu="@menu/app_bar_top_menu"
                 app:navigationIcon="@drawable/ic_baseline_menu_24"
-                app:title="Список уроков"
+                app:title="@string/app_name"
                 android:fitsSystemWindows="true"/>
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -31,18 +31,6 @@
             android:id="@+id/parent_recycler_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <!--com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/button_add_shop_item"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
-                android:clickable="true"
-                android:contentDescription="@string/add_shop_item_content_description"
-                android:focusable="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/ic_add" /-->
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/nav_view_bottom"
                 style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"

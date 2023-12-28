@@ -9,7 +9,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="28dp"
+            android:layout_marginStart="28dp"
             android:layout_centerVertical="true"
             android:textColor="@android:color/background_dark"
             android:textSize="16sp" />
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="30dp"/>
+            android:layout_marginEnd="30dp"/>
 
         <ImageView
             android:id="@+id/callPhone"
@@ -27,7 +27,7 @@
             android:layout_height="24dp"
             android:layout_alignParentStart="true"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:src="@drawable/ic_baseline_phone_forwarded_24" />
     </RelativeLayout>
 </layout>

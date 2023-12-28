@@ -14,7 +14,6 @@
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         tools:background="@android:color/holo_red_dark" />
 
     <TextView
@@ -22,7 +21,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:textColor="@android:color/black"
         android:textSize="16sp"
         tools:text="Event #1" />

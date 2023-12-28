@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="32dp"
         android:layout_height="32dp"
@@ -29,7 +29,7 @@
                 android:layout_gravity="center"
                 android:textColor="@color/white"
                 android:textSize="10sp"
-                />
+                tools:ignore="SmallSp" />
 
         </FrameLayout>
     </FrameLayout>

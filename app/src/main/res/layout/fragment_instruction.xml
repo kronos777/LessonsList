@@ -8,7 +8,7 @@
         android:fillViewport="true">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context=".presentation.info.InstructionFragment"
         android:padding="16dp"
 
@@ -36,7 +36,7 @@
             android:layout_marginBottom="4dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/instructions_picture"
-            android:text="Инструкция:"
+            android:text="@string/title_instructions"
             android:gravity="center"
             app:layout_constraintVertical_chainStyle="packed"
             android:textSize="24sp"
@@ -69,10 +69,11 @@
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:textFontWeight="500"
-                    android:textSize="24dp"
-                    android:lineHeight="24dp"
+                    android:textSize="24sp"
+                    android:lineHeight="26sp"
                     android:textColor="@color/black"
-                    android:text="1 Начало работы"/>
+                    android:text="@string/start_work_instruction"
+                    tools:targetApi="p" />
 
                 <!-- HEADER INDICATOR -->
                 <ImageView
@@ -80,9 +81,10 @@
                     android:id="@+id/headerIndicator"
                     android:layout_gravity="center_vertical|right"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
-                    app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp" />
+                    app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp"
+                    tools:ignore="RtlHardcoded" />
 
 
             </com.github.florent37.expansionpanel.ExpansionHeader>
@@ -98,11 +100,12 @@
                 <TextView
                     android:id="@+id/accordion_description_1"
                     android:textFontWeight="400"
-                    android:textSize="18dp"
-                    android:lineHeight="20dp"
+                    android:textSize="18sp"
+                    android:lineHeight="20sp"
                     android:textColor="@color/black"
                     android:layout_height="wrap_content"
-                    android:layout_width="match_parent"/>
+                    android:layout_width="match_parent"
+                    tools:targetApi="p" />
 
             </com.github.florent37.expansionpanel.ExpansionLayout>
         </LinearLayout>
@@ -138,7 +141,7 @@
                     android:textSize="24dp"
                     android:lineHeight="24dp"
                     android:textColor="@color/black"
-                    android:text="2 Вкладка платежи."/>
+                    android:text="@string/payments_tab_instruction"/>
 
                 <!-- HEADER INDICATOR -->
                 <ImageView
@@ -146,9 +149,10 @@
                     android:id="@+id/headerIndicator2"
                     android:layout_gravity="center_vertical|right"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
-                    app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp" />
+                    app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp"
+                    tools:ignore="RtlHardcoded" />
 
 
             </com.github.florent37.expansionpanel.ExpansionHeader>
@@ -164,11 +168,12 @@
                 <TextView
                     android:id="@+id/accordion_description_2"
                     android:textFontWeight="400"
-                    android:textSize="18dp"
-                    android:lineHeight="20dp"
+                    android:textSize="18sp"
+                    android:lineHeight="20sp"
                     android:textColor="@color/black"
                     android:layout_height="wrap_content"
-                    android:layout_width="match_parent"/>
+                    android:layout_width="match_parent"
+                    tools:targetApi="p" />
 
             </com.github.florent37.expansionpanel.ExpansionLayout>
         </LinearLayout>
@@ -199,10 +204,11 @@
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:textFontWeight="500"
-                    android:textSize="24dp"
-                    android:lineHeight="24dp"
+                    android:textSize="24sp"
+                    android:lineHeight="24sp"
                     android:textColor="@color/black"
-                    android:text="3 Вкладка группы."/>
+                    android:text="@string/tabs_groups_instruction"
+                    tools:targetApi="p" />
 
                 <!-- HEADER INDICATOR -->
                 <ImageView
@@ -210,9 +216,10 @@
                     android:id="@+id/headerIndicator3"
                     android:layout_gravity="center_vertical|right"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
-                    app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp" />
+                    app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp"
+                    tools:ignore="RtlHardcoded" />
 
 
             </com.github.florent37.expansionpanel.ExpansionHeader>
@@ -228,11 +235,12 @@
                 <TextView
                     android:id="@+id/accordion_description_3"
                     android:textFontWeight="400"
-                    android:textSize="18dp"
-                    android:lineHeight="20dp"
+                    android:textSize="18sp"
+                    android:lineHeight="20sp"
                     android:textColor="@color/black"
                     android:layout_height="wrap_content"
-                    android:layout_width="match_parent"/>
+                    android:layout_width="match_parent"
+                    tools:targetApi="p" />
 
             </com.github.florent37.expansionpanel.ExpansionLayout>
         </LinearLayout>
@@ -263,10 +271,11 @@
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:textFontWeight="500"
-                    android:textSize="24dp"
-                    android:lineHeight="24dp"
+                    android:textSize="24sp"
+                    android:lineHeight="26sp"
                     android:textColor="@color/black"
-                    android:text="4 Вкладка уроки."/>
+                    android:text="@string/tab_lessons_instruction"
+                    tools:targetApi="p" />
 
                 <!-- HEADER INDICATOR -->
                 <ImageView
@@ -274,9 +283,10 @@
                     android:id="@+id/headerIndicator4"
                     android:layout_gravity="center_vertical|right"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
-                    app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp" />
+                    app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp"
+                    tools:ignore="RtlHardcoded" />
 
 
             </com.github.florent37.expansionpanel.ExpansionHeader>
@@ -292,11 +302,12 @@
                 <TextView
                     android:id="@+id/accordion_description_4"
                     android:textFontWeight="400"
-                    android:textSize="18dp"
-                    android:lineHeight="20dp"
+                    android:textSize="18sp"
+                    android:lineHeight="20sp"
                     android:textColor="@color/black"
                     android:layout_height="wrap_content"
-                    android:layout_width="match_parent"/>
+                    android:layout_width="match_parent"
+                    tools:targetApi="p" />
 
             </com.github.florent37.expansionpanel.ExpansionLayout>
         </LinearLayout>
@@ -327,10 +338,11 @@
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:textFontWeight="500"
-                    android:textSize="24dp"
-                    android:lineHeight="24dp"
+                    android:textSize="24sp"
+                    android:lineHeight="26sp"
                     android:textColor="@color/black"
-                    android:text="5 Вкладка ученики."/>
+                    android:text="@string/tab_student_instruction"
+                    tools:targetApi="p" />
 
                 <!-- HEADER INDICATOR -->
                 <ImageView
@@ -338,9 +350,10 @@
                     android:id="@+id/headerIndicator5"
                     android:layout_gravity="center_vertical|right"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
-                    app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp" />
+                    app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp"
+                    tools:ignore="RtlHardcoded" />
 
 
             </com.github.florent37.expansionpanel.ExpansionHeader>
@@ -356,11 +369,12 @@
                 <TextView
                     android:id="@+id/accordion_description_5"
                     android:textFontWeight="400"
-                    android:textSize="18dp"
-                    android:lineHeight="20dp"
+                    android:textSize="18sp"
+                    android:lineHeight="20sp"
                     android:textColor="@color/black"
                     android:layout_height="wrap_content"
-                    android:layout_width="match_parent"/>
+                    android:layout_width="match_parent"
+                    tools:targetApi="p" />
 
             </com.github.florent37.expansionpanel.ExpansionLayout>
         </LinearLayout>

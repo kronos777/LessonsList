@@ -9,8 +9,6 @@
     android:paddingRight="16dp"
     >
 
-    <!-- В данном layout содержится верхняя часть, которая не будет изменяться при изменении состояния
-    В данном кейсе его можно заменить на TextView с compound drawable, но я оставлю LinearLayout для наглядности-->
     <LinearLayout
         android:id="@+id/layout_top"
         android:layout_width="match_parent"
@@ -26,12 +24,10 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="Text and image in linear layout"
             android:textSize="20sp" />
 
     </LinearLayout>
 
-    <!-- В данном layout содержится разметка для collapsed состояния фрагмента -->
     <LinearLayout
         android:id="@+id/layout_collapsed"
         android:layout_width="match_parent"
@@ -40,29 +36,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_top">
 
-        <!--
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:gravity="center"
-            android:textStyle="italic"
-            android:text="Text about something"
-            android:textSize="24sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:gravity="center"
-            android:text="Some element, for example RecyclerView"
-            android:textSize="32sp" />
-        -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_name"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:layout_alignParentLeft="true"
             app:layout_constraintVertical_chainStyle="packed"
             >
 
@@ -78,7 +57,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:layout_alignParentLeft="true"
             app:layout_constraintVertical_chainStyle="packed"
             >
 
@@ -113,8 +91,6 @@
 
     </LinearLayout>
 
-    <!-- В данном layout содержится разметка для развёрнутого состояния фрагмента
-    Изначально она находится в состоянии invisible и располагается под layout_top как и layout_collapsed-->
     <LinearLayout
         android:id="@+id/layout_expanded"
         android:layout_width="match_parent"

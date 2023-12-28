@@ -2,6 +2,8 @@ package com.example.lessonslist.presentation.actsplash
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -26,20 +28,26 @@ class ActSplash : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.act_splash)
+        setCleanDisplay()
         showProgressBarOrNot()
+    }
+
+    private fun setCleanDisplay() {
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
     }
 
     private fun showProgressBarOrNot() {
         viewModel.checkExistsDateItem(currentDate().toString())
         viewModel.dateItem.observe(this) {
             if(it!=null) {
-                onFromSplash(1000)
+                onFromSplash(1500)
                 goMain()
                 return@observe
             } else {
                 viewModel.addDateItem(currentDate().toString())
                 deletePrevDate()
-                onFromSplash(5000)
+                onFromSplash(6000)
                 return@observe
             }
         }

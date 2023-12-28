@@ -94,7 +94,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:text="@{String.valueOf(viewModel.lessonsItem.price)}"
-            android:textSize="32dp"
+            android:textSize="32sp"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textStyle="bold"
@@ -171,7 +171,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="Изменить/поставить уведомление"/>
+                android:text="@string/put_notifications"/>
 
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.card.MaterialCardView
@@ -197,7 +197,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/text_info_notifications"
-                    android:textSize="16dp"
+                    android:textSize="16sp"
                     android:textColor="@color/custom_calendar_date_weekend_background"
                     android:textStyle="normal"
                     />
@@ -221,32 +221,9 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </com.google.android.material.card.MaterialCardView>
-        <!--TextView
-            android:id="@+id/textViewChangeStateCheckbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="Студенты урока:"
-            android:textSize="24dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/til_dateend"
-            app:layout_constraintEnd_toStartOf="@id/payment_sale"
-            app:layout_constraintStart_toStartOf="parent"
-            />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/payment_sale"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            app:layout_constraintTop_toBottomOf="@id/til_dateend"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/textViewChangeStateCheckbox"
-            android:text="Скидка на оплату"/-->
         <TextView
-            android:id="@+id/textSwithData"
+            android:id="@+id/textSwitchData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -282,7 +259,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginEnd="15dp"
                     android:src="@drawable/ic_baseline_people_24" />
 
                 <TextView
@@ -290,21 +267,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_gravity="left"
-                    android:layout_toRightOf="@id/imageViewStudentStCard"
-                    android:layout_weight="1"
-                    android:lineHeight="24dp"
-                    android:text="Студенты"
+                    android:layout_gravity="start"
+                    android:layout_toEndOf="@id/imageViewStudentStCard"
+                    android:text="@string/students"
                     android:textColor="@color/black"
                     android:textFontWeight="500"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:targetApi="p" />
 
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="32dp"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_baseline_chevron_right_24" />
 
             </RelativeLayout>
@@ -332,7 +308,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginEnd="15dp"
                     android:src="@drawable/ic_baseline_money_off_24" />
 
                 <TextView
@@ -340,21 +316,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_gravity="left"
-                    android:layout_toRightOf="@id/imageViewGroupStCard"
-                    android:layout_weight="1"
+                    android:layout_gravity="start"
+                    android:layout_toEndOf="@id/imageViewGroupStCard"
                     android:lineHeight="24dp"
-                    android:text="Скидки"
+                    android:text="@string/sale"
                     android:textColor="@color/black"
                     android:textFontWeight="500"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:targetApi="p" />
 
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="32dp"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_baseline_chevron_right_24" />
 
             </RelativeLayout>

@@ -17,6 +17,7 @@
         android:layout_height="match_parent"
         android:nestedScrollingEnabled="true"
         android:fillViewport="true">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -151,7 +152,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="Повторять урок"/>
+                android:text="@string/repeat_lessons"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -173,26 +174,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!--com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_datestart_repeat"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
-                    app:layout_constraintVertical_chainStyle="packed"
-                    app:layout_constraintWidth_percent="0.45">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_datestart_repeat"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:clickable="true"
-                        android:focusable="false"
-                        android:hint="@string/lessons_date_start_repeat"
-                        android:inputType="text"
-                        android:text="@{viewModel.lessonsItem.dateStart}" />
-                </com.google.android.material.textfield.TextInputLayout-->
                 <TextView
                     android:id="@+id/textInfoRepeat"
                     android:layout_width="wrap_content"
@@ -247,7 +228,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="Уведомить до начала"/>
+                android:text="@string/notify_start"/>
 
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.card.MaterialCardView
@@ -273,7 +254,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/text_info_notifications"
-                    android:textSize="16dp"
+                    android:textSize="16sp"
                     android:textColor="@color/custom_calendar_date_weekend_background"
                     android:textStyle="normal"
                     />
@@ -301,7 +282,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/list_student_lessons"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:textColor="@color/custom_calendar_date_weekend_background"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@id/card_notifications"
@@ -330,8 +311,8 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginEnd="15dp"
                     android:src="@drawable/ic_baseline_people_24" />
 
                 <TextView
@@ -339,21 +320,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_gravity="left"
-                    android:layout_toRightOf="@id/imageViewStudentStCard"
-                    android:layout_weight="1"
+                    android:layout_gravity="start"
+                    android:layout_toEndOf="@id/imageViewStudentStCard"
                     android:lineHeight="24dp"
-                    android:text="Студенты"
+                    android:text="@string/student"
                     android:textColor="@color/black"
                     android:textFontWeight="500"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:targetApi="p" />
 
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="32dp"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_baseline_chevron_right_24" />
 
             </RelativeLayout>
@@ -380,8 +361,8 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginEnd="15dp"
                     android:src="@drawable/ic_baseline_groups_24" />
 
                 <TextView
@@ -389,21 +370,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_gravity="left"
-                    android:layout_toRightOf="@id/imageViewGroupStCard"
-                    android:layout_weight="1"
+                    android:layout_gravity="start"
+                    android:layout_toEndOf="@id/imageViewGroupStCard"
                     android:lineHeight="24dp"
-                    android:text="Группы"
+                    android:text="@string/groups"
                     android:textColor="@color/black"
                     android:textFontWeight="500"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:targetApi="p" />
 
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="32dp"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
                     android:src="@drawable/ic_baseline_chevron_right_24" />
 
             </RelativeLayout>

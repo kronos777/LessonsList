@@ -16,15 +16,15 @@
         android:id="@+id/txtStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/txtName"
+        android:layout_toEndOf="@id/txtName"
         android:textColor="@android:color/background_dark"
         android:textSize="16sp" />
     <TextView
         android:id="@+id/txtPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/txtStatus"
-        android:layout_marginLeft="15dp"
+        android:layout_toEndOf="@id/txtStatus"
+        android:layout_marginStart="15dp"
         android:textColor="@android:color/background_dark"
         android:textSize="16sp" />
 </RelativeLayout>
