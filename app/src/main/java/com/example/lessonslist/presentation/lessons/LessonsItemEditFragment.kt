@@ -178,7 +178,7 @@ class LessonsItemEditFragment : Fragment() {
 
 
     private fun changeDataLessons() {
-        binding.textSwithData.setOnClickListener {
+        binding.textSwitchData.setOnClickListener {
             setNewDayLessons()
         }
     }
@@ -582,7 +582,7 @@ class LessonsItemEditFragment : Fragment() {
         binding.tilPrice.visibility = View.GONE
         binding.saveButton.text = "Список уроков."
         binding.etTitle.setBackgroundResource(R.color.white)
-        binding.textSwithData.visibility = View.GONE
+        binding.textSwitchData.visibility = View.GONE
         binding.etTitle.isFocusable = false
         binding.etDatestart.setBackgroundResource(R.color.white)
         binding.etDateend.setBackgroundResource(R.color.white)

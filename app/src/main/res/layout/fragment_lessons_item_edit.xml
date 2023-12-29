@@ -124,6 +124,7 @@
                 android:focusable="false"
                 android:hint="@string/lessons_date_start"
                 android:inputType="text"
+                android:textSize="14sp"
                 android:text="@{viewModel.lessonsItem.dateStart}" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -150,6 +151,7 @@
                 android:focusable="false"
                 android:hint="@string/lessons_date_end"
                 android:inputType="textCapWords"
+                android:textSize="14sp"
                 android:text="@{viewModel.lessonsItem.dateEnd}" />
         </com.google.android.material.textfield.TextInputLayout>
 

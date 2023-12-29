@@ -67,7 +67,7 @@ class PaymentItemListFragment: Fragment() {
     }
 
     private fun switchViewPayments() {
-        binding.buttonSwithPayment.setOnClickListener {
+        binding.buttonSwitchPayment.setOnClickListener {
             navController.navigate(R.id.calendarPaymentItemFragment, null, NavigationOptions().invoke())
         }
     }

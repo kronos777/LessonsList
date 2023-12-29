@@ -74,7 +74,7 @@ class CalendarPaymentItemFragment : Fragment() {
     }
 
     private fun switchViewPayments() {
-        binding.buttonSwithPayment.setOnClickListener {
+        binding.buttonSwitchPayment.setOnClickListener {
             val btnArgsPayment = Bundle().apply {
                 putString(PaymentItemListFragment.SCREEN_MODE, PaymentItemListFragment.CUSTOM_LIST)
             }
@@ -101,9 +101,7 @@ class CalendarPaymentItemFragment : Fragment() {
                         if(!item.enabled) {
                             calendarPicList += EventItemsList(dd, "payment", item.student)
                             calendarShowMessageList += EventItemsList(dd, "dolg", item.student)
-
                         } else {
-
                             calendarPicList += EventItemsList(dd, "paymentyes", item.student)
                             calendarShowMessageList += EventItemsList(dd, "paymentyes", item.student)
                         }
