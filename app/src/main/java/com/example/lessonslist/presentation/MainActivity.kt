@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -91,7 +92,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         initDrawerNavigation()
         //initBottomNavigation()
         //startWorkManager()
-        startWorkManageMinute()
+       // startWorkManageMinute()
         initWorkManager()
         initMaterialToolBar()
         getDeptPayment()
@@ -105,34 +106,35 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     }
 
-    private fun startWorkManageMinute() {
-        val workManager = WorkManager.getInstance(application)
-        workManager.enqueueUniqueWork(
-            PaymentMinuteWork.NAME,
-            ExistingWorkPolicy.REPLACE,
-            PaymentMinuteWork.makeRequest()
-        )
+    private fun customCalendarView() {
+        val paymentBtnAppBarTop = findViewById<View>(R.id.payment)
+        val backupBtnAppBarTop = findViewById<View>(R.id.backup)
+        enableHomeBackIcon(false)
+        initMaterialToolBar()
+        initDrawerNavigation()
+        //this.findViewById(R.id.tool_bar)?.setNavigationIcon(R.drawable.ic_baseline_navigate_before_24)
+        paymentBtnAppBarTop.visibility = View.VISIBLE
+        backupBtnAppBarTop.visibility = View.VISIBLE
+    }
+
+    private fun customOtherView () {
+        val paymentBtnAppBarTop = findViewById<View>(R.id.payment)
+        val backupBtnAppBarTop = findViewById<View>(R.id.backup)
+        enableHomeBackIcon(true)
+        toggle.setHomeAsUpIndicator(R.drawable.ic_baseline_navigate_before_24)
+        paymentBtnAppBarTop.visibility = View.GONE
+        backupBtnAppBarTop.visibility = View.GONE
+        goCalendarFragment()
     }
 
 
     private fun onDestinationChanged(currentDestination: Int) {
-        val paymentBtnAppBarTop = findViewById<View>(R.id.payment)
-        val backupBtnAppBarTop = findViewById<View>(R.id.backup)
         try {
             when(currentDestination) {
                 R.id.calendarItemFragment -> {
-                    enableHomeBackIcon(false)
-                    initMaterialToolBar()
-                    initDrawerNavigation()
-                    //this.findViewById(R.id.tool_bar)?.setNavigationIcon(R.drawable.ic_baseline_navigate_before_24)
-                    paymentBtnAppBarTop.visibility = View.VISIBLE
-                    backupBtnAppBarTop.visibility = View.VISIBLE
+                    customCalendarView()
                 } else -> {
-                    enableHomeBackIcon(true)
-                    toggle.setHomeAsUpIndicator(R.drawable.ic_baseline_navigate_before_24)
-                    paymentBtnAppBarTop.visibility = View.GONE
-                    backupBtnAppBarTop.visibility = View.GONE
-                    goCalendarFragment()
+                    customOtherView()
                 }
             }
 
@@ -337,7 +339,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.muItem3 ->  navController.navigate(R.id.instructionFragment, null, NavigationOptions().invoke())
+                R.id.muItem3 -> navController.navigate(R.id.instructionFragment, null, NavigationOptions().invoke())
                 R.id.muItem4 -> navController.navigate(R.id.aboutFragment, null, NavigationOptions().invoke())
                 R.id.muItem5 -> exitApplication()
             }
@@ -382,14 +384,21 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
         //WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "paymentWork",
-            ExistingPeriodicWorkPolicy.KEEP,
-            //ExistingPeriodicWorkPolicy.REPLACE,
+            //ExistingPeriodicWorkPolicy.KEEP,
+            ExistingPeriodicWorkPolicy.REPLACE,
             request
         )
         /*work manager */
     }
 
-
+    private fun startWorkManageMinute() {
+        val workManager = WorkManager.getInstance(applicationContext)
+        workManager.enqueueUniqueWork(
+            PaymentMinuteWork.NAME,
+            ExistingWorkPolicy.REPLACE,
+            PaymentMinuteWork.makeRequest()
+        )
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
          if(toggle.onOptionsItemSelected(item)){
              return true
@@ -399,7 +408,8 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
 
     override fun onEditingFinished() {
-        supportFragmentManager.popBackStack()
+         supportFragmentManager.popBackStack()
+         customCalendarView()
     }
 
 

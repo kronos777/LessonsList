@@ -618,9 +618,9 @@ class LessonsItemAddFragment : Fragment()  {
                         binding.etPrice.text.toString().toInt(),
                         binding.etDatestart.text.toString(),
                         binding.etDateend.text.toString())
-                    checkExistsLessonsCurrentDateTime(binding.etDatestart.text.toString(), binding.etDateend.text.toString(), lessonsItem)
-                    //viewModel.addLessonsItem(lessonsItem.title, lessonsItem.notifications, lessonsItem.student,
-                       // lessonsItem.price.toString(), lessonsItem.dateStart, lessonsItem.dateEnd)
+                   // checkExistsLessonsCurrentDateTime(binding.etDatestart.text.toString(), binding.etDateend.text.toString(), lessonsItem)
+                    viewModel.addLessonsItem(lessonsItem.title, lessonsItem.notifications, lessonsItem.student,
+                        lessonsItem.price.toString(), lessonsItem.dateStart, lessonsItem.dateEnd)
                  }
              } else {
                  setHideError()
