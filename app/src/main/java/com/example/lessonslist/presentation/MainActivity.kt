@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         initDrawerNavigation()
         //initBottomNavigation()
         //startWorkManager()
-       // startWorkManageMinute()
+        startWorkManageOneTime()
         initWorkManager()
         initMaterialToolBar()
         getDeptPayment()
@@ -102,7 +102,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         navController.addOnDestinationChangedListener { _, destination, _ ->
             onDestinationChanged(destination.id)
         }
-
 
     }
 
@@ -391,7 +390,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         /*work manager */
     }
 
-    private fun startWorkManageMinute() {
+    private fun startWorkManageOneTime() {
         val workManager = WorkManager.getInstance(applicationContext)
         workManager.enqueueUniqueWork(
             PaymentMinuteWork.NAME,
