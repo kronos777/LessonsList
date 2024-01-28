@@ -134,8 +134,7 @@ class LessonsItemAddFragment : Fragment()  {
         repeatLessons()
         notificationsLessons()
 
-    }
-
+     }
 
     private fun goLessonsListFragmentBackPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -618,9 +617,9 @@ class LessonsItemAddFragment : Fragment()  {
                         binding.etPrice.text.toString().toInt(),
                         binding.etDatestart.text.toString(),
                         binding.etDateend.text.toString())
-                   // checkExistsLessonsCurrentDateTime(binding.etDatestart.text.toString(), binding.etDateend.text.toString(), lessonsItem)
-                    viewModel.addLessonsItem(lessonsItem.title, lessonsItem.notifications, lessonsItem.student,
-                        lessonsItem.price.toString(), lessonsItem.dateStart, lessonsItem.dateEnd)
+                    checkExistsLessonsCurrentDateTime(binding.etDatestart.text.toString(), binding.etDateend.text.toString(), lessonsItem)
+                    //viewModel.addLessonsItem(lessonsItem.title, lessonsItem.notifications, lessonsItem.student,
+                     //   lessonsItem.price.toString(), lessonsItem.dateStart, lessonsItem.dateEnd)
                  }
              } else {
                  setHideError()
@@ -802,7 +801,6 @@ class LessonsItemAddFragment : Fragment()  {
             binding.tilDateend.error = ""
         }
     }
-
 
 
     private fun observeViewModel() {
