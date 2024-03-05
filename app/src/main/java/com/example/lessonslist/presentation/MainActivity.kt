@@ -380,7 +380,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     /* this work copy*/
         val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
             .build()
-        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
         //WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "paymentWork",
             //ExistingPeriodicWorkPolicy.KEEP,
@@ -391,7 +391,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
     private fun startWorkManageOneTime() {
-        val workManager = WorkManager.getInstance(applicationContext)
+        val workManager = WorkManager.getInstance(this)
         workManager.enqueueUniqueWork(
             PaymentMinuteWork.NAME,
             ExistingWorkPolicy.REPLACE,
