@@ -3,12 +3,14 @@ package com.example.lessonslist.presentation
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -358,6 +360,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         WorkManager.getInstance(this).enqueue(request)
     }
 
+
     private fun initWorkManager() {
         /*work manager */
             //PeriodicWorkRequest myWorkRequest = new PeriodicWorkRequest.Builder(MyWorker.class, 30, TimeUnit.MINUTES, 25, TimeUnit.MINUTES).build();
@@ -378,7 +381,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
                 }*/
     /* this work copy*/
-        val request = PeriodicWorkRequestBuilder<PaymentWork>(20, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
+        val request = PeriodicWorkRequestBuilder<PaymentWork>(15, TimeUnit.MINUTES)
             .build()
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
         //WorkManager.getInstance(this).enqueueUniquePeriodicWork(
