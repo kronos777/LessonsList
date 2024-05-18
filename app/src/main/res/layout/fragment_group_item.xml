@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.lessonslist.presentation.group.GroupItemViewModel"
+            type="com.listlessons.lessonslist.presentation.group.GroupItemViewModel"
             />
     </data>
 

@@ -4,7 +4,7 @@
         <import type="android.view.View"/>
         <variable
             name="studentItem"
-            type="com.example.lessonslist.domain.student.StudentItem"
+            type="com.listlessons.lessonslist.domain.student.StudentItem"
             />
     </data>
     <androidx.cardview.widget.CardView

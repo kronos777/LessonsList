@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.lessonslist.presentation.student.StudentItemViewModel"
+            type="com.listlessons.lessonslist.presentation.student.StudentItemViewModel"
             />
     </data>
 
