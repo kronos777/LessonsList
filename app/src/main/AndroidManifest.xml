@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.listlessons.lessonslist">
+    package="com.example.lessonslist">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +13,7 @@
         android:roundIcon="@drawable/iconlogo"
         android:supportsRtl="true"
         android:theme="@style/Theme.LessonsList">
-        <activity android:name="com.listlessons.lessonslist.presentation.actsplash.ActSplash"
+        <activity android:name="com.example.lessonslist.presentation.actsplash.ActSplash"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
@@ -20,7 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.listlessons.lessonslist.presentation.MainActivity"
+        <activity android:name="com.example.lessonslist.presentation.MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             android:exported="true"/>

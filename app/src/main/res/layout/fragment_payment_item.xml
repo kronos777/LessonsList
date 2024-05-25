@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.listlessons.lessonslist.presentation.payment.PaymentItemViewModel"
+            type="com.example.lessonslist.presentation.payment.PaymentItemViewModel"
             />
     </data>
     <ScrollView

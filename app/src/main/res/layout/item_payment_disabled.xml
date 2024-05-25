@@ -4,7 +4,7 @@
 
         <variable
             name="paymentItem"
-            type="com.listlessons.lessonslist.domain.payment.PaymentItem"
+            type="com.example.lessonslist.domain.payment.PaymentItem"
             />
     </data>
     <androidx.cardview.widget.CardView

@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.listlessons.lessonslist.presentation.student.StudentItemViewModel"
+            type="com.example.lessonslist.presentation.student.StudentItemViewModel"
             />
     </data>
 
@@ -41,6 +41,8 @@
             app:layout_constraintVertical_chainStyle="packed"
             android:hint="@string/name_hint"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:startIconDrawable="@drawable/baseline_auto_stories_24"
+            app:startIconTint="@color/cardColor"
             >
 
             <com.google.android.material.textfield.TextInputEditText
@@ -106,6 +108,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/til_paymentBalance"
             app:layout_constraintVertical_chainStyle="packed"
+            app:startIconDrawable="@drawable/baseline_auto_stories_24"
+            app:startIconTint="@color/cardColor"
             >
 
             <com.google.android.material.textfield.TextInputEditText

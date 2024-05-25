@@ -9,11 +9,11 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.listlessons.lessonslist"
+        applicationId "com.example.lessonslist"
         minSdk 26
         targetSdk 32
-        versionCode 3
-        versionName "3.0"
+        versionCode 4
+        versionName "4"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
