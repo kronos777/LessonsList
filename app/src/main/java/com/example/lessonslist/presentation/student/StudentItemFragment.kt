@@ -371,7 +371,6 @@ class StudentItemFragment : Fragment() {
     }
     @SuppressLint("Range")
     fun setDataContactNumberInField(data: Uri?) {
-            // Get the URI and query the content provider for the phone number
             val contactUri: Uri? = data
             //val projection: Array<String> = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
             if (contactUri != null) {
@@ -382,18 +381,11 @@ class StudentItemFragment : Fragment() {
                             val name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
                             val numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
                             val number = cursor.getString(numberIndex)
-                            // Do something with the phone number
-                            //Toast.makeText(activity, "number $number", Toast.LENGTH_SHORT).show()
-                            //val id = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NAME_RAW_CONTACT_ID))
-                            //Log.d("namesData", name.toString())
                             binding.etName.setText(name)
                             binding.etTelephone.setText(normalizeInputNumber(number))
                         }
                     }
 
-                   /* val c: Cursor =  requireActivity().managedQuery(contactUri, null, null, null, null)
-                    val name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                    Toast.makeText(activity, "name $name", Toast.LENGTH_SHORT).show()*/
                   }
             }
     }
@@ -430,8 +422,3 @@ class StudentItemFragment : Fragment() {
 
     }
 }
-
-data class Contact(
-    val id : String ,
-    val name : String,
-    val number : String)

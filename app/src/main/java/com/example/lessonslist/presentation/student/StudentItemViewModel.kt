@@ -61,6 +61,10 @@ class StudentItemViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
+    fun setStudentPhone() {
+
+    }
+
     fun checkExistsStudent(name: String, lastName: String) {
         viewModelScope.launch {
             val student = checkStudentItemUseCase.checkExistsStudentItem(name, lastName)

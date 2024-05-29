@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.text.InputType.TYPE_CLASS_NUMBER
 import android.util.Log
@@ -337,6 +338,9 @@ class StudentItemEditFragment : Fragment() {
             }
         } else {
             alert.setTitle("Добавьте телефон студента.")
+            alert.setNeutralButton("Контакты") { _, _ ->
+                selectContact()
+            }
             alert.setPositiveButton("Добавить") { _, _ ->
                 addPhoneNumber()
             }
@@ -484,22 +488,21 @@ class StudentItemEditFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == takeFoto && resultCode == RESULT_OK) {
-            // Фотка сделана, извлекаем миниатюру картинки
-            if(data?.extras?.get("data") != null) {
-                val imageUri: Uri? = activity?.let { getImageUri(it.applicationContext,
-                    data.extras?.get("data") as Bitmap
-                ) }
-                if (imageUri != null) {
-                    startCrop(imageUri)
-                }
-            } else {
-                val imageUri: Uri? = data?.data
-                if (imageUri != null) {
-                    startCrop(imageUri)
-                }
-            }
-
+        when (requestCode) {
+            takeFoto -> if(data?.extras?.get("data") != null) {
+                        val imageUri: Uri? = activity?.let { getImageUri(it.applicationContext,
+                                data.extras?.get("data") as Bitmap
+                            ) }
+                            if (imageUri != null) {
+                                startCrop(imageUri)
+                            }
+                        } else {
+                            val imageUri: Uri? = data?.data
+                            if (imageUri != null) {
+                                startCrop(imageUri)
+                            }
+                        }
+            REQUEST_SELECT_PHONE_NUMBER -> setDataContactNumberInField(data?.data)
         }
 
 
@@ -651,6 +654,34 @@ class StudentItemEditFragment : Fragment() {
         return elementList.toString()
     }
 
+    fun selectContact() {
+        // Start an activity for the user to pick a phone number from contacts
+        val intent = Intent(Intent.ACTION_PICK).apply {
+            type = ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE
+        }
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivityForResult(intent, StudentItemFragment.REQUEST_SELECT_PHONE_NUMBER)
+        }
+    }
+    @SuppressLint("Range")
+    fun setDataContactNumberInField(data: Uri?) {
+        val contactUri: Uri? = data
+        //val projection: Array<String> = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
+        if (contactUri != null) {
+            requireActivity().contentResolver.query(contactUri, null, null, null, null).use { cursor ->
+                // If the cursor returned is valid, get the phone number
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        val numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                        val number = cursor.getString(numberIndex)
+                        viewModel.editPhoneNumber(studentItemId, number)
+                    }
+                }
+
+            }
+        }
+    }
+
     interface OnEditingFinishedListener {
 
         fun onEditingFinished()
@@ -663,7 +694,7 @@ class StudentItemEditFragment : Fragment() {
         const val SCREEN_MODE = "extra_mode"
         const val SHOP_ITEM_ID = "extra_shop_item_id"
         const val MODE_EDIT = "mode_edit"
-
+        const val REQUEST_SELECT_PHONE_NUMBER = 2
     }
 }
 

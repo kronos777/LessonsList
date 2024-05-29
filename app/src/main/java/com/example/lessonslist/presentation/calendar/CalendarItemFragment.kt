@@ -372,7 +372,7 @@ class CalendarItemFragment : Fragment() {
 
         if(dataDate.size == 0) {
            // Toast.makeText(getActivity(),"На сегодня ничего нет", Toast.LENGTH_SHORT).show()
-            val alert = AlertDialog.Builder(requireContext())
+            val alert = AlertDialog.Builder(requireContext(), R.style.AlertDialog)
             alert.setTitle("$date")
             alert.setMessage("Запланированных занятий нет.")
 
@@ -386,7 +386,7 @@ class CalendarItemFragment : Fragment() {
             alert.setCancelable(true)
             alert.show()
         } else {
-            val alert = AlertDialog.Builder(requireContext())
+            val alert = AlertDialog.Builder(requireContext(), R.style.AlertDialog)
             alert.setTitle("$date")
 
             val layout = LinearLayout(requireContext())
