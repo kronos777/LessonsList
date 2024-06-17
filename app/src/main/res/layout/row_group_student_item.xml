@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:textColor="@android:color/background_dark"
+        android:textColor="@color/black_for_day_night"
         android:textSize="16sp" />
     <CheckBox
         android:id="@+id/checkBox"

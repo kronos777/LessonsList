@@ -298,7 +298,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textViewChangeStateCheckbox"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="@color/white_for_day_night"
             app:cardCornerRadius="0dp"
             >
 
@@ -324,7 +324,7 @@
                     android:layout_toEndOf="@id/imageViewStudentStCard"
                     android:lineHeight="24dp"
                     android:text="@string/student"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_for_day_night"
                     android:textFontWeight="500"
                     android:textSize="16sp"
                     tools:targetApi="p" />
@@ -348,7 +348,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card_students"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="@color/white_for_day_night"
             app:cardCornerRadius="0dp"
             >
 
@@ -374,7 +374,7 @@
                     android:layout_toEndOf="@id/imageViewGroupStCard"
                     android:lineHeight="24dp"
                     android:text="@string/groups"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_for_day_night"
                     android:textFontWeight="500"
                     android:textSize="16sp"
                     tools:targetApi="p" />

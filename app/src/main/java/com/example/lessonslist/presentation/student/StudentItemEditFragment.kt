@@ -2,6 +2,7 @@ package com.example.lessonslist.presentation.student
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.app.UiModeManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -25,6 +26,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -257,7 +259,15 @@ class StudentItemEditFragment : Fragment() {
     }
 
     private fun getDialogPaymentStudent() {
-        val alert = AlertDialog.Builder(requireContext())
+        var flagNightMode = false
+        var alert = AlertDialog.Builder(requireContext())
+        val uiModeManager = requireContext().getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+        val mode = uiModeManager.nightMode
+        if (mode == UiModeManager.MODE_NIGHT_YES) {
+            alert = AlertDialog.Builder(requireContext(), R.style.AlertDialog)
+            flagNightMode = true
+        }
+
         alert.setTitle("Платежи студента")
         //alert.setMessage("Enter phone details and amount to buy airtime.")
         val layout = LinearLayout(requireContext())
@@ -265,6 +275,9 @@ class StudentItemEditFragment : Fragment() {
         val paymentsLabel = TextView(requireContext())
         paymentsLabel.setSingleLine()
         paymentsLabel.text = "Отсюда Вы можете посмотреть все платежи или все долги студента."
+        if (flagNightMode) {
+            paymentsLabel.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+        }
         paymentsLabel.isSingleLine = false
         paymentsLabel.height = 250
         paymentsLabel.top = 15
@@ -321,7 +334,13 @@ class StudentItemEditFragment : Fragment() {
 
 
     private fun askEditNumber(telephone: String?) {
-        val alert = AlertDialog.Builder(requireContext())
+        var alert = AlertDialog.Builder(requireContext())
+        val uiModeManager = requireContext().getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+        val mode = uiModeManager.nightMode
+        if (mode == UiModeManager.MODE_NIGHT_YES) {
+            alert = AlertDialog.Builder(requireContext(), R.style.AlertDialog)
+            // System is in Night mode
+        }
         val layout = LinearLayout(requireContext())
         layout.orientation = LinearLayout.VERTICAL
 
@@ -359,6 +378,7 @@ class StudentItemEditFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun actionAddMoney() {
+
         var newBalance: Int
 
         val layout = LinearLayout(requireContext())
@@ -369,8 +389,17 @@ class StudentItemEditFragment : Fragment() {
         layout.setPadding(50, 40, 50, 10)
         layout.addView(inputEditTextField)
 
+        var alert = AlertDialog.Builder(requireContext())
+        val uiModeManager = requireContext().getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+        val mode = uiModeManager.nightMode
+        if (mode == UiModeManager.MODE_NIGHT_YES) {
+            alert = AlertDialog.Builder(requireContext(), R.style.AlertDialog)
+            // System is in Night mode
+        }
 
-        val dialog = AlertDialog.Builder(requireContext())
+
+
+        val dialog = alert
             .setTitle("Пополнить баланс студента.")
             //.setMessage("Message")
             .setView(layout)
@@ -442,7 +471,16 @@ class StudentItemEditFragment : Fragment() {
 
 
     private fun addPhoneNumber() {
-        val alert = AlertDialog.Builder(requireContext())
+        var alert = AlertDialog.Builder(requireContext())
+
+        val uiModeManager = requireContext().getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+        val mode = uiModeManager.nightMode
+        if (mode == UiModeManager.MODE_NIGHT_YES) {
+            alert = AlertDialog.Builder(requireContext(), R.style.AlertDialog)
+            // System is in Night mode
+        }
+
+
         alert.setTitle("Добавить телефон студента.")
 
         val layout = LinearLayout(requireContext())

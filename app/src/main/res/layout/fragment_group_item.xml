@@ -1,10 +1,7 @@
 <layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-
     <data>
-
         <variable
             name="viewModel"
             type="com.example.lessonslist.presentation.group.GroupItemViewModel"
@@ -109,8 +106,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewChangeStateCheckbox"
                  />
-
-
         <Button
             android:id="@+id/save_button"
             android:layout_width="0dp"

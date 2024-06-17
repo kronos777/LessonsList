@@ -581,11 +581,11 @@ class LessonsItemEditFragment : Fragment() {
         binding.tilNotifications.visibility = View.GONE
         binding.tilPrice.visibility = View.GONE
         binding.saveButton.text = "Список уроков."
-        binding.etTitle.setBackgroundResource(R.color.white)
+        binding.etTitle.setBackgroundResource(R.color.white_for_day_night)
         binding.textSwitchData.visibility = View.GONE
         binding.etTitle.isFocusable = false
-        binding.etDatestart.setBackgroundResource(R.color.white)
-        binding.etDateend.setBackgroundResource(R.color.white)
+        binding.etDatestart.setBackgroundResource(R.color.white_for_day_night)
+        binding.etDateend.setBackgroundResource(R.color.white_for_day_night)
         binding.cardStudents.visibility = View.GONE
         binding.cardSaleStudent.visibility = View.GONE
         binding.listView.visibility = View.VISIBLE

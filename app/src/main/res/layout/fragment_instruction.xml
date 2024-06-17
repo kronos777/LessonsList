@@ -71,7 +71,7 @@
                     android:textFontWeight="500"
                     android:textSize="24sp"
                     android:lineHeight="26sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_for_day_night"
                     android:text="@string/start_work_instruction"
                     tools:targetApi="p" />
 
@@ -102,7 +102,7 @@
                     android:textFontWeight="400"
                     android:textSize="18sp"
                     android:lineHeight="20sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_for_day_night"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     tools:targetApi="p" />
@@ -140,7 +140,7 @@
                     android:textFontWeight="500"
                     android:textSize="24dp"
                     android:lineHeight="24dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_for_day_night"
                     android:text="@string/payments_tab_instruction"/>
 
                 <!-- HEADER INDICATOR -->
@@ -170,7 +170,7 @@
                     android:textFontWeight="400"
                     android:textSize="18sp"
                     android:lineHeight="20sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_for_day_night"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     tools:targetApi="p" />
@@ -206,7 +206,7 @@
                     android:textFontWeight="500"
                     android:textSize="24sp"
                     android:lineHeight="24sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_for_day_night"
                     android:text="@string/tabs_groups_instruction"
                     tools:targetApi="p" />
 
@@ -237,7 +237,7 @@
                     android:textFontWeight="400"
                     android:textSize="18sp"
                     android:lineHeight="20sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_for_day_night"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     tools:targetApi="p" />
@@ -273,7 +273,7 @@
                     android:textFontWeight="500"
                     android:textSize="24sp"
                     android:lineHeight="26sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_for_day_night"
                     android:text="@string/tab_lessons_instruction"
                     tools:targetApi="p" />
 
@@ -304,7 +304,7 @@
                     android:textFontWeight="400"
                     android:textSize="18sp"
                     android:lineHeight="20sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_for_day_night"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     tools:targetApi="p" />
@@ -340,7 +340,7 @@
                     android:textFontWeight="500"
                     android:textSize="24sp"
                     android:lineHeight="26sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_for_day_night"
                     android:text="@string/tab_student_instruction"
                     tools:targetApi="p" />
 
@@ -371,7 +371,7 @@
                     android:textFontWeight="400"
                     android:textSize="18sp"
                     android:lineHeight="20sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/black_for_day_night"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     tools:targetApi="p" />

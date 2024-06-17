@@ -1,6 +1,8 @@
 package com.example.lessonslist.presentation.calendar
 
 
+import android.annotation.SuppressLint
+import android.app.UiModeManager
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,10 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -61,6 +65,8 @@ class CalendarItemFragment : Fragment() {
 
     private val dateTitleMutableMap: MutableMap<String, String> =
         mutableMapOf()
+
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnEditingFinishedListener) {
@@ -368,11 +374,26 @@ class CalendarItemFragment : Fragment() {
         navController.navigate(R.id.paymentItemListFragment, btnArgsPayments, NavigationOptions().invoke())
     }
 
+
+    @SuppressLint("ResourceAsColor")
     private fun dialogWindow(date: CalendarDate, dataDate: MutableList<EventItemsList>) {
+        var flagNightMode = false
+        var alert = AlertDialog.Builder(requireContext())
+
+        val uiModeManager = requireContext().getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+        val mode = uiModeManager.nightMode
+        if (mode == UiModeManager.MODE_NIGHT_YES) {
+            alert = AlertDialog.Builder(requireContext(), R.style.AlertDialog)
+            flagNightMode = true
+            // System is in Night mode
+        } else if (mode == UiModeManager.MODE_NIGHT_NO) {
+            // System is in Day mode
+        }
+
 
         if(dataDate.size == 0) {
-           // Toast.makeText(getActivity(),"На сегодня ничего нет", Toast.LENGTH_SHORT).show()
-            val alert = AlertDialog.Builder(requireContext(), R.style.AlertDialog)
+            // Toast.makeText(getActivity(),"На сегодня ничего нет", Toast.LENGTH_SHORT).show()
+
             alert.setTitle("$date")
             alert.setMessage("Запланированных занятий нет.")
 
@@ -386,7 +407,7 @@ class CalendarItemFragment : Fragment() {
             alert.setCancelable(true)
             alert.show()
         } else {
-            val alert = AlertDialog.Builder(requireContext(), R.style.AlertDialog)
+            //  val alert = AlertDialog.Builder(requireContext())
             alert.setTitle("$date")
 
             val layout = LinearLayout(requireContext())
@@ -395,15 +416,21 @@ class CalendarItemFragment : Fragment() {
             val lessonsLabel = TextView(requireContext())
             lessonsLabel.setSingleLine()
             lessonsLabel.text = "Уроки:"
+            if (flagNightMode) {
+                lessonsLabel.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+            }
             layout.addView(lessonsLabel)
 
 
             for (index in dataDate.indices) {
                 if(dataDate[index].color == "lessons"){
-                   val nameEvent = dataDate[index].eventName
+                    val nameEvent = dataDate[index].eventName
                     layout.addView(TextView(requireContext()).apply {
                         setSingleLine()
                         this.text = nameEvent
+                        if (flagNightMode) {
+                            this.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                        }
                         this.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
                     })
                 }
@@ -416,6 +443,10 @@ class CalendarItemFragment : Fragment() {
             val paymentsLabel = TextView(requireContext())
             paymentsLabel.setSingleLine()
             paymentsLabel.text = "Оплаченные платежи:"
+            if (flagNightMode) {
+                paymentsLabel.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+            }
+            //paymentsLabel.setTextColor(R.color.white)
             paymentsLabel.top = 15
             layout.addView(paymentsLabel)
 
@@ -431,12 +462,20 @@ class CalendarItemFragment : Fragment() {
             paymentYes.setSingleLine()
             paymentYes.text = countPayYes.toString()
             paymentYes.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
+
+            if (flagNightMode) {
+                paymentYes.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+            }
+
             layout.addView(paymentYes)
 
             val paymentsNoLabel = TextView(requireContext())
             paymentsNoLabel.setSingleLine()
             paymentsNoLabel.text = "Долги :"
             paymentsNoLabel.top = 15
+            if (flagNightMode) {
+                paymentsNoLabel.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+            }
             layout.addView(paymentsNoLabel)
 
 
@@ -453,6 +492,9 @@ class CalendarItemFragment : Fragment() {
             payNo.setSingleLine()
             payNo.text = countPayNo.toString()
             payNo.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
+            if (flagNightMode) {
+                payNo.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+            }
             layout.addView(payNo)
 
             layout.setPadding(50, 40, 50, 10)
@@ -478,8 +520,6 @@ class CalendarItemFragment : Fragment() {
             alert.show()
 
         }
-
-
 
     }
 

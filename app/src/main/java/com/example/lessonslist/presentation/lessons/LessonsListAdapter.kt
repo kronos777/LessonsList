@@ -40,6 +40,7 @@ class LessonsListAdapter(
 
     override fun onBindViewHolder(viewHolder: LessonsItemViewHolder, position: Int) {
         val lessonsItem = getItem(position)
+        val lessonsItemDateEndModify = lessonsItem.copy(dateEnd = lessonsItem.dateEnd.split(" ")[1])
         val binding = viewHolder.binding
        /* binding.root.setOnClickListener {
             onLessonsItemClickListener?.invoke(lessonsItem)
@@ -65,15 +66,11 @@ class LessonsListAdapter(
             pairList[lessonsItem.id] = lessonsItem
         }*/
         listItem.add(lessonsItem.id)
-        Log.d("currentLessonsItem", listItem.toString())
 
         binding.root.setOnClickListener {
-            //Log.d("thisCurrentPosition", position.toString())
-            //pairList.put(it.id, it.price)
             if(lessonsItem.student != "500" && pairList.isEmpty()){
                 onLessonsItemClickListener?.invoke(lessonsItem)
             } else if(pairList.containsKey(lessonsItem.id)) {
-                //itemSelectedList.removeAt(position)
                 pairList.remove(lessonsItem.id)
                 lessonsItem.student = "0"
                 viewHolder.binding.checkImage.visibility = View.GONE
@@ -89,17 +86,14 @@ class LessonsListAdapter(
         binding.root.setOnLongClickListener {
             selectItem(viewHolder, lessonsItem)
             true
-            /*onLessonsItemLongClickListener?.invoke(lessonsItem)
-            true*/
         }
-        binding.lessonsItem = lessonsItem
+        binding.lessonsItem = lessonsItemDateEndModify
     }
 
 
     private fun selectItem(viewHolder: LessonsItemViewHolder, lessonsItem: LessonsItem) {
         isEnabled = true
         viewHolder.binding.checkImage.visibility = View.VISIBLE
-       // itemSelectedList.add(position)
         pairList[lessonsItem.id] = lessonsItem
         lessonsItem.student = "500"
         showMenuDelete(true)
@@ -107,9 +101,8 @@ class LessonsListAdapter(
 
 
     companion object {
-
         const val VIEW_TYPE_ENABLED = 100
-         const val MAX_POOL_SIZE = 30
+        const val MAX_POOL_SIZE = 30
     }
 
 }

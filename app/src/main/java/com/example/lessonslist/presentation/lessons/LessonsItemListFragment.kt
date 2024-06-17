@@ -331,7 +331,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
                 }
 
             }
-            val sortLessons = listNew.sortedByDescending {sortLessItem->
+            val sortLessons = listNew.sortedByDescending { sortLessItem ->
                 LocalDate.parse(sortLessItem.dateStart, formatter)
             }
             lessonsListAdapter.submitList(sortLessons)

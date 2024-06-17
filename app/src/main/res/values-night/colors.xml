@@ -5,9 +5,9 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
+    <color name="black">#000000</color>
     <color name="grey">#757575</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="cardColor">#0061A5</color>
     <color name="cardColorDisabled">#41A9F3</color>
     <color name="active_select_items">#0e0f0f</color>
@@ -17,11 +17,11 @@
     <color name="custom_calendar_grid_color">#0061A5</color>
     <color name="custom_calendar_month_text_color">#0061A5</color>
 
-    <color name="custom_calendar_year_selection_background">#0061A5</color>
+    <color name="custom_calendar_year_selection_background">#000000</color>
     <color name="custom_calendar_year_selection_arrows_color">#f2e81a</color>
     <color name="custom_calendar_year_selection_text_color">#f2e81a</color>
 
-    <color name="custom_calendar_days_bar_background">#0061A5</color>
+    <color name="custom_calendar_days_bar_background">#000000</color>
     <color name="custom_calendar_days_bar_text_color">#f2e81a</color>
     <color name="custom_calendar_weekend_days_bar_text_color">@android:color/holo_red_dark</color>
 
@@ -50,8 +50,7 @@
     <color name="event_5_color">#bf36c1</color>
     <color name="event_6_color">#3dbebc</color>
     <!--day or night-->
-    <color name="card_item_background">@color/white</color>
-    <color name="white_for_day_night">@color/white</color>
-    <color name="black_for_day_night">@color/black</color>
-
+    <color name="card_item_background">@color/black</color>
+    <color name="white_for_day_night">@color/black</color>
+    <color name="black_for_day_night">@color/white</color>
 </resources>
