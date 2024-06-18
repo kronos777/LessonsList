@@ -20,7 +20,6 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.lessonslist.R
@@ -372,12 +371,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     private fun exitApplication() {
         this.finishAffinity()
     }
-
-    private fun startWorkManager() {
-        val request = OneTimeWorkRequestBuilder<PaymentWork>().build()//change
-        WorkManager.getInstance(this).enqueue(request)
-    }
-
 
     private fun initWorkManager() {
         /*work manager */
