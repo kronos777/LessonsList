@@ -1,6 +1,8 @@
 package com.example.lessonslist.presentation.group
 
 
+import android.app.UiModeManager
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -43,6 +45,7 @@ class GroupItemListFragment: Fragment(), MenuProvider {
     private var toolbar: MaterialToolbar? = null
     private var menuChoice: Menu? = null
     private var hideModifyAppBar = false
+    private var flagNightMode = false
 
     private val navController by lazy {
         (activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
@@ -75,6 +78,19 @@ class GroupItemListFragment: Fragment(), MenuProvider {
         }
 
         goCalendarFragmentBackPressed()
+        stateNightMode()
+    }
+
+    private fun stateNightMode() {
+        val uiModeManager = requireContext().getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+        val mode = uiModeManager.nightMode
+        if (mode == UiModeManager.MODE_NIGHT_YES) {
+            flagNightMode = true
+            // System is in Night mode
+        } else if (mode == UiModeManager.MODE_NIGHT_NO) {
+            // System is in Day mode
+            flagNightMode = false
+        }
     }
 
     private fun goCalendarFragment() {
@@ -135,8 +151,13 @@ class GroupItemListFragment: Fragment(), MenuProvider {
             bottomNavigation.itemBackgroundResource = R.color.active_select_items
             toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.VISIBLE
             toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.VISIBLE
-            (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0e0f0f")
-            toolbar?.background = ColorDrawable(Color.parseColor("#0e0f0f"))
+            if (flagNightMode) {
+                (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#032B47")
+                toolbar?.background = ColorDrawable(Color.parseColor("#032B47"))
+            } else {
+                (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0e0f0f")
+                toolbar?.background = ColorDrawable(Color.parseColor("#0e0f0f"))
+            }
             toolbar?.setOnMenuItemClickListener {
                 onMenuItemSelected(it)
             }
@@ -148,10 +169,16 @@ class GroupItemListFragment: Fragment(), MenuProvider {
             }
             hideModifyAppBar = true
         } else {
-            binding.groupListRecyclerLayout.background = ColorDrawable(Color.parseColor("#FFFFFF"))
             bottomNavigation.itemBackgroundResource = R.color.noactive_select_items
-            toolbar?.background = ColorDrawable(Color.parseColor("#0061A5"))
-            (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")
+            if (flagNightMode) {
+                binding.groupListRecyclerLayout.background = ColorDrawable(Color.parseColor("#000000"))
+                toolbar?.background = ColorDrawable(Color.parseColor("#000000"))
+                (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#000000")
+            } else {
+                binding.groupListRecyclerLayout.background = ColorDrawable(Color.parseColor("#FFFFFF"))
+                toolbar?.background = ColorDrawable(Color.parseColor("#0061A5"))
+                (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")
+            }
             toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.GONE
             toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.GONE
             toolbar?.setNavigationIcon(R.drawable.ic_baseline_navigate_before_24)
@@ -283,10 +310,17 @@ class GroupItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun hideModifyAppBar() {
+        if (flagNightMode) {
+            // System is in Night mode
+            toolbar?.background = ColorDrawable(Color.parseColor("#000000"))
+            (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#000000")
+        } else {
+            // System is in Day mode
+            toolbar?.background = ColorDrawable(Color.parseColor("#0061A5"))
+            (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")
+        }
         val bottomNavigation = (activity as AppCompatActivity?)!!. window.findViewById<BottomNavigationView>(R.id.nav_view_bottom)
         bottomNavigation.itemBackgroundResource = R.color.noactive_select_items
-        toolbar?.background = ColorDrawable(Color.parseColor("#0061A5"))
-        (activity as AppCompatActivity?)!!.window.statusBarColor = Color.parseColor("#0061A5")
         toolbar?.findViewById<View>(R.id.menu_delete)?.visibility = View.GONE
         toolbar?.findViewById<View>(R.id.menu_select_all)?.visibility = View.GONE
     }

@@ -55,6 +55,38 @@
             app:layout_constraintVertical_chainStyle="packed"
             android:textSize="18sp"
             />
+        <TextView
+            android:id="@+id/til_offers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/til_description"
+            android:text="@string/offers_about"
+            android:textColor="@color/black_for_day_night"
+            android:gravity="left"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:textSize="24sp"
+            />
+        <TextView
+            android:id="@+id/til_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/til_offers"
+            android:text="@string/offers_email"
+            android:textColor="@color/cardColor"
+            android:gravity="left"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:textSize="24sp"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

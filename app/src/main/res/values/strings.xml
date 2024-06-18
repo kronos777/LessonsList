@@ -121,4 +121,6 @@
     <string name="pay_yes">Оплачен:</string>
     <string name="yes">да</string>
     <string name="no">нет</string>
+    <string name="offers_about">По вопросам и предложениям обращаться по адресу:</string>
+    <string name="offers_email">creatorweb77@gmail.com\n</string>
 </resources>

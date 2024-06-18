@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="CalendarViewCustomStyle">
-        <item name="android:background">@color/white_for_day_night</item>
+        <item name="android:background">@color/white</item>
         <item name="calendar_date_background">@color/cardColor</item>
-        <item name="calendar_date_text_color">@color/black_for_day_night</item>
+        <item name="calendar_date_text_color">@color/black</item>
         <item name="calendar_day_bar_background">@color/custom_calendar_days_bar_background</item>
         <item name="calendar_day_bar_text_color">@color/white</item>
         <item name="calendar_grid_color">@color/white_for_day_night</item>
