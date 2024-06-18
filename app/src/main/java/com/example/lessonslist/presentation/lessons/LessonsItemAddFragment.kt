@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.app.UiModeManager
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -87,7 +88,7 @@ class LessonsItemAddFragment : Fragment()  {
     private val navController by lazy {
         (activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
     }
-
+    private var flagNightMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -133,8 +134,20 @@ class LessonsItemAddFragment : Fragment()  {
 
         repeatLessons()
         notificationsLessons()
+        stateNightMode()
+    }
 
-     }
+    private fun stateNightMode() {
+        val uiModeManager = requireContext().getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+        val mode = uiModeManager.nightMode
+        if (mode == UiModeManager.MODE_NIGHT_YES) {
+            flagNightMode = true
+            // System is in Night mode
+        } else if (mode == UiModeManager.MODE_NIGHT_NO) {
+            // System is in Day mode
+            flagNightMode = false
+        }
+    }
 
     private fun goLessonsListFragmentBackPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -362,7 +375,10 @@ class LessonsItemAddFragment : Fragment()  {
     }
 
     private fun setStudentLessons() {
-        val builder = AlertDialog.Builder(context)
+        var builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+        if (flagNightMode) {
+            builder = androidx.appcompat.app.AlertDialog.Builder(requireContext(), R.style.AlertDialog)
+        }
         builder.setTitle("Выберите студентов урока")
 
         val rowList = layoutInflater.inflate(R.layout.list_data, null)

@@ -2,6 +2,8 @@ package com.example.lessonslist.presentation
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.app.UiModeManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -75,11 +77,11 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         ViewModelProvider(this)[StudentListViewModel::class.java]
     }
 
-    // create Firebase authentication object
     private val navController by lazy {
         (supportFragmentManager.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
     }
 
+    private var flagNightMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,6 +104,19 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
             onDestinationChanged(destination.id)
         }
 
+
+    }
+
+    private fun stateNightMode() {
+        val uiModeManager = this.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+        val mode = uiModeManager.nightMode
+        if (mode == UiModeManager.MODE_NIGHT_YES) {
+            flagNightMode = true
+            // System is in Night mode
+        } else if (mode == UiModeManager.MODE_NIGHT_NO) {
+            // System is in Day mode
+            flagNightMode = false
+        }
     }
 
     private fun customCalendarView() {
@@ -263,9 +278,15 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
     }
 
     private fun getDialogBackup() {
-        val builder = AlertDialog.Builder(this)
+        stateNightMode()
+        var alert = AlertDialog.Builder(this)
+        if (flagNightMode) {
+            alert = AlertDialog.Builder(this, R.style.AlertDialog)
+        }
+
+        alert
             .setTitle("Создать/Восстановить резервную копию.")
-            .setCancelable(false)
+            .setCancelable(true)
             .setPositiveButton("Создать резервную копию.") { _, _ ->
                 backup()
             }
@@ -276,7 +297,7 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
                 dialog.dismiss()
             }
 
-        val dialog = builder.create()
+        val dialog = alert.create()
         dialog.show()
     }
 

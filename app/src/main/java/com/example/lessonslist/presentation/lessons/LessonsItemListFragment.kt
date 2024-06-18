@@ -209,7 +209,10 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
         }
     */
     private fun delete() {
-        val alert = AlertDialog.Builder(requireContext())
+        var alert = AlertDialog.Builder(requireContext())
+        if (flagNightMode) {
+            alert = AlertDialog.Builder(requireContext(), R.style.AlertDialog)
+        }
         val title: String
         val txtDescription: String
         if(lessonsListAdapter.pairList.size == 1) {

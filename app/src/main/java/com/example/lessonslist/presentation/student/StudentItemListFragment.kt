@@ -277,8 +277,12 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     }
 
     private fun delete() {
+        var alert = AlertDialog.Builder(requireContext())
+        if (flagNightMode) {
+            alert = AlertDialog.Builder(requireContext(), R.style.AlertDialog)
+        }
         if (studentListAdapter.pairList.isNotEmpty()) {
-            val alert = AlertDialog.Builder(requireContext())
+
             alert.setTitle("Удалить студента")
 
             val layout = LinearLayout(requireContext())
@@ -318,7 +322,7 @@ class StudentItemListFragment: Fragment(), MenuProvider {
             alert.setCancelable(true)
             alert.show()
         } else {
-            val alert = AlertDialog.Builder(requireContext())
+
             alert.setTitle("Не выбран не один студент")
 
             val layout = LinearLayout(requireContext())

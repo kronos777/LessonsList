@@ -1,6 +1,8 @@
 package com.example.lessonslist.presentation.helpers
 
 import android.annotation.SuppressLint
+import android.app.UiModeManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -75,6 +77,8 @@ class BottomFragment : BottomSheetDialogFragment() {
         (activity?.supportFragmentManager?.findFragmentById(R.id.fragment_item_container) as NavHostFragment).navController
     }
 
+    private var flagNightMode = false
+
 
     // Переопределим тему, чтобы использовать нашу с закруглёнными углами
     override fun getTheme() = R.style.AppBottomSheetDialogTheme
@@ -101,7 +105,19 @@ class BottomFragment : BottomSheetDialogFragment() {
         }
 
 
+        stateNightMode()
+    }
 
+    private fun stateNightMode() {
+        val uiModeManager = requireContext().getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+        val mode = uiModeManager.nightMode
+        if (mode == UiModeManager.MODE_NIGHT_YES) {
+            flagNightMode = true
+            // System is in Night mode
+        } else if (mode == UiModeManager.MODE_NIGHT_NO) {
+            // System is in Day mode
+            flagNightMode = false
+        }
     }
 
 
@@ -384,7 +400,10 @@ class BottomFragment : BottomSheetDialogFragment() {
     }
 
     private fun getDialogNotesItem(title: String, textNotes: String, id: Int) {
-        val alert = AlertDialog.Builder(requireContext())
+        var alert = AlertDialog.Builder(requireContext())
+        if (flagNightMode) {
+            alert = AlertDialog.Builder(requireContext(), R.style.AlertDialog)
+        }
         alert.setTitle(title)
         val layout = LinearLayout(requireContext())
         layout.orientation = LinearLayout.VERTICAL
@@ -420,7 +439,10 @@ class BottomFragment : BottomSheetDialogFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun getDialogContactItem(name: String?, phone: String?, id: Int) {
-        val alert = AlertDialog.Builder(requireContext())
+        var alert = AlertDialog.Builder(requireContext())
+        if (flagNightMode) {
+            alert = AlertDialog.Builder(requireContext(), R.style.AlertDialog)
+        }
         alert.setTitle("Выберите действие для контакта")
         val layout = LinearLayout(requireContext())
         layout.orientation = LinearLayout.VERTICAL
