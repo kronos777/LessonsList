@@ -1,11 +1,12 @@
 package com.example.lessonslist.presentation.student
 
 import android.annotation.SuppressLint
-import android.app.Activity.RESULT_OK
 import android.app.UiModeManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -462,7 +463,8 @@ class StudentItemEditFragment : Fragment() {
 
                     }
                 }
-                binding.textViewPaymentBalance.setTextColor(R.color.custom_calendar_weekend_days_bar_text_color.dec())
+                binding.textViewPaymentBalance.setTextColor(Color.parseColor("#a31a0b"))
+               // binding.textViewPaymentBalance.setTextColor(R.color.custom_calendar_weekend_days_bar_text_color.dec())
                 binding.textViewPaymentBalance.text = sumDept.toString()
             }
         }
@@ -498,11 +500,19 @@ class StudentItemEditFragment : Fragment() {
         alert.setView(layout)
         alert.setPositiveButton("Добавить") { _, _ ->
             val number = amountET.text.toString()
-            viewModel.editPhoneNumber(studentItemId, number)
+            viewModel.editPhoneNumber(studentItemId, number, object : CallbackPhone {
+                override fun success() {
+                    askEditNumber(number)
+                }
+            })
         }
 
         alert.setNegativeButton("отмена") { dialog, _ ->
             dialog.dismiss()
+        }
+
+        alert.setNeutralButton("Контакты") { _, _ ->
+            selectContact()
         }
 
         alert.setCancelable(true)
@@ -712,7 +722,12 @@ class StudentItemEditFragment : Fragment() {
                     if (cursor.moveToFirst()) {
                         val numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
                         val number = cursor.getString(numberIndex)
-                        viewModel.editPhoneNumber(studentItemId, number)
+                        viewModel.editPhoneNumber(studentItemId, number, object : CallbackPhone {
+                            override fun success() {
+                                askEditNumber(number)
+                                //Log.d("thisNumberMustAdd", number)
+                            }
+                        })
                     }
                 }
 
