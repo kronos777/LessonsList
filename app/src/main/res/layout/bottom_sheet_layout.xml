@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -21,9 +21,10 @@
         <TextView
             android:id="@+id/simple_text_title"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="52dp"
             android:layout_gravity="center"
             android:gravity="center"
+            android:textColor="@color/cardColor"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -33,6 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:backgroundTint="@color/white_for_day_night"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_top">
 
@@ -58,6 +60,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             app:layout_constraintVertical_chainStyle="packed"
+            app:startIconDrawable="@drawable/baseline_auto_stories_24"
+            app:startIconTint="@color/cardColor"
             >
 
             <com.google.android.material.textfield.TextInputEditText

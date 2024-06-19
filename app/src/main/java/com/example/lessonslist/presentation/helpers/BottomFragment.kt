@@ -1,11 +1,17 @@
 package com.example.lessonslist.presentation.helpers
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.UiModeManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +21,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.example.lessonslist.R
@@ -32,6 +39,7 @@ import com.example.lessonslist.presentation.student.parentContact.ParentListAdap
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.textfield.TextInputLayout
+import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -125,6 +133,7 @@ class BottomFragment : BottomSheetDialogFragment() {
 
 
     private fun showModeNotes() {
+        binding.tilNotes.isStartIconVisible = false
         binding.simpleTextTitle.text = "Заметки о студенте"
         binding.etNotes.hint = "Внести заметку о студенте"
         binding.tilName.visibility = View.GONE
@@ -144,11 +153,77 @@ class BottomFragment : BottomSheetDialogFragment() {
         binding.etNotes.inputType = InputType.TYPE_CLASS_NUMBER
         showParentContact()
 
+        //binding.tilNotes.setStartIconDrawable(R.drawable.baseline_auto_stories_24)
+        binding.tilNotes.visibility = View.VISIBLE
+
+        binding.tilNotes.setStartIconOnClickListener {
+            selectContact()
+        }
+
+        //binding.tilNotes.setStartIconTintMode(R.color.cardColor)
         binding.etNotes.addTextChangedListener(PhoneTextFormatter(binding.etNotes, "+7 (###) ###-####"))
 
         binding.imageAddNotes.setOnClickListener {
             addParentContact()
         }
+    }
+
+
+
+    fun selectContact() {
+        // Start an activity for the user to pick a phone number from contacts
+        val intent = Intent(Intent.ACTION_PICK).apply {
+            type = ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE
+        }
+        if (intent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivityForResult(intent, REQUEST_SELECT_PHONE_NUMBER)
+        }
+    }
+
+    @SuppressLint("Range")
+    fun setDataContactNumberInField(data: Uri?) {
+        val contactUri: Uri? = data
+        //val projection: Array<String> = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
+        if (contactUri != null) {
+            requireActivity().contentResolver.query(contactUri, null, null, null, null).use { cursor ->
+                // If the cursor returned is valid, get the phone number
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        val name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
+                        val numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                        val number = cursor.getString(numberIndex)
+                        binding.etName.setText(name)
+                        binding.etNotes.setText(normalizeInputNumber(number))
+                    }
+                }
+
+            }
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            2 -> {
+                if (data != null) {
+                    setDataContactNumberInField(data.data)
+                }
+            }
+        }
+    }
+
+    private fun normalizeInputNumber(number: String): String {
+        var newNumber = number
+            .replace(" ", "")
+            .replace("-", "")
+            .replace(")", "")
+            .replace("(", "")
+        if(newNumber[0] == '8') {
+            newNumber = newNumber.substring(1)
+        }
+
+        return newNumber
     }
 
     private fun showModeGroupStudent() {
@@ -309,8 +384,9 @@ class BottomFragment : BottomSheetDialogFragment() {
                 setupGroupStudentRecycler()
                 groupListAdapter.submitList(listGroup)
                 setupGroupItemAdapterClick()
+            } else {
+                binding.simpleTextTitle.setText(R.string.no_student_in_group)
             }
-
         }
     }
 
@@ -575,7 +651,7 @@ class BottomFragment : BottomSheetDialogFragment() {
         private const val CONTACT_PARENT = "contact_parent"
         private const val GROUP_STUDENT = "group_student"
         private const val MODE_UNKNOWN = ""
-
+        const val REQUEST_SELECT_PHONE_NUMBER = 2
 
         fun newInstanceParentsContacts(studentItemId: Int): BottomFragment {
             return BottomFragment().apply {

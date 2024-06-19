@@ -123,4 +123,5 @@
     <string name="no">нет</string>
     <string name="offers_about">По вопросам и предложениям обращаться по адресу:</string>
     <string name="offers_email">creatorweb77@gmail.com\n</string>
+    <string name="no_student_in_group">Ученик не присутствует не в одной из групп.</string>
 </resources>
