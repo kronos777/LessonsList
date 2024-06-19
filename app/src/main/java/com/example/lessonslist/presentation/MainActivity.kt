@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -47,6 +48,11 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import de.raphaelebner.roomdatabasebackup.core.RoomBackup
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
@@ -428,7 +434,6 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
 
     @SuppressLint("SetTextI18n")
     private fun initNavHeader() {
-
         val navigationView : NavigationView = binding.navView
         val headerView : View = navigationView.getHeaderView(0)
         val navScheduledCount : TextView = headerView.findViewById(R.id.nav_scheduled_count_lessons)

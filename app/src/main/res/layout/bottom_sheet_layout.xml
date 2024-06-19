@@ -63,7 +63,6 @@
             app:startIconDrawable="@drawable/baseline_auto_stories_24"
             app:startIconTint="@color/cardColor"
             >
-
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_notes"
                 android:layout_width="match_parent"
