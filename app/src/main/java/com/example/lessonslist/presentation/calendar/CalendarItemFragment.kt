@@ -35,6 +35,7 @@ import ru.cleverpumpkin.calendar.CalendarView
 import ru.cleverpumpkin.calendar.extension.getColorInt
 import ru.cleverpumpkin.calendar.sample.events.EventItem
 import ru.cleverpumpkin.calendar.sample.events.EventItemsList
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.Calendar
 import java.util.TimeZone
@@ -46,7 +47,7 @@ class CalendarItemFragment : Fragment() {
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
     private var _binding: FragmentCalndarBinding? = null
     private val binding: FragmentCalndarBinding
-        get() = _binding ?: throw RuntimeException("FragmentCalndarBinding == null")
+        get() = _binding ?: throw RuntimeException("FragmentCalendarBinding == null")
 
 
     val arrayList: ArrayList<String> = ArrayList()
@@ -206,14 +207,10 @@ class CalendarItemFragment : Fragment() {
                 }
 
 
-
-                val minDateForSetMinDateTime: CalendarDate
-
-
-                if(minDateNumberLessons > minDateNumberPayments) {
-                    minDateForSetMinDateTime = minDateNumberPayments
+                val minDateForSetMinDateTime: CalendarDate = if(minDateNumberLessons > minDateNumberPayments) {
+                    minDateNumberPayments
                 } else {
-                    minDateForSetMinDateTime = minDateNumberLessons
+                    minDateNumberLessons
                 }
 
                 val calendarTimeZone: Calendar = Calendar.getInstance(TimeZone.getDefault())
@@ -340,7 +337,13 @@ class CalendarItemFragment : Fragment() {
         }
 
         calendarView.onDateLongClickListener = { date ->
-            launchLessonsAddFragment(date.toString())
+            val localDate = LocalDate.now()
+            val dateClick = LocalDate.of(date.year, date.month+1, date.dayOfMonth)
+            if(localDate > dateClick) {
+                Toast.makeText(activity, "Урок не может быть добавлен задним числом.", Toast.LENGTH_SHORT).show()
+            } else if (localDate <= dateClick) {
+                launchLessonsAddFragment(date.toString())
+            }
         }
 
    }
@@ -386,8 +389,6 @@ class CalendarItemFragment : Fragment() {
             alert = AlertDialog.Builder(requireContext(), R.style.AlertDialog)
             flagNightMode = true
             // System is in Night mode
-        } else if (mode == UiModeManager.MODE_NIGHT_NO) {
-            // System is in Day mode
         }
 
 
@@ -397,9 +398,14 @@ class CalendarItemFragment : Fragment() {
             alert.setTitle("$date")
             alert.setMessage("Запланированных занятий нет.")
 
-            alert.setPositiveButton("Добавить урок") { _, _ ->
-                launchLessonsAddFragment(date.toString())
+            val localDate = LocalDate.now()
+            val dateClick = LocalDate.of(date.year, date.month+1, date.dayOfMonth)
+            if (localDate <= dateClick) {
+                alert.setPositiveButton("Добавить урок") { _, _ ->
+                    launchLessonsAddFragment(date.toString())
+                }
             }
+
             alert.setNeutralButton("Закрыть") { dialog, _ ->
                 dialog.dismiss()
             }
