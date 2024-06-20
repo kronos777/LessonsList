@@ -4,7 +4,7 @@
 
         <variable
             name="studentItem"
-            type="com.example.lessonslist.domain.student.StudentItem"
+            type="com.lesslist.lessonslist.domain.student.StudentItem"
             />
     </data>
     <androidx.cardview.widget.CardView

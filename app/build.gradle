@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.lessonslist"
+        applicationId "com.lesslist.lessonslist"
         minSdk 26
-        targetSdk 32
+        targetSdk 34
         versionCode 4
         versionName "4"
 
