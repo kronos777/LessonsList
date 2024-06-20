@@ -7,7 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.lessonslist.data.lessons.LessonsListRepositoryImpl
 import com.example.lessonslist.domain.lessons.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class LessonsListViewModel(application: Application) : AndroidViewModel(application) {
