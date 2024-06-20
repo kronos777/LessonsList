@@ -9,7 +9,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.lesslist.lessonslist"
+        applicationId "com.example.lessonslist"
         minSdk 26
         targetSdk 34
         versionCode 4
