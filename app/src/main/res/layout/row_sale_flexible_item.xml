@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@color/cardColor"
-            android:inputType="number"
+            android:digits="0123456789%"
+            android:inputType="text"
             />
     </com.google.android.material.textfield.TextInputLayout>
     <CheckBox

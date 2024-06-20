@@ -504,10 +504,12 @@ class LessonsItemEditFragment : Fragment() {
                             //тут необходимо сделать редактирование скидки
                             Log.d("existsSaleInCurrentLessons21", adapterValue[it.idStudent].toString())
                             val countSaleForCheck =  calculatePercentages(adapterValue[it.idStudent]!!.toString(), viewModel.lessonsItem.value!!.price)
-                            if(countSaleForCheck > 0 &&  countSaleForCheck < viewModel.lessonsItem.value!!.price) {
-                                viewModelSale.editSaleItem(it, adapterValue[it.idStudent]!!.toInt())
-                            } else {
-                                Toast.makeText(activity, "сумма скидки не может превышать стоимость урока", Toast.LENGTH_SHORT).show()
+                            if (countSaleForCheck != null) {
+                                if(countSaleForCheck > 0 &&  countSaleForCheck < viewModel.lessonsItem.value!!.price) {
+                                    viewModelSale.editSaleItem(it, adapterValue[it.idStudent]!!.toInt())
+                                } else {
+                                    Toast.makeText(activity, "сумма скидки не может превышать стоимость урока", Toast.LENGTH_SHORT).show()
+                                }
                             }
                         } else if(!adapterValue.containsKey(it.idStudent)) {
                             //тут необходимо удалить
@@ -519,10 +521,12 @@ class LessonsItemEditFragment : Fragment() {
                         if (!salesMap.containsKey(it.key)) {
                             Log.d("existsSaleInCurrentLessons333", it.toString())
                             val countSaleForCheck =  calculatePercentages(it.value.toString(), viewModel.lessonsItem.value!!.price)
-                            if(countSaleForCheck > 0 &&  countSaleForCheck < viewModel.lessonsItem.value!!.price) {
-                                viewModelSale.addSaleItem(it.key, lessonsItemId, it.value)
-                            } else {
-                                Toast.makeText(activity, "сумма скидки не может превышать стоимость урока", Toast.LENGTH_SHORT).show()
+                            if (countSaleForCheck != null) {
+                                if(countSaleForCheck > 0 &&  countSaleForCheck < viewModel.lessonsItem.value!!.price) {
+                                    viewModelSale.addSaleItem(it.key, lessonsItemId, it.value)
+                                } else {
+                                    Toast.makeText(activity, "сумма скидки не может превышать стоимость урока", Toast.LENGTH_SHORT).show()
+                                }
                             }
                         }
                     }
@@ -534,10 +538,12 @@ class LessonsItemEditFragment : Fragment() {
                 Log.d("existsSaleInCurrentLessons2", adapterValue.toString())
                 adapterValue.forEach {
                     val countSaleForCheck =  calculatePercentages(it.value.toString(), viewModel.lessonsItem.value!!.price)
-                    if(countSaleForCheck > 0 &&  countSaleForCheck < viewModel.lessonsItem.value!!.price) {
-                        viewModelSale.addSaleItem(it.key, lessonsItemId, countSaleForCheck.toInt())
-                    } else {
-                        Toast.makeText(activity, "сумма скидки не может превышать стоимость урока", Toast.LENGTH_SHORT).show()
+                    if (countSaleForCheck != null) {
+                        if(countSaleForCheck > 0 &&  countSaleForCheck < viewModel.lessonsItem.value!!.price) {
+                            viewModelSale.addSaleItem(it.key, lessonsItemId, countSaleForCheck.toInt())
+                        } else {
+                            Toast.makeText(activity, "сумма скидки не может превышать стоимость урока", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
@@ -546,19 +552,23 @@ class LessonsItemEditFragment : Fragment() {
     }
 
 
-    private fun calculatePercentages(valueSale: String, lessonsPrice: Int): Float {
+    private fun calculatePercentages(valueSale: String, lessonsPrice: Int): Float? {
         val price = valueSale.split("%")
-        //println("lessonsPrice: " + lessonsPrice.toString())
-        return if(price[0] != "" && price.size > 1 && price.size < 3 && price[1] == "") {
-            (lessonsPrice).toFloat() / (100).toFloat() * price[0].toFloat()
-        } else if (price.size == 1) {
-            (valueSale.toInt()).toFloat()
-        } else if(price.size >= 3) {
-            lessonsPrice.toFloat()
+        //println("lessonsPrice: " +
+        return if (price[0].toInt() < 100) {
+            if(price[0] != "" && price.size > 1 && price.size < 3 && price[1] == "") {
+                (lessonsPrice).toFloat() / (100).toFloat() * price[0].toFloat()
+            } else if (price.size == 1) {
+                (valueSale.toInt()).toFloat()
+            } else if(price.size >= 3) {
+                lessonsPrice.toFloat()
+            } else {
+                lessonsPrice.toFloat()
+            }
         } else {
-            lessonsPrice.toFloat()
+            Toast.makeText(activity, "Сумма скидки в % не может быть равной 100 и более %.", Toast.LENGTH_SHORT).show()
+            null
         }
-
     }
 
 
