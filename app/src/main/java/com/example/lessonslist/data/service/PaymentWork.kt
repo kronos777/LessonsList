@@ -67,64 +67,39 @@ class PaymentWork(
                        if(listIdsPayment.contains(idLessons)) {
                            HelpersWorkerService().log("нет необходимости что либо создавать.")
                        } else {
-                           //dbLessonGet()
-                           //в противном случае на каждого ученика необходимо создать платеж
-                           // log("в противном случае на каждого ученика необходимо создать платеж" + idLessons)
-                           /*dt*/
                            val current = LocalDateTime.now()
                            val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
                            val formatted = current.format(formatter)
                            val currentTime = LocalDateTime.parse(formatted, formatter)
-                           // log("время текущее" + currentTime)
                            val lessonsItem = dbLessonGet.getLessonsItem(idLessons)
                            val formattedLess = (lessonsItem.dateEnd.format(formatter)).split(":")
                            val newFormatLess = (formattedLess[0] + ":" + formattedLess[1]).format(formatter)
-                           // val formatterLess = DateTimeFormatter.ofPattern("yyyy/M/dd HH:mm")
-                           val timeStartLessons = LocalDateTime.parse(newFormatLess, formatter)
+                           val timeEndLessons = LocalDateTime.parse(newFormatLess, formatter)
 
-                           //val fLess = newFormatLess.format(formatter)
-                           //log("время урока $timeStartLessons")
-                           //delay(100)
-                           if(timeStartLessons >= currentTime) {
-                               // log("время начала урока больше текущего текущее время:" + currentTime + " время начала урока:" + timeStartLessons)
-                               //в этом блоке мы должны вычислить корректный вызов напоминания
+                           if(timeEndLessons >= currentTime) {
                                if(lessonsItem.notifications != ""){
-                                   HelpersWorkerService().sendNotifications(currentTime, timeStartLessons, lessonsItem, applicationContext)
+                                   HelpersWorkerService().sendNotifications(currentTime, timeEndLessons, lessonsItem, applicationContext)
                                }
-                           } else if(currentTime >= timeStartLessons) {
-                               // log("время начала урока меньше текущего те урок окончен текущее время:" + currentTime + " время начала урока:" + timeStartLessons)
-                               //log("время начала урока меньше текущего те урок окончен")
-                               //  log("поле студенты " + lessonsItem.student.toString() + lessonsItem.title)
+                           } else if(currentTime >= timeEndLessons) {
                                val stIds = StringHelpers.getStudentIds(lessonsItem.student)
-                               //    log("в противном случае на каждого ученика необходимо создать платеж" + stIds)
-
                                val namesStudentArrayList: ArrayList<String> = ArrayList()
                                var okPay = 0
                                var noPay = 0
-                               //   sleep(1000)
                                if(stIds.isNotEmpty()) {
                                    for (id in stIds.indices){
-                                       // log("id потока" + threadId)
-                                       //  log("id студента" + stIds[id])
                                        val student = dbStudent.getStudentItem(stIds[id])
                                        HelpersWorkerService().log(student.name + student.lastname + student.paymentBalance)
                                        val studentData = student.name + " " + student.lastname
-                                       //тут необходимо на каждого студента создать платеж и
-                                       //(inputTitle: String, inputDescription: String, inputLessonsId: Int, inputStudentId: Int, inputStudent: String, inputPrice: String)
                                        val newBalanceStudent = HelpersWorkerService().calculatePaymentPriceAdd(student.paymentBalance, lessonsItem.price)
                                        namesStudentArrayList.add(studentData + ' ' + newBalanceStudent.toString())
                                        HelpersWorkerService().log(newBalanceStudent.toString())
                                        val curPayment = viewModelPayment.checkExistsPaymentItem(student.id, idLessons)
                                        sleep(2000)
-                                       //пробуем проверить наличие скидки
                                        val saleTest = HelpersWorkerService().getSale(lessonsItem.id, student.id, applicationContext)
                                        var saleValue = 0
                                        if(saleTest.size > 0) {
-                                           //  log("наличие скидок" + saleTest[0].price.toString() + lessonsItem.title)
                                            saleValue = saleTest[0].price
                                        }
-                                       //пробуем проверить наличие скидки
-
                                        if(!curPayment) {
                                            if(newBalanceStudent > 0) {
                                                if(lessonsItem.price > student.paymentBalance) {

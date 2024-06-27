@@ -23,15 +23,11 @@ class HelpersWorkerService {
     suspend fun sendNotifications(currentTime: LocalDateTime, startLessonsTime: LocalDateTime, lessonsItem: LessonsItemDbModel, context: Context) {
         val notification = lessonsItem.notifications
 
-        //вычислить текущую дату и совпадение с временем начала урока
         val formatterCurentDay = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        var currentDay = currentTime.format(formatterCurentDay)
-        var dayLessons = startLessonsTime.format(formatterCurentDay)
+        val currentDay = currentTime.format(formatterCurentDay)
+        val dayLessons = startLessonsTime.format(formatterCurentDay)
 
-        if(dayLessons == currentDay) {  //if today
-            // log("текущеее время " + currentTime + " время урока " + startLessonsTime + " время уведомления " + notification + " урок " + lessonsItem.title)
-            //проверить условия для отправки уведомлений
-            //а условие попадание в диапазон времени  текущем в значение уведомления
+        if(dayLessons == currentDay) {
             val hstart = currentTime.toString().split("T")
             val shstart = hstart[1].split(":")
             val hhstart = shstart[0].toInt()
