@@ -27,7 +27,10 @@ import com.example.lessonslist.presentation.group.ListStudentAdapter
 import com.example.lessonslist.presentation.helpers.NavigationOptions
 import com.example.lessonslist.presentation.helpers.PhoneTextFormatter
 import com.example.lessonslist.presentation.helpers.StringHelpers
-import com.example.lessonslist.presentation.lessons.sale.*
+import com.example.lessonslist.presentation.lessons.sale.DataSalePaymentModel
+import com.example.lessonslist.presentation.lessons.sale.ListFlexibleSaleAdapter
+import com.example.lessonslist.presentation.lessons.sale.SaleItemViewModel
+import com.example.lessonslist.presentation.lessons.sale.SalesItemListViewModel
 import com.example.lessonslist.presentation.payment.PaymentListViewModel
 import com.example.lessonslist.presentation.student.StudentListViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -35,7 +38,7 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Calendar
 
 
 @Suppress("NAME_SHADOWING", "ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE", "UNUSED_EXPRESSION")
@@ -167,13 +170,6 @@ class LessonsItemEditFragment : Fragment() {
             day = fTime.dayOfMonth
         }
 
-        /*val firstField = binding.etDatestart.text
-        val twoField = binding.etDateend.text
-        val formatter = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm")
-        val fTime = LocalDateTime.parse(firstField, formatter)
-        year = fTime.year
-        month = fTime.month.value
-        day = fTime.dayOfMonth*/
     }
 
 
@@ -507,8 +503,9 @@ class LessonsItemEditFragment : Fragment() {
                         salesMap[it.idStudent] = it.price
                         if (adapterValue.containsKey(it.idStudent) && !adapterValue.containsValue(it.price)) {
                             //тут необходимо сделать редактирование скидки
-                            Log.d("existsSaleInCurrentLessons21", adapterValue[it.idStudent].toString())
-                            val countSaleForCheck =  calculatePercentages(adapterValue[it.idStudent]!!.toString(), viewModel.lessonsItem.value!!.price)
+                            // val countSaleForCheck =  calculatePercentages(adapterValue[it.idStudent]!!.toString(), viewModel.lessonsItem.value!!.price)
+                            val countSaleForCheck = StringHelpers.calculateTheDiscountValue(adapterValue[it.idStudent]!!.toString(), viewModel.lessonsItem.value!!.price.toString())
+
                             if (countSaleForCheck != null) {
                                 if(countSaleForCheck > 0 &&  countSaleForCheck < viewModel.lessonsItem.value!!.price) {
                                     viewModelSale.editSaleItem(it, adapterValue[it.idStudent]!!.toInt())
@@ -519,13 +516,12 @@ class LessonsItemEditFragment : Fragment() {
                         } else if(!adapterValue.containsKey(it.idStudent)) {
                             //тут необходимо удалить
                             viewModelSale.deleteSaleItem(it.id)
-                            Log.d("existsSaleInCurrentLessons21", it.idStudent.toString() + "" + it.price.toString())
-                        }
+                         }
                     }
                     adapterValue.forEach {
                         if (!salesMap.containsKey(it.key)) {
-                            Log.d("existsSaleInCurrentLessons333", it.toString())
-                            val countSaleForCheck =  calculatePercentages(it.value.toString(), viewModel.lessonsItem.value!!.price)
+                            //val countSaleForCheck =  calculatePercentages(it.value.toString(), viewModel.lessonsItem.value!!.price)
+                            val countSaleForCheck =  StringHelpers.calculateTheDiscountValue(it.value.toString(), viewModel.lessonsItem.value!!.price.toString())
                             if (countSaleForCheck != null) {
                                 if(countSaleForCheck > 0 &&  countSaleForCheck < viewModel.lessonsItem.value!!.price) {
                                     viewModelSale.addSaleItem(it.key, lessonsItemId, it.value)
@@ -540,9 +536,9 @@ class LessonsItemEditFragment : Fragment() {
                     deleteAllSaleInCurrentLessons()
                 }
             } else {
-                Log.d("existsSaleInCurrentLessons2", adapterValue.toString())
                 adapterValue.forEach {
-                    val countSaleForCheck =  calculatePercentages(it.value.toString(), viewModel.lessonsItem.value!!.price)
+                    //val countSaleForCheck =  calculatePercentages(it.value.toString(), viewModel.lessonsItem.value!!.price)
+                    val countSaleForCheck =  StringHelpers.calculateTheDiscountValue(it.value.toString(), viewModel.lessonsItem.value!!.price.toString())
                     if (countSaleForCheck != null) {
                         if(countSaleForCheck > 0 &&  countSaleForCheck < viewModel.lessonsItem.value!!.price) {
                             viewModelSale.addSaleItem(it.key, lessonsItemId, countSaleForCheck.toInt())
@@ -555,30 +551,6 @@ class LessonsItemEditFragment : Fragment() {
         }
 
     }
-
-
-    private fun calculatePercentages(valueSale: String, lessonsPrice: Int): Float? {
-        if(valueSale.contains("%")) {
-            val price = valueSale.split("%")
-            return if (price[0].toInt() < 100) {
-                if(price[0] != "" && price.size > 1 && price.size < 3 && price[1] == "") {
-                    (lessonsPrice).toFloat() / (100).toFloat() * price[0].toFloat()
-                } else if(price.size >= 3) {
-                    lessonsPrice.toFloat()
-                } else {
-                    lessonsPrice.toFloat()
-                }
-            } else {
-                Toast.makeText(activity, "Сумма скидки в % не может быть равной 100 и более %.", Toast.LENGTH_SHORT).show()
-                null
-            }
-        } else {
-            return valueSale.toFloat()
-        }
-
-    }
-
-
 
     private fun checkValidStudent(): HashSet<Int?> {
         val lstValues: ArrayList<Int> = ArrayList()
@@ -594,7 +566,6 @@ class LessonsItemEditFragment : Fragment() {
 
 
     private fun setFocusableEditText() {
-        //binding.saveButton.setVisibility (View.GONE)
         binding.tilNotifications.visibility = View.GONE
         binding.tilPrice.visibility = View.GONE
         binding.saveButton.text = "Список уроков."
@@ -606,8 +577,6 @@ class LessonsItemEditFragment : Fragment() {
         binding.cardStudents.visibility = View.GONE
         binding.cardSaleStudent.visibility = View.GONE
         binding.listView.visibility = View.VISIBLE
-        //  binding.textViewChangeStateCheckbox.text = "Список платежей:"
-        //binding.paymentSale.visibility = View.GONE
         binding.etDatestart.setOnClickListener{
             false
         }
@@ -615,17 +584,9 @@ class LessonsItemEditFragment : Fragment() {
             false
         }
         binding.saveButton.setOnClickListener {
-            //launchFragment(LessonsItemListFragment.newInstanceNoneParams())
             launchLessonsListFragment()
         }
 
-//        binding.saveButton
-
-        /*   binding.saveButton.setVisibility (View.GONE)
-           binding.layoutInfo.setVisibility (View.VISIBLE)
-           //binding.textViewChangeStateCheckbox.setVisibility (View.GONE)
-
-           binding.textViewChangeStateCheckbox.isFocusable = false*/
     }
 
 
@@ -690,14 +651,12 @@ class LessonsItemEditFragment : Fragment() {
 
                 for (index in dataStudentGroupModel!!.indices) {
                     if (dataStudentGroupModel!![index].checked) {
-                        // Log.d("studentLessons", " index: " + dataStudentGroupModel!![index].id.toString() + " check: " + dataStudentGroupModel!![index].checked.toString())
-                        arrayListLocal.add(dataStudentGroupModel!![index].id!!)
+                       arrayListLocal.add(dataStudentGroupModel!![index].id!!)
                     }
 
                 }
                 studentIds = arrayListLocal.toString()
             }
-            //Toast.makeText(activity, "Ученики урока" + dataStudentGroupModel, Toast.LENGTH_SHORT).show()
 
             if(adapter.arrayList.size == 0 && arrayListLocal.size == 0) {
                 Toast.makeText(activity, "В уроке нет учеников", Toast.LENGTH_SHORT).show()
@@ -758,17 +717,12 @@ class LessonsItemEditFragment : Fragment() {
     private fun notificationsLessons() {
         val switchChoose = binding.etNotifications
         binding.etTimeNotifications.addTextChangedListener(PhoneTextFormatter(binding.etTimeNotifications, "##:##"))
-        //textChangedListener(PhoneTextFormatter(binding.etTimeNotifications, "##:##"))
         switchChoose.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked) {
-                //   Toast.makeText(activity, "checked", Toast.LENGTH_SHORT).show()
                 binding.cardNotifications.visibility = View.VISIBLE
                 binding.etTimeNotifications.setOnClickListener {
                     setNotifications()
                 }
-                /*binding.etDateendRepeat.setOnClickListener {
-                    chooseDateEndRepeat()
-                }*/
             } else {
                 Toast.makeText(activity, "Вы убрали уведомление.", Toast.LENGTH_SHORT).show()
                 binding.cardNotifications.visibility = View.GONE
@@ -776,7 +730,6 @@ class LessonsItemEditFragment : Fragment() {
                 binding.tilTimeNotifications.error = ""
                 binding.etTimeNotifications.setText("")
                 notificationBoolean = true
-                //Toast.makeText(activity, "unchecked", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -790,7 +743,6 @@ class LessonsItemEditFragment : Fragment() {
                 val minH = if (hourOfDay < 10) "0$hourOfDay" else hourOfDay
                 val minM = if (minute < 10) "0$minute" else minute
                 binding.etTimeNotifications.setText("$minH:$minM")
-                // binding.tilNotifications.setEndIconDrawable(R.drawable.ic_baseline_circle_24)
             },
             mHour,
             mMinute,
@@ -815,12 +767,8 @@ class LessonsItemEditFragment : Fragment() {
             /*time*/
 
             if (notify.isNotBlank() && timeDateStart.isNotBlank()) {
-                //val formatter = SimpleDateFormat("HH:mm", Locale.ENGLISH)
-                //val formattedDatetimeDateNotifications = formatter.parse(timeDateStart)
-                //LocalTime time = LocalTime.of(23, 59);
                 val formattedDatetimeDateNotifications = LocalTime.of(hhnotify, mmnotify)
                 val formattedDatetimeDateStart = LocalTime.of(hhstart, mmstart)
-                //val formattedDatetimeDateStart = formatter.parse(timeDateStart)
                 if(formattedDatetimeDateNotifications >= formattedDatetimeDateStart.minusMinutes(20)) {
                     Toast.makeText(activity, "Значение даты напоминания не может быть больше или равному дате начала урока за 20 минут.", Toast.LENGTH_SHORT).show()
                     binding.tilTimeNotifications.error = "Значение даты напоминания не может быть больше или равному дате начала урока за 20 минут."
@@ -831,7 +779,6 @@ class LessonsItemEditFragment : Fragment() {
                     notificationBoolean = true
 
                 }
-                //Toast.makeText(activity, "this value start time" + formattedDatetimeDateStart.minusMinutes(20), Toast.LENGTH_SHORT).show()
 
             } else if(notify.isBlank() && timeDateStart.isNotBlank()) {
                 notificationString = ""

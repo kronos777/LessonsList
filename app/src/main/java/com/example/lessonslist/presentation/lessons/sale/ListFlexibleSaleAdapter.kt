@@ -93,8 +93,8 @@ class ListFlexibleSaleAdapter(private val dataSet: ArrayList<*>, mContext: Conte
                 }
 
                 override fun afterTextChanged(p0: Editable?) {
-                    Log.d("chechBox", item.id.toString())
-                    Log.d("chechBox", viewHolder.valuePrice.text.toString())
+                    /*Log.d("chechBox", item.id.toString())
+                    Log.d("chechBox", viewHolder.valuePrice.text.toString())*/
                     if (viewHolder.checkBox.isChecked) {
                         val calculatePrice = StringHelpers.calculateTheDiscountValue(viewHolder.valuePrice.text.toString(), item.oldPrice.toString())
                         calculatePrice?.let { addCountArrayList(item.id!!, it) }
@@ -111,12 +111,12 @@ class ListFlexibleSaleAdapter(private val dataSet: ArrayList<*>, mContext: Conte
                             val calculatePrice = StringHelpers.calculateTheDiscountValue(viewHolder.valuePrice.text.toString(), item.oldPrice.toString())
                             calculatePrice?.let { it1 -> addCountArrayList(item.id!!, it1) }
                             item.checked = true
-                            Log.d("chechBox old", item.oldPrice.toString())
+                            /*Log.d("chechBox old", item.oldPrice.toString())
                             Log.d("chechBox", item.id.toString())
                             Log.d("chechBox", viewHolder.checkBox.isChecked.toString())
                             Log.d("chechBox", item.checked.toString())
                             Log.d("chechBox", viewHolder.valuePrice.text.toString())
-                            Log.d("chechBox", item.name.toString())
+                            Log.d("chechBox", item.name.toString())*/
                         }
                     } else {
                         if(viewHolder.valuePrice.text.toString().isNullOrBlank()) {
