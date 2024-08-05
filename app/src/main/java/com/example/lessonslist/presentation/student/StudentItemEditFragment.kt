@@ -748,6 +748,7 @@ class StudentItemEditFragment : Fragment() {
         const val SHOP_ITEM_ID = "extra_shop_item_id"
         const val MODE_EDIT = "mode_edit"
         const val REQUEST_SELECT_PHONE_NUMBER = 2
+
     }
 }
 
