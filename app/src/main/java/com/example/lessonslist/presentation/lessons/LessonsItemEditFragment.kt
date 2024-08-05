@@ -422,7 +422,9 @@ class LessonsItemEditFragment : Fragment() {
                                     existsStudentId.add(sales[saleItem].idStudent)
                                     studentName += name
                                     studentsLessonsAdapter.remove(studentId)
-                                    dataStudentSaleModel!!.add(DataSalePaymentModel(name, sales[saleItem].price, studentId, true))
+                                    viewModel.lessonsItem.observe(viewLifecycleOwner) {
+                                        dataStudentSaleModel!!.add(DataSalePaymentModel(name, sales[saleItem].price, studentId, true, it.price))
+                                    }
                                     //dataStudentSaleModel!!.add(DataSalePaymentModel(name, sales[saleItem].price, sales[saleItem].id, true))
                                 }
                             }
@@ -438,7 +440,10 @@ class LessonsItemEditFragment : Fragment() {
                         val studentId = student.id
                         val name = student.name + " " + student.lastname
                         if(studentsLessonsAdapter.contains(studentId)) {
-                            dataStudentSaleModel!!.add(DataSalePaymentModel(name, 0, studentId, false))
+                            //dataStudentSaleModel!!.add(DataSalePaymentModel(name, 0, studentId, false, viewModel.lessonsItem.value!!.price))
+                            viewModel.lessonsItem.observe(viewLifecycleOwner) {
+                                dataStudentSaleModel!!.add(DataSalePaymentModel(name, 0, studentId, false, it.price))
+                            }
                         }
                     }
                 }
@@ -553,22 +558,24 @@ class LessonsItemEditFragment : Fragment() {
 
 
     private fun calculatePercentages(valueSale: String, lessonsPrice: Int): Float? {
-        val price = valueSale.split("%")
-        //println("lessonsPrice: " +
-        return if (price[0].toInt() < 100) {
-            if(price[0] != "" && price.size > 1 && price.size < 3 && price[1] == "") {
-                (lessonsPrice).toFloat() / (100).toFloat() * price[0].toFloat()
-            } else if (price.size == 1) {
-                (valueSale.toInt()).toFloat()
-            } else if(price.size >= 3) {
-                lessonsPrice.toFloat()
+        if(valueSale.contains("%")) {
+            val price = valueSale.split("%")
+            return if (price[0].toInt() < 100) {
+                if(price[0] != "" && price.size > 1 && price.size < 3 && price[1] == "") {
+                    (lessonsPrice).toFloat() / (100).toFloat() * price[0].toFloat()
+                } else if(price.size >= 3) {
+                    lessonsPrice.toFloat()
+                } else {
+                    lessonsPrice.toFloat()
+                }
             } else {
-                lessonsPrice.toFloat()
+                Toast.makeText(activity, "Сумма скидки в % не может быть равной 100 и более %.", Toast.LENGTH_SHORT).show()
+                null
             }
         } else {
-            Toast.makeText(activity, "Сумма скидки в % не может быть равной 100 и более %.", Toast.LENGTH_SHORT).show()
-            null
+            return valueSale.toFloat()
         }
+
     }
 
 

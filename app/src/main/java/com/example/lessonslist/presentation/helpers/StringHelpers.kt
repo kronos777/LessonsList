@@ -1,6 +1,7 @@
 package com.example.lessonslist.presentation.helpers
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -28,5 +29,26 @@ object StringHelpers {
             "00"
         }
     }
+
+    fun calculateTheDiscountValue(stringValue: String, lessonsPrice: String): Int? {
+        if(stringValue.contains("%")) {
+            val price = stringValue.split("%")
+            return if (price[0].toInt() < 100) {
+                if(price[0] != "" && price.size > 1 && price.size < 3 && price[1] == "") {
+                    ((lessonsPrice).toFloat() / (100).toFloat() * price[0].toFloat()).toInt()
+                } else if(price.size >= 3) {
+                    lessonsPrice.toInt()
+                } else {
+                    lessonsPrice.toInt()
+                }
+            } else {
+                //Toast.makeText(activity, "Сумма скидки в % не может быть равной 100 и более %.", Toast.LENGTH_SHORT).show()
+                null
+            }
+        } else {
+            return stringValue.toFloat().toInt()
+        }
+    }
+
 
 }
