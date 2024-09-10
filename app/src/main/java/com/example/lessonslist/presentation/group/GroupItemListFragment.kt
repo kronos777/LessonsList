@@ -196,6 +196,8 @@ class GroupItemListFragment: Fragment(), MenuProvider {
             groupListAdapter.submitList(listGroup)
             if (listGroup.isEmpty()) {
                 binding.noGroup.visibility = View.VISIBLE
+            } else {
+                binding.noGroup.visibility = View.GONE
             }
         }
     }

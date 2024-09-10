@@ -116,9 +116,7 @@ class StudentItemListFragment: Fragment(), MenuProvider {
     private fun setData() {
         viewModel.studentList.observe(viewLifecycleOwner) { listStudent ->
             if(listStudent.isNotEmpty()) {
-                if(binding.noStudent.visibility == View.VISIBLE) {
-                    binding.noStudent.visibility = View.GONE
-                }
+                binding.noStudent.visibility = View.GONE
                 val studentSort = listStudent.sortedBy { it.name }
                 studentListAdapter.submitList(studentSort)
             } else {

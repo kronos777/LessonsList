@@ -335,6 +335,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
                     val sortLessons = listArrayPayment.sortedByDescending {lessItem->
                         LocalDate.parse(lessItem.dateStart, formatter)
                     }
+                    hideImageNoneItem()
                     lessonsListAdapter.submitList(sortLessons)
                 } else {
                     Toast.makeText(activity,"На эту дату уроков не запланировано!",Toast.LENGTH_SHORT).show()
@@ -364,6 +365,7 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
             val sortLessons = listNew.sortedByDescending { sortLessItem ->
                 LocalDate.parse(sortLessItem.dateStart, formatter)
             }
+            hideImageNoneItem()
             lessonsListAdapter.submitList(sortLessons)
             if(listLessItem.isEmpty()) {
                 showImageNoneItem()
@@ -376,6 +378,11 @@ class LessonsItemListFragment: Fragment(), MenuProvider {
     private fun showImageNoneItem() {
         binding.noLessons.visibility = View.VISIBLE
     }
+
+    private fun hideImageNoneItem() {
+        binding.noLessons.visibility = View.GONE
+    }
+
 
     private fun setCustomDataLessonsCheckAll(selectAll: Boolean) {
         viewModel.lessonsList.observe(viewLifecycleOwner) {listLessItem->

@@ -310,11 +310,8 @@ class LessonsItemEditFragment : Fragment() {
         val hour = mCurrentTime.get(Calendar.HOUR_OF_DAY)
         val minute = mCurrentTime.get(Calendar.MINUTE)
 
-
-
         var timePicker1 = ""
         var timePicker2 = ""
-
 
         mTimePicker = TimePickerDialog(context,
             { _, hourOfDay, minute ->
