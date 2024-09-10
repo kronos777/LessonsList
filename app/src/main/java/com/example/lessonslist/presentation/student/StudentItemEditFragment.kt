@@ -416,20 +416,7 @@ class StudentItemEditFragment : Fragment() {
                     }
                     viewModel.editPaymentBalance(studentItemId, (currentBalanceView + newBalance))
                     binding.textViewPaymentBalance.text = (currentBalanceView + newBalance).toString()
-                    /*viewModel.getStudentItem(studentItemId)
-                    sleep(1500)
-                    viewModel.studentItem.observe(viewLifecycleOwner) {
-                        binding.textViewPaymentBalance.text = it.paymentBalance.toString()
-                    }*/
-                   /* viewModel.studentItem.observe(viewLifecycleOwner) {
-                        Log.d("currentBalance before", it.paymentBalance.toString())
-                        viewModel.editPaymentBalance(it.id, (it.paymentBalance + newBalance))
-                    }
-                    viewModel.getStudentItem(studentItemId)
-                    viewModel.studentItem.observe(viewLifecycleOwner) {
-                        binding.textViewPaymentBalance.text = (it.paymentBalance + newBalance).toString()
-                        Log.d("currentBalance after", it.paymentBalance.toString())
-                    }*/
+
                 } else {
                     Toast.makeText(activity,"Строка не является числом, сохранить невозможно.",Toast.LENGTH_SHORT).show()
                 }
@@ -439,8 +426,6 @@ class StudentItemEditFragment : Fragment() {
             .setNegativeButton("отмена", null)
             .create()
         dialog.show()
-        //Toast.makeText(getActivity(),"inputdata!"+inputEditTextField.text.toString(),Toast.LENGTH_SHORT).show();
-        //Log.d("new balance", inputEditTextField.text.toString())
     }
 
 
@@ -464,7 +449,6 @@ class StudentItemEditFragment : Fragment() {
                     }
                 }
                 binding.textViewPaymentBalance.setTextColor(Color.parseColor("#a31a0b"))
-               // binding.textViewPaymentBalance.setTextColor(R.color.custom_calendar_weekend_days_bar_text_color.dec())
                 binding.textViewPaymentBalance.text = sumDept.toString()
             }
         }
@@ -668,7 +652,6 @@ class StudentItemEditFragment : Fragment() {
         viewModelPayment.paymentList.observe(viewLifecycleOwner) {
             for (payment in it) {
                 if(payment.studentId == studentId) {
-                    Log.d("payment.lessonsId", payment.lessonsId.toString())
                     editLessonsItem(payment.lessonsId, studentId)
                     viewModelPayment.deletePaymentItem(payment)
                 }
@@ -697,7 +680,6 @@ class StudentItemEditFragment : Fragment() {
             if(item != el){
                 elementList.add(item)
             }
-
         }
         return elementList.toString()
     }
@@ -714,7 +696,6 @@ class StudentItemEditFragment : Fragment() {
     @SuppressLint("Range")
     fun setDataContactNumberInField(data: Uri?) {
         val contactUri: Uri? = data
-        //val projection: Array<String> = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
         if (contactUri != null) {
             requireActivity().contentResolver.query(contactUri, null, null, null, null).use { cursor ->
                 // If the cursor returned is valid, get the phone number
@@ -725,7 +706,6 @@ class StudentItemEditFragment : Fragment() {
                         viewModel.editPhoneNumber(studentItemId, number, object : CallbackPhone {
                             override fun success() {
                                 askEditNumber(number)
-                                //Log.d("thisNumberMustAdd", number)
                             }
                         })
                     }
