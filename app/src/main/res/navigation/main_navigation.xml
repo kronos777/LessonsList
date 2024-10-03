@@ -5,7 +5,7 @@
     app:startDestination="@+id/calendarItemFragment">
     <fragment
         android:id="@+id/calendarItemFragment"
-        android:name="com.example.lessonslist.presentation.calendar.CalendarItemFragment"
+        android:name="com.llist.lessonslist.presentation.calendar.CalendarItemFragment"
         android:label="CalendarItemFragment" >
         <action
             android:id="@+id/action_calendarItemFragment_to_studentItemListFragment"
@@ -29,15 +29,15 @@
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="com.example.lessonslist.presentation.info.AboutFragment"
+        android:name="com.llist.lessonslist.presentation.info.AboutFragment"
         android:label="AboutFragment" />
     <fragment
         android:id="@+id/groupItemFragment"
-        android:name="com.example.lessonslist.presentation.group.GroupItemFragment"
+        android:name="com.llist.lessonslist.presentation.group.GroupItemFragment"
         android:label="GroupItemFragment" />
     <fragment
         android:id="@+id/groupItemListFragment"
-        android:name="com.example.lessonslist.presentation.group.GroupItemListFragment"
+        android:name="com.llist.lessonslist.presentation.group.GroupItemListFragment"
         android:label="GroupItemListFragment" >
         <action
             android:id="@+id/action_groupItemListFragment_to_groupItemFragment"
@@ -47,19 +47,19 @@
     </fragment>
     <fragment
         android:id="@+id/instructionFragment"
-        android:name="com.example.lessonslist.presentation.info.InstructionFragment"
+        android:name="com.llist.lessonslist.presentation.info.InstructionFragment"
         android:label="InstructionFragment" />
     <fragment
         android:id="@+id/lessonsItemAddFragment"
-        android:name="com.example.lessonslist.presentation.lessons.LessonsItemAddFragment"
+        android:name="com.llist.lessonslist.presentation.lessons.LessonsItemAddFragment"
         android:label="LessonsItemAddFragment" />
     <fragment
         android:id="@+id/lessonsItemEditFragment"
-        android:name="com.example.lessonslist.presentation.lessons.LessonsItemEditFragment"
+        android:name="com.llist.lessonslist.presentation.lessons.LessonsItemEditFragment"
         android:label="LessonsItemEditFragment" />
     <fragment
         android:id="@+id/lessonsItemListFragment"
-        android:name="com.example.lessonslist.presentation.lessons.LessonsItemListFragment"
+        android:name="com.llist.lessonslist.presentation.lessons.LessonsItemListFragment"
         android:label="LessonsItemListFragment" >
         <action
             android:id="@+id/action_lessonsItemListFragment_to_lessonsItemAddFragment"
@@ -74,7 +74,7 @@
     </fragment>
     <fragment
         android:id="@+id/paymentItemListFragment"
-        android:name="com.example.lessonslist.presentation.payment.PaymentItemListFragment"
+        android:name="com.llist.lessonslist.presentation.payment.PaymentItemListFragment"
         android:label="PaymentItemListFragment" >
         <action
             android:id="@+id/action_paymentItemListFragment_to_paymentItemFragment"
@@ -87,15 +87,15 @@
     </fragment>
     <fragment
         android:id="@+id/paymentItemFragment"
-        android:name="com.example.lessonslist.presentation.payment.PaymentItemFragment"
+        android:name="com.llist.lessonslist.presentation.payment.PaymentItemFragment"
         android:label="PaymentItemFragment" />
     <fragment
         android:id="@+id/studentItemEditFragment"
-        android:name="com.example.lessonslist.presentation.student.StudentItemEditFragment"
+        android:name="com.llist.lessonslist.presentation.student.StudentItemEditFragment"
         android:label="StudentItemEditFragment" />
     <fragment
         android:id="@+id/studentItemListFragment"
-        android:name="com.example.lessonslist.presentation.student.StudentItemListFragment"
+        android:name="com.llist.lessonslist.presentation.student.StudentItemListFragment"
         android:label="StudentItemListFragment" >
         <action
             android:id="@+id/action_studentItemListFragment_to_studentItemEditFragment"
@@ -110,15 +110,15 @@
     </fragment>
     <fragment
         android:id="@+id/studentItemFragment"
-        android:name="com.example.lessonslist.presentation.student.StudentItemFragment"
+        android:name="com.llist.lessonslist.presentation.student.StudentItemFragment"
         android:label="StudentItemFragment" />
     <fragment
         android:id="@+id/settingsNotificationsFragment"
-        android:name="com.example.lessonslist.presentation.settings.SettingsNotificationsFragment"
+        android:name="com.llist.lessonslist.presentation.settings.SettingsNotificationsFragment"
         android:label="SettingsNotificationsFragment" />
     <fragment
         android:id="@+id/calendarPaymentItemFragment"
-        android:name="com.example.lessonslist.presentation.calendar.CalendarPaymentItemFragment"
+        android:name="com.llist.lessonslist.presentation.calendar.CalendarPaymentItemFragment"
         android:label="CalendarPaymentItemFragment" >
         <action
             android:id="@+id/action_calendarPaymentItemFragment_to_paymentItemListFragment"
