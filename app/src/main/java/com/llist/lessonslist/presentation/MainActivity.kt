@@ -286,10 +286,10 @@ class MainActivity : AppCompatActivity(), StudentItemFragment.OnEditingFinishedL
         alert
             .setTitle("Создать/Восстановить резервную копию.")
             .setCancelable(true)
-            .setPositiveButton("Создать резервную копию.") { _, _ ->
+            .setPositiveButton("Создать р/к.") { _, _ ->
                 backup()
             }
-            .setNegativeButton("Восстановить из резервной копии.") { _, _ ->
+            .setNegativeButton("Восстановить из р/к.") { _, _ ->
                 restore()
             }
             .setNeutralButton("Закрыть") { dialog, _ ->
