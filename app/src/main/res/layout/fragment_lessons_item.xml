@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.llist.lessonslist.presentation.lessons.LessonsItemViewModel"
+            type="com.leslist.lessonslist.presentation.lessons.LessonsItemViewModel"
             />
     </data>
 
